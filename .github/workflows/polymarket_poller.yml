@@ -2,25 +2,18 @@ name: Polymarket Poller
 
 on:
   schedule:
-    # Every 5 minutes
     - cron: '*/5 * * * *'
   workflow_dispatch:
-    # Manual trigger for testing
 
 permissions:
   contents: write
-  pull-requests: write
 
 env:
-  POLYMARKET_API_KEY: ${{ secrets.POLYMARKET_API_KEY }}
   DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-  CLOB_API_URL: 'https://clob.polymarket.com'
-  CHAIN: 'polygon'
-  MARKET_TYPE: 'pf'
+  POLYMARKET_API_KEY: ${{ secrets.POLYMARKET_API_KEY }}
 
 jobs:
-  poll-polymarket:
-    name: Poll Crypto Markets
+  poll:
     runs-on: ubuntu-latest
     timeout-minutes: 3
 
@@ -31,269 +24,186 @@ jobs:
           persist-credentials: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      # ── Step 1: Fetch market list from CLOB ──────────────────────────────────
-      - name: Fetch Polymarket CLOB markets
-        id: fetch-markets
+      - name: Fetch market data
         run: |
           set -euo pipefail
-
-          # Retry logic for transient failures
-          fetch_with_retry() {
-            local attempt=1
-            local max_attempts=3
-            local delay=10
-            while [[ $attempt -le $max_attempts ]]; do
-              echo "Attempt $attempt/$max_attempts..."
-              response=$(curl -s -w "\n%{http_code}" \
-                --max-time 30 \
-                -H "Authorization: Bearer ${POLYMARKET_API_KEY}" \
-                -H "Accept: application/json" \
-                "${CLOB_API_URL}/markets?chain=${CHAIN}&market_type=${MARKET_TYPE}&limit=50" \
-                2>&1)
-              
-              http_code=$(echo "$response" | tail -n1)
-              body=$(echo "$response" | sed '$d')
-              
-              if [[ "$http_code" == "200" ]]; then
-                echo "$body"
-                return 0
-              elif [[ "$http_code" == "429" ]]; then
-                echo "Rate limited. Sleeping ${delay}s before retry..."
-                sleep $delay
-                delay=$((delay * 2))
-                attempt=$((attempt + 1))
-              else
-                echo "HTTP $http_code — attempt $attempt failed."
-                if [[ $attempt -lt $max_attempts ]]; then
-                  sleep $delay
-                  delay=$((delay * 2))
-                  attempt=$((attempt + 1))
-                else
-                  echo "Max attempts reached. Failing."
-                  echo "body=$body"
-                  exit 1
-                fi
-              fi
-            done
-          }
-
-          echo "::group::Polymarket API Response"
-          MARKETS_JSON=$(fetch_with_retry)
-          echo "::endgroup::"
-
-          if [[ -z "$MARKETS_JSON" ]]; then
-            echo "ERROR: Empty response from Polymarket"
-            exit 1
-          fi
-
-          echo "markets_json<<EOF" >> $GITHUB_OUTPUT
-          $MARKETS_JSON
-          EOF
-
-      # ── Step 2: Parse and filter BTC / crypto 5-min markets ─────────────────
-      - name: Extract live crypto market data
-        id: extract-data
-        run: |
-          set -euo pipefail
-
-          MARKETS_JSON='${{ steps.fetch-markets.outputs.markets_json }}'
-
-          if [[ -z "$MARKETS_JSON" || "$MARKETS_JSON" == "null" || "$MARKETS_JSON" == "{}" ]]; then
-            echo "WARNING: No markets returned. Posting heartbeat only."
-            echo "is_empty=true" >> $GITHUB_OUTPUT
-            echo "discord_payload={}" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-
-          echo "is_empty=false" >> $GITHUB_OUTPUT
-
-          # Use jq to extract BTC 5-min and active crypto markets
-          # Filter: BTC-related or 5-min timeframe, active (closed = false)
-          EXTRACTED=$(echo "$MARKETS_JSON" | jq '[
-            .markets[]? |
-            select(
-              (
-                (.question | test("btc|bitcoin|₿"; "i")) or
-                (.question | test("eth|ethereum"; "i")) or
-                (.question | test("5.min|5min|5 min"; "i"))
-              ) and
-              (.closed == false or .closed == null)
-            ) |
-            {
-              id: .id,
-              question: .question,
-              condition_id: .condition_id,
-              market_type: .market_type,
-              slug: .slug,
-              clob_url: .clob_url,
-              # Best bid/ask or spread
-              best_bid: (.best_bid // null),
-              best_ask: (.best_ask // null),
-              spread: (if (.best_bid != null and .best_ask != null) then ((.best_ask | tonumber) - (.best_bid | tonumber)) else null end),
-              # Price (from outcomes / neg_risk)
-              outcome_prices: (.outcome_prices // null),
-              # Volume
-              volume: (.volume // null),
-              # Updated
-              updated_at: (.updated_at // now | todate)
-            }
-          ]')
-
-          echo "extracted_json<<EOF" >> $GITHUB_OUTPUT
-          $EXTRACTED
-          EOF
-
-          # Build compact Discord embed payload
-          COUNT=$(echo "$EXTRACTED" | jq 'length')
-          echo "market_count=$COUNT" >> $GITHUB_OUTPUT
-
-          if [[ "$COUNT" -gt 0 ]]; then
-            DISCORD_EMBEDS=$(echo "$EXTRACTED" | jq -c '.[]' | while read -r item; do
-              QUESTION=$(echo "$item" | jq -r '.question')
-              COND_ID=$(echo "$item" | jq -r '.condition_id')
-              BEST_BID=$(echo "$item" | jq -r '.best_bid // "N/A"')
-              BEST_ASK=$(echo "$item" | jq -r '.best_ask // "N/A"')
-              SPREAD=$(echo "$item" | jq -r '.spread // "N/A"')
-              VOLUME=$(echo "$item" | jq -r '.volume // "N/A"')
-              URL=$(echo "$item" | jq -r '.clob_url // "https://polymarket.com"')
-
-              # Escape double-quotes for JSON string
-              QUESTION_ESC=$(echo "$QUESTION" | jq -Rs '.' | cut -d'"' -f2 | sed 's/"/\\"/g')
-
-              echo '{"title":"'"$QUESTION_ESC"'","color":3066993,"fields":[{"name":"Condition ID","value":"'"$COND_ID"'","inline":true},{"name":"Best Bid","value":"'"$BEST_BID"'","inline":true},{"name":"Best Ask","value":"'"$BEST_ASK"'","inline":true},{"name":"Spread","value":"'"$SPREAD"'","inline":true},{"name":"Volume","value":"'"$VOLUME"'","inline":true}],"url":"'"$URL"'","footer":{"text":"Polymarket Poller"}}'
-            done | jq -s '.')
-
-            TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-            DISCORD_PAYLOAD=$(jq -n \
-              --argjson embeds "$DISCORD_EMBEDS" \
-              --arg ts "$TIMESTAMP" \
-              --arg count "$COUNT" \
-              '{
-                username: "Polymarket Poller",
-                avatar_url: "https://i.imgur.com/AfFp7pu.png",
-                content: "** Polymarket Crypto Markets Update — '"$count"' markets**",
-                embeds: $embeds,
-                timestamp: $ts
-              }')
+          
+          response=$(curl -s --max-time 30 \
+            -H "Authorization: Bearer ${POLYMARKET_API_KEY}" \
+            -H "Accept: application/json" \
+            "https://clob.polymarket.com/markets?chain=polygon&market_type=pf&limit=50")
+          
+          http_code=$(echo "$response" | python3 -c "import sys,json; d=json.load(sys.stdin); print('ok' if isinstance(d,list) else 'fail')" 2>&1 || echo "fail")
+          
+          if [[ "$http_code" != "ok" ]]; then
+            echo "API error: $http_code"
+            echo "Empty response" > markets_raw.json
           else
-            DISCORD_PAYLOAD=$(jq -n \
-              --arg ts "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
-              '{
-                username: "Polymarket Poller",
-                content: " Polymarket Poller heartbeat — no active BTC/crypto 5-min markets found.",
-                timestamp: $ts
-              }')
+            echo "$response" > markets_raw.json
+            echo "Fetched $(wc -c < markets_raw.json) bytes"
           fi
 
-          echo "discord_payload<<EOF" >> $GITHUB_OUTPUT
-          $DISCORD_PAYLOAD
-          EOF
-
-      # ── Step 3: Save live_markets.json and commit ────────────────────────────
-      - name: Save and commit live markets data
+      - name: Process market data
         run: |
           set -euo pipefail
+          
+          python3 << 'PYEOF'
+          import json, os, sys
+          
+          try:
+              with open('markets_raw.json') as f:
+                  raw = f.read()
+              
+              if not raw.strip() or raw.strip() == 'Empty response':
+                  print("::set-output name=is_empty::true")
+                  print("::set-output name=market_count::0")
+                  sys.exit(0)
+              
+              markets = json.loads(raw)
+              
+              # Filter for BTC/crypto 5-min active markets
+              filtered = []
+              for m in markets:
+                  q = m.get('question', '') or ''
+                  closed = m.get('closed', True)
+                  if closed:
+                      continue
+                  # Check if BTC/ETH/SOL related
+                  crypto = any(k in q.lower() for k in ['btc', 'bitcoin', 'eth', 'ethereum', 'sol', 'solana', 'xrp', 'doge', 'bnb'])
+                  timeframe = any(k in q.lower() for k in ['5 min', '5min', '5.min', '5m'])
+                  if crypto or timeframe:
+                      bid = m.get('best_bid')
+                      ask = m.get('best_ask')
+                      spread = None
+                      if bid and ask:
+                          try:
+                              spread = float(ask) - float(bid)
+                          except:
+                              pass
+                      
+                      # Handle outcomes_prices
+                      outcome_prices = m.get('outcome_prices', {})
+                      if isinstance(outcome_prices, str):
+                          try:
+                              outcome_prices = json.loads(outcome_prices)
+                          except:
+                              outcome_prices = {}
+                      
+                      filtered.append({
+                          'id': m.get('id', ''),
+                          'question': q,
+                          'condition_id': m.get('condition_id', ''),
+                          'slug': m.get('slug', ''),
+                          'clob_url': m.get('clob_url', ''),
+                          'best_bid': bid,
+                          'best_ask': ask,
+                          'spread': spread,
+                          'outcome_prices': outcome_prices,
+                          'volume': m.get('volume'),
+                      })
+              
+              print(f"Filtered {len(filtered)} markets")
+              
+              with open('markets_processed.json', 'w') as f:
+                  json.dump(filtered, f)
+              
+              print(f"::set-output name=is_empty::{'false' if filtered else 'true'}")
+              print(f"::set-output name=market_count::{len(filtered)}")
+              
+          except Exception as e:
+              print(f"Error: {e}")
+              print("::set-output name=is_empty::true")
+              print("::set-output name=market_count::0")
+              with open('markets_processed.json', 'w') as f:
+                  json.dump([], f)
+          PYEOF
 
+      - name: Build and save market file
+        run: |
+          set -euo pipefail
+          
           mkdir -p workers/data
-
-          if [[ '${{ steps.extract-data.outputs.is_empty }}' == "false" ]]; then
-            # Merge with existing live_markets.json, updating timestamp
-            TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-            
-            if [[ -f workers/data/live_markets.json ]] && [[ -s workers/data/live_markets.json ]]; then
-              EXISTING=$(cat workers/data/live_markets.json)
-            else
-              EXISTING="{}"
-            fi
-
-            # Build new JSON with markets array + metadata
-            UPDATED=$(echo '{}' | jq \
-              --argjson existing "$EXISTING" \
-              --argjson markets '${{ steps.extract-data.outputs.extracted_json }}' \
-              --arg ts "$TIMESTAMP" \
-              --arg count '${{ steps.extract-data.outputs.market_count }}' \
-              '{
-                updated_at: $ts,
-                run_id: env.GITHUB_RUN_ID,
-                run_url: "https://github.com/\(env.GITHUB_REPOSITORY)/actions/runs/\(env.GITHUB_RUN_ID)",
-                market_count: ($count | tonumber),
-                markets: $markets
-              }')
-
-            echo "$UPDATED" > workers/data/live_markets.json
+          
+          count=$(cat markets_processed.json | python3 -c "import json,sys; print(len(json.load(sys.stdin)))")
+          ts=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          
+          python3 << PYEOF
+          import json
+          with open('markets_processed.json') as f:
+              markets = json.load(f)
+          data = {
+              "updated_at": "$ts",
+              "market_count": $count,
+              "markets": markets
+          }
+          with open('workers/data/live_markets.json', 'w') as f:
+              json.dump(data, f, indent=2)
+          print(f"Saved {len(markets)} markets to workers/data/live_markets.json")
+          PYEOF
+          
+          # Commit if changed
+          if git diff --quiet workers/data/live_markets.json 2>/dev/null; then
+              echo "No changes to commit"
           else
-            # Heartbeat only — update timestamp in existing file
-            if [[ -f workers/data/live_markets.json ]]; then
-              TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-              cat workers/data/live_markets.json | jq \
-                --arg ts "$TIMESTAMP" \
-                '.updated_at = $ts | .run_id = env.GITHUB_RUN_ID | .heartbeat = true' \
-                > workers/data/live_markets.json.tmp && mv workers/data/live_markets.json.tmp workers/data/live_markets.json
-            else
-              echo '{"updated_at":"'"$(date -u +"%Y-%m-%dT%H:%M:%SZ")"'","heartbeat":true}' > workers/data/live_markets.json
-            fi
+              git config --local user.email "polymarket-poller@github-actions.bot"
+              git config --local user.name "Polymarket Poller Bot"
+              git add workers/data/live_markets.json
+              git commit -m "chore: update live_markets.json [skip ci]" || true
+              git push origin main || echo "Push failed"
           fi
 
-          echo "::group::live_markets.json"
-          cat workers/data/live_markets.json | jq .
-          echo "::endgroup::"
-
-          git config --local user.email "polymarket-poller@github-actions.bot"
-          git config --local user.name "Polymarket Poller Bot"
-          git add workers/data/live_markets.json
-          git diff --cached --stat
-          git commit -m "chore: update live_markets.json [skip ci] [polymarket-poller]" || echo "No changes to commit"
-
-          # Try to push; fail gracefully if nothing changed
-          git push origin HEAD || echo "Push failed (possibly no changes to commit — OK)"
-
-      # ── Step 4: Post to Discord webhook ─────────────────────────────────────
-      - name: Post to Discord webhook
+      - name: Post to Discord
+        if: env.DISCORD_WEBHOOK != ''
         run: |
           set -euo pipefail
-
-          if [[ -z "${DISCORD_WEBHOOK}" ]]; then
-            echo "WARNING: DISCORD_WEBHOOK not set. Skipping Discord notification."
-            exit 0
-          fi
-
-          DISCORD_PAYLOAD='${{ steps.extract-data.outputs.discord_payload }}'
-
-          if [[ -z "$DISCORD_PAYLOAD" || "$DISCORD_PAYLOAD" == "{}" ]]; then
-            echo "Empty Discord payload — posting heartbeat."
-            DISCORD_PAYLOAD=$(jq -n \
-              --arg ts "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
-              --arg run "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
-              '{
-                username: "Polymarket Poller",
-                content: " Polymarket Poller heartbeat — API unreachable or empty response. Check run: \(env.GITHUB_SERVER_URL)/\($GITHUB_REPOSITORY)/actions/runs/\($GITHUB_RUN_ID)",
-                timestamp: $ts
-              }')
-          fi
-
-          echo "::group::Discord Payload"
-          echo "$DISCORD_PAYLOAD" | jq .
-          echo "::endgroup::"
-
-          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" \
-            -X POST \
-            -H "Content-Type: application/json" \
-            -d "$DISCORD_PAYLOAD" \
-            "${DISCORD_WEBHOOK}")
-
-          echo "Discord webhook HTTP response: $HTTP_CODE"
-
-          if [[ "$HTTP_CODE" -ge 200 && "$HTTP_CODE" -lt 300 ]]; then
-            echo "Discord notification sent successfully."
+          
+          count=$(cat markets_processed.json | python3 -c "import json,sys; print(len(json.load(sys.stdin)))")
+          
+          if [[ "$count" == "0" ]]; then
+            msg="🤖 Polymarket Poller heartbeat — no active BTC/crypto markets right now. Next run in 5 min."
           else
-            echo "WARNING: Discord webhook returned HTTP $HTTP_CODE"
+            python3 << PYEOF
+          import json, subprocess, os
+          
+          with open('markets_processed.json') as f:
+              markets = json.load(f)
+          
+          fields = []
+          for m in markets[:5]:
+              bid = m.get('best_bid', 'N/A')
+              ask = m.get('best_ask', 'N/A')
+              spread = m.get('spread')
+              spread_str = f"\${spread:.4f}" if spread else 'N/A'
+              fields.append({
+                  "name": m['question'][:75],
+                  "value": f"Bid: {bid} | Ask: {ask} | Spread: {spread_str}",
+                  "inline": False
+              })
+          
+          ts = subprocess.check_output(['date', '-u', '+%Y-%m-%dT%H:%M:%SZ']).decode().strip()
+          
+          payload = {
+              "username": "Polymarket Poller",
+              "content": f"** Polymarket Update — {len(markets)} BTC/crypto markets active**",
+              "embeds": [{
+                  "title": f"{len(markets)} Active Markets",
+                  "color": 3066993,
+                  "fields": fields,
+                  "footer": {"text": "Polymarket Poller | github-actions"},
+                  "timestamp": ts
+              }]
+          }
+          
+          import urllib.request
+          import urllib.parse
+          
+          data = json.dumps(payload).encode()
+          req = urllib.request.Request(
+              "https://discord.com/api/webhooks/1486066262122430684/mLKWVlGJRyADWEnpDgx3n4QcI1B-JhAnDLyBHKwsK-BSmeo5lal5MYrrY_QiuOBqiNLy",
+              data=data,
+              headers={"Content-Type": "application/json"}
+          )
+          with urllib.request.urlopen(req) as resp:
+              print(f"Discord: {resp.status}")
+          PYEOF
           fi
-
-      # ── Step 5: Summary output ──────────────────────────────────────────────
-      - name: Summary
-        run: |
-          echo "## Polymarket Poller Run" >> $GITHUB_STEP_SUMMARY
-          echo "- Run ID: $GITHUB_RUN_ID" >> $GITHUB_STEP_SUMMARY
-          echo "- Markets fetched: ${{ steps.extract-data.outputs.market_count || 0 }}" >> $GITHUB_STEP_SUMMARY
-          echo "- Empty/heartbeat: ${{ steps.extract-data.outputs.is_empty || true }}" >> $GITHUB_STEP_SUMMARY
-          echo "- [View live_markets.json](https://github.com/$GITHUB_REPOSITORY/blob/main/workers/data/live_markets.json)" >> $GITHUB_STEP_SUMMARY

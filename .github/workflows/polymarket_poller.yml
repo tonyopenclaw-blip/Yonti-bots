@@ -10,6 +10,7 @@ permissions:
 
 env:
   DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+  POLYMARKET_API_KEY: ${{ secrets.POLYMARKET_API_KEY }}
 
 jobs:
   poll:

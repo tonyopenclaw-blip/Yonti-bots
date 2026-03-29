@@ -10,7 +10,6 @@ permissions:
 
 env:
   DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-  POLYMARKET_API_KEY: ${{ secrets.POLYMARKET_API_KEY }}
 
 jobs:
   poll:
@@ -26,128 +25,141 @@ jobs:
 
       - name: Fetch market data
         run: |
-          set -euo pipefail
+          python3 << 'PYEOF'
+          import json, os, urllib.request
           
-          response=$(curl -s --max-time 30 \
-            -H "Authorization: Bearer ${POLYMARKET_API_KEY}" \
-            -H "Accept: application/json" \
-            "https://clob.polymarket.com/markets?chain=polygon&market_type=pf&limit=50")
+          api_key = os.environ.get('POLYMARKET_API_KEY', '')
+          if not api_key:
+              print("No API key found")
+              with open('markets_raw.json', 'w') as f:
+                  f.write('{"error": "no_api_key"}')
+              exit(0)
           
-          http_code=$(echo "$response" | python3 -c "import sys,json; d=json.load(sys.stdin); print('ok' if isinstance(d,list) else 'fail')" 2>&1 || echo "fail")
-          
-          if [[ "$http_code" != "ok" ]]; then
-            echo "API error: $http_code"
-            echo "Empty response" > markets_raw.json
-          else
-            echo "$response" > markets_raw.json
-            echo "Fetched $(wc -c < markets_raw.json) bytes"
-          fi
+          try:
+              req = urllib.request.Request(
+                  'https://clob.polymarket.com/markets?chain=polygon&market_type=pf&limit=50',
+                  headers={'Authorization': f'Bearer {api_key}', 'Accept': 'application/json'}
+              )
+              with urllib.request.urlopen(req, timeout=30) as resp:
+                  data = json.loads(resp.read())
+                  with open('markets_raw.json', 'w') as f:
+                      json.dump(data, f)
+                  print(f"Fetched {len(data)} items")
+          except Exception as e:
+              print(f"Error: {e}")
+              with open('markets_raw.json', 'w') as f:
+                  f.write('{"error": "' + str(e) + '"}')
+          PYEOF
 
       - name: Process market data
         run: |
-          set -euo pipefail
-          
           python3 << 'PYEOF'
-          import json, os, sys
+          import json, os
           
           try:
               with open('markets_raw.json') as f:
                   raw = f.read()
               
-              if not raw.strip() or raw.strip() == 'Empty response':
-                  print("::set-output name=is_empty::true")
-                  print("::set-output name=market_count::0")
-                  sys.exit(0)
+              if not raw.strip() or '"error"' in raw:
+                  print("Empty or error response")
+                  with open('markets_processed.json', 'w') as f:
+                      json.dump([], f)
+                  exit(0)
               
-              markets = json.loads(raw)
+              data = json.loads(raw)
               
-              # Filter for BTC/crypto 5-min active markets
+              # Handle the response format: {"data": [...]} or [...]
+              if isinstance(data, dict) and 'data' in data:
+                  markets = data['data']
+              elif isinstance(data, list):
+                  markets = data
+              else:
+                  print(f"Unknown format: {type(data)}")
+                  markets = []
+              
               filtered = []
               for m in markets:
                   q = m.get('question', '') or ''
                   closed = m.get('closed', True)
-                  if closed:
+                  active = m.get('active', False)
+                  if closed or not active:
                       continue
-                  # Check if BTC/ETH/SOL related
-                  crypto = any(k in q.lower() for k in ['btc', 'bitcoin', 'eth', 'ethereum', 'sol', 'solana', 'xrp', 'doge', 'bnb'])
-                  timeframe = any(k in q.lower() for k in ['5 min', '5min', '5.min', '5m'])
+                  
+                  crypto = any(k in q.lower() for k in 
+                      ['btc', 'bitcoin', 'eth', 'ethereum', 'sol', 'solana', 'xrp', 'doge', 'bnb', 'hype'])
+                  timeframe = any(k in q.lower() for k in 
+                      ['5 min', '5min', '5.min', '5m'])
+                  
                   if crypto or timeframe:
                       bid = m.get('best_bid')
                       ask = m.get('best_ask')
                       spread = None
                       if bid and ask:
                           try:
-                              spread = float(ask) - float(bid)
+                              spread = round(float(ask) - float(bid), 4)
                           except:
                               pass
                       
-                      # Handle outcomes_prices
-                      outcome_prices = m.get('outcome_prices', {})
-                      if isinstance(outcome_prices, str):
-                          try:
-                              outcome_prices = json.loads(outcome_prices)
-                          except:
-                              outcome_prices = {}
-                      
                       filtered.append({
                           'id': m.get('id', ''),
-                          'question': q,
+                          'question': q[:100],
                           'condition_id': m.get('condition_id', ''),
                           'slug': m.get('slug', ''),
                           'clob_url': m.get('clob_url', ''),
-                          'best_bid': bid,
-                          'best_ask': ask,
+                          'best_bid': str(bid) if bid else None,
+                          'best_ask': str(ask) if ask else None,
                           'spread': spread,
-                          'outcome_prices': outcome_prices,
                           'volume': m.get('volume'),
+                          'active': active,
+                          'closed': closed,
                       })
               
-              print(f"Filtered {len(filtered)} markets")
+              print(f"Found {len(filtered)} active crypto/5min markets")
               
               with open('markets_processed.json', 'w') as f:
-                  json.dump(filtered, f)
-              
-              print(f"::set-output name=is_empty::{'false' if filtered else 'true'}")
-              print(f"::set-output name=market_count::{len(filtered)}")
+                  json.dump(filtered, f, indent=2)
               
           except Exception as e:
               print(f"Error: {e}")
-              print("::set-output name=is_empty::true")
-              print("::set-output name=market_count::0")
+              import traceback
+              traceback.print_exc()
               with open('markets_processed.json', 'w') as f:
                   json.dump([], f)
           PYEOF
 
-      - name: Build and save market file
+      - name: Save market data
         run: |
-          set -euo pipefail
+          python3 << 'PYEOF'
+          import json, subprocess, os
           
-          mkdir -p workers/data
-          
-          count=$(cat markets_processed.json | python3 -c "import json,sys; print(len(json.load(sys.stdin)))")
-          ts=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-          
-          python3 << PYEOF
-          import json
           with open('markets_processed.json') as f:
               markets = json.load(f)
+          
+      - name: Save and commit
+        run: |
+          mkdir -p workers/data
+          python3 -c "
+          import json, subprocess, os
+          with open('markets_processed.json') as f:
+              markets = json.load(f)
+          import datetime
+          ts = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
           data = {
-              "updated_at": "$ts",
-              "market_count": $count,
-              "markets": markets
+              'updated_at': ts,
+              'market_count': len(markets),
+              'markets': markets
           }
           with open('workers/data/live_markets.json', 'w') as f:
               json.dump(data, f, indent=2)
-          print(f"Saved {len(markets)} markets to workers/data/live_markets.json")
-          PYEOF
+          print(f'Saved {len(markets)} markets')
+          "
           
-          # Commit if changed
-          if git diff --quiet workers/data/live_markets.json 2>/dev/null; then
+          git config --local user.email "polymarket-poller@github-actions.bot"
+          git config --local user.name "Polymarket Poller Bot"
+          git add workers/data/live_markets.json || true
+          if git diff --cached --quiet; then
               echo "No changes to commit"
           else
-              git config --local user.email "polymarket-poller@github-actions.bot"
-              git config --local user.name "Polymarket Poller Bot"
-              git add workers/data/live_markets.json
               git commit -m "chore: update live_markets.json [skip ci]" || true
               git push origin main || echo "Push failed"
           fi
@@ -155,55 +167,47 @@ jobs:
       - name: Post to Discord
         if: env.DISCORD_WEBHOOK != ''
         run: |
-          set -euo pipefail
-          
-          count=$(cat markets_processed.json | python3 -c "import json,sys; print(len(json.load(sys.stdin)))")
-          
-          if [[ "$count" == "0" ]]; then
-            msg="🤖 Polymarket Poller heartbeat — no active BTC/crypto markets right now. Next run in 5 min."
-          else
-            python3 << PYEOF
-          import json, subprocess, os
+          python3 << 'PYEOF'
+          import json, os, urllib.request, datetime
           
           with open('markets_processed.json') as f:
               markets = json.load(f)
           
-          fields = []
-          for m in markets[:5]:
-              bid = m.get('best_bid', 'N/A')
-              ask = m.get('best_ask', 'N/A')
-              spread = m.get('spread')
-              spread_str = f"\${spread:.4f}" if spread else 'N/A'
-              fields.append({
-                  "name": m['question'][:75],
-                  "value": f"Bid: {bid} | Ask: {ask} | Spread: {spread_str}",
-                  "inline": False
-              })
+          webhook = os.environ.get('DISCORD_WEBHOOK', '')
+          if not webhook:
+              print("No webhook")
+              exit(0)
           
-          ts = subprocess.check_output(['date', '-u', '+%Y-%m-%dT%H:%M:%SZ']).decode().strip()
+          ts = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
+          
+          if not markets:
+              content = "🤖 Polymarket Poller heartbeat — no active BTC/crypto 5-min markets right now."
+          else:
+              lines = []
+              for m in markets[:8]:
+                  bid = m.get('best_bid', '?')
+                  ask = m.get('best_ask', '?')
+                  spread = m.get('spread')
+                  spread_str = f"${spread:.4f}" if spread else '?'
+                  lines.append(f"**{m['question']}**\nBid: `${bid}` | Ask: `${ask}` | Spread: `{spread_str}`")
+              
+              content = f"** Polymarket — {len(markets)} active BTC/crypto markets**\n\n" + "\n\n".join(lines)
           
           payload = {
               "username": "Polymarket Poller",
-              "content": f"** Polymarket Update — {len(markets)} BTC/crypto markets active**",
-              "embeds": [{
-                  "title": f"{len(markets)} Active Markets",
-                  "color": 3066993,
-                  "fields": fields,
-                  "footer": {"text": "Polymarket Poller | github-actions"},
-                  "timestamp": ts
-              }]
+              "content": content,
+              "timestamp": ts
           }
-          
-          import urllib.request
-          import urllib.parse
           
           data = json.dumps(payload).encode()
           req = urllib.request.Request(
-              "https://discord.com/api/webhooks/1486066262122430684/mLKWVlGJRyADWEnpDgx3n4QcI1B-JhAnDLyBHKwsK-BSmeo5lal5MYrrY_QiuOBqiNLy",
+              webhook,
               data=data,
               headers={"Content-Type": "application/json"}
           )
-          with urllib.request.urlopen(req) as resp:
-              print(f"Discord: {resp.status}")
+          try:
+              with urllib.request.urlopen(req, timeout=10) as resp:
+                  print(f"Discord: {resp.status}")
+          except Exception as e:
+              print(f"Discord error: {e}")
           PYEOF
-          fi

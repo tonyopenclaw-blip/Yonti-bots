@@ -21,14 +21,20 @@ class Market:
     no_bid: float
     no_ask: float
     prob_yes: float  # Calculated probability
-    expiry_ts: int  # Unix timestamp
+    close_time: str  # ISO timestamp
     status: str
     last_close_ts: Optional[int] = None
     
     def time_to_expiry_sec(self) -> int:
-        """Calculate seconds until expiry."""
-        now = int(datetime.utcnow().timestamp())
-        return max(0, self.expiry_ts - now)
+        """Calculate seconds until close_time."""
+        try:
+            close = datetime.fromisoformat(self.close_time.replace("Z", ""))
+            if close.tzinfo:
+                close = close.replace(tzinfo=None)
+            now = datetime.utcnow()
+            return max(0, int((close - now).total_seconds()))
+        except:
+            return 0
 
 
 class KalshiAPI:
@@ -80,15 +86,20 @@ class KalshiAPI:
         markets = []
         for m in result.get("markets", []):
             try:
+                yes_ask_raw = m.get("yes_ask_dollars", m.get("yes_ask", 0))
+                yes_bid_raw = m.get("yes_bid_dollars", m.get("yes_bid", 0))
+                no_ask_raw = m.get("no_ask_dollars", m.get("no_ask", 0))
+                no_bid_raw = m.get("no_bid_dollars", m.get("no_bid", 0))
+                
                 market = Market(
                     ticker=m.get("ticker", ""),
                     question=m.get("question", ""),
-                    yes_bid=float(m.get("yes_bid", 0)),
-                    yes_ask=float(m.get("yes_ask", 0)),
-                    no_bid=float(m.get("no_bid", 0)),
-                    no_ask=float(m.get("no_ask", 0)),
+                    yes_bid=float(yes_bid_raw) if yes_bid_raw else 0.0,
+                    yes_ask=float(yes_ask_raw) if yes_ask_raw else 0.0,
+                    no_bid=float(no_bid_raw) if no_bid_raw else 0.0,
+                    no_ask=float(no_ask_raw) if no_ask_raw else 0.0,
                     prob_yes=self._calc_prob(m),
-                    expiry_ts=int(m.get("expiry_ts", 0)),
+                    close_time=m.get("close_time", ""),
                     status=m.get("status", ""),
                     last_close_ts=m.get("last_close_ts")
                 )

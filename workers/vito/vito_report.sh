@@ -1,18 +1,14 @@
 #!/bin/bash
-# Vito's Betting Report - Posts to Discord via webhook
+# Uncle Vito's Betting Report - Posts to Discord via webhook
 
 WEBHOOK_URL="https://discord.com/api/webhooks/1486066262122430684/mLKWVlGJRyADWEnpDgx3n4QcI1B-JhAnDLyBHKwsK-BSmeo5lal5MYrrY_QiuOBqiNLy"
 
-TIMESTAMP=$(date '+%Y-%m-%d %H:%M UTC')
+cd /home/ubuntu/.openclaw/workspace/workers/uncle_vito
 
-REPORT="🍝 **UNCLE VITO'S BETTING REPORT** 🍝
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📅 Generated: $TIMESTAMP
+# Generate the report
+REPORT=$(python3 run.py 2>/dev/null)
 
-⚠️ *Report regenerating - full picks coming soon*
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-
+# Post to Discord
 PAYLOAD=$(printf '{"content": %s}' "$(echo "$REPORT" | jq -Rs .)")
 
 curl -s -H "Content-Type: application/json" \

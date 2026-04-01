@@ -40,7 +40,6 @@ def generate_ticker_suffix(dt: datetime = None) -> str:
     if dt is None:
         dt = datetime.utcnow()
     
-    # Format: YYMMDDHHMM-00
     month_abbr = dt.strftime("%b").upper()
     suffix = dt.strftime(f"%y{month_abbr}%d%H%M-00")
     
@@ -50,11 +49,8 @@ def generate_ticker_suffix(dt: datetime = None) -> str:
 def get_current_15min_window() -> tuple:
     """
     Get the current 15-min window start time.
-    Returns (window_start, window_end) as datetime objects.
     """
     now = datetime.utcnow()
-    
-    # Round down to nearest 15 min
     minute = (now.minute // 15) * 15
     window_start = now.replace(minute=minute, second=0, microsecond=0)
     window_end = window_start + timedelta(minutes=15)
@@ -63,16 +59,11 @@ def get_current_15min_window() -> tuple:
 
 
 def generate_tickers_for_window(window_start: datetime = None) -> List[str]:
-    """
-    Generate ticker suffixes for scanning.
-    Checks current window + next few windows.
-    """
+    """Generate ticker suffixes for scanning."""
     if window_start is None:
         window_start, _ = get_current_15min_window()
     
     tickers = []
-    
-    # Generate for next 4 windows (1 hour ahead)
     for i in range(4):
         window = window_start + timedelta(minutes=i * 15)
         suffix = generate_ticker_suffix(window)
@@ -82,9 +73,7 @@ def generate_tickers_for_window(window_start: datetime = None) -> List[str]:
 
 
 def check_market(series_ticker: str, suffix: str) -> Optional[Dict]:
-    """
-    Check if a specific market exists and get its status.
-    """
+    """Check if a specific market exists and get its status."""
     ticker = f"{series_ticker}-{suffix}"
     url = f"{KALSHI_API_BASE}/markets/{ticker}"
     
@@ -108,13 +97,12 @@ def check_market(series_ticker: str, suffix: str) -> Optional[Dict]:
 def list_markets_in_series(series_ticker: str, limit: int = 20) -> List[Dict]:
     """
     List markets in a series (e.g., KXBTC15M).
-    Returns markets sorted by closing time.
+    Returns ALL markets - filter for tradeable ones below.
     """
     url = f"{KALSHI_API_BASE}/markets"
     params = {
         "series_ticker": series_ticker,
-        "limit": limit,
-        "status": "active"
+        "limit": limit
     }
     
     try:
@@ -128,8 +116,8 @@ def list_markets_in_series(series_ticker: str, limit: int = 20) -> List[Dict]:
                 result.append({
                     "ticker": m.get("ticker", ""),
                     "status": m.get("status", ""),
-                    "yes_bid": m.get("yes_bid", 0),
-                    "yes_ask": m.get("yes_ask", 0),
+                    "yes_bid": float(m.get("yes_bid_dollars", 0)),
+                    "yes_ask": float(m.get("yes_ask_dollars", 0)),
                     "close_time": m.get("close_time", ""),
                     "resolution_time": m.get("resolution_time", ""),
                 })
@@ -140,31 +128,62 @@ def list_markets_in_series(series_ticker: str, limit: int = 20) -> List[Dict]:
         return []
 
 
+def is_market_tradeable(market: Dict) -> bool:
+    """
+    Check if a market is tradeable.
+    Criteria:
+    - Has a real price (yes_ask > 0)
+    - Status is NOT finalized
+    - Market has opened (close_time in future)
+    """
+    # Must have a price
+    if market.get("yes_ask", 0) <= 0:
+        return False
+    
+    # Must not be finalized
+    if market.get("status") == "finalized":
+        return False
+    
+    # Check if market has opened (close_time must be in the future)
+    close_time_str = market.get("close_time", "")
+    if close_time_str:
+        try:
+            # Parse close_time and compare with current UTC
+            close_time = datetime.fromisoformat(close_time_str.replace("Z", ""))
+            now = datetime.utcnow()
+            if close_time.tzinfo:
+                close_time = close_time.replace(tzinfo=None)
+            if close_time < now:
+                return False
+        except:
+            pass
+    
+    return True
+
+
 def scan_all_series() -> Dict[str, List[Dict]]:
     """
-    Scan all configured series for active markets.
-    Returns dict of series -> active markets.
+    Scan all configured series for ACTIVE (tradeable) markets.
+    Returns dict of series -> tradeable markets.
     """
     results = {}
     
     for coin, series in SERIES.items():
-        markets = list_markets_in_series(series, limit=20)
+        markets = list_markets_in_series(series, limit=30)
         
-        # Filter for markets that are priced (not just initialized)
-        active = [m for m in markets if m.get("status") in ["active", "priced", "proposed"]]
+        # Filter for tradeable markets
+        tradeable = [m for m in markets if is_market_tradeable(m)]
         
-        if active:
-            results[coin] = active
+        if tradeable:
+            results[coin] = tradeable
     
     return results
 
 
 def format_market_summary(markets_by_series: Dict[str, List[Dict]]) -> str:
-    """
-    Format scan results for display/logging.
-    """
+    """Format scan results for display/logging."""
     if not markets_by_series:
-        return "No active markets found."
+        return "No tradeable markets found."
     
     lines = []
     lines.append(f"SCAN RESULTS - {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}")
@@ -178,59 +197,48 @@ def format_market_summary(markets_by_series: Dict[str, List[Dict]]) -> str:
             status = m.get("status", "")
             yes_ask = m.get("yes_ask", 0)
             
-            price_str = f"${yes_ask/100:.2f}" if yes_ask else "N/A"
+            price_str = f"${yes_ask:.2f}" if yes_ask else "N/A"
             lines.append(f"  {ticker} | {status} | YES: {price_str}")
             total += 1
     
     lines.append(f"\n{'=' * 60}")
-    lines.append(f"Total active markets: {total}")
+    lines.append(f"Total tradeable markets: {total}")
     
     return "\n".join(lines)
 
 
 def save_live_markets(markets_by_series: Dict[str, List[Dict]], filepath: str):
-    """
-    Save live markets to JSON file for other bots to use.
-    """
+    """Save live markets to JSON file for other bots to use."""
     output = {
         "updated_at": datetime.utcnow().isoformat(),
         "market_count": sum(len(m) for m in markets_by_series.values()),
         "markets": markets_by_series
     }
     
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
     with open(filepath, "w") as f:
         json.dump(output, f, indent=2)
 
 
 def main():
-    """
-    Main scanner loop.
-    """
+    """Main scanner loop."""
     script_dir = os.path.dirname(os.path.abspath(__file__))
     output_file = os.path.join(script_dir, "..", "data", "live_markets.json")
     
-    # Ensure data directory exists
-    data_dir = os.path.dirname(output_file)
-    os.makedirs(data_dir, exist_ok=True)
-    
     print("Kalshi Market Scanner starting...")
     
-    # Get current window
     window_start, window_end = get_current_15min_window()
     tickers = generate_tickers_for_window(window_start)
     
     print(f"Current 15-min window: {window_start.strftime('%H:%M')} - {window_end.strftime('%H:%M')} UTC")
     print(f"Checking tickers: {tickers}")
     
-    # Scan all series
     print("\nScanning all series...")
     results = scan_all_series()
     
-    # Format and print results
     summary = format_market_summary(results)
     print(f"\n{summary}")
     
-    # Save to file
     save_live_markets(results, output_file)
     print(f"\nSaved to {output_file}")
     

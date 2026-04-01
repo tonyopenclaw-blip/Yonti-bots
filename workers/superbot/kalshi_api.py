@@ -70,8 +70,7 @@ class KalshiAPI:
         """Fetch active markets for the series."""
         result = self._get("/markets", params={
             "series_ticker": SERIES_TICKER,
-            "limit": limit,
-            "status": "active"
+            "limit": limit
         })
         
         if "error" in result:

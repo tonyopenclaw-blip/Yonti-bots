@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+*.log
+logs/
+*.stdout.log
+data/*.json
+!workers/flip/data/flip_stats.json
+!workers/flip/data/flip_trades.json
+!workers/superbot/report.json
+unified_report.html
+*.log

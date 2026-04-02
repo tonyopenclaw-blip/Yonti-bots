@@ -11747,3 +11747,67 @@ ImportError: cannot import name 'DRIFT_SHORT_STOP_LOSS' from 'config' (/home/ubu
 2026-04-02 21:30:29 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
 2026-04-02 21:30:29 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
 2026-04-02 21:30:29 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:30:33 | INFO | Status: cash=$100.00, positions=0, loop=30, active_series=['KXXRP15M', 'KXDOGE15M', 'KXBTC15M', 'KXBNB15M', 'KXHYPE15M', 'KXSOL15M', 'KXETH15M']
+2026-04-02 21:30:33 | INFO | Status: cash=$100.00, positions=0, loop=30, active_series=['KXXRP15M', 'KXDOGE15M', 'KXBTC15M', 'KXBNB15M', 'KXHYPE15M', 'KXSOL15M', 'KXETH15M']
+2026-04-02 21:30:33 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-02 21:30:33 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-02 21:30:33 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-02 21:30:33 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-02 21:30:33 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 21:30:33 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 21:30:40 | INFO | DRIFT SHORT signal: KXXRP15M-26APR021745-45 @ $0.5550, size=$0.50, Kelly=0.00%, TP=$0.4440, SL=$0.7500, first_cross=none
+2026-04-02 21:30:40 | INFO | DRIFT SHORT signal: KXXRP15M-26APR021745-45 @ $0.5550, size=$0.50, Kelly=0.00%, TP=$0.4440, SL=$0.7500, first_cross=none
+2026-04-02 21:30:40 | INFO | [XRP] Opened drift_short: no KXXRP15M-26APR021745-45 @ $0.5550, size=$0.50, cost=$0.22
+2026-04-02 21:30:40 | INFO | [XRP] Opened drift_short: no KXXRP15M-26APR021745-45 @ $0.5550, size=$0.50, cost=$0.22
+2026-04-02 21:30:40 | INFO | 🚀 [XRP] TRADE EXECUTED: drift_short no KXXRP15M-26APR021745-45 @ $0.5550, size=$0.50
+2026-04-02 21:30:40 | INFO | 🚀 [XRP] TRADE EXECUTED: drift_short no KXXRP15M-26APR021745-45 @ $0.5550, size=$0.50
+2026-04-02 21:30:43 | INFO | DRIFT SHORT signal: KXBTC15M-26APR021745-45 @ $0.5850, size=$0.50, Kelly=0.00%, TP=$0.4680, SL=$0.7500, first_cross=none
+2026-04-02 21:30:43 | INFO | DRIFT SHORT signal: KXBTC15M-26APR021745-45 @ $0.5850, size=$0.50, Kelly=0.00%, TP=$0.4680, SL=$0.7500, first_cross=none
+2026-04-02 21:30:43 | INFO | [BTC] Opened drift_short: no KXBTC15M-26APR021745-45 @ $0.5850, size=$0.50, cost=$0.21
+2026-04-02 21:30:43 | INFO | [BTC] Opened drift_short: no KXBTC15M-26APR021745-45 @ $0.5850, size=$0.50, cost=$0.21
+2026-04-02 21:30:43 | INFO | 🚀 [BTC] TRADE EXECUTED: drift_short no KXBTC15M-26APR021745-45 @ $0.5850, size=$0.50
+2026-04-02 21:30:43 | INFO | 🚀 [BTC] TRADE EXECUTED: drift_short no KXBTC15M-26APR021745-45 @ $0.5850, size=$0.50
+2026-04-02 21:30:46 | INFO | FIRST_CROSS: KXSOL15M-26APR021745-45 crossed UP through $0.50 (was $0.4750, now $0.5100)
+2026-04-02 21:30:46 | INFO | FIRST_CROSS: KXSOL15M-26APR021745-45 crossed UP through $0.50 (was $0.4750, now $0.5100)
+2026-04-02 21:30:48 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:30:48 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:30:48 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:30:48 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:30:49 | INFO | FIRST_CROSS: KXBNB15M-26APR021745-45 crossed DOWN through $0.50 (was $0.5050, now $0.4950)
+2026-04-02 21:30:49 | INFO | FIRST_CROSS: KXBNB15M-26APR021745-45 crossed DOWN through $0.50 (was $0.5050, now $0.4950)
+2026-04-02 21:30:52 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXDOGE15M&status=open&limit=10
+2026-04-02 21:30:52 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXDOGE15M&status=open&limit=10
+2026-04-02 21:30:52 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXDOGE15M&status=open&limit=10
+2026-04-02 21:30:52 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXDOGE15M&status=open&limit=10
+2026-04-02 21:30:53 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXDOGE15M&status=open&limit=10
+2026-04-02 21:30:53 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXDOGE15M&status=open&limit=10
+2026-04-02 21:30:53 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXDOGE15M&status=open&limit=10
+2026-04-02 21:30:53 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXDOGE15M&status=open&limit=10
+2026-04-02 21:30:54 | INFO | DRIFT SHORT signal: KXDOGE15M-26APR021745-45 @ $0.6100, size=$0.50, Kelly=0.00%, TP=$0.4880, SL=$0.7500, first_cross=none
+2026-04-02 21:30:54 | INFO | DRIFT SHORT signal: KXDOGE15M-26APR021745-45 @ $0.6100, size=$0.50, Kelly=0.00%, TP=$0.4880, SL=$0.7500, first_cross=none
+2026-04-02 21:30:54 | INFO | [DOGE] Opened drift_short: no KXDOGE15M-26APR021745-45 @ $0.6100, size=$0.50, cost=$0.20
+2026-04-02 21:30:54 | INFO | [DOGE] Opened drift_short: no KXDOGE15M-26APR021745-45 @ $0.6100, size=$0.50, cost=$0.20
+2026-04-02 21:30:54 | INFO | 🚀 [DOGE] TRADE EXECUTED: drift_short no KXDOGE15M-26APR021745-45 @ $0.6100, size=$0.50
+2026-04-02 21:30:54 | INFO | 🚀 [DOGE] TRADE EXECUTED: drift_short no KXDOGE15M-26APR021745-45 @ $0.6100, size=$0.50
+2026-04-02 21:30:58 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:30:58 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:30:58 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:30:58 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:31:02 | INFO | DRIFT SHORT signal: KXETH15M-26APR021745-45 @ $0.5800, size=$0.50, Kelly=0.00%, TP=$0.4640, SL=$0.7500, first_cross=none
+2026-04-02 21:31:02 | INFO | DRIFT SHORT signal: KXETH15M-26APR021745-45 @ $0.5800, size=$0.50, Kelly=0.00%, TP=$0.4640, SL=$0.7500, first_cross=none
+2026-04-02 21:31:02 | INFO | [ETH] Opened drift_short: no KXETH15M-26APR021745-45 @ $0.5800, size=$0.50, cost=$0.21
+2026-04-02 21:31:02 | INFO | [ETH] Opened drift_short: no KXETH15M-26APR021745-45 @ $0.5800, size=$0.50, cost=$0.21
+2026-04-02 21:31:02 | INFO | 🚀 [ETH] TRADE EXECUTED: drift_short no KXETH15M-26APR021745-45 @ $0.5800, size=$0.50
+2026-04-02 21:31:02 | INFO | 🚀 [ETH] TRADE EXECUTED: drift_short no KXETH15M-26APR021745-45 @ $0.5800, size=$0.50
+2026-04-02 21:31:02 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:31:02 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:31:02 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:31:02 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:31:03 | INFO | Status: cash=$99.17, positions=4, loop=59, active_series=['KXXRP15M', 'KXDOGE15M', 'KXBTC15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M']
+2026-04-02 21:31:03 | INFO | Status: cash=$99.17, positions=4, loop=59, active_series=['KXXRP15M', 'KXDOGE15M', 'KXBTC15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M']
+2026-04-02 21:31:03 | INFO | Day P&L: $0.83 (0.8%) / $100.00 limit
+2026-04-02 21:31:03 | INFO | Day P&L: $0.83 (0.8%) / $100.00 limit
+2026-04-02 21:31:03 | INFO | Coins: BTC: drift_short no@0.58 | ETH: drift_short no@0.58 | BNB: idle | SOL: idle | DOGE: drift_short no@0.61 | XRP: drift_short no@0.55 | HYPE: idle | ADA: idle
+2026-04-02 21:31:03 | INFO | Coins: BTC: drift_short no@0.58 | ETH: drift_short no@0.58 | BNB: idle | SOL: idle | DOGE: drift_short no@0.61 | XRP: drift_short no@0.55 | HYPE: idle | ADA: idle
+2026-04-02 21:31:03 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 21:31:03 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json

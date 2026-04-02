@@ -1,44 +1,55 @@
 {
-  "start_time": "2026-04-02 21:24:46 UTC",
-  "end_time": "2026-04-02 21:30:01 UTC",
+  "start_time": "2026-04-02 21:30:03 UTC",
+  "end_time": "",
   "starting_balance": 100.0,
-  "ending_balance": 99.8075,
-  "total_pnl": -0.19249999999999545,
-  "total_trades": 1,
+  "ending_balance": 99.16500000000002,
+  "total_pnl": -0.8349999999999795,
+  "total_trades": 0,
   "winning_trades": 0,
-  "losing_trades": 1,
-  "win_rate": 0.0,
+  "losing_trades": 0,
+  "win_rate": 0,
   "largest_win": 0.0,
-  "largest_loss": -0.1225,
-  "open_positions": 0,
-  "thermostat": 0,
-  "trades": [
+  "largest_loss": 0.0,
+  "open_positions": 4,
+  "thermostat": 50,
+  "trades": [],
+  "last_10_open_trades": [
     {
-      "ticker": "KXETH15M-26APR021730-30",
+      "ticker": "KXBTC15M-26APR021745-45",
       "side": "no",
-      "entry_price": 0.615,
-      "exit_price": 0.86,
+      "entry_price": 0.585,
       "size": 0.5,
-      "pnl": -0.1225,
       "strategy": "drift_short",
-      "open_time": "2026-04-02 21:26:32 UTC",
-      "close_time": "2026-04-02 21:28:02 UTC",
-      "exit_reason": "SL hit: $0.8600 >= $0.7500"
+      "open_time": "2026-04-02 21:30:43 UTC",
+      "current_price": 0.585
+    },
+    {
+      "ticker": "KXETH15M-26APR021745-45",
+      "side": "no",
+      "entry_price": 0.58,
+      "size": 0.5,
+      "strategy": "drift_short",
+      "open_time": "2026-04-02 21:31:02 UTC",
+      "current_price": 0.58
+    },
+    {
+      "ticker": "KXDOGE15M-26APR021745-45",
+      "side": "no",
+      "entry_price": 0.61,
+      "size": 0.5,
+      "strategy": "drift_short",
+      "open_time": "2026-04-02 21:30:54 UTC",
+      "current_price": 0.61
+    },
+    {
+      "ticker": "KXXRP15M-26APR021745-45",
+      "side": "no",
+      "entry_price": 0.5549999999999999,
+      "size": 0.5,
+      "strategy": "drift_short",
+      "open_time": "2026-04-02 21:30:40 UTC",
+      "current_price": 0.5549999999999999
     }
   ],
-  "last_10_open_trades": [],
-  "last_10_closed_trades": [
-    {
-      "ticker": "KXETH15M-26APR021730-30",
-      "side": "no",
-      "entry_price": 0.615,
-      "exit_price": 0.86,
-      "size": 0.5,
-      "pnl": -0.1225,
-      "strategy": "drift_short",
-      "open_time": "2026-04-02 21:26:32 UTC",
-      "close_time": "2026-04-02 21:28:02 UTC",
-      "exit_reason": "SL hit: $0.8600 >= $0.7500"
-    }
-  ]
+  "last_10_closed_trades": []
 }

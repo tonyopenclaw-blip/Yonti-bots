@@ -4,8 +4,11 @@ __pycache__/
 logs/
 *.stdout.log
 data/*.json
+data/*.jsonl
+market_data.jsonl
+unified_report.html
+
+# Whitelist specific tracked json files
 !workers/flip/data/flip_stats.json
 !workers/flip/data/flip_trades.json
 !workers/superbot/report.json
-unified_report.html
-*.log

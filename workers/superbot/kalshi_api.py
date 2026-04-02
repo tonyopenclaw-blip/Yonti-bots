@@ -183,6 +183,44 @@ class KalshiAPI:
             return []
         return result.get("orders", [])
     
+    def get_market_by_ticker(self, ticker: str) -> Optional[Market]:
+        """
+        Fetch a specific market by ticker.
+        Returns Market object even if market is closed/settled.
+        Used to check on positions whose markets have expired.
+        """
+        result = self._get(f"/markets/{ticker}")
+        if "error" in result:
+            logger.warning(f"Failed to fetch market {ticker}: {result['error']}")
+            return None
+        
+        m = result.get("market", {})
+        if not m:
+            return None
+        
+        try:
+            yes_bid_raw = m.get("yes_bid_dollars", m.get("yes_bid", 0))
+            yes_ask_raw = m.get("yes_ask_dollars", m.get("yes_ask", 0))
+            no_bid_raw = m.get("no_bid_dollars", m.get("no_bid", 0))
+            no_ask_raw = m.get("no_ask_dollars", m.get("no_ask", 0))
+            
+            market = Market(
+                ticker=m.get("ticker", ""),
+                question=m.get("question", ""),
+                yes_bid=float(yes_bid_raw) if yes_bid_raw else 0.0,
+                yes_ask=float(yes_ask_raw) if yes_ask_raw else 0.0,
+                no_bid=float(no_bid_raw) if no_bid_raw else 0.0,
+                no_ask=float(no_ask_raw) if no_ask_raw else 0.0,
+                prob_yes=self._calc_prob(m),
+                close_time=m.get("close_time", ""),
+                status=m.get("status", ""),
+                last_close_ts=m.get("last_close_ts")
+            )
+            return market
+        except (ValueError, TypeError) as e:
+            logger.warning(f"Failed to parse market {ticker}: {e}")
+            return None
+    
     def get_order_status(self, order_id: str) -> Dict[str, Any]:
         """Get status of a specific order."""
         return self._get(f"/orders/{order_id}")

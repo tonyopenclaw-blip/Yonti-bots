@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 The Odds API Client for Uncle Vito
-Fetches real DK/FD odds for NBA, NHL, NCAAB
+Fetches real DK/FD odds for NBA, NHL, MLB
 """
 
 import requests
@@ -20,7 +20,7 @@ class OddsAPIClient:
     def get_odds(self, sport_key: str, markets: List[str] = None) -> List[Dict]:
         """
         Fetch odds for a sport.
-        sport_key: 'basketball_nba', 'icehockey_nhl', 'basketball_ncaab'
+        sport_key: 'basketball_nba', 'icehockey_nhl', 'baseball_mlb'
         markets: ['h2h', 'spreads', 'totals'] (h2h = moneyline)
         """
         if markets is None:

@@ -1,0 +1,8 @@
+# Superbot Paper Report - every 15 min
+*/15 * * * * /home/ubuntu/.openclaw/workspace/workers/vito/superbot_report.sh >> /home/ubuntu/.openclaw/workspace/workers/superbot/report.log 2>&1
+
+# Kalshi Scanner - every 15 min
+*/15 * * * * python3 /home/ubuntu/.openclaw/workspace/workers/scanner/scanner.py >> /home/ubuntu/.openclaw/workspace/workers/scanner/scanner.log 2>&1
+
+# Uncle Vito Betting Report - every hour 8am to 9pm
+0 8,9,10,11,12,13,14,15,16,17,18,19,20,21 * * * /home/ubuntu/.openclaw/workspace/workers/uncle_vito/cron_vito_report.sh >> /home/ubuntu/.openclaw/workspace/workers/uncle_vito/vito_cron.log 2>&1

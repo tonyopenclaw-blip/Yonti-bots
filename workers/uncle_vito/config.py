@@ -16,10 +16,10 @@ SPREDSHEET_API = {
 }
 
 # Sports covered
-SPORTS = ["NBA", "NHL", "NCAAB"]
+SPORTS = ["NBA", "NHL", "MLB"]
 
 # Parlay settings
-PARLAY_LEGS = 4
+PARLAY_LEGS = 3
 
 # Source signals for picking direction/confidence
 # These represent betting source signals we reference
@@ -37,13 +37,14 @@ DEFAULT_PROP_ODDS = -110  # Standard -110 juice
 DEFAULT_ML_ODDS = {
     "nba": {"favorite": -150, "underdog": +130},
     "nhl": {"favorite": -140, "underdog": +120},
-    "ncaab": {"favorite": -160, "underdog": +140},
+    "mlb": {"favorite": -160, "underdog": +140},
 }
 
 # Prop stat categories
 PROP_STATS = {
     "basketball": ["points", "rebounds", "assists", "threes", "blocks", "steals"],
     "hockey": ["goals", "assists", "shots_on_goal", "saves"],
+    "baseball": ["hits", "runs", "RBI", "home_runs", "strikeouts"],
 }
 
 # Report output channel (Discord channel ID or name)
@@ -67,6 +68,6 @@ ODDS_REGIONS = "us"  # Covers DraftKings, FanDuel
 ODDS_SPORTS = {
     "nba": "basketball_nba",
     "nhl": "icehockey_nhl",
-    "ncaab": "basketball_ncaab",
+    "mlb": "baseball_mlb",
 }
 # Alternative: sportsbook-odds-scraper (GitHub: declanwalpole/sportsbook-odds-scraper)

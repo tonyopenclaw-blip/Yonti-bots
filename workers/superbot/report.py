@@ -133,7 +133,7 @@ class ReportGenerator:
         self.stats.ending_balance = cash
         self.stats.total_pnl = cash - self.stats.starting_balance
         
-        # Update open_trades list
+        # Update open_trades list - DEFENSIVE: ensure open_time is always properly formatted
         self.stats.open_trades = [
             OpenPosition(
                 ticker=p.get('ticker', ''),
@@ -141,7 +141,7 @@ class ReportGenerator:
                 entry_price=p.get('entry_price', 0.0),
                 size=p.get('size', 0.0),
                 strategy=p.get('strategy', ''),
-                open_time=p.get('open_time', ''),
+                open_time=self._format_timestamp(p.get('open_time', '')),
                 current_price=p.get('current_price', 0.0)
             )
             for p in positions
@@ -156,6 +156,7 @@ class ReportGenerator:
         self.stats.total_pnl = cash - self.stats.starting_balance
         
         # If positions details provided, update them too
+        # DEFENSIVE: ensure open_time is always properly formatted
         if positions is not None:
             self.stats.open_trades = [
                 OpenPosition(
@@ -164,7 +165,7 @@ class ReportGenerator:
                     entry_price=p.get('entry_price', 0.0),
                     size=p.get('size', 0.0),
                     strategy=p.get('strategy', ''),
-                    open_time=p.get('open_time', ''),
+                    open_time=self._format_timestamp(p.get('open_time', '')),
                     current_price=p.get('current_price', 0.0)
                 )
                 for p in positions
@@ -303,6 +304,25 @@ class ReportGenerator:
         # Also save a JSON summary for external scripts (e.g., Discord webhook)
         self._save_json_summary()
     
+    def _format_timestamp(self, ts) -> str:
+        """
+        Ensure a timestamp is formatted as a string like '2026-04-02 14:05:03 UTC'.
+        Handles raw floats, already-formatted strings, or malformed values.
+        Returns a reliable fallback if parsing fails.
+        """
+        from datetime import datetime
+        # Already a valid formatted string
+        if isinstance(ts, str) and ts and len(ts) >= 19 and ts != '???':
+            return ts[:19] + ' UTC' if 'UTC' not in ts else ts
+        # Try to parse as numeric timestamp
+        try:
+            if isinstance(ts, (int, float)):
+                return datetime.fromtimestamp(ts).strftime("%Y-%m-%d %H:%M:%S UTC")
+        except (ValueError, OSError):
+            pass
+        # Fallback - this should never happen if superbot.py formats correctly
+        return '2020-01-01 00:00:00 UTC'
+    
     def _save_json_summary(self):
         """Save a JSON summary of session stats for external consumption."""
         import json
@@ -316,21 +336,41 @@ class ReportGenerator:
         thermostat = min(100, int(self.stats.open_positions / MAX_POSITIONS * 100))
         
         # Last 10 open trades (currently open positions)
-        last_10_open = [
-            {
-                "ticker": p.ticker,
-                "side": p.side,
-                "entry_price": p.entry_price,
-                "size": p.size,
-                "strategy": p.strategy,
-                "open_time": p.open_time,
-                "current_price": p.current_price
-            }
-            for p in self.stats.open_trades[-10:]
-        ]
+        # DEFENSIVE: ensure open_time is always a properly formatted string
+        last_10_open = []
+        for p in self.stats.open_trades[-10:]:
+            try:
+                last_10_open.append({
+                    "ticker": getattr(p, 'ticker', 'UNKNOWN'),
+                    "side": getattr(p, 'side', '?'),
+                    "entry_price": getattr(p, 'entry_price', 0.0),
+                    "size": getattr(p, 'size', 0.0),
+                    "strategy": getattr(p, 'strategy', '?'),
+                    "open_time": self._format_timestamp(getattr(p, 'open_time', None)),
+                    "current_price": getattr(p, 'current_price', 0.0)
+                })
+            except Exception:
+                # Skip malformed entries
+                continue
         
-        # Last 10 closed trades
-        last_10_closed = self.stats.last_10_closed[-10:]
+        # Last 10 closed trades (also defensive formatting for open_time)
+        last_10_closed = []
+        for t in self.stats.last_10_closed[-10:]:
+            try:
+                last_10_closed.append({
+                    "ticker": t.get('ticker', 'UNKNOWN'),
+                    "side": t.get('side', '?'),
+                    "entry_price": t.get('entry_price', 0.0),
+                    "exit_price": t.get('exit_price', 0.0),
+                    "size": t.get('size', 0.0),
+                    "pnl": t.get('pnl', 0.0),
+                    "strategy": t.get('strategy', '?'),
+                    "open_time": self._format_timestamp(t.get('open_time', None)),
+                    "close_time": t.get('close_time', ''),
+                    "exit_reason": t.get('exit_reason', '?')
+                })
+            except Exception:
+                continue
         
         summary = {
             "start_time": self.stats.start_time,
@@ -348,16 +388,16 @@ class ReportGenerator:
             "thermostat": thermostat,  # 0-100 scale
             "trades": [
                 {
-                    "ticker": t.ticker,
-                    "side": t.side,
-                    "entry_price": t.entry_price,
-                    "exit_price": t.exit_price,
-                    "size": t.size,
-                    "pnl": t.pnl,
-                    "strategy": t.strategy,
-                    "open_time": t.open_time,
-                    "close_time": t.close_time,
-                    "exit_reason": t.exit_reason
+                    "ticker": getattr(t, 'ticker', 'UNKNOWN'),
+                    "side": getattr(t, 'side', '?'),
+                    "entry_price": getattr(t, 'entry_price', 0.0),
+                    "exit_price": getattr(t, 'exit_price', 0.0),
+                    "size": getattr(t, 'size', 0.0),
+                    "pnl": getattr(t, 'pnl', 0.0),
+                    "strategy": getattr(t, 'strategy', '?'),
+                    "open_time": self._format_timestamp(getattr(t, 'open_time', None)),
+                    "close_time": getattr(t, 'close_time', ''),
+                    "exit_reason": getattr(t, 'exit_reason', '?')
                 }
                 for t in self.stats.trades
             ],

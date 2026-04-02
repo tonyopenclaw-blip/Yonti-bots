@@ -1,6 +1,7 @@
 #!/bin/bash
 # cron_vito_report.sh - Run Uncle Vito report and only send to Discord if content changed
-# Usage: ./cron_vito_report.sh [--force]
+# Uncle Vito - every hour 8am to 9pm
+# 0 8,9,10,11,12,13,14,15,16,17,18,19,20,21 * * * /home/ubuntu/.openclaw/workspace/workers/uncle_vito/cron_vito_report.sh >> /home/ubuntu/.openclaw/workspace/workers/uncle_vito/vito_cron.log 2>&1
 
 WORKDIR="/home/ubuntu/.openclaw/workspace/workers/uncle_vito"
 LAST_REPORT_FILE="/home/ubuntu/.openclaw/workspace/workers/uncle_vito/last_report.txt"

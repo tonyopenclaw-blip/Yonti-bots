@@ -34,14 +34,20 @@ HEADERS = {
 def generate_ticker_suffix(dt: datetime = None) -> str:
     """
     Generate ticker suffix for 15-min market.
-    Format: YYMMDDHHMM-00
-    Example: 26APR011930-00
+    Format: YYMMDDHHMM-NN where NN is the interval offset (00, 15, 30, or 45)
+    Example: 26APR011930-30 (for the :30 interval)
     """
     if dt is None:
         dt = datetime.utcnow()
     
-    month_abbr = dt.strftime("%b").upper()
-    suffix = dt.strftime(f"%y{month_abbr}%d%H%M-00")
+    # Round down to nearest 15-min interval
+    minute = (dt.minute // 15) * 15
+    dt_rounded = dt.replace(minute=minute, second=0, microsecond=0)
+    
+    month_abbr = dt_rounded.strftime("%b").upper()
+    # Determine interval offset: 00->00, 15->15, 30->30, 45->45
+    interval_offset = f"{minute:02d}"
+    suffix = dt_rounded.strftime(f"%y{month_abbr}%d%H%M-{interval_offset}")
     
     return suffix
 
@@ -102,6 +108,7 @@ def list_markets_in_series(series_ticker: str, limit: int = 20) -> List[Dict]:
     url = f"{KALSHI_API_BASE}/markets"
     params = {
         "series_ticker": series_ticker,
+        "status": "open",
         "limit": limit
     }
     

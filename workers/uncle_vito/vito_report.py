@@ -217,7 +217,7 @@ class ESPNClient:
         sport_map = {
             "NBA": ("basketball", "nba"),
             "NHL": ("hockey", "nhl"),
-            "NCAAB": ("basketball", "mens-college-basketball"),
+            "MLB": ("baseball", "mlb"),
         }
 
         if sport not in sport_map:
@@ -329,21 +329,18 @@ class UncleVitoReport:
 
         return self.games
 
-    def generate_props_parlay(self, num_legs: int = 4) -> List[PropPick]:
+    def generate_props_parlay(self, sport: str, num_legs: int = 3) -> List[PropPick]:
         """
-        Generate a 4-leg player props parlay.
+        Generate a player props parlay for a specific sport.
         Uses source signals to determine direction and confidence.
         """
         picks = []
         props_used = set()
 
-        # Flatten all games for props
-        all_games = []
-        for sport, games in self.games.items():
-            all_games.extend([(g, sport) for g in games])
+        # Get games for this sport only
+        all_games = [(g, sport) for g in self.games.get(sport, [])]
 
         # Simulate player props based on available games
-        # In production, would fetch from actual props API
         simulated_props = self._simulate_player_props(all_games)
 
         for prop in simulated_props:
@@ -374,20 +371,21 @@ class UncleVitoReport:
             )
             picks.append(pick)
 
-        self.prop_picks = picks
         return picks
 
-    def generate_winners_parlay(self, num_legs: int = 4) -> List[WinnerPick]:
+    def generate_winners_parlay(self, sport: str, num_legs: int = 3) -> List[WinnerPick]:
         """
-        Generate a 4-leg game winners parlay.
+        Generate a game winners parlay for a specific sport (spread/total/ML mix).
         Uses source signals to pick winners.
         """
         picks = []
         teams_used = set()
 
-        all_games = []
-        for sport, games in self.games.items():
-            all_games.extend([(g, sport) for g in games if g.status == "scheduled"])
+        all_games = [(g, sport) for g in self.games.get(sport, []) if g.status == "scheduled"]
+
+        # For the mix: 1 spread + 1 total + 1 ML when possible
+        pick_types_needed = ["spread", "total", "moneyline"]
+        pick_types_used = []
 
         for game, sport in all_games:
             if len(picks) >= num_legs:
@@ -417,18 +415,26 @@ class UncleVitoReport:
 
             teams_used.add(pick_team.abbreviation)
 
-            # Determine if spread or moneyline
-            spread_available = sport in ["NBA", "NCAAB"]  # Basketball has spreads
-            pick_type = "spread" if spread_available and random.random() > 0.5 else "moneyline"
+            # Determine pick type - mix spread, total, and moneyline
+            spread_available = sport in ["NBA", "NHL", "MLB"]
+            total_available = sport in ["NBA", "NHL", "MLB"]
+
+            # Cycle through pick types
+            pick_type = pick_types_needed[len(pick_types_used) % len(pick_types_needed)]
 
             # Generate line and odds
             if pick_type == "spread":
                 line = self._generate_spread(sport)
                 odds = config.DEFAULT_PROP_ODDS
-            else:
+            elif pick_type == "total":
+                line = self._generate_total(sport)
+                odds = config.DEFAULT_PROP_ODDS
+            else:  # moneyline
                 line = 0
-                favorite = home_favored  # Simplified
+                favorite = home_favored
                 odds = self.odds.get_default_odds(favorite, sport.lower())
+
+            pick_types_used.append(pick_type)
 
             pick = WinnerPick(
                 team=pick_team.abbreviation,
@@ -441,8 +447,54 @@ class UncleVitoReport:
             )
             picks.append(pick)
 
-        self.winner_picks = picks
         return picks
+
+    def generate_league_parlays(self, sport: str) -> Dict[str, List]:
+        """
+        Generate per-league parlays for a specific sport.
+        Returns dict with 'props' and 'game_picks' lists.
+        """
+        props = self.generate_props_parlay(sport, config.PARLAY_LEGS)
+        game_picks = self.generate_winners_parlay(sport, config.PARLAY_LEGS)
+        return {
+            "props": props,
+            "game_picks": game_picks
+        }
+
+    def generate_confidence_parlay(self, min_confidence: int = 70) -> List[Dict]:
+        """
+        Generate a cross-league confidence parlay with 3-5 legs.
+        Only includes picks with >= min_confidence% confidence.
+        Uses higher confidence threshold (default 70%).
+        """
+        all_picks = []
+
+        for sport in config.SPORTS:
+            # Get props
+            props = self.generate_props_parlay(sport, config.PARLAY_LEGS)
+            for prop in props:
+                if prop.confidence >= min_confidence:
+                    all_picks.append({
+                        "type": "prop",
+                        "sport": sport,
+                        "pick": prop,
+                        "confidence": prop.confidence
+                    })
+
+            # Get game picks
+            game_picks = self.generate_winners_parlay(sport, config.PARLAY_LEGS)
+            for pick in game_picks:
+                if pick.confidence >= min_confidence:
+                    all_picks.append({
+                        "type": "game",
+                        "sport": sport,
+                        "pick": pick,
+                        "confidence": pick.confidence
+                    })
+
+        # Sort by confidence and take top 5
+        all_picks.sort(key=lambda x: x["confidence"], reverse=True)
+        return all_picks[:5]
 
     def _simulate_player_props(self, games: List[tuple]) -> List[Dict]:
         """
@@ -491,16 +543,85 @@ class UncleVitoReport:
                 ("Nathan MacKinnon", "points", 1.5),
                 ("Auston Matthews", "goals", 0.5),
             ],
+            # MLB teams
+            "NYY": [("Aaron Judge", "hits", 0.5), ("Juan Soto", "runs", 0.5)],
+            "LAD": [("Mookie Betts", "hits", 0.5), ("Shohei Ohtani", "strikeouts", 6.5)],
+            "BOS": [("Rafael Devers", "RBI", 0.5)],
+            "PHI": [("Kyle Schwarber", "home_runs", 0.5)],
+            "HOU": [("Jose Altuve", "hits", 0.5)],
+            "ATL": [("Ronald Acuna Jr.", "runs", 0.5)],
+            "SD": [("Manny Machado", "RBI", 0.5)],
+            "STL": [("Nolan Arenado", "RBI", 0.5)],
+            "CHC": [("Christopher Morel", "home_runs", 0.5)],
+            "NYM": [("Francisco Lindor", "hits", 0.5)],
+            "TOR": [("Vladimir Guerrero Jr.", "RBI", 0.5)],
+            "SEA": [("Julio Rodriguez", "runs", 0.5)],
+            "TEX": [("Corey Seager", "hits", 0.5)],
+            "MIL": [("Christian Yelich", "home_runs", 0.5)],
+            "CLE": [("Jose Ramirez", "RBI", 0.5)],
+            "SF": [("Logan Webb", "strikeouts", 6.5)],
+            "CIN": [("Elly De La Cruz", "runs", 0.5)],
+            "MIA": [("Jazz Chisholm", "home_runs", 0.5)],
+            "MIN": [("Carlos Correa", "hits", 0.5)],
+            "LAA": [("Mike Trout", "home_runs", 0.5)],
+            "COL": [("Ryan McMahon", "RBI", 0.5)],
+            "OAK": [("Lawrence Butler", "runs", 0.5)],
+            "KC": [("Bobby Witt Jr.", "hits", 0.5)],
+            "TB": [("Isaac Paredes", "RBI", 0.5)],
+            "PIT": [("Oneil Cruz", "home_runs", 0.5)],
+            "BAL": [("Gunnar Henderson", "runs", 0.5)],
+            "AZ": [("Ketel Marte", "hits", 0.5)],
+            "WSH": [("James Wood", "runs", 0.5)],
+        }
+
+        # NHL team abbreviation to star players
+        nhl_team_players = {
+            "EDM": [("Connor McDavid", "points", 1.5), ("Leon Draisaitl", "points", 1.5)],
+            "COL": [("Nathan MacKinnon", "points", 1.5)],
+            "TOR": [("Auston Matthews", "goals", 0.5), ("Mitch Marner", "points", 1.5)],
+            "BOS": [("David Pastrnak", "goals", 0.5)],
+            "NYR": [("Artemi Panarin", "points", 1.5)],
+            "NYI": [("Bo Horvat", "goals", 0.5)],
+            "FLA": [("Matthew Tkachuk", "points", 1.5)],
+            "TBL": [("Nikita Kucherov", "points", 1.5)],
+            "CAR": [("Sebastian Aho", "points", 1.5)],
+            "NJD": [("Jack Hughes", "points", 1.5)],
+            "PIT": [("Sidney Crosby", "points", 1.5)],
+            "WSH": [("Alex Ovechkin", "goals", 0.5)],
+            "PHI": [("Travis Konecny", "goals", 0.5)],
+            "BUF": [("Tage Thompson", "goals", 0.5)],
+            "OTT": [("Brady Tkachuk", "points", 0.5)],
+            "MTL": [("Cole Caufield", "goals", 0.5)],
+            "DET": [("Lucas Raymond", "points", 0.5)],
+            "CBJ": [("Johnny Gaudreau", "points", 0.5)],
+            "STL": [("Robert Thomas", "points", 0.5)],
+            "MIN": [("Kirill Kaprizov", "points", 1.5)],
+            "NSH": [("Roman Josi", "points", 0.5)],
+            "DAL": [("Jason Robertson", "points", 0.5)],
+            "WPG": [("Mark Scheifele", "points", 0.5)],
+            "CGY": [("Nazem Kadri", "points", 0.5)],
+            "ANA": [("Leo Carlsson", "goals", 0.5)],
+            "LA": [("Anze Kopitar", "points", 0.5)],
+            "SJ": [("Timo Meier", "goals", 0.5)],
+            "VGK": [("Jack Eichel", "points", 1.5)],
+            "ARI": [("Clayton Keller", "points", 0.5)],
+            "CHI": [("Patrick Kane", "points", 0.5)],
         }
 
         for game, sport in games:
             home_abbr = game.home_team.abbreviation
             away_abbr = game.away_team.abbreviation
 
+            # Select the right player map based on sport
+            if sport == "NHL":
+                player_map = nhl_team_players
+            else:
+                player_map = team_players
+
             # Check if we have players for these teams
             for abbr in [home_abbr, away_abbr]:
-                if abbr in team_players:
-                    players = team_players[abbr]
+                if abbr in player_map:
+                    players = player_map[abbr]
                     for player, stat, line in players[:2]:
                         simulated.append({
                             "player": player,
@@ -516,10 +637,19 @@ class UncleVitoReport:
         """Generate a realistic spread line."""
         spreads = {
             "NBA": [-6.5, -5.5, -4.5, -3.5, -2.5, -1.5],
-            "NCAAB": [-5.5, -4.5, -3.5, -2.5],
             "NHL": [-1.5, 1.5],
+            "MLB": [-1.5, 1.5],
         }
         return random.choice(spreads.get(sport, [-3.5]))
+
+    def _generate_total(self, sport: str) -> float:
+        """Generate a realistic total line."""
+        totals = {
+            "NBA": [210.5, 220.5, 225.5, 230.5, 235.5, 240.5],
+            "NHL": [5.5, 6.0, 6.5, 7.0],
+            "MLB": [7.5, 8.0, 8.5, 9.0, 9.5, 10.0],
+        }
+        return random.choice(totals.get(sport, [7.5]))
 
     def _get_strongest_source(self, signal: Dict) -> str:
         """Get the source with strongest signal."""
@@ -547,66 +677,117 @@ class UncleVitoReport:
         # Get date
         date_str = datetime.now().strftime("%m/%d/%Y")
 
-        # Sports list
-        sports_active = [sport for sport, games in self.games.items() if games]
-        sports_str = ", ".join(sports_active) if sports_active else "NBA, NHL, NCAAB"
+        # Sports emoji map
+        sport_emoji = {
+            "NBA": "🏀",
+            "NHL": "🧊",
+            "MLB": "⚾"
+        }
 
         # Build report
         report = []
         report.append("🍝 **UNCLE VITO'S BETTING REPORT** 🍝")
-        report.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-        report.append(f"📅 Generated: {date_str} | {sports_str} — **{total_games}** games today")
+        report.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+        report.append(f"📅 {date_str} | **{total_games}** games | 3-Leg Parlays")
         report.append("")
 
-        # Props Parlay
-        report.append("🏆 **TOP PROPS (4-Leg Parlay)**")
-        report.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+        # Generate parlays for each sport
+        league_parlays = {}
+        for sport in config.SPORTS:
+            if sport in self.games and self.games[sport]:
+                league_parlays[sport] = self.generate_league_parlays(sport)
 
-        if not self.prop_picks:
-            report.append("_No props available today_")
-        else:
-            for i, pick in enumerate(self.prop_picks, 1):
-                emoji = "📈" if pick.direction == "over" else "📉"
-                report.append(
-                    f"{i}. {pick.player} ({pick.team}) - **{pick.direction.upper()}** "
-                    f"{pick.stat_type} {pick.line} @ {pick.odds}"
-                )
+        # Format each league section
+        for sport in config.SPORTS:
+            emoji = sport_emoji.get(sport, "🏆")
+            parlays = league_parlays.get(sport, {"props": [], "game_picks": []})
+            props = parlays.get("props", [])
+            game_picks = parlays.get("game_picks", [])
 
-            props_payout = self.calculate_parlay_payout(self.prop_picks)
-            avg_confidence = sum(p.confidence for p in self.prop_picks) // len(self.prop_picks)
+            report.append(f"{emoji} **{sport}**")
             report.append("")
-            report.append(
-                f"📈 Odds: **+{props_payout['payout']}** | "
-                f"🎯 **{avg_confidence}%** confidence"
-            )
 
+            # Props section
+            report.append(f"  Props ({config.PARLAY_LEGS}-Leg):")
+            if not props:
+                report.append("  _No props available_")
+            else:
+                for i, pick in enumerate(props, 1):
+                    emoji_dir = "📈" if pick.direction == "over" else "📉"
+                    report.append(
+                        f"  {i}. {pick.player} ({pick.team}) - **{pick.direction.upper()}** "
+                        f"{pick.stat_type} {pick.line}"
+                    )
+                props_payout = self.calculate_parlay_payout(props)
+                avg_conf = sum(p.confidence for p in props) // max(len(props), 1)
+                report.append(f"  📈 Odds: **+{props_payout['payout']}** | 🎯 {avg_conf}%")
+
+            report.append("")
+
+            # Game picks section (spread/total/ML mix)
+            report.append(f"  Spread/Total/ML ({config.PARLAY_LEGS}-Leg):")
+            if not game_picks:
+                report.append("  _No games available_")
+            else:
+                for i, pick in enumerate(game_picks, 1):
+                    if pick.pick_type == "spread":
+                        line_str = f"({pick.line})"
+                    elif pick.pick_type == "total":
+                        line_str = f"O/U {pick.line}"
+                    else:
+                        line_str = "ML"
+                    report.append(
+                        f"  {i}. {pick.team} vs {pick.opponent} - **{pick.team}** {line_str}"
+                    )
+                winners_payout = self.calculate_parlay_payout(game_picks)
+                avg_conf = sum(p.confidence for p in game_picks) // max(len(game_picks), 1)
+                report.append(f"  📈 Odds: **+{winners_payout['payout']}** | 🎯 {avg_conf}%")
+
+            report.append("")
+
+        # Confidence Parlay (cross-league)
+        report.append("🌐 **CONFIDENCE PARLAY** (all leagues)")
         report.append("")
-        report.append("🏆 **GAME WINNERS (4-Leg Parlay)**")
-        report.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 
-        if not self.winner_picks:
-            report.append("_No games available_")
+        confidence_picks = self.generate_confidence_parlay(min_confidence=65)
+
+        if not confidence_picks:
+            report.append("_No high-confidence picks available today_")
         else:
-            for i, pick in enumerate(self.winner_picks, 1):
-                if pick.pick_type == "spread":
-                    line_str = f"({pick.line})"
+            for i, pick_data in enumerate(confidence_picks, 1):
+                sport = pick_data["sport"]
+                emoji = sport_emoji.get(sport, "🏆")
+                pick = pick_data["pick"]
+
+                if pick_data["type"] == "prop":
+                    emoji_dir = "📈" if pick.direction == "over" else "📉"
+                    report.append(
+                        f"{i}. {emoji} {pick.player} - **{pick.direction.upper()}** "
+                        f"{pick.stat_type} {pick.line} ({pick.confidence}%)"
+                    )
                 else:
-                    line_str = ""
+                    if pick.pick_type == "spread":
+                        line_str = f"({pick.line})"
+                    elif pick.pick_type == "total":
+                        line_str = f"O/U {pick.line}"
+                    else:
+                        line_str = "ML"
+                    report.append(
+                        f"{i}. {emoji} {pick.team} - **{pick.team}** {line_str} ({pick.confidence}%)"
+                    )
 
-                report.append(
-                    f"{i}. {pick.team} vs {pick.opponent} - **{pick.team}** {line_str} @ {pick.odds}"
-                )
-
-            winners_payout = self.calculate_parlay_payout(self.winner_picks)
-            avg_confidence = sum(p.confidence for p in self.winner_picks) // len(self.winner_picks)
+            # Calculate combined odds
+            conf_picks_formatted = [{"odds": p["pick"].odds} for p in confidence_picks]
+            conf_payout = self.odds.calculate_parlay_odds(conf_picks_formatted)
+            avg_conf = sum(p["confidence"] for p in confidence_picks) // len(confidence_picks)
             report.append("")
             report.append(
-                f"📈 Odds: **+{winners_payout['payout']}** | "
-                f"🎯 **{avg_confidence}%** confidence"
+                f"🌐 Odds: **+{conf_payout['payout']}** | 🎯 **{avg_conf}%** confidence | "
+                f"{len(confidence_picks)} legs"
             )
 
         report.append("")
-        report.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+        report.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
         report.append("⚠️ _Do your own homework. Uncle Vito don't miss._")
 
         return "\n".join(report)
@@ -616,11 +797,7 @@ class UncleVitoReport:
         # Fetch games
         self.fetch_todays_games()
 
-        # Generate parlays
-        self.generate_props_parlay()
-        self.generate_winners_parlay()
-
-        # Format and return
+        # Report is generated on-the-fly in format_report now
         return self.format_report()
 
 

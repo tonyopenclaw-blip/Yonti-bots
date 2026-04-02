@@ -12,9 +12,10 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from vito_report import UncleVitoReport
+import config
 
 
-def run(sport_filter: str = None, discord_output: bool = False, channel: str = None):
+def run(sport_filter: list = None, discord_output: bool = False, channel: str = None):
     """Run the report generator."""
     report = UncleVitoReport()
 
@@ -24,17 +25,15 @@ def run(sport_filter: str = None, discord_output: bool = False, channel: str = N
 
     # Filter sports if specified
     if sport_filter:
-        sport_upper = sport_filter.upper()
-        if sport_upper in report.games:
-            filtered = {sport_upper: report.games[sport_upper]}
-            report.games = filtered
-
-    # Generate parlays
-    print("🎯 Building props parlay...")
-    report.generate_props_parlay()
-
-    print("🏆 Building winners parlay...")
-    report.generate_winners_parlay()
+        sport_upper_list = [s.upper() for s in sport_filter]
+        filtered = {}
+        for sport_upper in sport_upper_list:
+            if sport_upper in report.games:
+                filtered[sport_upper] = report.games[sport_upper]
+        # Also filter config.SPORTS temporarily
+        original_sports = config.SPORTS.copy()
+        config.SPORTS = [s for s in config.SPORTS if s in filtered]
+        report.games = filtered
 
     # Format report
     output = report.format_report()
@@ -57,12 +56,15 @@ def run(sport_filter: str = None, discord_output: bool = False, channel: str = N
 
 def main():
     parser = argparse.ArgumentParser(description="Uncle Vito's Betting Report")
-    parser.add_argument("--sport", "-s", help="Filter by sport (NBA, NHL, NCAAB)")
+    parser.add_argument("--sport", "-s", action="append", help="Filter by sport (NBA, NHL, MLB). Can specify multiple.")
     parser.add_argument("--discord", "-d", action="store_true", help="Send to Discord")
     parser.add_argument("--channel", "-c", default="uncle-vito", help="Discord channel")
     args = parser.parse_args()
 
-    run(sport_filter=args.sport, discord_output=args.discord, channel=args.channel)
+    # Default to all sports if none specified
+    sport_filter = args.sport if args.sport else None
+
+    run(sport_filter=sport_filter, discord_output=args.discord, channel=args.channel)
 
 
 if __name__ == "__main__":

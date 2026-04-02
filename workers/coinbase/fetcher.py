@@ -60,11 +60,15 @@ def fetch_candles(product_id: str, hours: int = 1) -> List[Dict]:
     Fetch 15-min candles for a product.
     
     Returns list of candles: [time, low, high, open, close, volume]
-    Most recent candle is LAST in the list.
+    API returns NEWEST FIRST (index 0 = most recent).
     """
     url = f"{COINBASE_API}/products/{product_id}/candles"
+    
+    # Get current Unix timestamp to ensure we fetch the MOST RECENT candles
+    now_ts = int(datetime.now(timezone.utc).timestamp())
     params = {
         "granularity": GRANULARITY,
+        "time": now_ts,  # Unix timestamp - fetches candles starting from now
     }
     
     try:
@@ -96,7 +100,7 @@ def get_latest_candle(product_id: str) -> Optional[Dict]:
     """Get the most recent completed 15-min candle."""
     candles = fetch_candles(product_id, hours=1)
     if candles:
-        return candles[-1]  # Last = most recent
+        return candles[0]  # First = most recent (API returns newest first)
     return None
 
 
@@ -224,8 +228,8 @@ def multi_coin_analysis(coins: List[str] = None, hours: int = 1) -> List[Dict]:
         
         candles = fetch_candles(product_id, hours=hours)
         if candles:
-            # Analyze the latest (most recent) candle
-            latest = candles[-1]
+            # Analyze the latest (most recent) candle - API returns newest first
+            latest = candles[0]
             analysis = analyze_candle(latest, coin=coin)
             
             # Also include previous candle for context
@@ -281,6 +285,17 @@ def main():
     
     coins = [args.coin] if args.coin else None
     results = multi_coin_analysis(coins=coins, hours=args.hours)
+    
+    # Write bias to JSON file for superbot to read
+    bias_output = {
+        'BTC': results[0]['bias'].lower() if len(results) > 0 and results[0]['coin'] == 'BTC' else 'neutral',
+        'ETH': next((r['bias'].lower() for r in results if r['coin'] == 'ETH'), 'neutral'),
+        'SOL': next((r['bias'].lower() for r in results if r['coin'] == 'SOL'), 'neutral'),
+    }
+    bias_file = Path(__file__).parent / "last_bias.json"
+    with open(bias_file, 'w') as f:
+        json.dump(bias_output, f)
+    logger.info(f"Wrote bias file: {bias_file}")
     
     if args.json:
         print(json.dumps(results, indent=2))

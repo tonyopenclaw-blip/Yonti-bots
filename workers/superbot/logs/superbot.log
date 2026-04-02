@@ -27052,3 +27052,58 @@ AttributeError: 'CoinTrader' object has no attribute 'cash'
 2026-04-02 09:24:33 | INFO | DEEP BUY signal: KXSOL15M-26APR020530-30 @ $0.1150, size=$2.00, Kelly=0.00%, time_left=326s
 2026-04-02 09:24:33 | INFO | [SOL] Opened deep_buy: yes KXSOL15M-26APR020530-30 @ $0.1150, size=$2.00, cost=$0.23
 2026-04-02 09:24:33 | INFO | 🚀 [SOL] TRADE EXECUTED: deep_buy yes KXSOL15M-26APR020530-30 @ $0.1150, size=$2.00
+2026-04-02 09:24:54 | INFO | Status: cash=$79.17, positions=6, loop=465, active_series=['KXXRP15M', 'KXETH15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBTC15M', 'KXBNB15M', 'KXSOL15M']
+2026-04-02 09:24:54 | INFO | Coins: BTC: idle | ETH: drift_buy yes@0.51 | SOL: deep_buy yes@0.11 | XRP: drift_buy yes@0.36 | DOGE: deep_buy yes@0.15 | HYPE: deep_buy yes@0.10 | BNB: deep_buy yes@0.09 | ADA: idle
+2026-04-02 09:24:54 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 09:25:24 | INFO | Status: cash=$79.17, positions=6, loop=494, active_series=['KXXRP15M', 'KXETH15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBTC15M', 'KXBNB15M', 'KXSOL15M']
+2026-04-02 09:25:24 | INFO | Coins: BTC: idle | ETH: drift_buy yes@0.51 | SOL: deep_buy yes@0.11 | XRP: drift_buy yes@0.36 | DOGE: deep_buy yes@0.15 | HYPE: deep_buy yes@0.10 | BNB: deep_buy yes@0.09 | ADA: idle
+2026-04-02 09:25:24 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 09:25:27 | INFO | DRIFT BUY signal: KXBTC15M-26APR020530-30 @ $0.5650, size=$2.00, Kelly=0.00%, TP=$0.7062, SL=$0.4802
+2026-04-02 09:25:27 | INFO | [BTC] Opened drift_buy: yes KXBTC15M-26APR020530-30 @ $0.5650, size=$2.00, cost=$1.13
+2026-04-02 09:25:27 | INFO | 🚀 [BTC] TRADE EXECUTED: drift_buy yes KXBTC15M-26APR020530-30 @ $0.5650, size=$2.00
+2026-04-02 09:25:32 | INFO | [ETH] Closed KXETH15M-26APR020530-30: TP hit: $0.7700 >= $0.6312, Gross PnL=$0.53, Fee=$0.008, Net PnL=$0.52
+2026-04-02 09:25:32 | INFO | Strategy drift_buy stats: W=75.00%, R=1.22x, Kelly=50.00%
+2026-04-02 09:25:54 | INFO | Status: cash=$78.04, positions=6, loop=523, active_series=['KXXRP15M', 'KXETH15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBTC15M', 'KXBNB15M', 'KXSOL15M']
+2026-04-02 09:25:54 | INFO | Coins: BTC: drift_buy yes@0.56 | ETH: idle | SOL: deep_buy yes@0.11 | XRP: drift_buy yes@0.36 | DOGE: deep_buy yes@0.15 | HYPE: deep_buy yes@0.10 | BNB: deep_buy yes@0.09 | ADA: idle
+2026-04-02 09:25:54 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 09:25:57 | INFO | [BTC] Closed KXBTC15M-26APR020530-30: TP hit: $0.7100 >= $0.7062, Gross PnL=$0.29, Fee=$0.005, Net PnL=$0.29
+2026-04-02 09:25:57 | INFO | Strategy drift_buy stats: W=33.33%, R=1.16x, Kelly=0.00%
+2026-04-02 09:25:57 | INFO | DRIFT SHORT signal: KXBTC15M-26APR020530-30 @ $0.7100, size=$2.00, Kelly=0.00%, TP=$0.5325, SL=$0.8165
+2026-04-02 09:25:57 | INFO | [BTC] Opened drift_short: no KXBTC15M-26APR020530-30 @ $0.7100, size=$2.00, cost=$0.58
+2026-04-02 09:25:57 | INFO | 🚀 [BTC] TRADE EXECUTED: drift_short no KXBTC15M-26APR020530-30 @ $0.7100, size=$2.00
+2026-04-02 09:26:10 | INFO | [XRP] Closed KXXRP15M-26APR020530-30: TP hit: $0.4750 >= $0.4500, Gross PnL=$0.23, Fee=$0.004, Net PnL=$0.23
+2026-04-02 09:26:10 | INFO | Strategy drift_buy stats: W=50.00%, R=0.86x, Kelly=0.00%
+2026-04-02 09:26:10 | INFO | DRIFT BUY signal: KXXRP15M-26APR020530-30 @ $0.4750, size=$2.00, Kelly=0.00%, TP=$0.5938, SL=$0.4037
+2026-04-02 09:26:10 | INFO | [XRP] Opened drift_buy: yes KXXRP15M-26APR020530-30 @ $0.4750, size=$2.00, cost=$0.95
+2026-04-02 09:26:10 | INFO | 🚀 [XRP] TRADE EXECUTED: drift_buy yes KXXRP15M-26APR020530-30 @ $0.4750, size=$2.00
+2026-04-02 09:26:24 | INFO | Status: cash=$76.51, positions=6, loop=552, active_series=['KXXRP15M', 'KXETH15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBTC15M', 'KXBNB15M', 'KXSOL15M']
+2026-04-02 09:26:24 | INFO | Coins: BTC: drift_short no@0.71 | ETH: idle | SOL: deep_buy yes@0.11 | XRP: drift_buy yes@0.47 | DOGE: deep_buy yes@0.15 | HYPE: deep_buy yes@0.10 | BNB: deep_buy yes@0.09 | ADA: idle
+2026-04-02 09:26:24 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 09:26:27 | INFO | [BTC] Closed KXBTC15M-26APR020530-30: SL hit: $0.9145 >= $0.8165, PnL=$-0.41
+2026-04-02 09:26:27 | INFO | Strategy drift_short stats: W=0.00%, R=2.44x, Kelly=0.00%
+2026-04-02 09:26:34 | INFO | Received signal 15, shutting down...
+2026-04-02 09:26:34 | INFO | Received signal 15, shutting down...
+2026-04-02 09:26:35 | INFO | Shutting down superbot...
+2026-04-02 09:26:35 | INFO | [SOL] Closing position KXSOL15M-26APR020530-30 on shutdown
+2026-04-02 09:26:35 | INFO | [SOL] Closed KXSOL15M-26APR020530-30: shutdown, Gross PnL=$0.77, Fee=$0.012, Net PnL=$0.76
+2026-04-02 09:26:35 | INFO | Strategy deep_buy stats: W=100.00%, R=0.76x, Kelly=50.00%
+2026-04-02 09:26:35 | INFO | [XRP] Closing position KXXRP15M-26APR020530-30 on shutdown
+2026-04-02 09:26:35 | INFO | [XRP] Closed KXXRP15M-26APR020530-30: shutdown, Gross PnL=$0.05, Fee=$0.001, Net PnL=$0.05
+2026-04-02 09:26:35 | INFO | Strategy drift_buy stats: W=60.00%, R=0.62x, Kelly=0.00%
+2026-04-02 09:26:35 | INFO | [DOGE] Closing position KXDOGE15M-26APR020530-30 on shutdown
+2026-04-02 09:26:35 | INFO | [DOGE] Closed KXDOGE15M-26APR020530-30: shutdown, Gross PnL=$0.71, Fee=$0.011, Net PnL=$0.70
+2026-04-02 09:26:35 | INFO | Strategy deep_buy stats: W=100.00%, R=0.70x, Kelly=50.00%
+2026-04-02 09:26:35 | INFO | [HYPE] Closing position KXHYPE15M-26APR020530-30 on shutdown
+2026-04-02 09:26:35 | INFO | [HYPE] Closed KXHYPE15M-26APR020530-30: shutdown, Gross PnL=$0.80, Fee=$0.013, Net PnL=$0.79
+2026-04-02 09:26:35 | INFO | Strategy deep_buy stats: W=100.00%, R=0.79x, Kelly=50.00%
+2026-04-02 09:26:35 | INFO | [BNB] Closing position KXBNB15M-26APR020530-30 on shutdown
+2026-04-02 09:26:35 | INFO | [BNB] Closed KXBNB15M-26APR020530-30: shutdown, Gross PnL=$0.83, Fee=$0.013, Net PnL=$0.81
+2026-04-02 09:26:35 | INFO | Strategy deep_buy stats: W=100.00%, R=0.81x, Kelly=50.00%
+2026-04-02 09:26:35 | INFO | Report session ended: 2026-04-02 09:26:35 UTC
+2026-04-02 09:26:35 | INFO | Report saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.html
+2026-04-02 09:26:35 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 09:26:35 | INFO | ============================================================
+2026-04-02 09:26:35 | INFO | FINAL BALANCE: $76.51
+2026-04-02 09:26:35 | INFO | Total trades: 0
+2026-04-02 09:26:35 | INFO | Report saved to: /home/ubuntu/.openclaw/workspace/workers/superbot/report.html
+2026-04-02 09:26:35 | INFO | ============================================================

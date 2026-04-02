@@ -83,6 +83,35 @@ _(Nerd's ongoing findings go here)_
 
 ---
 
+## 🔥 MARKET INTEL (From @w1nklerr X Post — April 1, 2026)
+
+### Claimed Results
+- Turned $100 → $50,197 in one week using Claude + leaked GitHub script
+- First night profit: $4,871
+- Method: AI agent + prediction market trading bot
+
+### Core Strategy Mentioned
+> "The system builds automated workflows for prediction market trading by turning probabilistic decision making into structured skills that activate under specific conditions"
+
+### Implications for Yonti
+- AI orchestration (Claude/OpenClaw) + Kalshi = viable strategy
+- Automated workflows with specific trigger conditions
+- Structured skills that activate under market conditions
+- Bot already demonstrated $50K potential from $100 start
+
+### Notes
+- This was on Polymarket-style prediction markets (not Kalshi specifically)
+- The "leaked GitHub file" suggests open-source trading scripts exist
+- The strategy involves probability-based decision making → aligns with our Kelly approach
+- Worth researching: what specific conditions trigger the automated trades?
+
+### Source
+- @w1nklerr on X (April 1, 2026)
+- Tweet ID: 2039441440296829219
+- User: winkle. | 39.8K followers | AI/Alpha researcher
+
+---
+
 ## 🔧 GAPS & TODO
 
 - [ ] Polymarket integration

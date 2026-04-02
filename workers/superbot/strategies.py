@@ -46,7 +46,114 @@ class Strategy(Enum):
     DEEP_SHORT = "deep_short"  # Changed: was DEEP_BUY (buying tails is wrong direction)
     DRIFT_BUY = "drift_buy"
     DRIFT_SHORT = "drift_short"
+    FIRST_CROSS = "first_cross"  # Tony's insight: first direction of breakout tends to hold
     NONE = "none"
+
+
+class FirstCrossTracker:
+    """
+    Tracks the first time price crosses the midpoint ($0.50) for each market.
+    
+    Tony's insight: When a price crosses a target level for the first time,
+    it usually stays on that side. The first direction of a breakout tends
+    to hold in the 15-min window.
+    
+    - YES at $0.40, midpoint is $0.50
+    - If price CROSSES UP through $0.50 first (from below to above) → YES bias
+    - If price CROSSES DOWN through $0.50 first (from above to below) → NO bias
+    """
+    
+    # Midpoint price for crossing detection
+    MIDPOINT = 0.50
+    
+    def __init__(self):
+        # Per-ticker crossing state: ticker -> {crossed: bool, direction: str, first_price: float}
+        self._crossings: Dict[str, Dict] = {}
+    
+    def update(self, ticker: str, current_price: float) -> Optional[str]:
+        """
+        Update crossing state for a ticker.
+        Returns the first_cross_direction if crossing just happened, else None.
+        """
+        if ticker not in self._crossings:
+            self._crossings[ticker] = {
+                'crossed': False,
+                'direction': None,
+                'first_price': current_price,
+                'prev_price': current_price
+            }
+            return None
+        
+        state = self._crossings[ticker]
+        
+        # Already crossed - don't update direction
+        if state['crossed']:
+            state['prev_price'] = current_price
+            return None
+        
+        prev_price = state['prev_price']
+        state['prev_price'] = current_price
+        
+        # Check for crossing
+        crossed_up = prev_price < self.MIDPOINT <= current_price
+        crossed_down = prev_price > self.MIDPOINT >= current_price
+        
+        if crossed_up:
+            state['crossed'] = True
+            state['direction'] = 'up'
+            logger.info(f"FIRST_CROSS: {ticker} crossed UP through ${self.MIDPOINT:.2f} (was ${prev_price:.4f}, now ${current_price:.4f})")
+            return 'up'
+        
+        if crossed_down:
+            state['crossed'] = True
+            state['direction'] = 'down'
+            logger.info(f"FIRST_CROSS: {ticker} crossed DOWN through ${self.MIDPOINT:.2f} (was ${prev_price:.4f}, now ${current_price:.4f})")
+            return 'down'
+        
+        return None
+    
+    def get_direction(self, ticker: str) -> Optional[str]:
+        """Get the first cross direction for a ticker, or None if hasn't crossed."""
+        if ticker not in self._crossings:
+            return None
+        return self._crossings[ticker]['direction'] if self._crossings[ticker]['crossed'] else None
+    
+    def has_crossed(self, ticker: str) -> bool:
+        """Check if ticker has crossed the midpoint."""
+        return self._crossings.get(ticker, {}).get('crossed', False)
+    
+    def in_dead_zone(self, price: float) -> bool:
+        """Check if price is in the dead zone ($0.45-$0.55)."""
+        return DEAD_ZONE_MIN <= price <= DEAD_ZONE_MAX
+    
+    def should_wait(self, ticker: str, price: float) -> bool:
+        """
+        Returns True if we should WAIT and not trade.
+        Wait conditions:
+        - Price is in dead zone AND hasn't crossed yet
+        """
+        if self.in_dead_zone(price) and not self.has_crossed(ticker):
+            return True
+        return False
+    
+    def get_preferred_side(self, ticker: str) -> Optional[str]:
+        """
+        Get the preferred trading side based on first cross direction.
+        - Crossed UP first → prefer 'yes' (long bias, drift_buy)
+        - Crossed DOWN first → prefer 'no' (short bias, drift_short)
+        Returns None if hasn't crossed yet.
+        """
+        direction = self.get_direction(ticker)
+        if direction == 'up':
+            return 'yes'
+        if direction == 'down':
+            return 'no'
+        return None
+    
+    def reset(self, ticker: str):
+        """Reset crossing state for a ticker (e.g., when market expires)."""
+        if ticker in self._crossings:
+            del self._crossings[ticker]
 
 
 class StrategyTracker:
@@ -151,6 +258,7 @@ class Position:
     strategy: Strategy
     take_profit: Optional[float] = None
     stop_loss: Optional[float] = None
+    first_cross_direction: str = ""  # Tony's first crossing insight: 'up', 'down', or ''
     
     def current_value(self, current_price: float) -> float:
         """Calculate current value of position."""
@@ -169,6 +277,11 @@ class StrategyEngine:
     def __init__(self, cash_available: float):
         self.cash = cash_available
         self.tracker = StrategyTracker(KELLY_TRACKED_TRADES)
+        self.first_cross = FirstCrossTracker()  # Tony's first crossing insight
+    
+    def reset_cross_tracker(self, ticker: str):
+        """Reset the first cross tracker for a ticker (when market expires/closes)."""
+        self.first_cross.reset(ticker)
     
     def update_cash(self, cash: float):
         """Update available cash for Kelly sizing."""
@@ -214,6 +327,19 @@ class StrategyEngine:
         time_left = market.time_to_expiry_sec()
         
         logger.debug(f"Evaluating {market.ticker}: price=${mid_price:.4f}, time_left={time_left}s")
+        
+        # FIRST CROSS TRACKING: Update crossing state
+        cross_event = self.first_cross.update(market.ticker, mid_price)
+        
+        # FIRST CROSS INSIGHT: If price is in dead zone and hasn't crossed, WAIT
+        if self.first_cross.should_wait(market.ticker, mid_price):
+            logger.debug(f"FIRST_CROSS: {market.ticker} in dead zone (${mid_price:.4f}) and hasn't crossed yet - WAITING")
+            return None
+        
+        # Get preferred side based on first cross (for biasing entries)
+        preferred_side = self.first_cross.get_preferred_side(market.ticker)
+        if preferred_side:
+            logger.debug(f"FIRST_CROSS: {market.ticker} has crossed {preferred_side} first - biasing entries")
         
         # AI Probability Estimation: Check if we have genuine edge
         if AI_PROBABILITY_ENABLED:
@@ -338,11 +464,15 @@ Your estimate:"""
     
     def _check_drift_buy(self, market: Market, mid_price: float, time_left: int) -> Optional[TradeSignal]:
         """
-        DRIFT BUY: YES $0.35-$0.45 → mean reversion, TP at $0.95+, SL at $0.25
+        DRIFT BUY: YES $0.30-$0.38 → mean reversion, TP at $0.90+, SL at $0.22
         
-        TP: lock in near-wins when price reaches $0.95
-        SL: absolute $0.25 (Nerd's research - not percentage)
+        TP: lock in near-wins when price reaches $0.90
+        SL: absolute $0.22 (Nerd's research - not percentage)
         Dead zone: no trades $0.45-$0.55
+        
+        FIRST CROSS INSIGHT: If crossed DOWN first (price went from above $0.50 to below),
+        drift_buy is weaker because momentum is downward. Skip if first cross was down.
+        Only take drift_buy if first cross was UP or hasn't crossed yet (below midline).
         """
         # Skip dead zone ($0.45-$0.55)
         if DEAD_ZONE_MIN <= mid_price <= DEAD_ZONE_MAX:
@@ -353,6 +483,13 @@ Your estimate:"""
         
         if time_left < DRIFT_MIN_TIME_LEFT_SEC:
             logger.debug(f"DRIFT BUY: {market.ticker} - not enough time left ({time_left}s)")
+            return None
+        
+        # FIRST CROSS FILTER: If price crossed DOWN first, momentum is bearish
+        # Drift_buy (betting YES goes up) contradicts the first cross direction
+        preferred_side = self.first_cross.get_preferred_side(market.ticker)
+        if preferred_side == 'down':
+            logger.info(f"DRIFT BUY: {market.ticker} - SKIP: price crossed DOWN first, bearish momentum contradicts drift_buy")
             return None
         
         # Integrate Coinbase bias - use as signal boost, not a filter
@@ -369,12 +506,12 @@ Your estimate:"""
         size, kelly_pct = self.calculate_kelly_size(Strategy.DRIFT_BUY, prob)
         
         # Calculate TP and SL prices
-        # TP: Lock in profit when YES reaches $0.95+ (near maximum)
-        tp_price = DRIFT_TP_PRICE  # $0.95 absolute threshold
-        # SL: Absolute $0.25 stop loss (Nerd's research)
-        sl_price = DRIFT_BUY_STOP_LOSS  # $0.25 absolute
+        # TP: Lock in profit when YES reaches $0.90+ (near maximum)
+        tp_price = DRIFT_TP_PRICE  # $0.90 absolute threshold
+        # SL: Absolute $0.22 stop loss (Nerd's research)
+        sl_price = DRIFT_BUY_STOP_LOSS  # $0.22 absolute
         
-        logger.info(f"DRIFT BUY signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, TP=${tp_price:.4f}, SL=${sl_price:.4f}, Coinbase={bias}")
+        logger.info(f"DRIFT BUY signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, TP=${tp_price:.4f}, SL=${sl_price:.4f}, Coinbase={bias}, first_cross={preferred_side or 'none'}")
         
         return TradeSignal(
             strategy=Strategy.DRIFT_BUY,
@@ -382,7 +519,7 @@ Your estimate:"""
             side="yes", 
             price=mid_price,
             size=size,
-            reason=f"DRIFT BUY: YES at ${mid_price:.4f} (mean reversion), TP ${tp_price:.2f}, SL ${sl_price:.2f}, Coinbase={bias}",
+            reason=f"DRIFT BUY: YES at ${mid_price:.4f} (mean reversion), TP ${tp_price:.2f}, SL ${sl_price:.2f}, Coinbase={bias}, first_cross={preferred_side}",
             take_profit=tp_price,
             stop_loss=sl_price,
             tp_pct=DRIFT_TP_PCT,
@@ -391,11 +528,15 @@ Your estimate:"""
     
     def _check_drift_short(self, market: Market, mid_price: float, time_left: int) -> Optional[TradeSignal]:
         """
-        DRIFT SHORT: YES $0.55-$0.65 → sell overpriced, TP +25%, SL at $0.75
+        DRIFT SHORT: YES $0.55-$0.62 → sell overpriced, TP 20%, SL at $0.75
         This means we're SELLING YES (betting it will go down)
         
         SL: absolute $0.75 stop loss (Nerd's research - not percentage)
         Dead zone: no trades $0.45-$0.55
+        
+        FIRST CROSS INSIGHT: If crossed UP first (price went from below $0.50 to above),
+        drift_short is weaker because momentum is upward. Skip if first cross was up.
+        Only take drift_short if first cross was DOWN or hasn't crossed yet (above midline).
         """
         # Skip dead zone ($0.45-$0.55)
         if DEAD_ZONE_MIN <= mid_price <= DEAD_ZONE_MAX:
@@ -408,18 +549,25 @@ Your estimate:"""
             logger.debug(f"DRIFT SHORT: {market.ticker} - not enough time left ({time_left}s)")
             return None
         
+        # FIRST CROSS FILTER: If price crossed UP first, momentum is bullish
+        # Drift_short (betting YES goes down) contradicts the first cross direction
+        preferred_side = self.first_cross.get_preferred_side(market.ticker)
+        if preferred_side == 'up':
+            logger.info(f"DRIFT SHORT: {market.ticker} - SKIP: price crossed UP first, bullish momentum contradicts drift_short")
+            return None
+        
         # For short, probability of YES going DOWN is (1 - price)
         # We sell YES at current price, expecting it to drop
         prob = 1 - mid_price  # Probability that YES loses
         size, kelly_pct = self.calculate_kelly_size(Strategy.DRIFT_SHORT, prob)
         
         # Calculate TP and SL for short position
-        # TP: YES drops, we profit. TP means price drops by 25%
+        # TP: YES drops, we profit. TP means price drops by 20%
         tp_price = mid_price * (1 - DRIFT_TP_PCT)
         # SL: Absolute $0.75 stop loss (Nerd's research)
         sl_price = DRIFT_SHORT_STOP_LOSS  # $0.75 absolute
         
-        logger.info(f"DRIFT SHORT signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, TP=${tp_price:.4f}, SL=${sl_price:.4f}")
+        logger.info(f"DRIFT SHORT signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, TP=${tp_price:.4f}, SL=${sl_price:.4f}, first_cross={preferred_side or 'none'}")
         
         return TradeSignal(
             strategy=Strategy.DRIFT_SHORT,

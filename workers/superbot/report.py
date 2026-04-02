@@ -24,6 +24,7 @@ class Trade:
     open_time: str
     close_time: str
     exit_reason: str
+    first_cross_direction: str = ""  # Tony's first crossing insight: 'up', 'down', or ''
 
 
 @dataclass

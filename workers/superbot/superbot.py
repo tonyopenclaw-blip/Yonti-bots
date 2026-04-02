@@ -224,7 +224,8 @@ class CoinTrader:
             strategy=strategy_name,
             open_time=open_time_str,
             close_time=close_time,
-            exit_reason=reason
+            exit_reason=reason,
+            first_cross_direction=position.first_cross_direction  # Tony's first crossing insight
         )
         self.report.record_trade(trade, position)
         
@@ -263,6 +264,9 @@ class CoinTrader:
         
         logger.info(f"[{self.coin}] Opened {signal.strategy.value}: {signal.side} {ticker} @ ${signal.price:.4f}, size=${signal.size:.2f}, cost=${cost:.2f}")
         
+        # Get first cross direction for this ticker from strategy engine
+        first_cross_dir = self.strategy_engine.first_cross.get_direction(ticker) or ""
+        
         # Record position
         position = Position(
             ticker=ticker,
@@ -272,7 +276,8 @@ class CoinTrader:
             open_time=time.time(),
             strategy=signal.strategy,
             take_profit=signal.take_profit,
-            stop_loss=signal.stop_loss
+            stop_loss=signal.stop_loss,
+            first_cross_direction=first_cross_dir
         )
         self.positions[ticker] = position
         

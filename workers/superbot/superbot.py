@@ -3,11 +3,13 @@
 # Paper trading for Kalshi 15-minute crypto binary options
 # Multi-coin: BTC, ETH, SOL, XRP, DOGE, HYPE, BNB
 
+import json
 import logging
+import os
 import signal
 import sys
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -47,11 +49,12 @@ logger = setup_logging()
 class CoinTrader:
     """Manages trading for a single coin with independent position tracking."""
     
-    def __init__(self, coin: str, series_ticker: str, strategy_engine: StrategyEngine, api: KalshiAPI):
+    def __init__(self, coin: str, series_ticker: str, strategy_engine: StrategyEngine, api: KalshiAPI, report: ReportGenerator):
         self.coin = coin
         self.series_ticker = series_ticker
         self.strategy_engine = strategy_engine
         self.api = api
+        self.report = report
         
         # Per-coin position tracking
         self.positions: Dict[str, Position] = {}  # ticker -> Position
@@ -63,18 +66,105 @@ class CoinTrader:
         
         logger.info(f"CoinTrader initialized for {coin} ({series_ticker})")
     
+    def get_scanner_markets(self) -> List[dict]:
+        """
+        Read markets from Searcher/Scanner output file.
+        Returns list of market dicts from scanner's live_markets.json.
+        Returns empty list if scanner hasn't run or file is stale (>5 min).
+        """
+        scanner_file = Path(__file__).parent.parent.parent / "data" / "live_markets.json"
+        if not scanner_file.exists():
+            return []
+        
+        try:
+            with open(scanner_file, 'r') as f:
+                data = json.load(f)
+            
+            # Check if scanner data is fresh (within 5 minutes)
+            updated_at = data.get('updated_at', '')
+            if updated_at:
+                try:
+                    scanner_time = datetime.fromisoformat(updated_at.replace('Z', ''))
+                    age = datetime.now() - scanner_time.replace(tzinfo=None)
+                    if age > timedelta(minutes=5):
+                        logger.debug(f"[{self.coin}] Scanner data is stale ({age.total_seconds():.0f}s old)")
+                        return []
+                except Exception:
+                    pass
+            
+            # Get markets for this coin's series
+            markets_by_series = data.get('markets', {})
+            scanner_markets = markets_by_series.get(self.coin, [])
+            
+            if scanner_markets:
+                logger.debug(f"[{self.coin}] Found {len(scanner_markets)} markets from Scanner")
+            
+            return scanner_markets
+        except Exception as e:
+            logger.debug(f"[{self.coin}] Error reading scanner file: {e}")
+            return []
+    
     def get_markets(self) -> List[Market]:
-        """Fetch markets for this coin's series."""
+        """
+        Fetch markets for this coin's series.
+        Uses Searcher/Scanner output if available and fresh, otherwise falls back to direct API.
+        Scanner filters for tradeable markets (has price, not finalized, not expired).
+        """
+        # First, try Searcher/Scanner - it filters for tradeable markets only
+        scanner_markets = self.get_scanner_markets()
+        
+        if scanner_markets:
+            # Convert scanner market dicts to Market objects
+            markets = []
+            for m in scanner_markets:
+                try:
+                    market = Market(
+                        ticker=m.get('ticker', ''),
+                        yes_bid=float(m.get('yes_bid', 0)),
+                        yes_ask=float(m.get('yes_ask', 0)),
+                        status=m.get('status', 'open'),
+                        close_time=m.get('close_time', ''),
+                        series_ticker=self.series_ticker
+                    )
+                    markets.append(market)
+                except Exception as e:
+                    logger.debug(f"[{self.coin}] Error converting scanner market: {e}")
+            
+            if markets:
+                logger.info(f"[{self.coin}] Using {len(markets)} markets from Searcher/Scanner")
+                return markets
+        
+        # Fall back to direct API call
         return self.api.get_markets(series_ticker=self.series_ticker)
     
     def _check_existing_positions(self, markets: Dict[str, Market]) -> bool:
         """Check open positions for exit conditions. Returns True if positions changed."""
         positions_changed = False
         for ticker, position in list(self.positions.items()):
-            if ticker not in markets:
-                continue
+            market = markets.get(ticker)
             
-            market = markets[ticker]
+            # Market not in current series - check if it expired
+            if market is None:
+                # Try to fetch the market directly to check its status
+                market = self.api.get_market_by_ticker(ticker)
+                if market is None:
+                    # Market not found at all - treat as expired at mid price 0.5
+                    logger.warning(f"[{self.coin}] Market {ticker} not found - treating as expired")
+                    self._close_position(ticker, "expired", 0.5)
+                    positions_changed = True
+                    continue
+                
+                # Check if market has expired (status=closed/settled or time_left <= 0)
+                if market.status in ("closed", "settled") or market.time_to_expiry_sec() <= 0:
+                    mid_price = (market.yes_bid + market.yes_ask) / 2 if market.yes_bid > 0 else 0.5
+                    logger.info(f"[{self.coin}] Market {ticker} expired (status={market.status}) - closing at {mid_price:.4f}")
+                    self._close_position(ticker, "expired", mid_price)
+                    positions_changed = True
+                    continue
+                else:
+                    # Market still open but not in our markets dict - skip for now
+                    continue
+            
             mid_price = (market.yes_bid + market.yes_ask) / 2
             time_left = market.time_to_expiry_sec()
             
@@ -260,16 +350,17 @@ class Superbot:
         self.api = KalshiAPI(KALSHI_ACCESS_KEY)
         
         # Create a strategy engine per coin (each with its own cash tracking)
+        self.report = ReportGenerator()
+        
         self.coin_traders: Dict[str, CoinTrader] = {}
         for coin in COINS:
             self.coin_traders[coin] = CoinTrader(
                 coin=coin,
                 series_ticker=SERIES_TICKERS[coin],
                 strategy_engine=StrategyEngine(PAPER_BALANCE / len(COINS)),  # Split balance per coin
-                api=self.api
+                api=self.api,
+                report=self.report
             )
-        
-        self.report = ReportGenerator()
         
         # Paper trading state - shared cash pool but $2 max per coin
         self.cash = PAPER_BALANCE
@@ -317,43 +408,7 @@ class Superbot:
             self.cash = BALANCE_RESET_AMOUNT
     
     def _check_daily_stop_loss(self):
-        """Check if daily stop-loss has been triggered (20% portfolio loss)."""
-        # Check if it's a new day - reset tracking
-        current_day = datetime.now().strftime("%Y-%m-%d")
-        if current_day != self.day_start_time:
-            logger.info(f"New day detected ({current_day}). Resetting daily tracking.")
-            self.day_start_balance = self.cash
-            self.day_start_time = current_day
-            self.trading_stopped = False
-            self.stop_loss_triggered = False
-        
-        # Calculate today's loss
-        loss = self.day_start_balance - self.cash
-        loss_pct = loss / self.day_start_balance if self.day_start_balance > 0 else 0
-        
-        # Check stop-loss threshold
-        if loss_pct >= DAILY_STOP_LOSS_PCT and not self.trading_stopped:
-            logger.warning(f"🚨 DAILY STOP-LOSS TRIGGERED!")
-            logger.warning(f"   Day start: ${self.day_start_balance:.2f}")
-            logger.warning(f"   Current:  ${self.cash:.2f}")
-            logger.warning(f"   Loss:      ${loss:.2f} ({loss_pct*100:.1f}%)")
-            logger.warning(f"   Threshold: ${self.day_start_balance * DAILY_STOP_LOSS_PCT:.2f} ({DAILY_STOP_LOSS_PCT*100:.0f}%)")
-            self.trading_stopped = True
-            self.stop_loss_triggered = True
-            
-            # Close all open positions
-            for coin, trader in self.coin_traders.items():
-                for ticker in list(trader.positions.keys()):
-                    logger.warning(f"   Closing {ticker} due to daily stop-loss")
-                    trader._close_position(ticker, "daily_stop_loss", 0.5)
-            
-            # Reset balance
-            logger.warning(f"   Resetting balance to ${BALANCE_RESET_AMOUNT:.2f}")
-            self.cash = BALANCE_RESET_AMOUNT
-            self.day_start_balance = BALANCE_RESET_AMOUNT
-            self.day_start_time = datetime.now().strftime("%Y-%m-%d")
-            
-            return True
+        """DISABLED - keep trading through drawdowns"""
         return False
     
     def _distribute_cash_to_traders(self):
@@ -413,6 +468,14 @@ class Superbot:
             # Evaluate market for trading signal
             signal = trader.strategy_engine.evaluate_market(market)
             if signal:
+                # Pixel: Kill filter - drift_short entry only if YES < $0.70
+                if signal.strategy.value == "drift_short" and market.yes_bid > 0.70:
+                    logger.info(f"[{coin}] SKIP drift_short entry @ ${market.yes_bid:.4f} - above $0.70 threshold")
+                    continue
+                # Pixel: drift_buy entry only if YES < $0.45
+                if signal.strategy.value == "drift_buy" and market.yes_bid > 0.45:
+                    logger.info(f"[{coin}] SKIP drift_buy entry @ ${market.yes_bid:.4f} - above $0.45 threshold")
+                    continue
                 # Ensure max bet per coin is respected
                 signal.size = min(signal.size, MAX_BET)
                 

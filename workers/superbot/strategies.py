@@ -11,17 +11,35 @@ from enum import Enum
 
 from config import (
     MAX_BET, MIN_BET, KELLY_FRACTION, MIN_KELLY_BET, MAX_KELLY_BET,
-    DEEP_SHORT_MAX_PRICE, DEEP_MIN_TIME_LEFT_SEC,
+    DEEP_SHORT_ENABLED, DEEP_SHORT_MAX_PRICE, DEEP_MIN_TIME_LEFT_SEC,
     DRIFT_BUY_MIN_PRICE, DRIFT_BUY_MAX_PRICE, DRIFT_MIN_TIME_LEFT_SEC,
-    DRIFT_SHORT_MIN_PRICE, DRIFT_SHORT_MAX_PRICE,
+    DRIFT_SHORT_MIN_PRICE, DRIFT_SHORT_MAX_PRICE, DRIFT_SHORT_SL_PRICE,
     DRIFT_TP_PCT, DRIFT_SL_PCT, KELLY_TRACKED_TRADES, KELLY_MAX_CAP,
     DRIFT_TP_PRICE,  # New: absolute TP price threshold
+    DEAD_ZONE_MIN, DEAD_ZONE_MAX,  # Dead zone - no trade
+    DRIFT_BUY_STOP_LOSS, DRIFT_SHORT_STOP_LOSS,  # Absolute stop loss prices
     AI_EDGE_THRESHOLD,  # Minimum edge required (5%)
     AI_PROBABILITY_ENABLED  # Enable AI probability estimation
 )
 from kalshi_api import Market
 
 logger = logging.getLogger(__name__)
+
+
+def get_coinbase_bias(coin: str) -> str:
+    """
+    Returns 'bullish', 'bearish', or 'neutral' based on Coinbase.
+    Reads from Coinbase fetcher's last output.
+    """
+    bias_file = "/home/ubuntu/.openclaw/workspace/workers/coinbase/last_bias.json"
+    if os.path.exists(bias_file):
+        try:
+            with open(bias_file) as f:
+                biases = json.load(f)
+                return biases.get(coin, 'neutral')
+        except (json.JSONDecodeError, IOError):
+            return 'neutral'
+    return 'neutral'
 
 
 class Strategy(Enum):
@@ -280,6 +298,7 @@ Your estimate:"""
     def _check_deep_short(self, market: Market, mid_price: float, time_left: int) -> Optional[TradeSignal]:
         """
         DEEP SHORT: YES < $0.15 → SELL YES (fade the longshot)
+        DISABLED via DEEP_SHORT_ENABLED = False (kill switch)
         
         Research shows low-probability outcomes are OVERBET (longshot bias).
         The crowd overvalues tiny YES positions hoping for big wins.
@@ -288,6 +307,10 @@ Your estimate:"""
         We sell YES at low price like $0.10, betting event won't happen.
         Profit if YES stays low or goes lower. Loss if YES jumps up.
         """
+        # Pixel: Kill switch - deep_short completely disabled
+        if not DEEP_SHORT_ENABLED:
+            return None
+        
         if mid_price >= DEEP_SHORT_MAX_PRICE:
             return None
         
@@ -315,17 +338,31 @@ Your estimate:"""
     
     def _check_drift_buy(self, market: Market, mid_price: float, time_left: int) -> Optional[TradeSignal]:
         """
-        DRIFT BUY: YES $0.35-$0.65 → mean reversion, TP at $0.95+, SL -25%
+        DRIFT BUY: YES $0.35-$0.45 → mean reversion, TP at $0.95+, SL at $0.25
         
-        TP changed from +25% to $0.95+ (lock in near-wins when price reaches $0.95)
-        SL changed from -15% to -25% (give trades more room)
+        TP: lock in near-wins when price reaches $0.95
+        SL: absolute $0.25 (Nerd's research - not percentage)
+        Dead zone: no trades $0.45-$0.55
         """
+        # Skip dead zone ($0.45-$0.55)
+        if DEAD_ZONE_MIN <= mid_price <= DEAD_ZONE_MAX:
+            return None
+        
         if not (DRIFT_BUY_MIN_PRICE <= mid_price <= DRIFT_BUY_MAX_PRICE):
             return None
         
         if time_left < DRIFT_MIN_TIME_LEFT_SEC:
             logger.debug(f"DRIFT BUY: {market.ticker} - not enough time left ({time_left}s)")
             return None
+        
+        # Integrate Coinbase bias - use as signal boost, not a filter
+        # Bias just modifies our confidence, doesn't block entries
+        coin = market.ticker.replace('KX', '').replace('15M', '')
+        bias = get_coinbase_bias(coin)
+        if bias == 'bearish':
+            # Mild bullish bias check - allow drift_buy even with neutral/bearish bias
+            # since we need to trade to make $200
+            logger.debug(f"DRIFT BUY: {market.ticker} - Coinbase bias={bias}, using as signal boost only")
         
         # Calculate size using Kelly with historical strategy performance
         prob = mid_price
@@ -334,11 +371,10 @@ Your estimate:"""
         # Calculate TP and SL prices
         # TP: Lock in profit when YES reaches $0.95+ (near maximum)
         tp_price = DRIFT_TP_PRICE  # $0.95 absolute threshold
-        # SL: -25% loss on our stake (changed from -15%)
-        # If we buy at $0.40, -25% means YES drops to $0.30
-        sl_price = mid_price * (1 - DRIFT_SL_PCT)
+        # SL: Absolute $0.25 stop loss (Nerd's research)
+        sl_price = DRIFT_BUY_STOP_LOSS  # $0.25 absolute
         
-        logger.info(f"DRIFT BUY signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, TP=${tp_price:.4f} (lock at $0.95+), SL=${sl_price:.4f} (-25%)")
+        logger.info(f"DRIFT BUY signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, TP=${tp_price:.4f}, SL=${sl_price:.4f}, Coinbase={bias}")
         
         return TradeSignal(
             strategy=Strategy.DRIFT_BUY,
@@ -346,7 +382,7 @@ Your estimate:"""
             side="yes", 
             price=mid_price,
             size=size,
-            reason=f"DRIFT BUY: YES at ${mid_price:.4f} (mean reversion), TP ${tp_price:.2f}+, SL -25%",
+            reason=f"DRIFT BUY: YES at ${mid_price:.4f} (mean reversion), TP ${tp_price:.2f}, SL ${sl_price:.2f}, Coinbase={bias}",
             take_profit=tp_price,
             stop_loss=sl_price,
             tp_pct=DRIFT_TP_PCT,
@@ -355,11 +391,16 @@ Your estimate:"""
     
     def _check_drift_short(self, market: Market, mid_price: float, time_left: int) -> Optional[TradeSignal]:
         """
-        DRIFT SHORT: YES $0.55-$0.75 → sell overpriced, TP +25%, SL -25%
+        DRIFT SHORT: YES $0.55-$0.65 → sell overpriced, TP +25%, SL at $0.75
         This means we're SELLING YES (betting it will go down)
         
-        SL changed from -15% to -25% (give trades more room)
+        SL: absolute $0.75 stop loss (Nerd's research - not percentage)
+        Dead zone: no trades $0.45-$0.55
         """
+        # Skip dead zone ($0.45-$0.55)
+        if DEAD_ZONE_MIN <= mid_price <= DEAD_ZONE_MAX:
+            return None
+        
         if not (DRIFT_SHORT_MIN_PRICE <= mid_price <= DRIFT_SHORT_MAX_PRICE):
             return None
         
@@ -375,8 +416,8 @@ Your estimate:"""
         # Calculate TP and SL for short position
         # TP: YES drops, we profit. TP means price drops by 25%
         tp_price = mid_price * (1 - DRIFT_TP_PCT)
-        # SL: YES rises, we lose. SL means price rises by 25% (changed from 15%)
-        sl_price = mid_price * (1 + DRIFT_SL_PCT)
+        # SL: Absolute $0.75 stop loss (Nerd's research)
+        sl_price = DRIFT_SHORT_STOP_LOSS  # $0.75 absolute
         
         logger.info(f"DRIFT SHORT signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, TP=${tp_price:.4f}, SL=${sl_price:.4f}")
         
@@ -386,7 +427,7 @@ Your estimate:"""
             side="no",  # We SELL YES (buy NO)
             price=mid_price,
             size=size,
-            reason=f"DRIFT SHORT: Selling YES at ${mid_price:.4f} (overpriced), TP +25%, SL -25%",
+            reason=f"DRIFT SHORT: Selling YES at ${mid_price:.4f} (overpriced), TP ${tp_price:.4f}, SL ${sl_price:.4f}",
             take_profit=tp_price,
             stop_loss=sl_price,
             tp_pct=DRIFT_TP_PCT,

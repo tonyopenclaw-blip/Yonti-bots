@@ -80,7 +80,7 @@ AI_EDGE_THRESHOLD = 0.05         # Minimum edge required to trade (5%)
 # =============================================================================
 # TRADING COOLDOWN & DAILY STOP-LOSS (Added from Nerd's research)
 # =============================================================================
-COOLDOWN_CYCLES = 2              # Wait 2 full market cycles after closing before re-entering
+COOLDOWN_CYCLES = 0              # NO COOLDOWNS - Tony said trade freely
 DAILY_STOP_LOSS_PCT = 0.20      # Portfolio daily stop-loss at 20% (stop and reset)
 
 # =============================================================================

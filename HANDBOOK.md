@@ -193,6 +193,80 @@ order = client.orders.create({
 
 ---
 
+## 🔌 OPENCLAW INTEGRATION: Polymarket & Kalshi
+
+### Option 1: PolyClaw (OpenClaw Skill for Polymarket)
+**Source:** github.com/chainstacklabs/polyclaw | Available on ClawHub
+**What it does:** Gives OpenClaw native tools to trade Polymarket
+
+**Tools provided:**
+- `polyclaw markets trending` — Top markets by 24h volume
+- `polyclaw markets search "query"` — Search markets by keyword
+- `polyclaw market` — Market details with prices
+- `polyclaw buy YES/NO` — Execute trades via split + CLOB
+- `polyclaw positions` — List open positions with live P&L
+- `polyclaw wallet status` — Show address, POL/USDC.e balances
+- `polyclaw hedge scan` — LLM-powered hedging opportunities
+
+**Setup Requirements:**
+1. **Chainstack node** — Sign up at console.chainstack.com (free tier available)
+   - Need Polygon mainnet RPC URL
+2. **Polygon wallet** — Private key with USDC for trading
+3. **OpenRouter API key** — For LLM analysis (sk-or-v1-...)
+
+**Install:**
+```bash
+clawhub install polyclaw --force
+cd ~/.openclaw/skills/polyclaw
+uv sync
+```
+
+**Config (openclaw.json → skills.entries.polyclaw.env):**
+```json
+"polyclaw": {
+  "enabled": true,
+  "env": {
+    "CHAINSTACK_NODE": "https://polygon-mainnet.core.chainstack.com/YOUR_KEY",
+    "POLYCLAW_PRIVATE_KEY": "0x...",
+    "OPENROUTER_API_KEY": "sk-or-v1-..."
+  }
+}
+```
+
+**Before first trade (one-time approval):**
+```bash
+uv run python scripts/polyclaw.py wallet approve
+```
+
+---
+
+### Option 2: Clawmarket (MCP Server for Polymarket + Kalshi)
+**Source:** docs.useclawmarket.com
+**What it does:** MCP server connecting OpenClaw to BOTH Polymarket AND Kalshi
+**Status:** ⚠️ Setup instructions not fully accessible — docs site was blocked
+
+Clawmarket exposes both Polymarket and Kalshi as callable MCP tools:
+- Market data from both platforms
+- Order execution
+- Position tracking
+- Settlement verification
+
+---
+
+### Recommendation for Yonti
+
+**Start with PolyClaw (simpler):**
+1. Tony signs up for Chainstack (free) → get Polygon RPC
+2. Tony creates/has Polygon wallet with USDC → get private key
+3. Tony gets OpenRouter API key (or we use existing)
+4. Pixel installs + configures polyclaw skill
+
+**Then expand to Clawmarket** if we want unified Kalshi + Polymarket access.
+
+**Note:** Polymarket trading requires real funds on Polygon. Paper trading not available — actual USDC needed.
+
+---
+
 ## ⚖️ OPENLAW
 
 ### Overview

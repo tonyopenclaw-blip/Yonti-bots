@@ -1,4 +1,4 @@
-# kalshi_api.py - Kalshi API wrapper for Superbot
+# kalshi_api.py - Kalshi API wrapper for Thermostat
 
 import logging
 import requests
@@ -6,7 +6,7 @@ from typing import Dict, List, Optional, Any
 from datetime import datetime
 from dataclasses import dataclass
 
-from config import KALSHI_BASE_URL, SERIES_TICKERS, MARKETS_LIMIT, KALSHI_ACCESS_KEY
+from config import KALSHI_BASE_URL, KALSHI_ACCESS_KEY
 
 logger = logging.getLogger(__name__)
 
@@ -125,7 +125,7 @@ class KalshiAPI:
             logger.debug(f"Found {len(markets)} tradeable markets for {series_ticker}")
         return markets
     
-    def get_markets(self, series_ticker: str = None, limit: int = MARKETS_LIMIT) -> List[Market]:
+    def get_markets(self, series_ticker: str = None, limit: int = 20) -> List[Market]:
         """
         Fetch active markets for a series using the /events endpoint.
         Falls back to get_open_markets for better filtering.
@@ -182,6 +182,32 @@ class KalshiAPI:
         if "error" in result:
             return []
         return result.get("orders", [])
+    
+    def get_series(self) -> List[Dict[str, Any]]:
+        """Fetch all available series to find climate/temperature markets."""
+        result = self._get("/series", params={"limit": 100})
+        if "error" in result:
+            logger.warning(f"Failed to fetch series: {result['error']}")
+            return []
+        return result.get("series", [])
+    
+    def find_climate_series(self) -> Optional[str]:
+        """Find the climate series ticker (KXCLIMATE or similar)."""
+        series_list = self.get_series()
+        for s in series_list:
+            ticker = s.get("ticker", "").upper()
+            title = s.get("title", "").lower()
+            if "climate" in ticker.lower() or "temperature" in ticker.lower() or "weather" in ticker.lower():
+                logger.info(f"Found climate series: {ticker} - {s.get('title')}")
+                return ticker
+        # Fallback: try KXCLIMATE directly
+        return "KXCLIMATE"
+    
+    def get_climate_markets(self, series_ticker: str = None) -> List[Market]:
+        """Fetch climate/weather markets from a series."""
+        if series_ticker is None:
+            series_ticker = self.find_climate_series()
+        return self.get_open_markets(series_ticker=series_ticker)
     
     def get_order_status(self, order_id: str) -> Dict[str, Any]:
         """Get status of a specific order."""

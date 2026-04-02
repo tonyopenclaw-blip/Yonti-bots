@@ -17,8 +17,11 @@ LOG_DIR.mkdir(exist_ok=True)
 # KALSHI API CONFIG
 # =============================================================================
 KALSHI_BASE_URL = "https://api.elections.kalshi.com/trade-api/v2"
-SERIES_TICKER = "KXBTC15M"
 MARKETS_LIMIT = 20
+
+# Coins to trade (8-coin multi-market strategy)
+COINS = ['BTC', 'ETH', 'SOL', 'XRP', 'DOGE', 'HYPE', 'BNB', 'ADA']
+SERIES_TICKERS = {coin: f'KX{coin}15M' for coin in COINS}
 
 # Auth - set via environment variable KALSHI_ACCESS_KEY
 KALSHI_ACCESS_KEY = os.getenv("KALSHI_ACCESS_KEY", "")
@@ -39,8 +42,10 @@ MIN_BET = 0.10  # Minimum bet size
 
 # Kelly Criterion Sizing (based on CASH AVAILABLE, not original seed)
 KELLY_FRACTION = 0.25  # Use 25% of Kelly (conservative)
-MIN_KELLY_BET = 0.10   # Minimum bet when using Kelly sizing
-MAX_KELLY_BET = MAX_BET  # Cap Kelly bets at max_bet
+MIN_KELLY_BET = 2.00   # Minimum bet when using Kelly sizing ($2 hard floor)
+MAX_KELLY_BET = 2.00   # Maximum bet when using Kelly sizing ($2 hard cap)
+KELLY_TRACKED_TRADES = 50  # Number of recent trades to track per strategy
+KELLY_MAX_CAP = 0.50   # Never bet more than 50% of balance (half-Kelly safety)
 
 # =============================================================================
 # STRATEGY THRESHOLDS
@@ -50,23 +55,25 @@ MAX_KELLY_BET = MAX_BET  # Cap Kelly bets at max_bet
 DEEP_BUY_MAX_PRICE = 0.15
 DEEP_MIN_TIME_LEFT_SEC = 60   # At least 1 minute before expiry
 
-# DRIFT BUY Strategy: YES $0.35-$0.45 → mean reversion, TP +25%, SL -15%
+# DRIFT BUY Strategy: YES $0.35-$0.65 → mean reversion, TP +25%, SL -15%
 DRIFT_BUY_MIN_PRICE = 0.35
-DRIFT_BUY_MAX_PRICE = 0.45
+DRIFT_BUY_MAX_PRICE = 0.65
 DRIFT_MIN_TIME_LEFT_SEC = 120  # At least 2 minutes before expiry
 
-# DRIFT SHORT Strategy: YES $0.55-$0.65 → sell overpriced, TP +25%, SL -15%
+# DRIFT SHORT Strategy: YES $0.55-$0.75 → sell overpriced, TP +25%, SL -15%
 DRIFT_SHORT_MIN_PRICE = 0.55
-DRIFT_SHORT_MAX_PRICE = 0.65
+DRIFT_SHORT_MAX_PRICE = 0.75
 
 # Take Profit and Stop Loss percentages for DRIFT strategies
 DRIFT_TP_PCT = 0.25    # Take profit at 25% gain
 DRIFT_SL_PCT = 0.15    # Stop loss at 15% loss
 
 # =============================================================================
-# TRADING LOOP CONFIG
+# TRADING LOOP CONFIG - Smart Polling (Recorder's Approach)
 # =============================================================================
-LOOP_INTERVAL_SEC = 10   # Check markets every 10 seconds
+IDLE_POLL_INTERVAL_SEC = 10    # When NO active markets: poll 1 series per 10 sec
+ACTIVE_POLL_INTERVAL_SEC = 1   # When market IS active: poll every 1 sec
+LOOP_INTERVAL_SEC = 10   # Legacy fallback
 MAX_OPEN_POSITIONS = 5    # Maximum concurrent positions
 
 # =============================================================================

@@ -1,0 +1,135 @@
+2026-04-02 03:01:15 [INFO] thermostat: NOAA forecast for New York City: Today High 49°F, Tomorrow High 64°F
+2026-04-02 03:02:17 [INFO] __main__: Loaded 0 existing trades, balance: $100.00
+2026-04-02 03:02:17 [INFO] __main__: ============================================================
+2026-04-02 03:02:17 [INFO] __main__: THERMOSTAT - Weather Forecast Arbitrage Bot
+2026-04-02 03:02:17 [INFO] __main__: ============================================================
+2026-04-02 03:02:18 [INFO] kalshi_api: Found climate series: KXEUCLIMATE - EU hits climate goals
+2026-04-02 03:02:18 [INFO] __main__: Climate series: KXEUCLIMATE
+2026-04-02 03:02:18 [INFO] __main__: Fetching NOAA forecasts...
+2026-04-02 03:02:18 [INFO] __main__: NOAA forecast for New York City: Today High 49°F, Tomorrow High 64°F
+2026-04-02 03:02:18 [INFO] __main__: NOAA forecast for Los Angeles: Today High 71°F, Tomorrow High 80°F
+2026-04-02 03:02:18 [INFO] __main__: NOAA forecast for Chicago: Today High 66°F, Tomorrow High 50°F
+2026-04-02 03:02:18 [INFO] __main__: NOAA forecast for Houston: Today High 82°F, Tomorrow High 83°F
+2026-04-02 03:02:18 [INFO] __main__: NOAA forecast for Phoenix: Today High 86°F, Tomorrow High 89°F
+2026-04-02 03:02:18 [INFO] __main__: NOAA forecast for Philadelphia: Today High 52°F, Tomorrow High 80°F
+2026-04-02 03:02:18 [INFO] __main__: NOAA forecast for San Antonio: Today High 84°F, Tomorrow High 89°F
+2026-04-02 03:02:18 [INFO] __main__: NOAA forecast for San Diego: Today High 67°F, Tomorrow High 77°F
+2026-04-02 03:02:18 [INFO] __main__: NOAA forecast for Denver: Today High 74°F, Tomorrow High 56°F
+2026-04-02 03:02:18 [INFO] __main__: NOAA forecast for Atlanta: Today High 83°F, Tomorrow High 82°F
+2026-04-02 03:02:18 [INFO] __main__: Initial balance: $100.00
+2026-04-02 03:02:18 [INFO] __main__: Paper mode: True
+2026-04-02 03:02:18 [INFO] __main__: Starting main loop (poll interval: 3600s)
+2026-04-02 03:02:18 [INFO] __main__: ----------------------------------------
+2026-04-02 03:02:18 [INFO] __main__: [03:02:18] Scanning for climate opportunities...
+2026-04-02 03:02:18 [INFO] __main__: Fetching NOAA forecasts...
+2026-04-02 03:02:18 [INFO] __main__: No trading opportunities found
+2026-04-02 03:02:18 [ERROR] __main__: Error in main loop: 'winning_trades'
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/thermostat/thermostat.py", line 625, in run
+    self.run_once()
+  File "/home/ubuntu/.openclaw/workspace/workers/thermostat/thermostat.py", line 610, in run_once
+    summary = self.ledger.get_summary()
+  File "/home/ubuntu/.openclaw/workspace/workers/thermostat/thermostat.py", line 392, in get_summary
+    "winning_trades": self.stats["winning_trades"],
+KeyError: 'winning_trades'
+2026-04-02 03:02:18 [INFO] __main__: Sleeping 3600s until next scan...
+2026-04-02 03:03:23 [INFO] __main__: Shutting down Thermostat...
+2026-04-02 03:03:24 [INFO] __main__: Thermostat stopped.
+2026-04-02 03:03:28 [INFO] __main__: Loaded 0 existing trades, balance: $100.00
+2026-04-02 03:03:28 [INFO] __main__: ============================================================
+2026-04-02 03:03:28 [INFO] __main__: THERMOSTAT - Weather Forecast Arbitrage Bot
+2026-04-02 03:03:28 [INFO] __main__: ============================================================
+2026-04-02 03:03:29 [INFO] kalshi_api: Found climate series: EUCLIMATE - EU hits climate goals
+2026-04-02 03:03:29 [INFO] __main__: Climate series: EUCLIMATE
+2026-04-02 03:03:29 [INFO] __main__: Fetching NOAA forecasts...
+2026-04-02 03:03:29 [INFO] __main__: NOAA forecast for New York City: Today High 49°F, Tomorrow High 64°F
+2026-04-02 03:03:29 [INFO] __main__: NOAA forecast for Los Angeles: Today High 71°F, Tomorrow High 80°F
+2026-04-02 03:03:29 [INFO] __main__: NOAA forecast for Chicago: Today High 66°F, Tomorrow High 50°F
+2026-04-02 03:03:29 [INFO] __main__: NOAA forecast for Houston: Today High 82°F, Tomorrow High 83°F
+2026-04-02 03:03:29 [INFO] __main__: NOAA forecast for Phoenix: Today High 86°F, Tomorrow High 89°F
+2026-04-02 03:03:29 [INFO] __main__: NOAA forecast for Philadelphia: Today High 52°F, Tomorrow High 80°F
+2026-04-02 03:03:29 [INFO] __main__: NOAA forecast for San Antonio: Today High 84°F, Tomorrow High 89°F
+2026-04-02 03:03:29 [INFO] __main__: NOAA forecast for San Diego: Today High 67°F, Tomorrow High 77°F
+2026-04-02 03:03:29 [INFO] __main__: NOAA forecast for Denver: Today High 74°F, Tomorrow High 56°F
+2026-04-02 03:03:29 [INFO] __main__: NOAA forecast for Atlanta: Today High 83°F, Tomorrow High 82°F
+2026-04-02 03:03:29 [INFO] __main__: Initial balance: $100.00
+2026-04-02 03:03:29 [INFO] __main__: Paper mode: True
+2026-04-02 03:03:29 [INFO] __main__: Starting main loop (poll interval: 3600s)
+2026-04-02 03:03:29 [INFO] __main__: ----------------------------------------
+2026-04-02 03:03:29 [INFO] __main__: [03:03:29] Scanning for climate opportunities...
+2026-04-02 03:03:29 [INFO] __main__: Fetching NOAA forecasts...
+2026-04-02 03:03:29 [INFO] __main__: No trading opportunities found
+2026-04-02 03:03:29 [ERROR] __main__: Error in main loop: 'total_pnl'
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/thermostat/thermostat.py", line 630, in run
+    self.run_once()
+  File "/home/ubuntu/.openclaw/workspace/workers/thermostat/thermostat.py", line 615, in run_once
+    summary = self.ledger.get_summary()
+  File "/home/ubuntu/.openclaw/workspace/workers/thermostat/thermostat.py", line 400, in get_summary
+    "total_pnl": self.stats["total_pnl"],
+KeyError: 'total_pnl'
+2026-04-02 03:03:29 [INFO] __main__: Sleeping 3600s until next scan...
+2026-04-02 03:04:27 [INFO] __main__: Loaded 0 existing trades, balance: $100.00
+2026-04-02 03:04:27 [INFO] __main__: ============================================================
+2026-04-02 03:04:27 [INFO] __main__: THERMOSTAT - Weather Forecast Arbitrage Bot
+2026-04-02 03:04:27 [INFO] __main__: ============================================================
+2026-04-02 03:04:28 [INFO] kalshi_api: Found climate series: KXCITIESWEATHER - Highest temperature in cities
+2026-04-02 03:04:28 [INFO] __main__: Climate series: KXCITIESWEATHER
+2026-04-02 03:04:28 [INFO] __main__: Fetching NOAA forecasts...
+2026-04-02 03:04:28 [INFO] __main__: NOAA forecast for New York City: Today High 49°F, Tomorrow High 64°F
+2026-04-02 03:04:28 [INFO] __main__: NOAA forecast for Los Angeles: Today High 71°F, Tomorrow High 80°F
+2026-04-02 03:04:28 [INFO] __main__: NOAA forecast for Chicago: Today High 66°F, Tomorrow High 50°F
+2026-04-02 03:04:28 [INFO] __main__: NOAA forecast for Houston: Today High 82°F, Tomorrow High 83°F
+2026-04-02 03:04:28 [INFO] __main__: NOAA forecast for Phoenix: Today High 86°F, Tomorrow High 89°F
+2026-04-02 03:04:28 [INFO] __main__: NOAA forecast for Philadelphia: Today High 52°F, Tomorrow High 80°F
+2026-04-02 03:04:28 [INFO] __main__: NOAA forecast for San Antonio: Today High 84°F, Tomorrow High 89°F
+2026-04-02 03:04:28 [INFO] __main__: NOAA forecast for San Diego: Today High 67°F, Tomorrow High 77°F
+2026-04-02 03:04:28 [INFO] __main__: NOAA forecast for Denver: Today High 74°F, Tomorrow High 56°F
+2026-04-02 03:04:28 [INFO] __main__: NOAA forecast for Atlanta: Today High 83°F, Tomorrow High 82°F
+2026-04-02 03:04:28 [INFO] __main__: Initial balance: $100.00
+2026-04-02 03:04:28 [INFO] __main__: Paper mode: True
+2026-04-02 03:04:28 [INFO] __main__: Starting main loop (poll interval: 3600s)
+2026-04-02 03:04:28 [INFO] __main__: ----------------------------------------
+2026-04-02 03:04:28 [INFO] __main__: [03:04:28] Scanning for climate opportunities...
+2026-04-02 03:04:28 [INFO] __main__: Fetching NOAA forecasts...
+2026-04-02 03:04:28 [INFO] __main__: No trading opportunities found
+2026-04-02 03:04:28 [INFO] __main__: Status: Balance $100.00 | Trades: 0 (0 open) | Win Rate: 0.0% | PnL: $0.00
+2026-04-02 03:04:28 [INFO] __main__: Sleeping 3600s until next scan...
+2026-04-02 03:16:17 [INFO] __main__: Loaded 0 existing trades, balance: $100.00
+2026-04-02 03:16:17 [INFO] __main__: ============================================================
+2026-04-02 03:16:17 [INFO] __main__: THERMOSTAT - Weather Forecast Arbitrage Bot
+2026-04-02 03:16:17 [INFO] __main__: ============================================================
+2026-04-02 03:16:18 [INFO] kalshi_api: Found climate series: EUCLIMATE - EU hits climate goals
+2026-04-02 03:16:18 [INFO] __main__: Climate series: EUCLIMATE
+2026-04-02 03:16:18 [INFO] __main__: Fetching NOAA forecasts...
+2026-04-02 03:16:18 [INFO] __main__: NOAA forecast for New York City: Today High 49°F, Tomorrow High 64°F
+2026-04-02 03:16:18 [INFO] __main__: NOAA forecast for Phoenix: Today High 86°F, Tomorrow High 89°F
+2026-04-02 03:16:18 [INFO] __main__: NOAA forecast for Chicago: Today High 66°F, Tomorrow High 50°F
+2026-04-02 03:16:18 [INFO] __main__: NOAA forecast for Houston: Today High 82°F, Tomorrow High 83°F
+2026-04-02 03:16:18 [INFO] __main__: NOAA forecast for Atlanta: Today High 83°F, Tomorrow High 82°F
+2026-04-02 03:16:18 [INFO] __main__: NOAA forecast for Los Angeles: Today High 71°F, Tomorrow High 80°F
+2026-04-02 03:16:18 [INFO] __main__: NOAA forecast for Denver: Today High 74°F, Tomorrow High 56°F
+2026-04-02 03:16:18 [INFO] __main__: NOAA forecast for Philadelphia: Today High 52°F, Tomorrow High 80°F
+2026-04-02 03:16:18 [INFO] __main__: NOAA forecast for San Antonio: Today High 84°F, Tomorrow High 89°F
+2026-04-02 03:16:18 [INFO] __main__: NOAA forecast for San Diego: Today High 67°F, Tomorrow High 77°F
+2026-04-02 03:16:18 [INFO] __main__: Initial balance: $100.00
+2026-04-02 03:16:18 [INFO] __main__: Paper mode: True
+2026-04-02 03:16:27 [INFO] __main__: Loaded 0 existing trades, balance: $100.00
+2026-04-02 03:16:27 [INFO] __main__: ============================================================
+2026-04-02 03:16:27 [INFO] __main__: THERMOSTAT - Weather Forecast Arbitrage Bot
+2026-04-02 03:16:27 [INFO] __main__: ============================================================
+2026-04-02 03:16:27 [INFO] kalshi_api: Found climate series: KXINDIACLIMATE - India climate goals
+2026-04-02 03:16:27 [INFO] __main__: Climate series: KXINDIACLIMATE
+2026-04-02 03:16:27 [INFO] __main__: Fetching NOAA forecasts...
+2026-04-02 03:16:27 [INFO] __main__: NOAA forecast for New York City: Today High 49°F, Tomorrow High 64°F
+2026-04-02 03:16:27 [INFO] __main__: NOAA forecast for Phoenix: Today High 86°F, Tomorrow High 89°F
+2026-04-02 03:16:27 [INFO] __main__: NOAA forecast for Chicago: Today High 66°F, Tomorrow High 50°F
+2026-04-02 03:16:27 [INFO] __main__: NOAA forecast for Houston: Today High 82°F, Tomorrow High 83°F
+2026-04-02 03:16:27 [INFO] __main__: NOAA forecast for Atlanta: Today High 83°F, Tomorrow High 82°F
+2026-04-02 03:16:27 [INFO] __main__: NOAA forecast for Los Angeles: Today High 71°F, Tomorrow High 80°F
+2026-04-02 03:16:27 [INFO] __main__: NOAA forecast for Denver: Today High 74°F, Tomorrow High 56°F
+2026-04-02 03:16:27 [INFO] __main__: NOAA forecast for Philadelphia: Today High 52°F, Tomorrow High 80°F
+2026-04-02 03:16:27 [INFO] __main__: NOAA forecast for San Antonio: Today High 84°F, Tomorrow High 89°F
+2026-04-02 03:16:27 [INFO] __main__: NOAA forecast for San Diego: Today High 67°F, Tomorrow High 77°F
+2026-04-02 03:16:27 [INFO] __main__: Initial balance: $100.00
+2026-04-02 03:16:27 [INFO] __main__: Paper mode: True

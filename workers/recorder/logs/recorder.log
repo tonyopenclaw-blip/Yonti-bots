@@ -1,0 +1,138 @@
+2026-04-02 02:06:03 | INFO | ============================================================
+2026-04-02 02:06:03 | INFO | 📊 RECORDER BOT INITIALIZED!
+2026-04-02 02:06:03 | INFO | Purpose: Record second-by-second market data for Nerd's analysis
+2026-04-02 02:06:03 | INFO | Watching 8 coin series: BTC, ETH, SOL, ADA, DOGE, XRP, HYPE, BNB
+2026-04-02 02:06:03 | INFO | ============================================================
+2026-04-02 02:06:03 | INFO | 🚀 Recorder starting main loop... Let's get some DATA!
+2026-04-02 02:06:11 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/events | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/events?series_ticker=KXBNB15M&with_nested_markets=true&limit=20
+2026-04-02 02:06:11 | WARNING | Failed to fetch events: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/events?series_ticker=KXBNB15M&with_nested_markets=true&limit=20
+2026-04-02 02:06:26 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/events | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/events?series_ticker=KXHYPE15M&with_nested_markets=true&limit=20
+2026-04-02 02:06:26 | WARNING | Failed to fetch events: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/events?series_ticker=KXHYPE15M&with_nested_markets=true&limit=20
+2026-04-02 02:07:18 | INFO | ============================================================
+2026-04-02 02:07:18 | INFO | 📊 RECORDER BOT INITIALIZED!
+2026-04-02 02:07:18 | INFO | Purpose: Record second-by-second market data for Nerd's analysis
+2026-04-02 02:07:18 | INFO | Watching 8 coin series: BTC, ETH, SOL, ADA, DOGE, XRP, HYPE, BNB
+2026-04-02 02:07:18 | INFO | ============================================================
+2026-04-02 02:07:18 | INFO | 🚀 Recorder starting main loop... Let's get some DATA!
+2026-04-02 02:07:32 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/events | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/events?series_ticker=KXBNB15M&with_nested_markets=true&limit=20
+2026-04-02 02:07:32 | WARNING | Failed to fetch events: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/events?series_ticker=KXBNB15M&with_nested_markets=true&limit=20
+2026-04-02 02:07:33 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/events | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/events?series_ticker=KXBNB15M&with_nested_markets=true&limit=20
+2026-04-02 02:07:33 | WARNING | Failed to fetch events: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/events?series_ticker=KXBNB15M&with_nested_markets=true&limit=20
+2026-04-02 02:13:36 | INFO | ============================================================
+2026-04-02 02:13:36 | INFO | 📊 RECORDER BOT INITIALIZED!
+2026-04-02 02:13:36 | INFO | Purpose: Record second-by-second market data for Nerd's analysis
+2026-04-02 02:13:36 | INFO | Watching 8 coin series: BTC, ETH, SOL, ADA, DOGE, XRP, HYPE, BNB
+2026-04-02 02:13:36 | INFO | Idle poll interval: 10s | Active poll interval: 1s
+2026-04-02 02:13:36 | INFO | ============================================================
+2026-04-02 02:13:36 | INFO | 🚀 Recorder starting main loop... Let's get some DATA!
+2026-04-02 02:13:36 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:13:36 | WARNING | Failed to fetch markets: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:13:47 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:13:47 | WARNING | Failed to fetch markets: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:13:57 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:13:57 | WARNING | Failed to fetch markets: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:14:07 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:14:07 | WARNING | Failed to fetch markets: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:14:17 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:14:17 | WARNING | Failed to fetch markets: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:14:27 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:14:27 | WARNING | Failed to fetch markets: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:14:37 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:14:37 | WARNING | Failed to fetch markets: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:14:47 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:14:47 | WARNING | Failed to fetch markets: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:14:57 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:14:57 | WARNING | Failed to fetch markets: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:15:07 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:15:07 | WARNING | Failed to fetch markets: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:15:17 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:15:17 | WARNING | Failed to fetch markets: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:15:27 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:15:27 | WARNING | Failed to fetch markets: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:15:37 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:15:37 | WARNING | Failed to fetch markets: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:15:47 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:15:47 | WARNING | Failed to fetch markets: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:15:57 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:15:57 | WARNING | Failed to fetch markets: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:16:07 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:16:07 | WARNING | Failed to fetch markets: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:16:17 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:16:17 | WARNING | Failed to fetch markets: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&series_ticker=KXETH15M&series_ticker=KXSOL15M&series_ticker=KXADA15M&series_ticker=KXDOGE15M&series_ticker=KXXRP15M&series_ticker=KXHYPE15M&series_ticker=KXBNB15M&status=open&limit=100
+2026-04-02 02:16:24 | INFO | ============================================================
+2026-04-02 02:16:24 | INFO | 📊 RECORDER BOT INITIALIZED!
+2026-04-02 02:16:24 | INFO | Purpose: Record second-by-second market data for Nerd's analysis
+2026-04-02 02:16:24 | INFO | Watching 8 coin series: BTC, ETH, SOL, ADA, DOGE, XRP, HYPE, BNB
+2026-04-02 02:16:24 | INFO | Idle poll interval: 10s | Active poll interval: 1s
+2026-04-02 02:16:24 | INFO | ============================================================
+2026-04-02 02:16:24 | INFO | 🚀 Recorder starting main loop... Let's get some DATA!
+2026-04-02 02:16:24 | ERROR | ❌ Error in main loop: name 'series_tickers' is not defined
+2026-04-02 02:16:29 | ERROR | ❌ Error in main loop: name 'series_tickers' is not defined
+2026-04-02 02:16:34 | ERROR | ❌ Error in main loop: name 'series_tickers' is not defined
+2026-04-02 02:16:39 | ERROR | ❌ Error in main loop: name 'series_tickers' is not defined
+2026-04-02 02:16:44 | ERROR | ❌ Error in main loop: name 'series_tickers' is not defined
+2026-04-02 02:16:49 | ERROR | ❌ Error in main loop: name 'series_tickers' is not defined
+2026-04-02 02:16:54 | ERROR | ❌ Error in main loop: name 'series_tickers' is not defined
+2026-04-02 02:16:59 | ERROR | ❌ Error in main loop: name 'series_tickers' is not defined
+2026-04-02 02:17:04 | ERROR | ❌ Error in main loop: name 'series_tickers' is not defined
+2026-04-02 02:17:09 | ERROR | ❌ Error in main loop: name 'series_tickers' is not defined
+2026-04-02 02:17:14 | ERROR | ❌ Error in main loop: name 'series_tickers' is not defined
+2026-04-02 02:17:19 | ERROR | ❌ Error in main loop: name 'series_tickers' is not defined
+2026-04-02 02:17:24 | ERROR | ❌ Error in main loop: name 'series_tickers' is not defined
+2026-04-02 02:17:29 | ERROR | ❌ Error in main loop: name 'series_tickers' is not defined
+2026-04-02 02:17:34 | ERROR | ❌ Error in main loop: name 'series_tickers' is not defined
+2026-04-02 02:17:39 | ERROR | ❌ Error in main loop: name 'series_tickers' is not defined
+2026-04-02 02:17:44 | ERROR | ❌ Error in main loop: name 'series_tickers' is not defined
+2026-04-02 02:17:49 | ERROR | ❌ Error in main loop: name 'series_tickers' is not defined
+2026-04-02 02:17:54 | ERROR | ❌ Error in main loop: name 'series_tickers' is not defined
+2026-04-02 02:17:59 | ERROR | ❌ Error in main loop: name 'series_tickers' is not defined
+2026-04-02 02:18:17 | INFO | ============================================================
+2026-04-02 02:18:17 | INFO | 📊 RECORDER BOT INITIALIZED!
+2026-04-02 02:18:17 | INFO | Purpose: Record second-by-second market data for Nerd's analysis
+2026-04-02 02:18:17 | INFO | Watching 8 coin series: BTC, ETH, SOL, ADA, DOGE, XRP, HYPE, BNB
+2026-04-02 02:18:17 | INFO | Idle poll interval: 10s | Active poll interval: 1s
+2026-04-02 02:18:17 | INFO | ============================================================
+2026-04-02 02:18:17 | INFO | 🚀 Recorder starting main loop... Let's get some DATA!
+2026-04-02 02:18:17 | INFO | 🎯 🖊️ Recording in progress... this data's gonna be SPPICY!
+2026-04-02 02:18:17 | INFO | 📊 Started recording KXBTC15M-26APR012230-30 (BTC) | Close: 2026-04-02T02:30:00Z | Price: $0.62-$0.64
+2026-04-02 02:30:18 | INFO | 🎯 🎯 Found an active one! Starting data collection sequence...
+2026-04-02 02:30:18 | INFO | 📊 Started recording KXBTC15M-26APR012245-45 (BTC) | Close: 2026-04-02T02:45:00Z | Price: $0.43-$0.44
+2026-04-02 02:40:30 | INFO | ============================================================
+2026-04-02 02:40:30 | INFO | 📊 RECORDER BOT INITIALIZED!
+2026-04-02 02:40:30 | INFO | Purpose: Record second-by-second market data for Nerd's analysis
+2026-04-02 02:40:30 | INFO | Watching 8 coin series: BTC, ETH, SOL, ADA, DOGE, XRP, HYPE, BNB
+2026-04-02 02:40:30 | INFO | Idle poll interval: 10s | Active poll interval: 1s
+2026-04-02 02:40:30 | INFO | ============================================================
+2026-04-02 02:40:47 | INFO | ============================================================
+2026-04-02 02:40:47 | INFO | 📊 RECORDER BOT INITIALIZED!
+2026-04-02 02:40:47 | INFO | Purpose: Record second-by-second market data for Nerd's analysis
+2026-04-02 02:40:47 | INFO | Watching 8 coin series: BTC, ETH, SOL, ADA, DOGE, XRP, HYPE, BNB
+2026-04-02 02:40:47 | INFO | Idle poll interval: 10s | Active poll interval: 1s
+2026-04-02 02:40:47 | INFO | ============================================================
+2026-04-02 02:40:47 | INFO | 🚀 Recorder starting main loop... Let's get some DATA!
+2026-04-02 02:40:47 | INFO | 🎯 🖊️ Recording in progress... this data's gonna be SPPICY!
+2026-04-02 02:40:47 | INFO | 📊 Started recording KXBTC15M-26APR012245-45 (BTC) | Close: 2026-04-02T02:45:00Z | Price: $0.37-$0.38
+2026-04-02 02:41:30 | INFO | ============================================================
+2026-04-02 02:41:30 | INFO | 📊 RECORDER BOT INITIALIZED!
+2026-04-02 02:41:30 | INFO | Purpose: Record second-by-second market data for Nerd's analysis
+2026-04-02 02:41:30 | INFO | Watching 8 coin series: BTC, ETH, SOL, ADA, DOGE, XRP, HYPE, BNB
+2026-04-02 02:41:30 | INFO | Idle poll interval: 10s | Active poll interval: 1s
+2026-04-02 02:41:30 | INFO | ============================================================
+2026-04-02 02:41:30 | INFO | 🚀 Recorder starting main loop... Let's get some DATA!
+2026-04-02 02:41:30 | INFO | 🎯 🖊️ Recording in progress... this data's gonna be SPPICY!
+2026-04-02 02:41:30 | INFO | 📊 Started recording KXBTC15M-26APR012245-45 (BTC) | Close: 2026-04-02T02:45:00Z | Price: $0.70-$0.72
+2026-04-02 02:42:58 | INFO | ============================================================
+2026-04-02 02:42:58 | INFO | 📊 RECORDER BOT INITIALIZED!
+2026-04-02 02:42:58 | INFO | Purpose: Record second-by-second market data for Nerd's analysis
+2026-04-02 02:42:58 | INFO | Watching 8 coin series: BTC, ETH, SOL, ADA, DOGE, XRP, HYPE, BNB
+2026-04-02 02:42:58 | INFO | Idle poll interval: 10s | Active poll interval: 1s
+2026-04-02 02:42:58 | INFO | ============================================================
+2026-04-02 02:42:58 | INFO | 🚀 Recorder starting main loop... Let's get some DATA!
+2026-04-02 02:42:58 | INFO | 🎯 🖊️ Recording in progress... this data's gonna be SPPICY!
+2026-04-02 02:42:58 | INFO | 📊 Started recording KXBTC15M-26APR012245-45 (BTC) | Close: 2026-04-02T02:45:00Z | Price: $0.66-$0.69
+2026-04-02 02:44:34 | INFO | 🎯 📊 Recorder here! Spotted a juicy market, going to town on it!
+2026-04-02 02:44:34 | INFO | 📊 Started recording KXDOGE15M-26APR012245-45 (DOG) | Close: 2026-04-02T02:45:00Z | Price: $0.00-$0.01
+2026-04-02 02:44:54 | INFO | 🎯 🖊️ Recording in progress... this data's gonna be SPPICY!
+2026-04-02 02:44:54 | INFO | 📊 Started recording KXXRP15M-26APR012245-45 (XRP) | Close: 2026-04-02T02:45:00Z | Price: $0.00-$0.01
+2026-04-02 02:45:15 | INFO | 🎯 🖊️ Recording in progress... this data's gonna be SPPICY!
+2026-04-02 02:45:15 | INFO | 📊 Started recording KXXRP15M-26APR012300-00 (XRP) | Close: 2026-04-02T03:00:00Z | Price: $0.37-$0.67

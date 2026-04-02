@@ -27,6 +27,18 @@ class Trade:
 
 
 @dataclass
+class OpenPosition:
+    """Record of an currently open position."""
+    ticker: str
+    side: str
+    entry_price: float
+    size: float
+    strategy: str
+    open_time: str
+    current_price: float = 0.0  # Updated periodically
+
+
+@dataclass
 class SessionStats:
     """Trading session statistics."""
     start_time: str = ""
@@ -39,7 +51,10 @@ class SessionStats:
     total_pnl: float = 0.0
     largest_win: float = 0.0
     largest_loss: float = 0.0
-    trades: List[Trade] = field(default_factory=list)
+    trades: List[Trade] = field(default_factory=list)  # Closed trades
+    open_positions: int = 0  # Number of currently open positions
+    open_trades: List[OpenPosition] = field(default_factory=list)  # Open trade details
+    last_10_closed: List[dict] = field(default_factory=list)  # Last 10 closed trades for JSON
 
 
 class ReportGenerator:
@@ -62,10 +77,33 @@ class ReportGenerator:
         logger.info(f"Report session ended: {self.stats.end_time}")
         self._generate_report()
     
-    def record_trade(self, trade: Trade):
-        """Record a completed trade."""
+    def record_trade(self, trade: Trade, open_position: OpenPosition = None):
+        """Record a completed trade. Optionally pass the OpenPosition to remove from open_trades."""
         self.stats.trades.append(trade)
         self.stats.total_trades += 1
+        
+        # Track last 10 closed trades
+        trade_dict = {
+            "ticker": trade.ticker,
+            "side": trade.side,
+            "entry_price": trade.entry_price,
+            "exit_price": trade.exit_price,
+            "size": trade.size,
+            "pnl": trade.pnl,
+            "strategy": trade.strategy,
+            "open_time": trade.open_time,
+            "close_time": trade.close_time,
+            "exit_reason": trade.exit_reason
+        }
+        self.stats.last_10_closed.insert(0, trade_dict)
+        self.stats.last_10_closed = self.stats.last_10_closed[:10]
+        
+        # Remove from open trades if provided
+        if open_position:
+            self.stats.open_trades = [
+                p for p in self.stats.open_trades
+                if not (p.ticker == open_position.ticker and p.strategy == open_position.strategy)
+            ]
         
         if trade.pnl > 0:
             self.stats.winning_trades += 1
@@ -75,6 +113,64 @@ class ReportGenerator:
             self.stats.largest_loss = min(self.stats.largest_loss, trade.pnl)
         
         logger.info(f"Trade recorded: {trade.ticker} {trade.side} {trade.strategy} PnL=${trade.pnl:.2f}")
+    
+    def update_open_positions(self, count: int, cash: float, current_pnl: float = None):
+        """Update open position count and current cash mid-session."""
+        self.stats.open_positions = count
+        self.stats.ending_balance = cash
+        if current_pnl is not None:
+            self.stats.total_pnl = current_pnl
+        # Save JSON mid-session for Discord webhook
+        self._save_json_summary()
+    
+    def update_open_positions_details(self, positions: List[dict], cash: float):
+        """
+        Update open positions with full details for Discord webhook.
+        
+        positions: List of dicts with keys: ticker, side, entry_price, size, strategy, open_time, current_price
+        """
+        self.stats.open_positions = len(positions)
+        self.stats.ending_balance = cash
+        self.stats.total_pnl = cash - self.stats.starting_balance
+        
+        # Update open_trades list
+        self.stats.open_trades = [
+            OpenPosition(
+                ticker=p.get('ticker', ''),
+                side=p.get('side', ''),
+                entry_price=p.get('entry_price', 0.0),
+                size=p.get('size', 0.0),
+                strategy=p.get('strategy', ''),
+                open_time=p.get('open_time', ''),
+                current_price=p.get('current_price', 0.0)
+            )
+            for p in positions
+        ]
+        
+        self._save_json_summary()
+    
+    def update_session_stats(self, cash: float, positions_count: int, positions: List[dict] = None):
+        """Update session stats mid-run for Discord reporting."""
+        self.stats.ending_balance = cash
+        self.stats.open_positions = positions_count
+        self.stats.total_pnl = cash - self.stats.starting_balance
+        
+        # If positions details provided, update them too
+        if positions is not None:
+            self.stats.open_trades = [
+                OpenPosition(
+                    ticker=p.get('ticker', ''),
+                    side=p.get('side', ''),
+                    entry_price=p.get('entry_price', 0.0),
+                    size=p.get('size', 0.0),
+                    strategy=p.get('strategy', ''),
+                    open_time=p.get('open_time', ''),
+                    current_price=p.get('current_price', 0.0)
+                )
+                for p in positions
+            ]
+        
+        self._save_json_summary()
     
     def _generate_report(self):
         """Generate the HTML report."""
@@ -203,6 +299,74 @@ class ReportGenerator:
         
         self.output_file.write_text(html)
         logger.info(f"Report saved to {self.output_file}")
+        
+        # Also save a JSON summary for external scripts (e.g., Discord webhook)
+        self._save_json_summary()
+    
+    def _save_json_summary(self):
+        """Save a JSON summary of session stats for external consumption."""
+        import json
+        json_file = self.output_file.with_suffix('.json')
+        
+        total_closed = self.stats.total_trades
+        win_rate = (self.stats.winning_trades / total_closed * 100) if total_closed > 0 else 0
+        
+        # Thermostat: 0-100 scale of how active the bot is (open positions vs MAX_OPEN_POSITIONS = 8)
+        MAX_POSITIONS = 8  # MAX_OPEN_POSITIONS from config
+        thermostat = min(100, int(self.stats.open_positions / MAX_POSITIONS * 100))
+        
+        # Last 10 open trades (currently open positions)
+        last_10_open = [
+            {
+                "ticker": p.ticker,
+                "side": p.side,
+                "entry_price": p.entry_price,
+                "size": p.size,
+                "strategy": p.strategy,
+                "open_time": p.open_time,
+                "current_price": p.current_price
+            }
+            for p in self.stats.open_trades[-10:]
+        ]
+        
+        # Last 10 closed trades
+        last_10_closed = self.stats.last_10_closed[-10:]
+        
+        summary = {
+            "start_time": self.stats.start_time,
+            "end_time": self.stats.end_time,
+            "starting_balance": self.stats.starting_balance,
+            "ending_balance": self.stats.ending_balance,
+            "total_pnl": self.stats.total_pnl,
+            "total_trades": total_closed,
+            "winning_trades": self.stats.winning_trades,
+            "losing_trades": self.stats.losing_trades,
+            "win_rate": round(win_rate, 1),
+            "largest_win": self.stats.largest_win,
+            "largest_loss": self.stats.largest_loss,
+            "open_positions": self.stats.open_positions,
+            "thermostat": thermostat,  # 0-100 scale
+            "trades": [
+                {
+                    "ticker": t.ticker,
+                    "side": t.side,
+                    "entry_price": t.entry_price,
+                    "exit_price": t.exit_price,
+                    "size": t.size,
+                    "pnl": t.pnl,
+                    "strategy": t.strategy,
+                    "open_time": t.open_time,
+                    "close_time": t.close_time,
+                    "exit_reason": t.exit_reason
+                }
+                for t in self.stats.trades
+            ],
+            "last_10_open_trades": last_10_open,
+            "last_10_closed_trades": last_10_closed
+        }
+        
+        json_file.write_text(json.dumps(summary, indent=2))
+        logger.info(f"JSON summary saved to {json_file}")
     
     def _generate_trades_table(self) -> str:
         """Generate the trades table HTML."""

@@ -1,4 +1,4 @@
-# kalshi_api.py - Kalshi API wrapper for Superbot
+# kalshi_api.py - Kalshi API wrapper for Recorder (copied from superbot)
 
 import logging
 import requests
@@ -24,6 +24,7 @@ class Market:
     close_time: str  # ISO timestamp
     status: str
     last_close_ts: Optional[int] = None
+    result: Optional[str] = None  # 'yes' or 'no' when settled
     
     def time_to_expiry_sec(self) -> int:
         """Calculate seconds until close_time."""
@@ -55,6 +56,9 @@ class KalshiAPI:
         url = f"{self.base_url}{endpoint}"
         try:
             resp = self.session.get(url, params=params, timeout=10)
+            if resp.status_code == 429:
+                logger.warning(f"⚠️ Rate limited! HTTP 429 from {url}")
+                return {"error": "rate_limited", "status_code": 429}
             resp.raise_for_status()
             return resp.json()
         except requests.RequestException as e:
@@ -72,29 +76,27 @@ class KalshiAPI:
             logger.error(f"API POST failed: {url} | Error: {e}")
             return {"error": str(e)}
     
-    def get_open_markets(self, series_ticker: str = None) -> List[Market]:
+    def get_open_markets(self, series_ticker: str, limit: int = 100) -> List[Market]:
         """
-        Fetch OPEN markets for a series using the /markets endpoint with status=open.
-        This is the key method Recorder uses to find tradeable markets.
-        Only returns markets with yes_bid > 0 (tradeable).
+        Fetch open markets for a SINGLE series_ticker using /markets endpoint.
+        Kalshi only accepts ONE series_ticker per request.
         """
-        if series_ticker is None:
-            series_ticker = SERIES_TICKERS['BTC']
-        
-        # Use /markets endpoint with status=open filter (same as Recorder)
         result = self._get("/markets", params={
             "series_ticker": series_ticker,
             "status": "open",
-            "limit": 10
+            "limit": limit
         })
         
         if "error" in result:
-            logger.warning(f"Failed to fetch markets: {result['error']}")
+            if result.get("status_code") == 429:
+                logger.warning(f"⚠️ Rate limited on /markets endpoint!")
+            else:
+                logger.warning(f"Failed to fetch markets: {result['error']}")
             return []
         
         markets = []
         for m in result.get("markets", []):
-            # Filter for markets with yes_bid > 0 (tradeable)
+            # Filter for open markets with yes_bid > 0
             yes_bid_raw = m.get("yes_bid_dollars", m.get("yes_bid", 0))
             if not yes_bid_raw or float(yes_bid_raw) <= 0:
                 continue
@@ -121,83 +123,38 @@ class KalshiAPI:
                 logger.warning(f"Failed to parse market: {m.get('ticker')} | {e}")
                 continue
         
-        if markets:
-            logger.debug(f"Found {len(markets)} tradeable markets for {series_ticker}")
+        logger.debug(f"Fetched {len(markets)} open markets for series {series_ticker}")
         return markets
     
-    def get_markets(self, series_ticker: str = None, limit: int = MARKETS_LIMIT) -> List[Market]:
+    def get_market_result(self, ticker: str) -> Optional[str]:
         """
-        Fetch active markets for a series using the /events endpoint.
-        Falls back to get_open_markets for better filtering.
+        Fetch a market's settlement result.
+        Returns 'yes', 'no', or None if not settled yet.
         """
-        # Use the improved get_open_markets method
-        return self.get_open_markets(series_ticker)
+        result = self._get(f"/markets/{ticker}")
+        if "error" in result:
+            return None
+        
+        # Check if market is settled
+        status = result.get("status", "")
+        if status == "settled":
+            # Get the result field
+            return result.get("result", None)
+        return None
     
     def _calc_prob(self, m: Dict) -> float:
         """Calculate YES probability from bid/ask."""
         yes_ask = float(m.get("yes_ask", 0))
         if yes_ask > 0:
             return yes_ask
-        # Fallback: use 1 - no_bid
         no_bid = float(m.get("no_bid", 0))
         return 1.0 - no_bid if no_bid > 0 else 0.5
-    
-    def get_balance(self) -> float:
-        """Get account balance (paper mode returns simulated balance)."""
-        # In live mode, this would fetch from API
-        # For paper trading, we manage balance externally
-        return 0.0  # Paper balance managed by superbot
-    
-    def place_order(self, ticker: str, side: str, price: float, amount: float) -> Dict[str, Any]:
-        """
-        Place an order on Kalshi.
-        side: 'yes' or 'no'
-        price: probability price (e.g., 0.35 for 35 cents)
-        amount: dollar amount to risk
-        """
-        if side == "yes":
-            # Buying YES - pay price * 100
-            cost = price * amount
-            if cost > 0:
-                return self._post(f"/markets/{ticker}/orders", {
-                    "type": "market",
-                    "side": "yes",
-                    "yes_price": price
-                })
-        else:
-            # Buying NO - pay (1 - price) * amount
-            cost = (1 - price) * amount
-            if cost > 0:
-                return self._post(f"/markets/{ticker}/orders", {
-                    "type": "market", 
-                    "side": "no",
-                    "no_price": 1 - price
-                })
-        
-        return {"error": "Invalid order parameters"}
-    
-    def get_open_positions(self) -> List[Dict[str, Any]]:
-        """Get open positions/orders."""
-        result = self._get("/orders", params={"status": "open"})
-        if "error" in result:
-            return []
-        return result.get("orders", [])
-    
-    def get_order_status(self, order_id: str) -> Dict[str, Any]:
-        """Get status of a specific order."""
-        return self._get(f"/orders/{order_id}")
     
     def parse_ticker(self, ticker: str) -> Dict[str, Any]:
         """
         Parse ticker format: KX{coin}15M-DDMMMYYHHMM-MM
         Example: KXBTC15M-26APR012145-45
-        - series: KXBTC15M
-        - DDMONYYHHMM: day=26, month=APR, year=01, hour=21, minute=45
-        - MM suffix: 45 (minute marker: 00, 15, 30, or 45)
-        
-        Returns dict with date/time info and minute suffix.
         """
-        # Month abbreviation to number mapping
         MONTH_MAP = {
             'JAN': 1, 'FEB': 2, 'MAR': 3, 'APR': 4,
             'MAY': 5, 'JUN': 6, 'JUL': 7, 'AUG': 8,
@@ -206,16 +163,13 @@ class KalshiAPI:
         
         parts = ticker.split("-")
         if len(parts) >= 3:
-            # series = parts[0] e.g., "KXBTC15M"
-            # ts_part = parts[1] e.g., "26APR012145"
-            # minute_suffix = parts[2] e.g., "45"
             ts_part = parts[1]
             minute_suffix = parts[2]
             
             if len(ts_part) == 11:
                 day = int(ts_part[0:2])
                 month_abbr = ts_part[2:5]
-                year = int("20" + ts_part[5:7])  # 01 -> 2001
+                year = int("20" + ts_part[5:7])
                 hour = int(ts_part[7:9])
                 minute = int(ts_part[9:11])
                 month = MONTH_MAP.get(month_abbr, 1)
@@ -231,30 +185,10 @@ class KalshiAPI:
                 }
         return {}
 
-    def construct_ticker(self, series_ticker: str, dt: datetime) -> str:
-        """
-        Construct a 15-min crypto market ticker from series and datetime.
-        Format: {SERIES}-{DDMONYYHHMM}-{MM_suffix}
-        Example: KXBTC15M-02APR012145-45 for Apr 2, 2026 01:45 UTC
-        
-        The minute_suffix is 00, 15, 30, or 45 - the minute of the 15-min interval close.
-        At time 01:37 UTC, we're in the 01:45 interval, so minute_suffix=45.
-        """
-        MONTH_ABBR = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN',
-                      'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
-        
-        day = dt.strftime("%d")  # 2-digit day
-        month_abbr = MONTH_ABBR[dt.month - 1]
-        year = dt.strftime("%y")  # 2-digit year
-        hour = dt.strftime("%H")  # 2-digit hour
-        minute = dt.strftime("%M")  # 2-digit minute
-        
-        # The minute suffix is the closing minute of the 15-min interval
-        # Round up to next 15-min boundary
-        minute_int = dt.minute
-        minute_suffix = ((minute_int // 15) + 1) * 15
-        if minute_suffix >= 60:
-            minute_suffix = 0
-        
-        ts_part = f"{day}{month_abbr}{year}{hour}{minute}"
-        return f"{series_ticker}-{ts_part}-{minute_suffix:02d}"
+    def extract_coin(self, ticker: str) -> str:
+        """Extract coin symbol from ticker (e.g., BTC from KXBTC15M-...)."""
+        parsed = self.parse_ticker(ticker)
+        series = parsed.get("series", "")
+        if series.startswith("KX") and "15M" in series:
+            return series[2:5]  # "BTC" from "KXBTC15M"
+        return "UNK"

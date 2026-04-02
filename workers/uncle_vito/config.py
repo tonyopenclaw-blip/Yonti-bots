@@ -61,7 +61,7 @@ TIME_FORMAT = "%I:%M %p ET"
 
 # The Odds API (the-odds-api.com) - DK + FD for NBA/NHL/NCAAB
 # Free tier: 500 credits/month
-ODDS_API_KEY = "YOUR_API_KEY_HERE"  # Get free key at the-odds-api.com
+ODDS_API_KEY = "cb42c4fe578ae32bbaf58923493d26e5"  # The Odds API - DK + FD
 ODDS_API_BASE = "https://api.the-odds-api.com/v4"
 ODDS_REGIONS = "us"  # Covers DraftKings, FanDuel
 ODDS_SPORTS = {

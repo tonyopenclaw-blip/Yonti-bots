@@ -2,7 +2,8 @@
 
 import logging
 from dataclasses import dataclass
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Dict, List
+from collections import deque
 from enum import Enum
 
 from config import (
@@ -10,7 +11,7 @@ from config import (
     DEEP_BUY_MAX_PRICE, DEEP_MIN_TIME_LEFT_SEC,
     DRIFT_BUY_MIN_PRICE, DRIFT_BUY_MAX_PRICE, DRIFT_MIN_TIME_LEFT_SEC,
     DRIFT_SHORT_MIN_PRICE, DRIFT_SHORT_MAX_PRICE,
-    DRIFT_TP_PCT, DRIFT_SL_PCT
+    DRIFT_TP_PCT, DRIFT_SL_PCT, KELLY_TRACKED_TRADES, KELLY_MAX_CAP
 )
 from kalshi_api import Market
 
@@ -22,6 +23,82 @@ class Strategy(Enum):
     DRIFT_BUY = "drift_buy"
     DRIFT_SHORT = "drift_short"
     NONE = "none"
+
+
+class StrategyTracker:
+    """
+    Tracks win rate and win/loss ratio per strategy over recent trades.
+    Used for Kelly Criterion sizing based on historical strategy performance.
+    """
+    
+    def __init__(self, tracked_trades: int = KELLY_TRACKED_TRADES):
+        self.tracked_trades = tracked_trades
+        # Store recent trade results per strategy: each entry is (pnl, won)
+        self._history: Dict[Strategy, deque] = {
+            Strategy.DEEP_BUY: deque(maxlen=tracked_trades),
+            Strategy.DRIFT_BUY: deque(maxlen=tracked_trades),
+            Strategy.DRIFT_SHORT: deque(maxlen=tracked_trades),
+        }
+    
+    def record_trade(self, strategy: Strategy, pnl: float):
+        """Record a completed trade result for a strategy."""
+        won = pnl > 0
+        self._history[strategy].append((pnl, won))
+    
+    def get_stats(self, strategy: Strategy) -> Tuple[float, float]:
+        """
+        Get win rate (W) and average win/loss ratio (R) for a strategy.
+        Returns (win_rate, win_loss_ratio).
+        - win_rate: fraction of winning trades (0.0 to 1.0)
+        - win_loss_ratio: avg_win / abs(avg_loss) if both exist, else 1.0
+        """
+        history = self._history[strategy]
+        if not history:
+            return 0.5, 1.0  # Default to 50% win rate, 1:1 ratio
+        
+        wins = [pnl for pnl, won in history if won]
+        losses = [pnl for pnl, won in history if not won]
+        
+        # Win rate
+        total = len(history)
+        win_count = len(wins)
+        W = win_count / total if total > 0 else 0.5
+        
+        # Win/loss ratio
+        avg_win = sum(wins) / len(wins) if wins else 1.0
+        avg_loss = abs(sum(losses) / len(losses)) if losses else 1.0
+        R = avg_win / avg_loss if avg_loss > 0 else 1.0
+        
+        return W, R
+    
+    def get_kelly_pct(self, strategy: Strategy) -> float:
+        """
+        Calculate Kelly % using the formula:
+        Kelly % = (W * (R+1) - 1) / R
+        
+        Where:
+        - W = win rate (0.0 to 1.0)
+        - R = win/loss ratio (e.g., 1.5 means wins are 1.5x losses)
+        
+        Returns Kelly % as a fraction (e.g., 0.25 = 25% of bankroll).
+        Capped at KELLY_MAX_CAP (50%) for safety.
+        """
+        W, R = self.get_stats(strategy)
+        
+        if R <= 0:
+            return 0.0
+        
+        # Kelly formula: Kelly % = (W * (R+1) - 1) / R
+        kelly_pct = (W * (R + 1) - 1) / R
+        
+        # Cap at maximum (never bet more than 50% of balance)
+        kelly_pct = min(kelly_pct, KELLY_MAX_CAP)
+        
+        # Don't bet if Kelly is negative or zero
+        if kelly_pct <= 0:
+            return 0.0
+        
+        return kelly_pct
 
 
 @dataclass
@@ -67,38 +144,43 @@ class StrategyEngine:
     
     def __init__(self, cash_available: float):
         self.cash = cash_available
+        self.tracker = StrategyTracker(KELLY_TRACKED_TRADES)
     
     def update_cash(self, cash: float):
         """Update available cash for Kelly sizing."""
         self.cash = cash
     
-    def calculate_kelly_size(self, edge: float, prob: float) -> float:
+    def record_trade_result(self, strategy: Strategy, pnl: float):
+        """Record a trade result for Kelly tracking."""
+        self.tracker.record_trade(strategy, pnl)
+        W, R = self.tracker.get_stats(strategy)
+        kelly_pct = self.tracker.get_kelly_pct(strategy)
+        logger.info(f"Strategy {strategy.value} stats: W={W:.2%}, R={R:.2f}x, Kelly={kelly_pct:.2%}")
+    
+    def calculate_kelly_size(self, strategy: Strategy, prob: float) -> Tuple[float, float]:
         """
-        Calculate Kelly Criterion bet size.
-        edge = expected_return - 1
-        prob = probability of winning
-        Uses fraction of Kelly for safety.
+        Calculate Kelly Criterion bet size using historical strategy performance.
+        
+        Returns (bet_size, kelly_pct) tuple.
+        - bet_size: dollar amount to bet (clamped to $2 min/$2 max)
+        - kelly_pct: the Kelly % used (for logging)
         """
         if prob <= 0 or prob >= 1:
-            return 0
+            return MIN_BET, 0.0
         
-        # Kelly formula: f* = (bp - q) / b
-        # where b = net odds, p = prob of win, q = prob of loss
-        b = 1 / prob - 1  # Net odds
-        q = 1 - prob
-        kelly = (b * prob - q) / b
+        # Get Kelly % from historical performance
+        kelly_pct = self.tracker.get_kelly_pct(strategy)
         
-        if kelly <= 0:
-            return 0
-        
-        # Apply Kelly fraction for safety
-        kelly = kelly * KELLY_FRACTION
+        # Apply Kelly fraction for additional safety
+        kelly_pct = kelly_pct * KELLY_FRACTION
         
         # Convert to dollar amount
-        bet = self.cash * kelly
+        bet = self.cash * kelly_pct
         
-        # Clamp to limits
-        return max(MIN_KELLY_BET, min(MAX_KELLY_BET, bet))
+        # Clamp to hard limits ($2 min, $2 max)
+        bet = max(MIN_KELLY_BET, min(MAX_KELLY_BET, bet))
+        
+        return bet, kelly_pct
     
     def evaluate_market(self, market: Market) -> Optional[TradeSignal]:
         """Evaluate a market and return a trading signal if conditions are met."""
@@ -137,13 +219,11 @@ class StrategyEngine:
             logger.debug(f"DEEP BUY: {market.ticker} - not enough time left ({time_left}s)")
             return None
         
-        # Calculate size - use Kelly but cap at max_bet
+        # Calculate size using Kelly with historical strategy performance
         prob = mid_price  # YES price ≈ probability
-        edge = 1 / prob - 1 if prob > 0 else 0
-        size = min(MAX_BET, max(MIN_BET, self.cash * KELLY_FRACTION * edge))
-        size = max(MIN_BET, min(MAX_BET, size))
+        size, kelly_pct = self.calculate_kelly_size(Strategy.DEEP_BUY, prob)
         
-        logger.info(f"DEEP BUY signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, time_left={time_left}s")
+        logger.info(f"DEEP BUY signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, time_left={time_left}s")
         
         return TradeSignal(
             strategy=Strategy.DEEP_BUY,
@@ -167,9 +247,9 @@ class StrategyEngine:
             logger.debug(f"DRIFT BUY: {market.ticker} - not enough time left ({time_left}s)")
             return None
         
-        # Calculate Kelly size
+        # Calculate size using Kelly with historical strategy performance
         prob = mid_price
-        size = self.calculate_kelly_size(edge=1/prob - 1 if prob > 0 else 0, prob=prob)
+        size, kelly_pct = self.calculate_kelly_size(Strategy.DRIFT_BUY, prob)
         
         # Calculate TP and SL prices
         # TP: +25% from entry (on the $1 payoff scale)
@@ -180,7 +260,7 @@ class StrategyEngine:
         # SL means YES drops, we lose 15% of our position
         sl_price = mid_price * (1 - DRIFT_SL_PCT)
         
-        logger.info(f"DRIFT BUY signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, TP=${tp_price:.4f}, SL=${sl_price:.4f}")
+        logger.info(f"DRIFT BUY signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, TP=${tp_price:.4f}, SL=${sl_price:.4f}")
         
         return TradeSignal(
             strategy=Strategy.DRIFT_BUY,
@@ -210,7 +290,7 @@ class StrategyEngine:
         # For short, probability of YES going DOWN is (1 - price)
         # We sell YES at current price, expecting it to drop
         prob = 1 - mid_price  # Probability that YES loses
-        size = self.calculate_kelly_size(edge=1/prob - 1 if prob > 0 else 0, prob=prob)
+        size, kelly_pct = self.calculate_kelly_size(Strategy.DRIFT_SHORT, prob)
         
         # Calculate TP and SL for short position
         # TP: YES drops, we profit. TP means price drops by 25%
@@ -218,7 +298,7 @@ class StrategyEngine:
         # SL: YES rises, we lose. SL means price rises by 15%
         sl_price = mid_price * (1 + DRIFT_SL_PCT)
         
-        logger.info(f"DRIFT SHORT signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, TP=${tp_price:.4f}, SL=${sl_price:.4f}")
+        logger.info(f"DRIFT SHORT signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, TP=${tp_price:.4f}, SL=${sl_price:.4f}")
         
         return TradeSignal(
             strategy=Strategy.DRIFT_SHORT,

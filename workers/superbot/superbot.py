@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # superbot.py - Superbot Main Trading Engine
 # Paper trading for Kalshi 15-minute crypto binary options
+# Multi-coin: BTC, ETH, SOL, XRP, DOGE, HYPE, BNB
 
 import logging
 import signal
@@ -13,8 +14,8 @@ from typing import Dict, List, Optional
 from config import (
     LOG_FILE, LOG_LEVEL, LOG_FORMAT, LOG_DATE_FORMAT,
     PAPER_MODE, PAPER_BALANCE, BALANCE_FLOOR, BALANCE_RESET_AMOUNT,
-    LOOP_INTERVAL_SEC, MAX_OPEN_POSITIONS,
-    KALSHI_ACCESS_KEY
+    IDLE_POLL_INTERVAL_SEC, ACTIVE_POLL_INTERVAL_SEC, MAX_OPEN_POSITIONS, MAX_BET,
+    KALSHI_ACCESS_KEY, COINS, SERIES_TICKERS
 )
 from kalshi_api import KalshiAPI, Market
 from strategies import StrategyEngine, Strategy, Position, TradeSignal
@@ -42,75 +43,107 @@ def setup_logging():
 logger = setup_logging()
 
 
-class Superbot:
-    """Main trading engine for Superbot."""
+class CoinTrader:
+    """Manages trading for a single coin with independent position tracking."""
     
-    def __init__(self):
-        self.api = KalshiAPI(KALSHI_ACCESS_KEY)
-        self.strategy_engine = StrategyEngine(PAPER_BALANCE)
-        self.report = ReportGenerator()
+    def __init__(self, coin: str, series_ticker: str, strategy_engine: StrategyEngine, api: KalshiAPI):
+        self.coin = coin
+        self.series_ticker = series_ticker
+        self.strategy_engine = strategy_engine
+        self.api = api
         
-        # Paper trading state
-        self.cash = PAPER_BALANCE
+        # Per-coin position tracking
         self.positions: Dict[str, Position] = {}  # ticker -> Position
-        self.trade_history: List[Trade] = []
+        self.cash = 0.0  # Per-coin cash tracking (managed by SuperBot)
         
-        # Shutdown flag
-        self.running = True
+        logger.info(f"CoinTrader initialized for {coin} ({series_ticker})")
+    
+    def get_markets(self) -> List[Market]:
+        """Fetch markets for this coin's series."""
+        return self.api.get_markets(series_ticker=self.series_ticker)
+    
+    def _check_existing_positions(self, markets: Dict[str, Market]) -> bool:
+        """Check open positions for exit conditions. Returns True if positions changed."""
+        positions_changed = False
+        for ticker, position in list(self.positions.items()):
+            if ticker not in markets:
+                continue
+            
+            market = markets[ticker]
+            mid_price = (market.yes_bid + market.yes_ask) / 2
+            time_left = market.time_to_expiry_sec()
+            
+            # Check if expired
+            if time_left <= 0:
+                settlement = mid_price
+                self._close_position(ticker, "expired", settlement)
+                positions_changed = True
+                continue
+            
+            # Check TP/SL for DRIFT strategies
+            should_exit, reason = self.strategy_engine.check_position_exit(position, mid_price)
+            if should_exit:
+                self._close_position(ticker, reason, mid_price)
+                positions_changed = True
         
-        # Setup signal handlers
-        signal.signal(signal.SIGINT, self._signal_handler)
-        signal.signal(signal.SIGTERM, self._signal_handler)
+        return positions_changed
+    
+    def _close_position(self, ticker: str, reason: str, exit_price: float):
+        """Close a position and return PnL."""
+        if ticker not in self.positions:
+            return 0.0, None
         
-        logger.info("=" * 60)
-        logger.info("SUPERBOT INITIALIZED - PAPER MODE")
-        logger.info(f"Starting balance: ${self.cash:.2f}")
-        logger.info(f"Balance floor: ${BALANCE_FLOOR:.2f}")
-        logger.info("=" * 60)
+        position = self.positions[ticker]
+        
+        if position.side == "yes":
+            pnl = position.size * (exit_price - position.entry_price)
+        else:
+            pnl = position.size * ((1 - exit_price) - (1 - position.entry_price))
+        
+        # Apply 1.6% Kalshi fee on positive PnL (winnings)
+        gross_pnl = pnl
+        if pnl > 0:
+            pnl = pnl * 0.984  # Net after 1.6% fee
+            logger.info(f"[{self.coin}] Closed {ticker}: {reason}, Gross PnL=${gross_pnl:.2f}, Fee=${gross_pnl - pnl:.3f}, Net PnL=${pnl:.2f}")
+        else:
+            logger.info(f"[{self.coin}] Closed {ticker}: {reason}, PnL=${pnl:.2f}")
+        
+        # Apply net PnL to paper balance
+        self.cash += pnl
+        
+        # Record trade result for Kelly tracking
+        self.strategy_engine.record_trade_result(position.strategy, pnl)
+        
+        del self.positions[ticker]
+        return pnl, position.strategy
     
-    def _signal_handler(self, signum, frame):
-        """Handle shutdown signals gracefully."""
-        logger.info(f"Received signal {signum}, shutting down...")
-        self.running = False
-    
-    def _check_balance_reset(self):
-        """Check if balance fell below floor and reset if needed."""
-        if self.cash < BALANCE_FLOOR:
-            logger.warning(f"Balance ${self.cash:.2f} below floor ${BALANCE_FLOOR:.2f}!")
-            logger.warning(f"Resetting balance to ${BALANCE_RESET_AMOUNT:.2f}")
-            self.cash = BALANCE_RESET_AMOUNT
-            self.strategy_engine.update_cash(self.cash)
-            self.report.stats.starting_balance = BALANCE_RESET_AMOUNT
-    
-    def _open_position(self, signal: TradeSignal) -> bool:
-        """Open a new position based on trading signal."""
+    def _open_position(self, signal: TradeSignal, available_cash: float) -> tuple[bool, float]:
+        """
+        Open a new position based on trading signal.
+        Returns (success, cost).
+        """
         ticker = signal.ticker
         
         # Check if we already have a position in this ticker
         if ticker in self.positions:
-            logger.debug(f"Position already exists for {ticker}, skipping")
-            return False
+            return False, 0.0
         
-        # Check max positions
-        if len(self.positions) >= MAX_OPEN_POSITIONS:
-            logger.debug(f"Max positions ({MAX_OPEN_POSITIONS}) reached, skipping")
-            return False
+        # Check max positions per coin
+        if len(self.positions) >= 1:  # One position per coin at a time
+            return False, 0.0
         
         # Check if we have enough cash
-        if signal.size > self.cash:
-            logger.warning(f"Insufficient cash: ${self.cash:.2f} < ${signal.size:.2f}")
-            return False
+        if signal.size > available_cash:
+            logger.warning(f"[{self.coin}] Insufficient cash: ${available_cash:.2f} < ${signal.size:.2f}")
+            return False, 0.0
         
-        # Deduct cost from cash
-        # For YES bet: cost = price * size
-        # For NO bet: cost = (1 - price) * size
+        # Calculate cost
         if signal.side == "yes":
             cost = signal.price * signal.size
         else:
             cost = (1 - signal.price) * signal.size
         
-        self.cash -= cost
-        logger.info(f"Opened {signal.strategy.value}: {signal.side} {ticker} @ ${signal.price:.4f}, size=${signal.size:.2f}, cost=${cost:.2f}, remaining cash=${self.cash:.2f}")
+        logger.info(f"[{self.coin}] Opened {signal.strategy.value}: {signal.side} {ticker} @ ${signal.price:.4f}, size=${signal.size:.2f}, cost=${cost:.2f}")
         
         # Record position
         position = Position(
@@ -125,96 +158,25 @@ class Superbot:
         )
         self.positions[ticker] = position
         
-        return True
+        return True, cost
     
-    def _close_position(self, ticker: str, reason: str, exit_price: float):
-        """Close a position and record the trade."""
-        if ticker not in self.positions:
-            return
-        
-        position = self.positions[ticker]
-        
-        # Calculate PnL
-        # For YES: profit = (exit_price - entry_price) * size / entry_price? 
-        # No, simpler: YES pays $1 at expiry, 0 otherwise
-        # If we bought YES at $0.40, we risk $0.40 to win $0.60
-        # At expiry: if YES wins, we get $1 per unit = $1/size profit
-        # Actually let's use a simpler model for paper trading
-        
-        # Simplified PnL model:
-        # If we bought YES at price P and size S:
-        # - If YES wins at expiry: PnL = S * (1 - P)  (we paid P, get $1 back)
-        # - If YES loses: PnL = -S * P  (we paid P, get nothing)
-        # If we bought NO (sold YES):
-        # - If NO wins: PnL = S * P  (we paid 1-P, get $1 back)  
-        # - If NO loses: PnL = -S * (1 - P)  (we paid 1-P, get nothing)
-        
-        if position.side == "yes":
-            # Assume YES wins at expiry (for paper trading, we mark to market)
-            # Real PnL depends on actual outcome
-            pnl = position.size * (exit_price - position.entry_price)
-        else:
-            pnl = position.size * ((1 - exit_price) - (1 - position.entry_price))
-        
-        self.cash += position.size + pnl  # Return stake + PnL
-        
-        # Record trade
-        now = datetime.utcnow()
-        trade = Trade(
-            ticker=ticker,
-            side=position.side,
-            entry_price=position.entry_price,
-            exit_price=exit_price,
-            size=position.size,
-            pnl=pnl,
-            strategy=position.strategy.value,
-            open_time=datetime.fromtimestamp(position.open_time).strftime("%H:%M:%S"),
-            close_time=now.strftime("%H:%M:%S"),
-            exit_reason=reason
-        )
-        self.report.record_trade(trade)
-        
-        logger.info(f"Closed {ticker}: {reason}, PnL=${pnl:.2f}, cash=${self.cash:.2f}")
-        
-        del self.positions[ticker]
-    
-    def _check_existing_positions(self, markets: Dict[str, Market]):
-        """Check open positions for exit conditions."""
-        for ticker, position in list(self.positions.items()):
-            if ticker not in markets:
-                # Market not in current data, skip
-                continue
-            
-            market = markets[ticker]
-            mid_price = (market.yes_bid + market.yes_ask) / 2
-            time_left = market.time_to_expiry_sec()
-            
-            # Check if expired
-            if time_left <= 0:
-                # Market expired - close at settlement price
-                # For YES market, settlement is typically 0 or 1
-                # Use current probability as estimate
-                settlement = mid_price
-                self._close_position(ticker, "expired", settlement)
-                continue
-            
-            # Check TP/SL for DRIFT strategies
-            should_exit, reason = self.strategy_engine.check_position_exit(position, mid_price)
-            if should_exit:
-                self._close_position(ticker, reason, mid_price)
-    
-    def _scan_for_signals(self, markets: List[Market]) -> List[TradeSignal]:
-        """Scan markets and generate trading signals."""
+    def scan_for_signals(self, markets: List[Market], available_cash: float) -> tuple[List[TradeSignal], float]:
+        """
+        Scan markets and generate trading signals.
+        Returns (signals, total_cost).
+        """
         signals = []
+        total_cost = 0.0
         
         # Index markets by ticker
         market_dict = {m.ticker: m for m in markets}
         
-        # First check existing positions
+        # Check existing positions
         self._check_existing_positions(market_dict)
         
-        # Update strategy engine with current cash
-        self.strategy_engine.update_cash(self.cash)
+        # Skip if we already have a position in this coin
+        if self.positions:
+            return [], 0.0
         
         # Scan for new signals
         for market in markets:
@@ -228,43 +190,232 @@ class Superbot:
             
             signal = self.strategy_engine.evaluate_market(market)
             if signal:
+                # Ensure max bet per coin is respected
+                signal.size = min(signal.size, MAX_BET)
                 signals.append(signal)
         
-        return signals
+        return signals, total_cost
+    
+    def get_status(self) -> str:
+        """Get status string for this coin."""
+        pos_count = len(self.positions)
+        if pos_count > 0:
+            ticker = list(self.positions.keys())[0]
+            pos = self.positions[ticker]
+            return f"{self.coin}: {pos.strategy.value} {pos.side}@{pos.entry_price:.2f}"
+        return f"{self.coin}: idle"
+
+
+class Superbot:
+    """
+    Main trading engine for Superbot - Multi-coin version.
+    
+    Smart Polling (Recorder's Approach):
+    - When NO active markets: poll ONE series per 10 seconds, cycle through all 8 coins
+    - When a market IS active: poll that series every 1 second AND execute trades
+    - Uses get_open_markets() which hits /markets?status=open (same as Recorder)
+    """
+    
+    def __init__(self):
+        self.api = KalshiAPI(KALSHI_ACCESS_KEY)
+        
+        # Create a strategy engine per coin (each with its own cash tracking)
+        self.coin_traders: Dict[str, CoinTrader] = {}
+        for coin in COINS:
+            self.coin_traders[coin] = CoinTrader(
+                coin=coin,
+                series_ticker=SERIES_TICKERS[coin],
+                strategy_engine=StrategyEngine(PAPER_BALANCE / len(COINS)),  # Split balance per coin
+                api=self.api
+            )
+        
+        self.report = ReportGenerator()
+        
+        # Paper trading state - shared cash pool but $2 max per coin
+        self.cash = PAPER_BALANCE
+        
+        # Shutdown flag
+        self.running = True
+        
+        # Smart polling state (Recorder's approach)
+        self.active_series: set = set()  # Track which series have active markets
+        self.series_cycle = 0  # Cycle counter for idle polling through all coins
+        self.our_series_tickers = list(SERIES_TICKERS.values())  # [KXBTC15M, KXETH15M, ...]
+        
+        # Setup signal handlers
+        signal.signal(signal.SIGINT, self._signal_handler)
+        signal.signal(signal.SIGTERM, self._signal_handler)
+        
+        logger.info("=" * 60)
+        logger.info("SUPERBOT INITIALIZED - PAPER MODE - SMART POLLING")
+        logger.info(f"Coins: {COINS}")
+        logger.info(f"Tickers: {list(SERIES_TICKERS.values())}")
+        logger.info(f"Starting balance: ${self.cash:.2f}")
+        logger.info(f"Balance floor: ${BALANCE_FLOOR:.2f}")
+        logger.info(f"Max bet per coin: ${MAX_BET:.2f}")
+        logger.info(f"Idle poll: {IDLE_POLL_INTERVAL_SEC}s per series | Active poll: {ACTIVE_POLL_INTERVAL_SEC}s")
+        logger.info("=" * 60)
+    
+    def _signal_handler(self, signum, frame):
+        """Handle shutdown signals gracefully."""
+        logger.info(f"Received signal {signum}, shutting down...")
+        self.running = False
+    
+    def _check_balance_reset(self):
+        """Check if balance fell below floor and reset if needed."""
+        if self.cash < BALANCE_FLOOR:
+            logger.warning(f"Balance ${self.cash:.2f} below floor ${BALANCE_FLOOR:.2f}!")
+            logger.warning(f"Resetting balance to ${BALANCE_RESET_AMOUNT:.2f}")
+            self.cash = BALANCE_RESET_AMOUNT
+    
+    def _distribute_cash_to_traders(self):
+        """Distribute available cash to each coin's strategy engine."""
+        per_coin_cash = self.cash / len(COINS)
+        for trader in self.coin_traders.values():
+            trader.strategy_engine.update_cash(per_coin_cash)
+    
+    def _get_coin_from_series(self, series_ticker: str) -> Optional[str]:
+        """Extract coin from series_ticker (e.g., KXBTC15M -> BTC)."""
+        for coin, ticker in SERIES_TICKERS.items():
+            if ticker == series_ticker:
+                return coin
+        return None
+    
+    def _check_and_trade_series(self, series_ticker: str) -> bool:
+        """
+        Check a single series for tradeable markets and execute trades if found.
+        Returns True if any new markets were found/tradable.
+        Uses the same get_open_markets() as Recorder.
+        """
+        coin = self._get_coin_from_series(series_ticker)
+        if not coin:
+            return False
+        
+        trader = self.coin_traders[coin]
+        
+        # Use get_open_markets (same as Recorder) - hits /markets?status=open
+        markets = self.api.get_open_markets(series_ticker)
+        
+        if not markets:
+            # No markets found - remove from active_series
+            self.active_series.discard(series_ticker)
+            return False
+        
+        # Found markets! Mark this series as active
+        self.active_series.add(series_ticker)
+        
+        # Index markets by ticker
+        market_dict = {m.ticker: m for m in markets}
+        
+        # Check existing positions for exit conditions
+        trader._check_existing_positions(market_dict)
+        
+        # If we already have a position, skip new trades (we'll monitor it)
+        if trader.positions:
+            return True
+        
+        # Scan for NEW trading signals
+        per_coin_cash = self.cash / len(COINS)
+        
+        for market in markets:
+            # Skip if market is about to expire
+            if market.time_to_expiry_sec() < 60:
+                continue
+            
+            # Evaluate market for trading signal
+            signal = trader.strategy_engine.evaluate_market(market)
+            if signal:
+                # Ensure max bet per coin is respected
+                signal.size = min(signal.size, MAX_BET)
+                
+                # Try to open position
+                success, cost = trader._open_position(signal, per_coin_cash)
+                if success:
+                    self.cash -= cost
+                    logger.info(f"🚀 [{coin}] TRADE EXECUTED: {signal.strategy.value} {signal.side} {signal.ticker} @ ${signal.price:.4f}, size=${signal.size:.2f}")
+                    return True
+        
+        return True
+    
+    def _poll_active_markets_fast(self):
+        """
+        Poll active series every 1 second - monitor positions and look for new trades.
+        This is called when we have active markets.
+        """
+        for series_ticker in list(self.active_series):
+            self._check_and_trade_series(series_ticker)
     
     def run(self):
-        """Main trading loop."""
-        logger.info("Starting trading loop...")
+        """
+        Main trading loop with smart polling (Recorder's approach).
+        
+        - When NO active markets: poll ONE series per 10 seconds, cycle through all 8 coins
+        - When markets ARE active: poll that series every 1 second (fast polling)
+        """
+        logger.info("Starting SMART POLLING trading loop (Recorder's approach)...")
         self.report.start_session()
         
         loop_count = 0
+        last_status_log = time.time()
+        
         while self.running:
             loop_count += 1
             try:
-                # Fetch markets
-                markets = self.api.get_markets()
-                
-                if markets:
-                    # Generate signals and open positions
-                    signals = self._scan_for_signals(markets)
-                    
-                    for signal in signals:
-                        if self._open_position(signal):
-                            logger.info(f"New position opened: {signal.ticker}")
+                # Distribute cash to each coin's strategy engine
+                self._distribute_cash_to_traders()
                 
                 # Check balance floor
                 self._check_balance_reset()
                 
-                # Status log every 10 loops
-                if loop_count % 10 == 0:
-                    logger.info(f"Status: cash=${self.cash:.2f}, positions={len(self.positions)}, loop={loop_count}")
+                if self.active_series:
+                    # ACTIVE MODE: First, do a QUICK scan of ALL series to discover any new active ones
+                    # then poll all active series every 1 second
+                    for series_ticker in self.our_series_tickers:
+                        self._check_and_trade_series(series_ticker)
+                    time.sleep(ACTIVE_POLL_INTERVAL_SEC)
+                else:
+                    # IDLE MODE: Check ONE series per cycle, cycle through all coins
+                    series_ticker = self.our_series_tickers[self.series_cycle % len(self.our_series_tickers)]
+                    self.series_cycle += 1
+                    
+                    had_markets = self._check_and_trade_series(series_ticker)
+                    
+                    if loop_count % 30 == 1:
+                        logger.info(f"😴 IDLE: checked {series_ticker} (poll #{loop_count})")
+                    
+                    # If no markets found, sleep 10 seconds
+                    # If markets WERE found, don't sleep - immediately go to active polling
+                    if not had_markets and not self.active_series:
+                        time.sleep(IDLE_POLL_INTERVAL_SEC)
                 
-                # Sleep until next iteration
-                time.sleep(LOOP_INTERVAL_SEC)
+                # Status log every 30 seconds
+                if time.time() - last_status_log >= 30:
+                    total_positions = sum(len(t.positions) for t in self.coin_traders.values())
+                    status_parts = [t.get_status() for t in self.coin_traders.values()]
+                    logger.info(f"Status: cash=${self.cash:.2f}, positions={total_positions}, loop={loop_count}, active_series={list(self.active_series)}")
+                    logger.info(f"Coins: {' | '.join(status_parts)}")
+                    
+                    # Build position details for the report
+                    positions_details = []
+                    for trader in self.coin_traders.values():
+                        for ticker, pos in trader.positions.items():
+                            from datetime import datetime
+                            positions_details.append({
+                                "ticker": pos.ticker,
+                                "side": pos.side,
+                                "entry_price": pos.entry_price,
+                                "size": pos.size,
+                                "strategy": pos.strategy.value if hasattr(pos.strategy, 'value') else str(pos.strategy),
+                                "open_time": datetime.fromtimestamp(pos.open_time).strftime("%Y-%m-%d %H:%M:%S UTC") if isinstance(pos.open_time, (int, float)) else str(pos.open_time),
+                                "current_price": pos.entry_price  # Will be updated when we have real market prices
+                            })
+                    
+                    self.report.update_session_stats(self.cash, total_positions, positions_details)
+                    last_status_log = time.time()
                 
             except Exception as e:
                 logger.error(f"Error in trading loop: {e}", exc_info=True)
-                time.sleep(LOOP_INTERVAL_SEC)
+                time.sleep(5)
         
         # Cleanup
         self._shutdown()
@@ -274,9 +425,10 @@ class Superbot:
         logger.info("Shutting down superbot...")
         
         # Close all open positions at current prices
-        for ticker in list(self.positions.keys()):
-            logger.info(f"Closing position {ticker} on shutdown")
-            self._close_position(ticker, "shutdown", 0.5)  # Estimate 0.5 as exit
+        for coin, trader in self.coin_traders.items():
+            for ticker in list(trader.positions.keys()):
+                logger.info(f"[{coin}] Closing position {ticker} on shutdown")
+                trader._close_position(ticker, "shutdown", 0.5)
         
         # Save final report
         self.report.end_session(self.cash)

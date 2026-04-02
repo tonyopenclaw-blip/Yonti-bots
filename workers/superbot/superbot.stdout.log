@@ -1,0 +1,26 @@
+2026-04-02 02:51:15 | INFO | CoinTrader initialized for BTC (KXBTC15M)
+2026-04-02 02:51:15 | INFO | CoinTrader initialized for ETH (KXETH15M)
+2026-04-02 02:51:15 | INFO | CoinTrader initialized for SOL (KXSOL15M)
+2026-04-02 02:51:15 | INFO | CoinTrader initialized for XRP (KXXRP15M)
+2026-04-02 02:51:15 | INFO | CoinTrader initialized for DOGE (KXDOGE15M)
+2026-04-02 02:51:15 | INFO | CoinTrader initialized for HYPE (KXHYPE15M)
+2026-04-02 02:51:15 | INFO | CoinTrader initialized for BNB (KXBNB15M)
+2026-04-02 02:51:15 | INFO | CoinTrader initialized for ADA (KXADA15M)
+2026-04-02 02:51:15 | INFO | ============================================================
+2026-04-02 02:51:15 | INFO | SUPERBOT INITIALIZED - PAPER MODE - SMART POLLING
+2026-04-02 02:51:15 | INFO | Coins: ['BTC', 'ETH', 'SOL', 'XRP', 'DOGE', 'HYPE', 'BNB', 'ADA']
+2026-04-02 02:51:15 | INFO | Tickers: ['KXBTC15M', 'KXETH15M', 'KXSOL15M', 'KXXRP15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXADA15M']
+2026-04-02 02:51:15 | INFO | Starting balance: $100.00
+2026-04-02 02:51:15 | INFO | Balance floor: $3.00
+2026-04-02 02:51:15 | INFO | Max bet per coin: $2.00
+2026-04-02 02:51:15 | INFO | Idle poll: 10s per series | Active poll: 1s
+2026-04-02 02:51:15 | INFO | ============================================================
+2026-04-02 02:51:15 | INFO | Starting SMART POLLING trading loop (Recorder's approach)...
+2026-04-02 02:51:15 | INFO | Report session started: 2026-04-02 02:51:15 UTC
+2026-04-02 02:51:15 | INFO | 😴 IDLE: checked KXBTC15M (poll #1)
+2026-04-02 02:51:45 | INFO | Status: cash=$100.00, positions=0, loop=31, active_series=['KXBTC15M']
+2026-04-02 02:51:45 | INFO | Coins: BTC: idle | ETH: idle | SOL: idle | XRP: idle | DOGE: idle | HYPE: idle | BNB: idle | ADA: idle
+2026-04-02 02:51:45 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 02:52:15 | INFO | Status: cash=$100.00, positions=0, loop=61, active_series=['KXBTC15M']
+2026-04-02 02:52:15 | INFO | Coins: BTC: idle | ETH: idle | SOL: idle | XRP: idle | DOGE: idle | HYPE: idle | BNB: idle | ADA: idle
+2026-04-02 02:52:15 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json

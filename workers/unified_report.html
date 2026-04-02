@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unified Paper Trading Report</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            padding: 20px;
+            font-size: 14px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        h1 { color: #58a6ff; margin-bottom: 20px; font-size: 24px; }
+        h2 { color: #c9d1d9; margin: 25px 0 10px; font-size: 16px; border-bottom: 1px solid #30363d; padding-bottom: 5px; }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        .stat-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+        .stat-card .label { color: #8b949e; font-size: 11px; text-transform: uppercase; }
+        .stat-card .value { font-size: 20px; font-weight: bold; margin-top: 4px; }
+        .positive { color: #3fb950; }
+        .negative { color: #f85149; }
+        .neutral { color: #58a6ff; }
+
+        table { width: 100%; border-collapse: collapse; background: #161b22; border-radius: 8px; overflow: hidden; margin-bottom: 30px; }
+        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #30363d; }
+        th { background: #21262d; color: #8b949e; font-size: 11px; text-transform: uppercase; font-weight: 600; }
+        tr:hover { background: #1c2128; }
+        tr:last-child td { border-bottom: none; }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .section-header h2 { margin: 0; border: none; }
+        .badge {
+            background: #238636; color: white; padding: 2px 8px; border-radius: 10px;
+            font-size: 11px;
+        }
+        .badge-closed { background: #da3633; }
+        .empty { color: #8b949e; font-style: italic; padding: 20px; text-align: center; background: #161b22; border-radius: 8px; }
+
+        .bot-tag {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .bot-superbot { background: #1f6feb; color: white; }
+        .bot-flip { background: #a371f7; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Unified Paper Trading Report</h1>
+        <p style="color: #8b949e; margin-bottom: 20px;">Generated: 2026-04-02 09:00:01 UTC</p>
+
+        <div class="summary">
+            <div class="stat-card">
+                <div class="label">Superbot Balance</div>
+                <div class="value neutral">$15.91</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Flip Balance</div>
+                <div class="value neutral">$93.12</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Total P&L</div>
+                <div class="value negative">$-0.14</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Win Rate</div>
+                <div class="value neutral">0.0%</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Wins / Losses</div>
+                <div class="value neutral">0 / 7</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Open Positions</div>
+                <div class="value neutral">10</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Closed Trades</div>
+                <div class="value neutral">7</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Largest Win</div>
+                <div class="value positive">$-0.02</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Largest Loss</div>
+                <div class="value negative">$-0.02</div>
+            </div>
+        </div>
+
+        <div class="section-header">
+            <h2>📌 Open Positions (last 10 by time)</h2>
+            <span class="badge">10 open</span>
+        </div>
+<table>
+            <thead>
+                <tr>
+                    <th>Bot</th>
+                    <th>Coin/Game</th>
+                    <th>Side</th>
+                    <th>Entry</th>
+                    <th>Shares</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="bot-tag bot-flip">Flip</span></td>
+                    <td>SAC@TOR</td>
+                    <td>TOR</td>
+                    <td>$0.0100</td>
+                    <td>2.00</td>
+                    <td>2026-04-02T02:59:49</td>
+                </tr>
+                <tr>
+                    <td><span class="bot-tag bot-flip">Flip</span></td>
+                    <td>SAC@TOR</td>
+                    <td>TOR</td>
+                    <td>$0.0100</td>
+                    <td>2.00</td>
+                    <td>2026-04-02T02:59:45</td>
+                </tr>
+                <tr>
+                    <td><span class="bot-tag bot-flip">Flip</span></td>
+                    <td>SAC@TOR</td>
+                    <td>TOR</td>
+                    <td>$0.0100</td>
+                    <td>2.00</td>
+                    <td>2026-04-02T02:59:42</td>
+                </tr>
+                <tr>
+                    <td><span class="bot-tag bot-flip">Flip</span></td>
+                    <td>SAC@TOR</td>
+                    <td>TOR</td>
+                    <td>$0.0100</td>
+                    <td>2.00</td>
+                    <td>2026-04-02T02:59:39</td>
+                </tr>
+                <tr>
+                    <td><span class="bot-tag bot-flip">Flip</span></td>
+                    <td>SAC@TOR</td>
+                    <td>TOR</td>
+                    <td>$0.0100</td>
+                    <td>2.00</td>
+                    <td>2026-04-02T02:59:35</td>
+                </tr>
+                <tr>
+                    <td><span class="bot-tag bot-flip">Flip</span></td>
+                    <td>SAC@TOR</td>
+                    <td>TOR</td>
+                    <td>$0.0100</td>
+                    <td>2.00</td>
+                    <td>2026-04-02T02:59:32</td>
+                </tr>
+                <tr>
+                    <td><span class="bot-tag bot-flip">Flip</span></td>
+                    <td>SAC@TOR</td>
+                    <td>TOR</td>
+                    <td>$0.0100</td>
+                    <td>2.00</td>
+                    <td>2026-04-02T02:52:40</td>
+                </tr>
+                <tr>
+                    <td><span class="bot-tag bot-flip">Flip</span></td>
+                    <td>DEN@UTA</td>
+                    <td>UTA</td>
+                    <td>$0.0500</td>
+                    <td>2.00</td>
+                    <td>2026-04-02T02:52:40</td>
+                </tr>
+                <tr>
+                    <td><span class="bot-tag bot-flip">Flip</span></td>
+                    <td>SAN@GOL</td>
+                    <td>GSW</td>
+                    <td>$0.0800</td>
+                    <td>2.00</td>
+                    <td>2026-04-02T02:52:40</td>
+                </tr>
+                <tr>
+                    <td><span class="bot-tag bot-flip">Flip</span></td>
+                    <td>PHO@CHA</td>
+                    <td>PHX</td>
+                    <td>$0.3500</td>
+                    <td>2.00</td>
+                    <td>2026-04-02T02:52:40</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="section-header">
+            <h2>📋 Closed Trades (last 10 by time)</h2>
+            <span class="badge badge-closed">7 closed</span>
+        </div>
+<table>
+            <thead>
+                <tr>
+                    <th>Bot</th>
+                    <th>Coin/Game</th>
+                    <th>Side</th>
+                    <th>Shares</th>
+                    <th>PnL</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="bot-tag bot-flip">Flip</span></td>
+                    <td></td>
+                    <td>TOR</td>
+                    <td>2.00</td>
+                    <td class="negative">$-0.0200</td>
+                    <td>2026-04-02T02:59:52</td>
+                </tr>
+                <tr>
+                    <td><span class="bot-tag bot-flip">Flip</span></td>
+                    <td></td>
+                    <td>TOR</td>
+                    <td>2.00</td>
+                    <td class="negative">$-0.0200</td>
+                    <td>2026-04-02T02:59:49</td>
+                </tr>
+                <tr>
+                    <td><span class="bot-tag bot-flip">Flip</span></td>
+                    <td></td>
+                    <td>TOR</td>
+                    <td>2.00</td>
+                    <td class="negative">$-0.0200</td>
+                    <td>2026-04-02T02:59:45</td>
+                </tr>
+                <tr>
+                    <td><span class="bot-tag bot-flip">Flip</span></td>
+                    <td></td>
+                    <td>TOR</td>
+                    <td>2.00</td>
+                    <td class="negative">$-0.0200</td>
+                    <td>2026-04-02T02:59:42</td>
+                </tr>
+                <tr>
+                    <td><span class="bot-tag bot-flip">Flip</span></td>
+                    <td></td>
+                    <td>TOR</td>
+                    <td>2.00</td>
+                    <td class="negative">$-0.0200</td>
+                    <td>2026-04-02T02:59:39</td>
+                </tr>
+                <tr>
+                    <td><span class="bot-tag bot-flip">Flip</span></td>
+                    <td></td>
+                    <td>TOR</td>
+                    <td>2.00</td>
+                    <td class="negative">$-0.0200</td>
+                    <td>2026-04-02T02:59:35</td>
+                </tr>
+                <tr>
+                    <td><span class="bot-tag bot-flip">Flip</span></td>
+                    <td></td>
+                    <td>TOR</td>
+                    <td>2.00</td>
+                    <td class="negative">$-0.0200</td>
+                    <td>2026-04-02T02:59:32</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

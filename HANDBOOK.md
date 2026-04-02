@@ -440,6 +440,215 @@ OpenLaw is **NOT** a prediction market — it's legal infrastructure for:
 
 ---
 
+## 📊 CANDLESTICK & TECHNICAL PATTERNS
+
+_Research findings from Twitter/X scraping + web research for 15-min crypto prediction markets._
+
+---
+
+### 🎯 KEY INDICATORS FOR 15-MIN BINARY OPTIONS
+
+**Primary Stack (from Twitter research):**
+| Indicator | Setting | Purpose |
+|-----------|---------|---------|
+| RSI | 4-period | Overbought/Oversold (levels 25/75) |
+| MACD | Default (12,26,9) | Trend direction + momentum |
+| Bollinger Bands | 20,2 | Volatility + support/resistance |
+| Stochastic | 5,3,3 | Momentum confirmation (levels 20/80) |
+
+**Entry Timeframe:**
+- 15-min chart for SIGNAL GENERATION
+- 1-min chart for ENTRY TIMING
+
+---
+
+### 📈 CANDLESTICK PATTERNS (High Probability)
+
+#### DOJI
+- **What:** Open ≈ Close (tiny body, long wicks)
+- **Meaning:** Indecision — bulls = bears = standoff
+- **For Binary Options:**
+  - In TREND → signals potential reversal
+  - At SUPPORT/RESISTANCE → turning point likely
+  - During CHOP → ignore (just noise)
+- **Action:** Wait for CONFIRMATION candle breaking Doji high/low
+- **Think:** "Market took a breath — wait to see which way it exhales"
+
+#### HAMMER (Bullish Reversal)
+- **What:** Small body at TOP, long lower wick (2x+ body length), little/no upper shadow
+- **Meaning:** Sellers pushed down hard, buyers stepped in and rejected lower prices
+- **For Binary Options:**
+  - Appears AFTER downtrend or pullback
+  - Must form at SUPPORT (trendline, MA, key level)
+  - Needs confirmation: green candle closes above Hammer's HIGH
+- **Action:** CALL when confirmation candle breaks Hammer high
+- **Stop:** Below Hammer's LOW (if broken, setup failed)
+- **Think:** "Bounce off the pavement — longer wick = harder bounce"
+
+#### INVERTED HAMMER (Shooting Star)
+- **What:** Small body at BOTTOM, long upper wick, little/no lower shadow
+- **Meaning:** Buyers pushed up, sellers rejected — bearish reversal
+- **For Binary Options:**
+  - Appears AFTER uptrend
+  - At RESISTANCE level
+  - Confirmation: red candle closes below Inverted Hammer low
+- **Action:** PUT when confirmation breaks below
+
+#### BULLISH ENGULFING (Momentum Flip)
+- **What:** 2-candle pattern: small red candle THEN large green candle
+- **Meaning:** Buyers ERASED previous sell-off and took control
+- **Rules:**
+  - Must appear at END of downtrend or strong pullback
+  - Green candle body COMPLETELY engulfs red body (not wicks)
+  - Volume confirmation = higher probability
+- **Action:** CALL when green candle breaks engulf high
+- **Think:** "Tide turned — buyers overpowered sellers"
+
+#### BEARISH ENGULFING
+- **What:** 2-candle: small green candle THEN large red candle
+- **Meaning:** Sellers took over after buyers' push
+- **Rules:**
+  - Appears at TOP of rally
+  - Red body engulfs green body
+  - Volume confirmation
+- **Action:** PUT when red candle breaks engulf low
+
+#### MORNING STAR (3-candle bullish)
+- **What:** Red candle → small body (doji/spinning top) → large green candle
+- **Meaning:** Selling exhaustion, buyers stepping in
+- **Best for:** Bottom of DRIFT zone ($0.35-$0.45)
+
+#### EVENING STAR (3-candle bearish)
+- **What:** Green candle → small body → large red candle
+- **Meaning:** Buying exhaustion, sellers stepping in
+- **Best for:** Top of DRIFT zone ($0.55-$0.65)
+
+---
+
+### 📊 INDICATOR-BASED SETUPS
+
+#### RSI-4 STRATEGY (15-min binary options)
+
+**Setup:**
+- RSI (4, Close) levels: 25 (oversold), 75 (overbought)
+- Stochastic (5,3,3) levels: 20 (oversold), 80 (overbought)
+- 15-min chart for signals, 1-min for timing
+
+**CALL Signal:**
+1. RSI(4) closes ABOVE 25 on 15-min chart
+2. Stochastic(5,3,3) closes ABOVE 20 on 15-min chart
+3. Switch to 1-min chart
+4. Place CALL when RSI(4) > 25 AND Stochastic > 20 on 1-min
+5. Expiry: 10-15 minutes
+
+**PUT Signal:**
+1. RSI(4) closes BELOW 75 on 15-min chart
+2. Stochastic(5,3,3) closes BELOW 80 on 15-min chart
+3. Switch to 1-min chart
+4. Place PUT when RSI(4) < 75 AND Stochastic < 80 on 1-min
+5. Expiry: 10-15 minutes
+
+#### BOLLINGER BANDS + MACD COMBO
+
+**LONG Setup:**
+- Price near LOWER Bollinger Band
+- MACD line crosses ABOVE signal line
+- Stop-loss: Below lower band
+
+**SHORT Setup:**
+- Price near UPPER Bollinger Band
+- MACD line crosses BELOW signal line
+- Stop-loss: Above upper band
+
+**Timeframes:** 15m-30m for intraday, 1h-4h for swing
+
+---
+
+### 🎯 DRIFT ZONE PATTERNS ($0.35-$0.65)
+
+Our DRIFT strategies trade mean reversion in this zone:
+
+| Zone | Price Range | Best Pattern | Strategy |
+|------|-------------|--------------|----------|
+| Deep Bottom | $0.01-$0.15 | Hammer, Engulfing | DEEP_BUY (ride to expiry) |
+| Drift Bottom | $0.35-$0.45 | Bullish Engulfing, Hammer, RSI < 30 | DRIFT_BUY |
+| Midpoint | $0.45-$0.55 | Doji, Inside Bar | WAIT — chop zone |
+| Drift Top | $0.55-$0.65 | Bearish Engulfing, Shooting Star, RSI > 70 | DRIFT_SHORT |
+| Deep Top | $0.85-$0.99 | Evening Star, Shooting Star | SELL tails |
+
+**For $0.50 Midpoint ($0.45-$0.55):**
+- AVOID single candlestick patterns here (chop zone)
+- Best patterns: Bollinger Band bounce, MACD divergence
+- Mean reversion WORKS — price tends to drift back toward $0.50
+- Wait for RSI extreme (>75 or <25) before fading
+
+---
+
+### 🔍 WHAT SUPERBOT SHOULD LOOK FOR
+
+**On every 15-min candle close:**
+
+1. **RSI Check:**
+   - RSI < 30 → oversold, bias toward CALL
+   - RSI > 70 → overbought, bias toward PUT
+   - RSI > 80 / < 20 → extreme, stronger signal
+
+2. **MACD Check:**
+   - MACD crosses above signal → bullish momentum
+   - MACD crosses below signal → bearish momentum
+   - Histogram growing → momentum strengthening
+
+3. **Candlestick Check:**
+   - Doji at support/resistance → potential reversal
+   - Hammer at lows → bullish reversal
+   - Engulfing at extremes → momentum flip
+
+4. **Bollinger Check:**
+   - Price at lower band + RSI < 30 + MACD cross up = HIGH PROB CALL
+   - Price at upper band + RSI > 70 + MACD cross down = HIGH PROB PUT
+
+5. **Volume (if available):**
+   - Reversal candle + volume spike = higher conviction
+   - No volume = lower probability
+
+---
+
+### 🚫 AVOID THESE MISTAKES
+
+| Mistake | Why | Fix |
+|---------|-----|-----|
+| Trading Doji alone | Just indecision, no direction | Wait for confirmation |
+| Ignoring location | Pattern in wrong place = noise | Only trade at support/resistance |
+| No volume check | Low volume = low conviction | Require volume on reversal |
+| Entering mid-DRIFT ($0.45-$0.55) | Choppy, mean reversion weak | Wait for extremes |
+| Fighting strong trend | Counter-trend is dangerous | Trade WITH trend on pullbacks |
+
+---
+
+### 📋 QUICK REFERENCE: PATTERN → ACTION
+
+| Pattern | Type | Context Needed | Superbot Action |
+|---------|------|----------------|-----------------|
+| Doji | Reversal | Trend + S/R level | Wait for next candle |
+| Hammer | Bullish | After downtrend + support | CALL if above hammer high |
+| Inverted Hammer | Bearish | After uptrend + resistance | PUT if below hammer low |
+| Bullish Engulfing | Bullish | End of downtrend | CALL if breaks engulf high |
+| Bearish Engulfing | Bearish | Top of rally | PUT if breaks engulf low |
+| Morning Star | Bullish | Bottom of range | CALL on break of high |
+| Evening Star | Bearish | Top of range | PUT on break of low |
+
+---
+
+### 📚 SOURCES
+
+- Twitter/X scraping via Apify (xtdata/twitter-x-scraper)
+- BinaryOptions.com candlestick strategies
+- ProfitF.com RSI-4 binary system
+- Trading-signals.ai Doji/Hammer/Engulfing guide
+- Trading community insights (@TraderFlameseN, @cryptosymbiiote)
+
+---
+
 ## 🔧 GAPS & TODO
 
 - [ ] Polymarket integration (needs Tony to set up account + KYC)

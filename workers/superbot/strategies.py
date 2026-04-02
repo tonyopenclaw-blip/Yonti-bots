@@ -1,6 +1,9 @@
 # strategies.py - Superbot Trading Strategies
 
 import logging
+import os
+import subprocess
+import json
 from dataclasses import dataclass
 from typing import Optional, Tuple, Dict, List
 from collections import deque
@@ -8,10 +11,13 @@ from enum import Enum
 
 from config import (
     MAX_BET, MIN_BET, KELLY_FRACTION, MIN_KELLY_BET, MAX_KELLY_BET,
-    DEEP_BUY_MAX_PRICE, DEEP_MIN_TIME_LEFT_SEC,
+    DEEP_SHORT_MAX_PRICE, DEEP_MIN_TIME_LEFT_SEC,
     DRIFT_BUY_MIN_PRICE, DRIFT_BUY_MAX_PRICE, DRIFT_MIN_TIME_LEFT_SEC,
     DRIFT_SHORT_MIN_PRICE, DRIFT_SHORT_MAX_PRICE,
-    DRIFT_TP_PCT, DRIFT_SL_PCT, KELLY_TRACKED_TRADES, KELLY_MAX_CAP
+    DRIFT_TP_PCT, DRIFT_SL_PCT, KELLY_TRACKED_TRADES, KELLY_MAX_CAP,
+    DRIFT_TP_PRICE,  # New: absolute TP price threshold
+    AI_EDGE_THRESHOLD,  # Minimum edge required (5%)
+    AI_PROBABILITY_ENABLED  # Enable AI probability estimation
 )
 from kalshi_api import Market
 
@@ -19,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 
 class Strategy(Enum):
-    DEEP_BUY = "deep_buy"
+    DEEP_SHORT = "deep_short"  # Changed: was DEEP_BUY (buying tails is wrong direction)
     DRIFT_BUY = "drift_buy"
     DRIFT_SHORT = "drift_short"
     NONE = "none"
@@ -35,7 +41,7 @@ class StrategyTracker:
         self.tracked_trades = tracked_trades
         # Store recent trade results per strategy: each entry is (pnl, won)
         self._history: Dict[Strategy, deque] = {
-            Strategy.DEEP_BUY: deque(maxlen=tracked_trades),
+            Strategy.DEEP_SHORT: deque(maxlen=tracked_trades),
             Strategy.DRIFT_BUY: deque(maxlen=tracked_trades),
             Strategy.DRIFT_SHORT: deque(maxlen=tracked_trades),
         }
@@ -191,8 +197,18 @@ class StrategyEngine:
         
         logger.debug(f"Evaluating {market.ticker}: price=${mid_price:.4f}, time_left={time_left}s")
         
-        # Check DEEP BUY first (highest priority)
-        signal = self._check_deep_buy(market, mid_price, time_left)
+        # AI Probability Estimation: Check if we have genuine edge
+        if AI_PROBABILITY_ENABLED:
+            ai_prob = self._estimate_ai_probability(market, mid_price)
+            if ai_prob is not None:
+                edge = abs(ai_prob - mid_price)
+                if edge < AI_EDGE_THRESHOLD:
+                    logger.debug(f"AI: {market.ticker} - No edge (market={mid_price:.4f}, AI={ai_prob:.4f}, edge={edge:.4f} < {AI_EDGE_THRESHOLD})")
+                    return None
+                logger.info(f"AI: {market.ticker} - Edge found! market={mid_price:.4f}, AI={ai_prob:.4f}, edge={edge:.4f}")
+        
+        # Check DEEP SHORT first (highest priority) - fading the longshot
+        signal = self._check_deep_short(market, mid_price, time_left)
         if signal:
             return signal
         
@@ -208,37 +224,101 @@ class StrategyEngine:
         
         return None
     
-    def _check_deep_buy(self, market: Market, mid_price: float, time_left: int) -> Optional[TradeSignal]:
+    def _estimate_ai_probability(self, market: Market, mid_price: float) -> Optional[float]:
         """
-        DEEP BUY: YES < $0.15 → buy YES, ride to expiry, NO stop loss
+        Use Claude to estimate the true probability of a market.
+        Returns None if estimation fails or is disabled.
+        Only returns a value if AI_EDGE_THRESHOLD (5%) or more edge exists.
         """
-        if mid_price >= DEEP_BUY_MAX_PRICE:
+        try:
+            # Build context for AI estimation
+            coin = market.ticker.replace('KX', '').replace('15M', '')
+            
+            prompt = f"""Estimate the true probability for this Kalshi crypto prediction market:
+
+Market: {market.ticker}
+Coin: {coin}
+Current YES Price: ${mid_price:.4f} (this is the market's implied probability)
+Question: Will {coin} be UP in the next 15 minutes?
+
+Consider:
+- Current market sentiment and price action
+- Technical analysis factors
+- The longshot bias (crowd often overbets low-prob outcomes)
+- Mean reversion patterns in 15-min crypto markets
+
+Respond with ONLY a number between 0.0 and 1.0 representing your estimated true probability.
+Example responses: 0.45, 0.52, 0.68
+
+Your estimate:"""
+            
+            # Call Claude via openclaw oracle CLI
+            result = subprocess.run(
+                ['oracle', '-m', 'minimax-portal/MiniMax-M2.7', prompt],
+                capture_output=True,
+                text=True,
+                timeout=10,
+                env={**os.environ, 'ORACLE_API_KEY': os.environ.get('ORACLE_API_KEY', '')}
+            )
+            
+            if result.returncode == 0:
+                # Parse the AI's response - extract number between 0 and 1
+                output = result.stdout.strip()
+                # Try to find a number in the output
+                import re
+                match = re.search(r'0?\.\d+', output)
+                if match:
+                    prob = float(match.group())
+                    prob = max(0.01, min(0.99, prob))  # Clamp to valid range
+                    return prob
+                    
+        except Exception as e:
+            logger.debug(f"AI probability estimation failed for {market.ticker}: {e}")
+        
+        return None
+    
+    def _check_deep_short(self, market: Market, mid_price: float, time_left: int) -> Optional[TradeSignal]:
+        """
+        DEEP SHORT: YES < $0.15 → SELL YES (fade the longshot)
+        
+        Research shows low-probability outcomes are OVERBET (longshot bias).
+        The crowd overvalues tiny YES positions hoping for big wins.
+        We SELL YES (buy NO) to fade the crowd - collect when tails fail to deliver.
+        
+        We sell YES at low price like $0.10, betting event won't happen.
+        Profit if YES stays low or goes lower. Loss if YES jumps up.
+        """
+        if mid_price >= DEEP_SHORT_MAX_PRICE:
             return None
         
         if time_left < DEEP_MIN_TIME_LEFT_SEC:
-            logger.debug(f"DEEP BUY: {market.ticker} - not enough time left ({time_left}s)")
+            logger.debug(f"DEEP SHORT: {market.ticker} - not enough time left ({time_left}s)")
             return None
         
         # Calculate size using Kelly with historical strategy performance
-        prob = mid_price  # YES price ≈ probability
-        size, kelly_pct = self.calculate_kelly_size(Strategy.DEEP_BUY, prob)
+        # For short: probability of YES going DOWN is (1 - price)
+        prob = 1 - mid_price  # Probability that YES loses (we win)
+        size, kelly_pct = self.calculate_kelly_size(Strategy.DEEP_SHORT, prob)
         
-        logger.info(f"DEEP BUY signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, time_left={time_left}s")
+        logger.info(f"DEEP SHORT signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, time_left={time_left}s")
         
         return TradeSignal(
-            strategy=Strategy.DEEP_BUY,
+            strategy=Strategy.DEEP_SHORT,
             ticker=market.ticker,
-            side="yes",
+            side="no",  # We SELL YES (buy NO)
             price=mid_price,
             size=size,
-            reason=f"DEEP BUY: YES at ${mid_price:.4f} (< ${DEEP_BUY_MAX_PRICE}), riding to expiry",
+            reason=f"DEEP SHORT: Selling YES at ${mid_price:.4f} (< ${DEEP_SHORT_MAX_PRICE}), fading the longshot",
             take_profit=None,  # No TP - ride to expiry
             stop_loss=None     # No SL - ride to expiry
         )
     
     def _check_drift_buy(self, market: Market, mid_price: float, time_left: int) -> Optional[TradeSignal]:
         """
-        DRIFT BUY: YES $0.35-$0.45 → mean reversion, TP +25%, SL -15%
+        DRIFT BUY: YES $0.35-$0.65 → mean reversion, TP at $0.95+, SL -25%
+        
+        TP changed from +25% to $0.95+ (lock in near-wins when price reaches $0.95)
+        SL changed from -15% to -25% (give trades more room)
         """
         if not (DRIFT_BUY_MIN_PRICE <= mid_price <= DRIFT_BUY_MAX_PRICE):
             return None
@@ -252,15 +332,13 @@ class StrategyEngine:
         size, kelly_pct = self.calculate_kelly_size(Strategy.DRIFT_BUY, prob)
         
         # Calculate TP and SL prices
-        # TP: +25% from entry (on the $1 payoff scale)
-        # If we buy at $0.40, we risk $0.40 to win $0.60
-        # TP means YES moves up to ~$0.50 (25% of $1 move)
-        tp_price = min(1.0, mid_price * (1 + DRIFT_TP_PCT))
-        # SL: -15% loss on our stake
-        # SL means YES drops, we lose 15% of our position
+        # TP: Lock in profit when YES reaches $0.95+ (near maximum)
+        tp_price = DRIFT_TP_PRICE  # $0.95 absolute threshold
+        # SL: -25% loss on our stake (changed from -15%)
+        # If we buy at $0.40, -25% means YES drops to $0.30
         sl_price = mid_price * (1 - DRIFT_SL_PCT)
         
-        logger.info(f"DRIFT BUY signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, TP=${tp_price:.4f}, SL=${sl_price:.4f}")
+        logger.info(f"DRIFT BUY signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, TP=${tp_price:.4f} (lock at $0.95+), SL=${sl_price:.4f} (-25%)")
         
         return TradeSignal(
             strategy=Strategy.DRIFT_BUY,
@@ -268,7 +346,7 @@ class StrategyEngine:
             side="yes", 
             price=mid_price,
             size=size,
-            reason=f"DRIFT BUY: YES at ${mid_price:.4f} (mean reversion), TP +25%, SL -15%",
+            reason=f"DRIFT BUY: YES at ${mid_price:.4f} (mean reversion), TP ${tp_price:.2f}+, SL -25%",
             take_profit=tp_price,
             stop_loss=sl_price,
             tp_pct=DRIFT_TP_PCT,
@@ -277,8 +355,10 @@ class StrategyEngine:
     
     def _check_drift_short(self, market: Market, mid_price: float, time_left: int) -> Optional[TradeSignal]:
         """
-        DRIFT SHORT: YES $0.55-$0.65 → sell overpriced, TP +25%, SL -15%
+        DRIFT SHORT: YES $0.55-$0.75 → sell overpriced, TP +25%, SL -25%
         This means we're SELLING YES (betting it will go down)
+        
+        SL changed from -15% to -25% (give trades more room)
         """
         if not (DRIFT_SHORT_MIN_PRICE <= mid_price <= DRIFT_SHORT_MAX_PRICE):
             return None
@@ -295,7 +375,7 @@ class StrategyEngine:
         # Calculate TP and SL for short position
         # TP: YES drops, we profit. TP means price drops by 25%
         tp_price = mid_price * (1 - DRIFT_TP_PCT)
-        # SL: YES rises, we lose. SL means price rises by 15%
+        # SL: YES rises, we lose. SL means price rises by 25% (changed from 15%)
         sl_price = mid_price * (1 + DRIFT_SL_PCT)
         
         logger.info(f"DRIFT SHORT signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, TP=${tp_price:.4f}, SL=${sl_price:.4f}")
@@ -306,7 +386,7 @@ class StrategyEngine:
             side="no",  # We SELL YES (buy NO)
             price=mid_price,
             size=size,
-            reason=f"DRIFT SHORT: Selling YES at ${mid_price:.4f} (overpriced), TP +25%, SL -15%",
+            reason=f"DRIFT SHORT: Selling YES at ${mid_price:.4f} (overpriced), TP +25%, SL -25%",
             take_profit=tp_price,
             stop_loss=sl_price,
             tp_pct=DRIFT_TP_PCT,
@@ -318,8 +398,8 @@ class StrategyEngine:
         Check if a position should be exited.
         Returns (should_exit, reason).
         """
-        if position.strategy == Strategy.DEEP_BUY:
-            # No exit for DEEP BUY - ride to expiry
+        if position.strategy == Strategy.DEEP_SHORT:
+            # No exit for DEEP SHORT - ride to expiry (we're fading the longshot)
             return False, ""
         
         if position.take_profit is not None:

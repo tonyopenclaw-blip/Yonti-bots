@@ -15,7 +15,8 @@ from config import (
     LOG_FILE, LOG_LEVEL, LOG_FORMAT, LOG_DATE_FORMAT,
     PAPER_MODE, PAPER_BALANCE, BALANCE_FLOOR, BALANCE_RESET_AMOUNT,
     IDLE_POLL_INTERVAL_SEC, ACTIVE_POLL_INTERVAL_SEC, MAX_OPEN_POSITIONS, MAX_BET,
-    KALSHI_ACCESS_KEY, COINS, SERIES_TICKERS
+    KALSHI_ACCESS_KEY, COINS, SERIES_TICKERS,
+    COOLDOWN_CYCLES, DAILY_STOP_LOSS_PCT
 )
 from kalshi_api import KalshiAPI, Market
 from strategies import StrategyEngine, Strategy, Position, TradeSignal
@@ -55,6 +56,10 @@ class CoinTrader:
         # Per-coin position tracking
         self.positions: Dict[str, Position] = {}  # ticker -> Position
         self.cash = 0.0  # Per-coin cash tracking (managed by SuperBot)
+        
+        # Cooldown tracking: cycles since last position closed
+        # After closing a position, wait COOLDOWN_CYCLES before re-entering
+        self.cycles_since_close = COOLDOWN_CYCLES * 2  # Start ready to trade (multiply by 2 to be safe)
         
         logger.info(f"CoinTrader initialized for {coin} ({series_ticker})")
     
@@ -113,6 +118,10 @@ class CoinTrader:
         
         # Record trade result for Kelly tracking
         self.strategy_engine.record_trade_result(position.strategy, pnl)
+        
+        # Start cooldown: wait 2 full market cycles before re-entering
+        self.cycles_since_close = 0
+        logger.info(f"[{self.coin}] Position closed. Cooldown started: must wait {COOLDOWN_CYCLES} cycles before re-entering")
         
         del self.positions[ticker]
         return pnl, position.strategy
@@ -178,6 +187,11 @@ class CoinTrader:
         if self.positions:
             return [], 0.0
         
+        # Check cooldown: wait COOLDOWN_CYCLES after closing a position
+        if self.cycles_since_close < COOLDOWN_CYCLES:
+            logger.debug(f"[{self.coin}] Cooldown: {self.cycles_since_close}/{COOLDOWN_CYCLES} cycles - skipping")
+            return [], 0.0
+        
         # Scan for new signals
         for market in markets:
             # Skip if we already have a position
@@ -195,6 +209,13 @@ class CoinTrader:
                 signals.append(signal)
         
         return signals, total_cost
+    
+    def increment_cooldown(self):
+        """Increment cooldown counter for this coin after each market cycle."""
+        if self.cycles_since_close < COOLDOWN_CYCLES:
+            self.cycles_since_close += 1
+            if self.cycles_since_close >= COOLDOWN_CYCLES:
+                logger.info(f"[{self.coin}] Cooldown complete - can trade again")
     
     def get_status(self) -> str:
         """Get status string for this coin."""
@@ -242,6 +263,12 @@ class Superbot:
         self.series_cycle = 0  # Cycle counter for idle polling through all coins
         self.our_series_tickers = list(SERIES_TICKERS.values())  # [KXBTC15M, KXETH15M, ...]
         
+        # Daily stop-loss tracking
+        self.day_start_balance = PAPER_BALANCE  # Balance at start of day
+        self.day_start_time = datetime.now().strftime("%Y-%m-%d")  # Track day
+        self.trading_stopped = False  # Flag when daily stop-loss triggered
+        self.stop_loss_triggered = False  # Flag to indicate stop-loss was triggered this day
+        
         # Setup signal handlers
         signal.signal(signal.SIGINT, self._signal_handler)
         signal.signal(signal.SIGTERM, self._signal_handler)
@@ -254,6 +281,8 @@ class Superbot:
         logger.info(f"Balance floor: ${BALANCE_FLOOR:.2f}")
         logger.info(f"Max bet per coin: ${MAX_BET:.2f}")
         logger.info(f"Idle poll: {IDLE_POLL_INTERVAL_SEC}s per series | Active poll: {ACTIVE_POLL_INTERVAL_SEC}s")
+        logger.info(f"Cooldown: {COOLDOWN_CYCLES} cycles after position close")
+        logger.info(f"Daily stop-loss: {DAILY_STOP_LOSS_PCT*100:.0f}% ({DAILY_STOP_LOSS_PCT*100:.0f}% of ${self.day_start_balance:.2f} = ${self.day_start_balance * DAILY_STOP_LOSS_PCT:.2f} max loss)")
         logger.info("=" * 60)
     
     def _signal_handler(self, signum, frame):
@@ -267,6 +296,46 @@ class Superbot:
             logger.warning(f"Balance ${self.cash:.2f} below floor ${BALANCE_FLOOR:.2f}!")
             logger.warning(f"Resetting balance to ${BALANCE_RESET_AMOUNT:.2f}")
             self.cash = BALANCE_RESET_AMOUNT
+    
+    def _check_daily_stop_loss(self):
+        """Check if daily stop-loss has been triggered (20% portfolio loss)."""
+        # Check if it's a new day - reset tracking
+        current_day = datetime.now().strftime("%Y-%m-%d")
+        if current_day != self.day_start_time:
+            logger.info(f"New day detected ({current_day}). Resetting daily tracking.")
+            self.day_start_balance = self.cash
+            self.day_start_time = current_day
+            self.trading_stopped = False
+            self.stop_loss_triggered = False
+        
+        # Calculate today's loss
+        loss = self.day_start_balance - self.cash
+        loss_pct = loss / self.day_start_balance if self.day_start_balance > 0 else 0
+        
+        # Check stop-loss threshold
+        if loss_pct >= DAILY_STOP_LOSS_PCT and not self.trading_stopped:
+            logger.warning(f"🚨 DAILY STOP-LOSS TRIGGERED!")
+            logger.warning(f"   Day start: ${self.day_start_balance:.2f}")
+            logger.warning(f"   Current:  ${self.cash:.2f}")
+            logger.warning(f"   Loss:      ${loss:.2f} ({loss_pct*100:.1f}%)")
+            logger.warning(f"   Threshold: ${self.day_start_balance * DAILY_STOP_LOSS_PCT:.2f} ({DAILY_STOP_LOSS_PCT*100:.0f}%)")
+            self.trading_stopped = True
+            self.stop_loss_triggered = True
+            
+            # Close all open positions
+            for coin, trader in self.coin_traders.items():
+                for ticker in list(trader.positions.keys()):
+                    logger.warning(f"   Closing {ticker} due to daily stop-loss")
+                    trader._close_position(ticker, "daily_stop_loss", 0.5)
+            
+            # Reset balance
+            logger.warning(f"   Resetting balance to ${BALANCE_RESET_AMOUNT:.2f}")
+            self.cash = BALANCE_RESET_AMOUNT
+            self.day_start_balance = BALANCE_RESET_AMOUNT
+            self.day_start_time = datetime.now().strftime("%Y-%m-%d")
+            
+            return True
+        return False
     
     def _distribute_cash_to_traders(self):
         """Distribute available cash to each coin's strategy engine."""
@@ -351,12 +420,15 @@ class Superbot:
         
         - When NO active markets: poll ONE series per 10 seconds, cycle through all 8 coins
         - When markets ARE active: poll that series every 1 second (fast polling)
+        - Cooldown: 2 full market cycles after closing any position
+        - Daily stop-loss: 20% portfolio loss triggers reset
         """
         logger.info("Starting SMART POLLING trading loop (Recorder's approach)...")
         self.report.start_session()
         
         loop_count = 0
         last_status_log = time.time()
+        last_cooldown_tick = time.time()
         
         while self.running:
             loop_count += 1
@@ -364,8 +436,20 @@ class Superbot:
                 # Distribute cash to each coin's strategy engine
                 self._distribute_cash_to_traders()
                 
+                # Check daily stop-loss FIRST (before any trading)
+                if self._check_daily_stop_loss():
+                    # If stop-loss triggered, wait and continue monitoring but don't trade
+                    time.sleep(IDLE_POLL_INTERVAL_SEC)
+                    continue
+                
                 # Check balance floor
                 self._check_balance_reset()
+                
+                # Increment cooldowns every ~15 seconds (market cycle time)
+                if time.time() - last_cooldown_tick >= 15:
+                    for trader in self.coin_traders.values():
+                        trader.increment_cooldown()
+                    last_cooldown_tick = time.time()
                 
                 if self.active_series:
                     # ACTIVE MODE: First, do a QUICK scan of ALL series to discover any new active ones
@@ -381,7 +465,9 @@ class Superbot:
                     had_markets = self._check_and_trade_series(series_ticker)
                     
                     if loop_count % 30 == 1:
-                        logger.info(f"😴 IDLE: checked {series_ticker} (poll #{loop_count})")
+                        loss = self.day_start_balance - self.cash
+                        loss_pct = loss / self.day_start_balance * 100 if self.day_start_balance > 0 else 0
+                        logger.info(f"😴 IDLE: checked {series_ticker} (poll #{loop_count}) | Day P&L: ${loss:.2f} ({loss_pct:.1f}%)")
                     
                     # If no markets found, sleep 10 seconds
                     # If markets WERE found, don't sleep - immediately go to active polling
@@ -392,14 +478,18 @@ class Superbot:
                 if time.time() - last_status_log >= 30:
                     total_positions = sum(len(t.positions) for t in self.coin_traders.values())
                     status_parts = [t.get_status() for t in self.coin_traders.values()]
+                    
+                    loss = self.day_start_balance - self.cash
+                    loss_pct = loss / self.day_start_balance * 100 if self.day_start_balance > 0 else 0
+                    
                     logger.info(f"Status: cash=${self.cash:.2f}, positions={total_positions}, loop={loop_count}, active_series={list(self.active_series)}")
+                    logger.info(f"Day P&L: ${loss:.2f} ({loss_pct:.1f}%) / ${self.day_start_balance * DAILY_STOP_LOSS_PCT:.2f} limit")
                     logger.info(f"Coins: {' | '.join(status_parts)}")
                     
                     # Build position details for the report
                     positions_details = []
                     for trader in self.coin_traders.values():
                         for ticker, pos in trader.positions.items():
-                            from datetime import datetime
                             positions_details.append({
                                 "ticker": pos.ticker,
                                 "side": pos.side,

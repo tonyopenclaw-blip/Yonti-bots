@@ -45,14 +45,16 @@ KELLY_FRACTION = 0.25  # Use 25% of Kelly (conservative)
 MIN_KELLY_BET = 2.00   # Minimum bet when using Kelly sizing ($2 hard floor)
 MAX_KELLY_BET = 2.00   # Maximum bet when using Kelly sizing ($2 hard cap)
 KELLY_TRACKED_TRADES = 50  # Number of recent trades to track per strategy
-KELLY_MAX_CAP = 0.50   # Never bet more than 50% of balance (half-Kelly safety)
+KELLY_MAX_CAP = 0.15   # Never bet more than 15% of balance (half-Kelly safety)
 
 # =============================================================================
 # STRATEGY THRESHOLDS
 # =============================================================================
 
-# DEEP BUY Strategy: YES < $0.15 → buy, ride to expiry, NO stop loss
-DEEP_BUY_MAX_PRICE = 0.15
+# DEEP SHORT Strategy: YES < $0.15 → SELL tails (short YES), fade the longshot
+# Research shows low-probability outcomes are overbet (longshot bias)
+# Fading the longshot = betting AGAINST low-prob events is more profitable
+DEEP_SHORT_MAX_PRICE = 0.15
 DEEP_MIN_TIME_LEFT_SEC = 60   # At least 1 minute before expiry
 
 # DRIFT BUY Strategy: YES $0.35-$0.65 → mean reversion, TP +25%, SL -15%
@@ -65,8 +67,21 @@ DRIFT_SHORT_MIN_PRICE = 0.55
 DRIFT_SHORT_MAX_PRICE = 0.75
 
 # Take Profit and Stop Loss percentages for DRIFT strategies
-DRIFT_TP_PCT = 0.25    # Take profit at 25% gain
-DRIFT_SL_PCT = 0.15    # Stop loss at 15% loss
+DRIFT_TP_PCT = 0.25    # Take profit at 25% gain (used for DRIFT_SHORT)
+DRIFT_TP_PRICE = 0.95  # TP at $0.95+ for DRIFT_BUY (lock in near-wins)
+DRIFT_SL_PCT = 0.25    # Stop loss at 25% loss (increased from 15% to give trades more room)
+
+# =============================================================================
+# AI PROBABILITY ESTIMATION
+# =============================================================================
+AI_PROBABILITY_ENABLED = False  # Enable AI probability estimation via Claude
+AI_EDGE_THRESHOLD = 0.05         # Minimum edge required to trade (5%)
+
+# =============================================================================
+# TRADING COOLDOWN & DAILY STOP-LOSS (Added from Nerd's research)
+# =============================================================================
+COOLDOWN_CYCLES = 2              # Wait 2 full market cycles after closing before re-entering
+DAILY_STOP_LOSS_PCT = 0.20      # Portfolio daily stop-loss at 20% (stop and reset)
 
 # =============================================================================
 # TRADING LOOP CONFIG - Smart Polling (Recorder's Approach)

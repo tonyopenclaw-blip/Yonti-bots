@@ -1,72 +1,81 @@
 {
-  "start_time": "2026-04-02 11:08:24 UTC",
+  "start_time": "2026-04-02 11:38:03 UTC",
   "end_time": "",
   "starting_balance": 100.0,
-  "ending_balance": 86.314,
-  "total_pnl": -13.686000000000007,
+  "ending_balance": 87.40499999999999,
+  "total_pnl": -12.595000000000013,
   "total_trades": 0,
   "winning_trades": 0,
   "losing_trades": 0,
   "win_rate": 0,
   "largest_win": 0.0,
   "largest_loss": 0.0,
-  "open_positions": 6,
-  "thermostat": 75,
+  "open_positions": 7,
+  "thermostat": 87,
   "trades": [],
   "last_10_open_trades": [
     {
-      "ticker": "KXBTC15M-26APR020715-15",
+      "ticker": "KXBTC15M-26APR020745-45",
+      "side": "no",
+      "entry_price": 0.075,
+      "size": 2.0,
+      "strategy": "deep_short",
+      "open_time": "2026-04-02 11:38:03 UTC",
+      "current_price": 0.075
+    },
+    {
+      "ticker": "KXETH15M-26APR020745-45",
+      "side": "no",
+      "entry_price": 0.14,
+      "size": 2.0,
+      "strategy": "deep_short",
+      "open_time": "2026-04-02 11:38:03 UTC",
+      "current_price": 0.14
+    },
+    {
+      "ticker": "KXSOL15M-26APR020745-45",
+      "side": "no",
+      "entry_price": 0.0755,
+      "size": 2.0,
+      "strategy": "deep_short",
+      "open_time": "2026-04-02 11:38:03 UTC",
+      "current_price": 0.0755
+    },
+    {
+      "ticker": "KXXRP15M-26APR020745-45",
       "side": "no",
       "entry_price": 0.1005,
       "size": 2.0,
       "strategy": "deep_short",
-      "open_time": "2026-04-02 11:08:24 UTC",
+      "open_time": "2026-04-02 11:38:34 UTC",
       "current_price": 0.1005
     },
     {
-      "ticker": "KXETH15M-26APR020715-15",
+      "ticker": "KXDOGE15M-26APR020745-45",
       "side": "no",
-      "entry_price": 0.08499999999999999,
+      "entry_price": 0.12000000000000001,
       "size": 2.0,
       "strategy": "deep_short",
-      "open_time": "2026-04-02 11:10:02 UTC",
-      "current_price": 0.08499999999999999
+      "open_time": "2026-04-02 11:38:06 UTC",
+      "current_price": 0.12000000000000001
     },
     {
-      "ticker": "KXSOL15M-26APR020715-15",
+      "ticker": "KXHYPE15M-26APR020745-45",
       "side": "no",
-      "entry_price": 0.095,
+      "entry_price": 0.105,
       "size": 2.0,
       "strategy": "deep_short",
-      "open_time": "2026-04-02 11:11:44 UTC",
-      "current_price": 0.095
+      "open_time": "2026-04-02 11:38:03 UTC",
+      "current_price": 0.105
     },
     {
-      "ticker": "KXXRP15M-26APR020715-15",
+      "ticker": "KXBNB15M-26APR020745-45",
       "side": "no",
-      "entry_price": 0.1105,
+      "entry_price": 0.08650000000000001,
       "size": 2.0,
       "strategy": "deep_short",
-      "open_time": "2026-04-02 11:09:16 UTC",
-      "current_price": 0.1105
-    },
-    {
-      "ticker": "KXHYPE15M-26APR020715-15",
-      "side": "no",
-      "entry_price": 0.0745,
-      "size": 2.0,
-      "strategy": "deep_short",
-      "open_time": "2026-04-02 11:08:24 UTC",
-      "current_price": 0.0745
-    },
-    {
-      "ticker": "KXBNB15M-26APR020715-15",
-      "side": "no",
-      "entry_price": 0.036500000000000005,
-      "size": 2.0,
-      "strategy": "deep_short",
-      "open_time": "2026-04-02 11:08:47 UTC",
-      "current_price": 0.036500000000000005
+      "open_time": "2026-04-02 11:38:03 UTC",
+      "current_price": 0.08650000000000001
     }
   ],
   "last_10_closed_trades": []

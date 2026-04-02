@@ -649,6 +649,290 @@ Our DRIFT strategies trade mean reversion in this zone:
 
 ---
 
+## 📊 WYCKOFF, FIBONACCI & MACRO DISTRIBUTION
+
+_Research findings from Twitter/X scraping + web research on Wyckoff method, Fibonacci retracement, and super macro distribution applied to 15-min crypto prediction markets._
+
+---
+
+### 🔷 WYCKOFF METHOD OVERVIEW
+
+**Origin:** Developed by Richard D. Wyckoff in the 1930s — one of the 5 "titans" of technical analysis (alongside Dow, Elliott, Merrill, Gann).
+
+**Core Concept:** Markets are driven by large institutional operators Wyckoff called the "Composite Man." By studying price and volume, you can identify when smart money is accumulating before a rally or distributing before a crash.
+
+**Why It Matters for Prediction Markets:**
+- Crypto markets (BTC, ETH) show clear Wyckoff patterns due to institutional influence
+- Accumulation/distribution phases create predictable range-bound behavior in 15-min markets
+- The "Spring" event is a high-probability reversal signal we can exploit
+
+---
+
+### ⚖️ THE THREE LAWS OF WYCKOFF
+
+#### 1. Law of Supply and Demand
+> Price moves based on the balance between buyers and sellers.
+
+- **Demand > Supply** → Price rises
+- **Supply > Demand** → Price falls
+- **For 15-min binary options:** When price approaches a Wyckoff support level AND demand is evident (volume on up-moves), bias toward CALL. When approaching resistance with supply evident, bias toward PUT.
+
+#### 2. Law of Cause and Effect
+> Every significant price move has a cause (accumulation/distribution) that produces an effect (markup/markdown).
+
+- **Accumulation** (cause) → **Markup** (effect)
+- **Distribution** (cause) → **Markdown** (effect)
+- **For 15-min binary options:** The longer the consolidation range, the bigger the eventual move. This is our "cause" — measure the range height to estimate the potential move.
+
+#### 3. Law of Effort vs Result
+> Price moves should be supported by volume. Divergence = warning sign.
+
+- **Strong move + high volume** = Healthy trend (continue)
+- **Strong move + low volume** = Weak, likely reversal
+- **Price moves but volume doesn't confirm** = Exhaustion signal
+- **For 15-min binary options:** A large candle WITHOUT volume spike at support/resistance is a RED FLAG — expect reversal.
+
+---
+
+### 🔄 THE FOUR WYCKOFF PHASES
+
+```
+Accumulation → Markup → Distribution → Markdown → (repeat)
+```
+
+#### Phase A: PRELIMINARY (End of downtrend)
+- **PS (Preliminary Support):** First sign selling is slowing; high volume but price stabilizes
+- **SC (Selling Climax):** Panic selling on VERY high volume — often a long-wick candle. Marks the approximate low.
+- **AR (Automatic Rally):** Sharp bounce after SC. Short covering + buyers step in.
+
+#### Phase B: ACCUMULATION (The "cause")
+- **ST (Secondary Test):** Price retests SC low on LOWER volume — confirms support.
+- **Spring (Wyckoff's key signal):** Price briefly breaks BELOW the SC low on LOW volume, then quickly reverses. This is a FALSE BREAKOUT — classic BUY signal.
+- **LPS (Last Point of Support):** Higher low forming before breakout — final chance to enter long.
+- **SOS (Sign of Strength):** Strong upward move on HIGH volume that breaks above the trading range resistance.
+
+#### Phase C: MARKUP (The "effect")
+- Price rises as smart money releases accumulated positions to the market.
+- Characterized by: Higher highs, higher lows, volume confirmations.
+- Our bot should be taking CALLS in this phase.
+
+#### Phase D: DISTRIBUTION (Reversal setup)
+- **PSY (Preliminary Supply):** First sign buying is tiring.
+- **BC (Buying Climax):** Last gasp of buying on high volume — often a blow-off top.
+- **AR (Automatic Reaction):** Sharp sell-off after BC.
+- **ST (Secondary Test):** Retest of BC high on lower volume.
+- **UTAD (Upthrust After Distribution):** Mirror of Spring — price briefly breaks ABOVE resistance on low volume, then reverses. Classic SELL signal.
+- **LPSY (Last Point of Supply):** Lower high forming before breakdown.
+
+#### Phase E: MARKDOWN
+- Smart money exits, price declines.
+- Our bot should be taking PUTS in this phase.
+
+---
+
+### 🎯 WYCKOFF SCHEMATICS FOR 15-MIN CHARTS
+
+**Key events to watch on 15-min crypto binary option charts:**
+
+| Event | What It Looks Like | Action |
+|-------|-------------------|--------|
+| **Spring** | Price briefly dips below support on LOW volume, then snaps back | 🟢 CALL (buy dip) |
+| **UTAD** | Price briefly rises above resistance on LOW volume, then falls | 🔴 PUT (sell rally) |
+| **LPS** | Higher low forming after Spring, before breakout | 🟢 CALL (accumulation entry) |
+| **LPSY** | Lower high forming after UTAD, before breakdown | 🔴 PUT (distribution entry) |
+| **SOS** | Strong candle breaking resistance on HIGH volume | 🟢 CALL confirmation |
+| **SOW** | Strong candle breaking support on HIGH volume | 🔴 PUT confirmation |
+
+**Visual pattern recognition for binary options:**
+
+```
+ACCUMULATION (Range-bound, buying support):
+        ________  <-- Resistance
+       /        \
+______/          \______  <-- Support (SC low)
+   ^Spring
+
+DISTRIBUTION (Range-bound, selling supply):
+______          _______  <-- Resistance (BC high)
+      \        /
+       \______/  <-- Support breaks down
+            ^UTAD
+```
+
+---
+
+### 📐 FIBONACCI RETRACEMENT FOR 15-MIN BINARY OPTIONS
+
+**Key levels:** 23.6% | 38.2% | 50% | 61.8% | 78.6%
+
+**How Fibonacci works in short-term trading:**
+After a strong move (up or down), price tends to retrace a portion of that move before continuing. These retracement levels act as support/resistance zones.
+
+**Practical testing results (from trader documentation):**
+
+| Fibonacci Level | Reversal Probability | Notes |
+|-----------------|---------------------|-------|
+| **23.6%** | Weak (42%) | Often just a pause, not reversal |
+| **38.2%** | Moderate (53%) | Occasional bounce, needs confirmation |
+| **50%** | **Strong (61%)** | **Most reliable for 15-min binary options** |
+| **61.8%** | Strong (58%) | "Golden ratio" — late reaction |
+| **78.6%** | Unreliable (47%) | Overextended — avoid |
+
+**For 15-min crypto binary options:**
+
+1. **Identify a clear swing:** Recent high to recent low (or vice versa)
+2. **Draw Fibonacci from low to high** (for retracement of down-move) or **high to low** (for retracement of up-move)
+3. **Watch for price to react at key levels:**
+   - At **50% level** → Strongest reversal probability → Enter trade
+   - At **61.8% level** → Second strongest → Enter with confirmation candle
+   - Between **38.2% and 50%** → Moderate probability → Wait for candle confirmation
+
+**Critical timing insight:** Fibonacci levels alone are NOT enough. Always wait for a **confirmation candle** (pin bar, engulfing, doji at the level) before entering. Testing showed adding candle confirmation improved win rate from ~54% to ~63%.
+
+**Fibonacci + Wyckoff combination:**
+- When price retraces TO a Fibonacci level AND forms a Wyckoff Spring/LPS pattern → HIGH probability CALL
+- When price retraces TO a Fibonacci level AND forms a UTAD/LPSY pattern → HIGH probability PUT
+
+---
+
+### 🌍 SUPER MACRO DISTRIBUTION
+
+**Concept:** The "super macro" level refers to the largest institutional distribution cycles — the kind that play out over months to years (not days). Understanding this context helps avoid fighting major trends.
+
+**Super Macro Distribution vs Wyckoff Distribution:**
+- Wyckoff distribution = Medium-term (weeks to months) — smart money unloading
+- Super macro distribution = Secular bear markets (years to decades) — generational wealth transfer
+
+**Key principle:** During super macro distribution, EVERY rally is a selling opportunity until the cycle reverses. During super macro accumulation, EVERY dip is a buying opportunity.
+
+**Practical application for our 15-min bots:**
+
+| Market Context | Super Macro Phase | Bot Bias |
+|---------------|-------------------|----------|
+| BTC in long-term bear market | Super Macro Distribution | Prefer PUTS, limit CALLS to counter-trend bounces |
+| BTC in long-term bull market | Super Macro Accumulation | Prefer CALLS, limit PUTS to small scalps |
+| BTC in range (no clear trend) | Wyckoff Accumulation/Distribution | Trade the range boundaries |
+
+**The "Quarterly Theory" (ICT/SMC):**
+- Markets move in quarterly cycles aligned with macro events
+- Each quarter has accumulation, manipulation, and distribution phases
+- Daily/15-min charts show these micro-phases within the quarterly context
+
+---
+
+### 🤖 WYCKOFF + FIBONACCI ENTRY/EXIT RULES FOR SUPERBOT
+
+**ENTRY RULES:**
+
+```
+🟢 CALL ENTRY:
+1. Price at key support level (Wyckoff LPS / Spring zone)
+2. Fibonacci retracement at 50% or 61.8% level
+3. RSI(4) < 30 or bouncing from oversold
+4. Volume INCREASING on bounce (effort vs result confirms)
+5. Confirmation candle forms (Hammer, Engulfing, or Doji)
+→ Enter CALL, 10-15 min expiry
+
+🔴 PUT ENTRY:
+1. Price at key resistance level (Wyckoff LPSY / UTAD zone)
+2. Fibonacci retracement at 50% or 61.8% level
+3. RSI(4) > 70 or rejecting from overbought
+4. Volume INCREASING on decline (effort vs result confirms)
+5. Confirmation candle forms (Shooting Star, Engulfing, or Doji)
+→ Enter PUT, 10-15 min expiry
+```
+
+**EXIT RULES:**
+
+| Trigger | Action |
+|---------|--------|
+| Price reaches **61.8% Fibonacci extension** of last swing | Take profit / close position |
+| RSI(4) reaches extreme (80 or 20) | Close immediately, don't fade |
+| Volume diverges from price direction | Close — trend likely exhausting |
+| Wyckoff phase change confirmed | Exit and reassess |
+| Price breaks through **78.6% Fibonacci** without reversal | Stop-loss / close — trend is overextended |
+
+**STOP-LOSS guidelines:**
+- For CALLS: Stop below the Spring/low of the retracement zone
+- For PUTS: Stop above the UTAD/high of the retracement zone
+- Maximum stop: 15% of position size (match existing DRIFT strategy)
+
+---
+
+### 📊 COMBINED WYCKOFF + FIBONACCI SCORECARD
+
+**When ALL signals align, probability is highest:**
+
+| Factor | CALL Signal (+) | PUT Signal (-) |
+|--------|-----------------|----------------|
+| **Wyckoff Phase** | Accumulation / LPS / Spring | Distribution / LPSY / UTAD |
+| **Fibonacci Level** | 50% or 61.8% retracement | 50% or 61.8% retracement |
+| **RSI** | < 30 (oversold) | > 70 (overbought) |
+| **Volume** | Higher on bounce up | Higher on drop down |
+| **Candle** | Hammer, Bullish Engulfing | Shooting Star, Bearish Engulfing |
+| **MACD** | Crossed above signal | Crossed below signal |
+| **Bollinger** | Price at lower band | Price at upper band |
+
+**Score: 5+ aligned = High conviction trade**
+**Score: 3-4 aligned = Medium conviction — reduce position size**
+**Score: < 3 aligned = Skip — not enough confirmation**
+
+---
+
+### 🎯 WHAT SUPERBOT SHOULD ADD
+
+**New indicators to code:**
+```python
+# Fibonacci levels (swing high/low detection)
+# Wyckoff phase detection (accumulation vs distribution vs markup vs markdown)
+# Volume confirmation (is volume supporting the move?)
+# Effort vs Result divergence detection
+```
+
+**Modified entry logic:**
+```
+IF price_near_fibonacci_level(50.0, 61.8)
+   AND wyckoff_phase IN ['accumulation', 'markup']
+   AND rsi_4 < 30
+   AND volume_confirms_move()
+   AND confirmation_candle_forms()
+   THEN enter_call()
+
+IF price_near_fibonacci_level(50.0, 61.8)
+   AND wyckoff_phase IN ['distribution', 'markdown']
+   AND rsi_4 > 70
+   AND volume_confirms_move()
+   AND confirmation_candle_forms()
+   THEN enter_put()
+```
+
+---
+
+### 🚫 WYCKOFF + FIBONACCI MISTAKES TO AVOID
+
+| Mistake | Why | Fix |
+|---------|-----|-----|
+| Trading Fibonacci without confirmation candle | Price often overshoots or whipsaws | Always wait for Hammer/Engulfing/Doji at the level |
+| Ignoring the Wyckoff phase context | Fighting a major trend is dangerous | Check if we're in accumulation/distribution/markup/markdown |
+| Using 23.6% or 78.6% levels as primary signals | These have lowest reversal probability | Focus on 50% and 61.8% only |
+| Entering before the Spring/UTAD fully completes | False breakouts can extend | Wait for candle close above/below the breakout level |
+| Ignoring volume | Wyckoff's Effort vs Result law | Require volume confirmation for all entries |
+| Forcing trades when nothing aligns | No setup = no trade | Wait for alignment, better to miss than lose |
+
+---
+
+### 📚 SOURCES
+
+- Twitter/X scraping via Apify (xtdata/twitter-x-scraper) — @npantano_ (Wyckoff-focused)
+- QuantStrategy.io — Wyckoff Theory explained
+- Margex Blog — Wyckoff Chart Patterns Guide
+- LuxAlgo — Accumulation Manipulation Distribution (AMD) strategy
+- BeCoin.net — Fibonacci Retracement testing in binary options
+- StockCharts.com — Wyckoff Method tutorial
+- Investor Perspectives — Super Macro: A Fundamental Timing Model
+
+---
+
 ## 🔧 GAPS & TODO
 
 - [ ] Polymarket integration (needs Tony to set up account + KYC)

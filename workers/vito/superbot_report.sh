@@ -103,13 +103,39 @@ fi
 
 # Format P&L signs
 if (( $(echo "$TOTAL_PNL >= 0" | bc -l) )); then
-    TOTAL_PNL_DISPLAY="+$${TOTAL_PNL_FMT}"
+    TOTAL_PNL_DISPLAY="+\$${TOTAL_PNL_FMT}"
 else
-    TOTAL_PNL_DISPLAY="-$$(echo "${TOTAL_PNL_FMT#-}" | tr -d '-')"
+    TOTAL_PNL_DISPLAY="-\$$(echo "${TOTAL_PNL_FMT#-}" | tr -d '-')"
+fi
+
+# Parse last 10 closed trades from superbot
+CLOSED_TRADES=""
+if [ -f "$SUPERBOT_STATS" ]; then
+    TRADE_COUNT=$(jq -r '.last_10_closed_trades | length' "$SUPERBOT_STATS" 2>/dev/null || echo "0")
+    if [ "$TRADE_COUNT" -gt 0 ]; then
+        IDX=0
+        while [ $IDX -lt "$TRADE_COUNT" ] && [ $IDX -lt 10 ]; do
+            TICKER=$(jq -r ".last_10_closed_trades[$IDX].ticker" "$SUPERBOT_STATS" 2>/dev/null)
+            SIDE=$(jq -r ".last_10_closed_trades[$IDX].side" "$SUPERBOT_STATS" 2>/dev/null)
+            ENTRY=$(jq -r ".last_10_closed_trades[$IDX].entry_price" "$SUPERBOT_STATS" 2>/dev/null)
+            EXIT=$(jq -r ".last_10_closed_trades[$IDX].exit_price" "$SUPERBOT_STATS" 2>/dev/null)
+            TRADE_PNL=$(jq -r ".last_10_closed_trades[$IDX].pnl" "$SUPERBOT_STATS" 2>/dev/null)
+            
+            ENTRY_FMT=$(printf "%.4f" "$ENTRY")
+            EXIT_FMT=$(printf "%.4f" "$EXIT")
+            PNL_FMT=$(printf "%+.2f" "$TRADE_PNL")
+            
+            # Shorten ticker (KXBTC15M-20240115-0900 -> BTC 0900)
+            TICKER_SHORT=$(echo "$TICKER" | sed 's/KXBTC15M/BTC/; s/KXETH15M/ETH/; s/KXSOL15M/SOL/; s/KXXRP15M/XRP/; s/KXDOGE15M/DOGE/; s/KXHYPE15M/HYPE/; s/KXBNB15M/BNB/' | cut -d'-' -f1)
+            
+            CLOSED_TRADES="${CLOSED_TRADES}  ${TICKER_SHORT} ${SIDE} ${ENTRY_FMT}→${EXIT_FMT} | PnL: \$${PNL_FMT}\n"
+            IDX=$((IDX + 1))
+        done
+    fi
 fi
 
 # Build report message
-TIMESTAMP=$(date '+%Y-%m-%d %H:%M UTC')
+TZ='America/New_York' TIMESTAMP=$(date '+%Y-%m-%d %H:%M EST')
 
 REPORT="📊 **UNIFIED PAPER TRADING REPORT**
 ━━━━━━━━━━━━━━━━━━━━━━
@@ -131,6 +157,13 @@ if [ -n "$OPEN_POSITIONS" ]; then
     REPORT="${REPORT}
 **OPEN POSITIONS (last 10):**
 $(printf '%b' "$OPEN_POSITIONS")"
+fi
+
+# Add closed trades from superbot if any
+if [ -n "$CLOSED_TRADES" ]; then
+    REPORT="${REPORT}
+**SUPERBOT CLOSED TRADES (last 10):**
+$(printf '%b' "$CLOSED_TRADES")"
 fi
 
 FULL_MESSAGE="${REPORT}

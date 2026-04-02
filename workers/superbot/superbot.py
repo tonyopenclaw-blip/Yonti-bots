@@ -119,6 +119,25 @@ class CoinTrader:
         # Record trade result for Kelly tracking
         self.strategy_engine.record_trade_result(position.strategy, pnl)
         
+        # Record trade in report
+        close_time = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+        open_time_str = datetime.fromtimestamp(position.open_time).strftime("%Y-%m-%d %H:%M:%S UTC") if isinstance(position.open_time, (int, float)) else str(position.open_time)
+        strategy_name = position.strategy.value if hasattr(position.strategy, 'value') else str(position.strategy)
+        
+        trade = Trade(
+            ticker=position.ticker,
+            side=position.side,
+            entry_price=position.entry_price,
+            exit_price=exit_price,
+            size=position.size,
+            pnl=pnl,
+            strategy=strategy_name,
+            open_time=open_time_str,
+            close_time=close_time,
+            exit_reason=reason
+        )
+        self.report.record_trade(trade, position)
+        
         # Start cooldown: wait 2 full market cycles before re-entering
         self.cycles_since_close = 0
         logger.info(f"[{self.coin}] Position closed. Cooldown started: must wait {COOLDOWN_CYCLES} cycles before re-entering")

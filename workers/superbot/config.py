@@ -23,7 +23,7 @@ MARKETS_LIMIT = 20
 # Coins to trade — REMOVED DOGE, XRP, BTC (all showed negative or near-zero PnL)
 # TOP PERFORMERS: ETH (52.9% WR, +$5.00), BNB (54.5% WR, +$2.93), SOL (42.9% WR, +$2.84)
 # BAD PERFORMERS: BTC (21.1% WR, -$1.70), XRP (26.7% WR, -$0.31), DOGE (29.4% WR, +$0.09)
-COINS = ['ETH', 'BNB', 'SOL', 'HYPE', 'ADA']  # Removed: BTC, DOGE, XRP, HYPE
+COINS = ['BTC', 'ETH', 'BNB', 'SOL', 'DOGE', 'XRP', 'HYPE', 'ADA']  # All coins — testing for stats
 SERIES_TICKERS = {coin: f'KX{coin}15M' for coin in COINS}
 
 KALSHI_ACCESS_KEY = os.getenv("KALSHI_ACCESS_KEY", "")
@@ -184,7 +184,7 @@ AI_EDGE_THRESHOLD = 0.05
 # DAILY STOP-LOSS AND SESSION LIMITS — TIGHTENED
 # =============================================================================
 COOLDOWN_CYCLES = 0
-DAILY_STOP_LOSS_PCT = 0.10  # 10% portfolio loss → STOP (tightened from 20%)
+DAILY_STOP_LOSS_PCT = 1.00  # DISABLED — paper trading, no stop loss
 SESSION_WIN_LIMIT_PCT = 0.50  # NEW: if we're UP 50%, take a break
 
 # =============================================================================

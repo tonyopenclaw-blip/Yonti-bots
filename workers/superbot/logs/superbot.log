@@ -11385,3 +11385,365 @@ ImportError: cannot import name 'DRIFT_SHORT_STOP_LOSS' from 'config' (/home/ubu
 2026-04-02 21:25:17 | INFO | Coins: ETH: idle | BNB: idle | SOL: idle | HYPE: idle | ADA: idle
 2026-04-02 21:25:17 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
 2026-04-02 21:25:17 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 21:25:34 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:25:34 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:25:34 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:25:34 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:25:47 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXETH15M&status=open&limit=10
+2026-04-02 21:25:47 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXETH15M&status=open&limit=10
+2026-04-02 21:25:47 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXETH15M&status=open&limit=10
+2026-04-02 21:25:47 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXETH15M&status=open&limit=10
+2026-04-02 21:25:48 | INFO | Status: cash=$100.00, positions=0, loop=61, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M']
+2026-04-02 21:25:48 | INFO | Status: cash=$100.00, positions=0, loop=61, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M']
+2026-04-02 21:25:48 | INFO | Day P&L: $0.00 (0.0%) / $10.00 limit
+2026-04-02 21:25:48 | INFO | Day P&L: $0.00 (0.0%) / $10.00 limit
+2026-04-02 21:25:48 | INFO | Coins: ETH: idle | BNB: idle | SOL: idle | HYPE: idle | ADA: idle
+2026-04-02 21:25:48 | INFO | Coins: ETH: idle | BNB: idle | SOL: idle | HYPE: idle | ADA: idle
+2026-04-02 21:25:48 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 21:25:48 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 21:25:50 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:25:50 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:25:50 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:25:50 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:26:01 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:26:01 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:26:01 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:26:01 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:26:01 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:26:01 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:26:01 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:26:01 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:26:02 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXETH15M&status=open&limit=10
+2026-04-02 21:26:02 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXETH15M&status=open&limit=10
+2026-04-02 21:26:02 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXETH15M&status=open&limit=10
+2026-04-02 21:26:02 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXETH15M&status=open&limit=10
+2026-04-02 21:26:02 | INFO | FIRST_CROSS: KXHYPE15M-26APR021730-30 crossed DOWN through $0.50 (was $0.5100, now $0.4850)
+2026-04-02 21:26:02 | INFO | FIRST_CROSS: KXHYPE15M-26APR021730-30 crossed DOWN through $0.50 (was $0.5100, now $0.4850)
+2026-04-02 21:26:03 | INFO | FIRST_CROSS: KXETH15M-26APR021730-30 crossed DOWN through $0.50 (was $0.7200, now $0.4800)
+2026-04-02 21:26:03 | INFO | FIRST_CROSS: KXETH15M-26APR021730-30 crossed DOWN through $0.50 (was $0.7200, now $0.4800)
+2026-04-02 21:26:06 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:26:06 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:26:06 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:26:06 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:26:19 | INFO | Status: cash=$100.00, positions=0, loop=91, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M']
+2026-04-02 21:26:19 | INFO | Status: cash=$100.00, positions=0, loop=91, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M']
+2026-04-02 21:26:19 | INFO | Day P&L: $0.00 (0.0%) / $10.00 limit
+2026-04-02 21:26:19 | INFO | Day P&L: $0.00 (0.0%) / $10.00 limit
+2026-04-02 21:26:19 | INFO | Coins: ETH: idle | BNB: idle | SOL: idle | HYPE: idle | ADA: idle
+2026-04-02 21:26:19 | INFO | Coins: ETH: idle | BNB: idle | SOL: idle | HYPE: idle | ADA: idle
+2026-04-02 21:26:19 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 21:26:19 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 21:26:31 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:26:31 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:26:31 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:26:31 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:26:31 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:26:31 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:26:31 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:26:31 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:26:32 | INFO | DRIFT SHORT signal: KXETH15M-26APR021730-30 @ $0.6150, size=$0.50, Kelly=0.00%, TP=$0.4920, SL=$0.7500, first_cross=no
+2026-04-02 21:26:32 | INFO | DRIFT SHORT signal: KXETH15M-26APR021730-30 @ $0.6150, size=$0.50, Kelly=0.00%, TP=$0.4920, SL=$0.7500, first_cross=no
+2026-04-02 21:26:32 | INFO | [ETH] Opened drift_short: no KXETH15M-26APR021730-30 @ $0.6150, size=$0.50, cost=$0.19
+2026-04-02 21:26:32 | INFO | [ETH] Opened drift_short: no KXETH15M-26APR021730-30 @ $0.6150, size=$0.50, cost=$0.19
+2026-04-02 21:26:32 | INFO | 🚀 [ETH] TRADE EXECUTED: drift_short no KXETH15M-26APR021730-30 @ $0.6150, size=$0.50
+2026-04-02 21:26:32 | INFO | 🚀 [ETH] TRADE EXECUTED: drift_short no KXETH15M-26APR021730-30 @ $0.6150, size=$0.50
+2026-04-02 21:26:37 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:26:37 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:26:37 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:26:37 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:26:38 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:26:38 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:26:38 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:26:38 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:26:39 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:26:39 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:26:39 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:26:39 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:26:44 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXSOL15M&status=open&limit=10
+2026-04-02 21:26:44 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXSOL15M&status=open&limit=10
+2026-04-02 21:26:44 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXSOL15M&status=open&limit=10
+2026-04-02 21:26:44 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXSOL15M&status=open&limit=10
+2026-04-02 21:26:46 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:26:46 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:26:46 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:26:46 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:26:48 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:26:48 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:26:48 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:26:48 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:26:49 | INFO | Status: cash=$99.81, positions=1, loop=121, active_series=['KXSOL15M', 'KXHYPE15M', 'KXETH15M']
+2026-04-02 21:26:49 | INFO | Status: cash=$99.81, positions=1, loop=121, active_series=['KXSOL15M', 'KXHYPE15M', 'KXETH15M']
+2026-04-02 21:26:49 | INFO | Day P&L: $0.19 (0.2%) / $10.00 limit
+2026-04-02 21:26:49 | INFO | Day P&L: $0.19 (0.2%) / $10.00 limit
+2026-04-02 21:26:49 | INFO | Coins: ETH: drift_short no@0.61 | BNB: idle | SOL: idle | HYPE: idle | ADA: idle
+2026-04-02 21:26:49 | INFO | Coins: ETH: drift_short no@0.61 | BNB: idle | SOL: idle | HYPE: idle | ADA: idle
+2026-04-02 21:26:49 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 21:26:49 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 21:26:49 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:26:49 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:26:49 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:26:49 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:26:55 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:26:55 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:26:55 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:26:55 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:26:59 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXSOL15M&status=open&limit=10
+2026-04-02 21:26:59 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXSOL15M&status=open&limit=10
+2026-04-02 21:26:59 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXSOL15M&status=open&limit=10
+2026-04-02 21:26:59 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXSOL15M&status=open&limit=10
+2026-04-02 21:27:01 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:27:01 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:27:01 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:27:01 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:27:12 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:27:12 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:27:12 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:27:12 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:27:14 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXSOL15M&status=open&limit=10
+2026-04-02 21:27:14 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXSOL15M&status=open&limit=10
+2026-04-02 21:27:14 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXSOL15M&status=open&limit=10
+2026-04-02 21:27:14 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXSOL15M&status=open&limit=10
+2026-04-02 21:27:20 | INFO | Status: cash=$99.81, positions=1, loop=151, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M']
+2026-04-02 21:27:20 | INFO | Status: cash=$99.81, positions=1, loop=151, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M']
+2026-04-02 21:27:20 | INFO | Day P&L: $0.19 (0.2%) / $10.00 limit
+2026-04-02 21:27:20 | INFO | Day P&L: $0.19 (0.2%) / $10.00 limit
+2026-04-02 21:27:20 | INFO | Coins: ETH: drift_short no@0.61 | BNB: idle | SOL: idle | HYPE: idle | ADA: idle
+2026-04-02 21:27:20 | INFO | Coins: ETH: drift_short no@0.61 | BNB: idle | SOL: idle | HYPE: idle | ADA: idle
+2026-04-02 21:27:20 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 21:27:20 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 21:27:23 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:27:23 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:27:23 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:27:23 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:27:28 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:27:28 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:27:28 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:27:28 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:27:44 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:27:44 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:27:44 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:27:44 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:27:45 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXSOL15M&status=open&limit=10
+2026-04-02 21:27:45 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXSOL15M&status=open&limit=10
+2026-04-02 21:27:45 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXSOL15M&status=open&limit=10
+2026-04-02 21:27:45 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXSOL15M&status=open&limit=10
+2026-04-02 21:27:45 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:27:45 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:27:45 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:27:45 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:27:47 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:27:47 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:27:47 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:27:47 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:27:51 | INFO | Status: cash=$99.81, positions=1, loop=181, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M']
+2026-04-02 21:27:51 | INFO | Status: cash=$99.81, positions=1, loop=181, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M']
+2026-04-02 21:27:51 | INFO | Day P&L: $0.19 (0.2%) / $10.00 limit
+2026-04-02 21:27:51 | INFO | Day P&L: $0.19 (0.2%) / $10.00 limit
+2026-04-02 21:27:51 | INFO | Coins: ETH: drift_short no@0.61 | BNB: idle | SOL: idle | HYPE: idle | ADA: idle
+2026-04-02 21:27:51 | INFO | Coins: ETH: drift_short no@0.61 | BNB: idle | SOL: idle | HYPE: idle | ADA: idle
+2026-04-02 21:27:51 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 21:27:51 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 21:28:00 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:28:00 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:28:00 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:28:00 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:28:01 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:28:01 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:28:01 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:28:01 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:28:02 | INFO | [ETH] Closed KXETH15M-26APR021730-30: SL hit: $0.8600 >= $0.7500, PnL=$-0.12
+2026-04-02 21:28:02 | INFO | [ETH] Closed KXETH15M-26APR021730-30: SL hit: $0.8600 >= $0.7500, PnL=$-0.12
+2026-04-02 21:28:02 | INFO | Strategy drift_short stats: W=0.00%, R=8.16x, Kelly=0.00%
+2026-04-02 21:28:02 | INFO | Strategy drift_short stats: W=0.00%, R=8.16x, Kelly=0.00%
+2026-04-02 21:28:02 | INFO | Trade recorded: KXETH15M-26APR021730-30 no drift_short PnL=$-0.12
+2026-04-02 21:28:02 | INFO | Trade recorded: KXETH15M-26APR021730-30 no drift_short PnL=$-0.12
+2026-04-02 21:28:02 | INFO | [ETH] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-02 21:28:02 | INFO | [ETH] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-02 21:28:02 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:28:02 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:28:02 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:28:02 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:28:22 | INFO | Status: cash=$99.81, positions=0, loop=211, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M']
+2026-04-02 21:28:22 | INFO | Status: cash=$99.81, positions=0, loop=211, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M']
+2026-04-02 21:28:22 | INFO | Day P&L: $0.19 (0.2%) / $10.00 limit
+2026-04-02 21:28:22 | INFO | Day P&L: $0.19 (0.2%) / $10.00 limit
+2026-04-02 21:28:22 | INFO | Coins: ETH: idle | BNB: idle | SOL: idle | HYPE: idle | ADA: idle
+2026-04-02 21:28:22 | INFO | Coins: ETH: idle | BNB: idle | SOL: idle | HYPE: idle | ADA: idle
+2026-04-02 21:28:22 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 21:28:22 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 21:28:22 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:28:22 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:28:22 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:28:22 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:28:23 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:28:23 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:28:23 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:28:23 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:28:24 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:28:24 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:28:24 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:28:24 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:28:32 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:28:32 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:28:32 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:28:32 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:28:45 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXSOL15M&status=open&limit=10
+2026-04-02 21:28:45 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXSOL15M&status=open&limit=10
+2026-04-02 21:28:45 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXSOL15M&status=open&limit=10
+2026-04-02 21:28:45 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXSOL15M&status=open&limit=10
+2026-04-02 21:28:52 | INFO | Status: cash=$99.81, positions=0, loop=241, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M']
+2026-04-02 21:28:52 | INFO | Status: cash=$99.81, positions=0, loop=241, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M']
+2026-04-02 21:28:52 | INFO | Day P&L: $0.19 (0.2%) / $10.00 limit
+2026-04-02 21:28:52 | INFO | Day P&L: $0.19 (0.2%) / $10.00 limit
+2026-04-02 21:28:52 | INFO | Coins: ETH: idle | BNB: idle | SOL: idle | HYPE: idle | ADA: idle
+2026-04-02 21:28:52 | INFO | Coins: ETH: idle | BNB: idle | SOL: idle | HYPE: idle | ADA: idle
+2026-04-02 21:28:52 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 21:28:52 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 21:29:03 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:29:03 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:29:03 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:29:03 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:29:04 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:29:04 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:29:04 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:29:04 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:29:04 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:29:04 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:29:04 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:29:04 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:29:17 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:29:17 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:29:17 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:29:17 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:29:20 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:29:20 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:29:20 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:29:20 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:29:21 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:29:21 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:29:21 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:29:21 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:29:22 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:29:22 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:29:22 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:29:22 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:29:23 | INFO | Status: cash=$99.81, positions=0, loop=271, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M']
+2026-04-02 21:29:23 | INFO | Status: cash=$99.81, positions=0, loop=271, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M']
+2026-04-02 21:29:23 | INFO | Day P&L: $0.19 (0.2%) / $10.00 limit
+2026-04-02 21:29:23 | INFO | Day P&L: $0.19 (0.2%) / $10.00 limit
+2026-04-02 21:29:23 | INFO | Coins: ETH: idle | BNB: idle | SOL: idle | HYPE: idle | ADA: idle
+2026-04-02 21:29:23 | INFO | Coins: ETH: idle | BNB: idle | SOL: idle | HYPE: idle | ADA: idle
+2026-04-02 21:29:23 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 21:29:23 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 21:29:35 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:29:35 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:29:35 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:29:35 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBNB15M&status=open&limit=10
+2026-04-02 21:29:38 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:29:38 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:29:38 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:29:38 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:29:39 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:29:39 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:29:39 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:29:39 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:29:54 | INFO | Status: cash=$99.81, positions=0, loop=301, active_series=['KXSOL15M', 'KXBNB15M', 'KXETH15M']
+2026-04-02 21:29:54 | INFO | Status: cash=$99.81, positions=0, loop=301, active_series=['KXSOL15M', 'KXBNB15M', 'KXETH15M']
+2026-04-02 21:29:54 | INFO | Day P&L: $0.19 (0.2%) / $10.00 limit
+2026-04-02 21:29:54 | INFO | Day P&L: $0.19 (0.2%) / $10.00 limit
+2026-04-02 21:29:54 | INFO | Coins: ETH: idle | BNB: idle | SOL: idle | HYPE: idle | ADA: idle
+2026-04-02 21:29:54 | INFO | Coins: ETH: idle | BNB: idle | SOL: idle | HYPE: idle | ADA: idle
+2026-04-02 21:29:54 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 21:29:54 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 21:30:01 | INFO | Received signal 15, shutting down...
+2026-04-02 21:30:01 | INFO | Received signal 15, shutting down...
+2026-04-02 21:30:01 | INFO | Shutting down superbot...
+2026-04-02 21:30:01 | INFO | Shutting down superbot...
+2026-04-02 21:30:01 | INFO | Report session ended: 2026-04-02 21:30:01 UTC
+2026-04-02 21:30:01 | INFO | Report session ended: 2026-04-02 21:30:01 UTC
+2026-04-02 21:30:01 | INFO | Report saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.html
+2026-04-02 21:30:01 | INFO | Report saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.html
+2026-04-02 21:30:01 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 21:30:01 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-02 21:30:01 | INFO | ============================================================
+2026-04-02 21:30:01 | INFO | ============================================================
+2026-04-02 21:30:01 | INFO | FINAL BALANCE: $99.81
+2026-04-02 21:30:01 | INFO | FINAL BALANCE: $99.81
+2026-04-02 21:30:01 | INFO | Total trades: 1
+2026-04-02 21:30:01 | INFO | Total trades: 1
+2026-04-02 21:30:01 | INFO | Report saved to: /home/ubuntu/.openclaw/workspace/workers/superbot/report.html
+2026-04-02 21:30:01 | INFO | Report saved to: /home/ubuntu/.openclaw/workspace/workers/superbot/report.html
+2026-04-02 21:30:01 | INFO | ============================================================
+2026-04-02 21:30:01 | INFO | ============================================================
+2026-04-02 21:30:03 | INFO | CoinTrader initialized for BTC (KXBTC15M)
+2026-04-02 21:30:03 | INFO | CoinTrader initialized for BTC (KXBTC15M)
+2026-04-02 21:30:03 | INFO | CoinTrader initialized for ETH (KXETH15M)
+2026-04-02 21:30:03 | INFO | CoinTrader initialized for ETH (KXETH15M)
+2026-04-02 21:30:03 | INFO | CoinTrader initialized for BNB (KXBNB15M)
+2026-04-02 21:30:03 | INFO | CoinTrader initialized for BNB (KXBNB15M)
+2026-04-02 21:30:03 | INFO | CoinTrader initialized for SOL (KXSOL15M)
+2026-04-02 21:30:03 | INFO | CoinTrader initialized for SOL (KXSOL15M)
+2026-04-02 21:30:03 | INFO | CoinTrader initialized for DOGE (KXDOGE15M)
+2026-04-02 21:30:03 | INFO | CoinTrader initialized for DOGE (KXDOGE15M)
+2026-04-02 21:30:03 | INFO | CoinTrader initialized for XRP (KXXRP15M)
+2026-04-02 21:30:03 | INFO | CoinTrader initialized for XRP (KXXRP15M)
+2026-04-02 21:30:03 | INFO | CoinTrader initialized for HYPE (KXHYPE15M)
+2026-04-02 21:30:03 | INFO | CoinTrader initialized for HYPE (KXHYPE15M)
+2026-04-02 21:30:03 | INFO | CoinTrader initialized for ADA (KXADA15M)
+2026-04-02 21:30:03 | INFO | CoinTrader initialized for ADA (KXADA15M)
+2026-04-02 21:30:03 | INFO | ============================================================
+2026-04-02 21:30:03 | INFO | ============================================================
+2026-04-02 21:30:03 | INFO | SUPERBOT INITIALIZED - PAPER MODE - SMART POLLING
+2026-04-02 21:30:03 | INFO | SUPERBOT INITIALIZED - PAPER MODE - SMART POLLING
+2026-04-02 21:30:03 | INFO | Coins: ['BTC', 'ETH', 'BNB', 'SOL', 'DOGE', 'XRP', 'HYPE', 'ADA']
+2026-04-02 21:30:03 | INFO | Coins: ['BTC', 'ETH', 'BNB', 'SOL', 'DOGE', 'XRP', 'HYPE', 'ADA']
+2026-04-02 21:30:03 | INFO | Tickers: ['KXBTC15M', 'KXETH15M', 'KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXXRP15M', 'KXHYPE15M', 'KXADA15M']
+2026-04-02 21:30:03 | INFO | Tickers: ['KXBTC15M', 'KXETH15M', 'KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXXRP15M', 'KXHYPE15M', 'KXADA15M']
+2026-04-02 21:30:03 | INFO | Starting balance: $100.00
+2026-04-02 21:30:03 | INFO | Starting balance: $100.00
+2026-04-02 21:30:03 | INFO | Balance floor: $3.00
+2026-04-02 21:30:03 | INFO | Balance floor: $3.00
+2026-04-02 21:30:03 | INFO | Max bet per coin: $3.00
+2026-04-02 21:30:03 | INFO | Max bet per coin: $3.00
+2026-04-02 21:30:03 | INFO | Idle poll: 10s per series | Active poll: 1s
+2026-04-02 21:30:03 | INFO | Idle poll: 10s per series | Active poll: 1s
+2026-04-02 21:30:03 | INFO | Cooldown: 0 cycles after position close
+2026-04-02 21:30:03 | INFO | Cooldown: 0 cycles after position close
+2026-04-02 21:30:03 | INFO | Daily stop-loss: 100% (100% of $100.00 = $100.00 max loss)
+2026-04-02 21:30:03 | INFO | Daily stop-loss: 100% (100% of $100.00 = $100.00 max loss)
+2026-04-02 21:30:03 | INFO | ============================================================
+2026-04-02 21:30:03 | INFO | ============================================================
+2026-04-02 21:30:03 | INFO | Starting SMART POLLING trading loop (Recorder's approach)...
+2026-04-02 21:30:03 | INFO | Starting SMART POLLING trading loop (Recorder's approach)...
+2026-04-02 21:30:03 | INFO | Report session started: 2026-04-02 21:30:03 UTC
+2026-04-02 21:30:03 | INFO | Report session started: 2026-04-02 21:30:03 UTC
+2026-04-02 21:30:03 | INFO | 😴 IDLE: checked KXBTC15M (poll #1) | Day P&L: $0.00 (0.0%)
+2026-04-02 21:30:03 | INFO | 😴 IDLE: checked KXBTC15M (poll #1) | Day P&L: $0.00 (0.0%)
+2026-04-02 21:30:10 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:30:10 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:30:10 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:30:10 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:30:13 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:30:13 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:30:13 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:30:13 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:30:17 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXDOGE15M&status=open&limit=10
+2026-04-02 21:30:17 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXDOGE15M&status=open&limit=10
+2026-04-02 21:30:17 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXDOGE15M&status=open&limit=10
+2026-04-02 21:30:17 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXDOGE15M&status=open&limit=10
+2026-04-02 21:30:24 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXXRP15M&status=open&limit=10
+2026-04-02 21:30:24 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXXRP15M&status=open&limit=10
+2026-04-02 21:30:24 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXXRP15M&status=open&limit=10
+2026-04-02 21:30:24 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXXRP15M&status=open&limit=10
+2026-04-02 21:30:26 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:30:26 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:30:26 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:30:26 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:30:27 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:30:27 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:30:27 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:30:27 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXADA15M&status=open&limit=10
+2026-04-02 21:30:29 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:30:29 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:30:29 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10
+2026-04-02 21:30:29 | WARNING | Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHYPE15M&status=open&limit=10

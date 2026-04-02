@@ -335,3 +335,22 @@ Scanning all series...
 No tradeable markets found.
 
 Saved to /home/ubuntu/.openclaw/workspace/workers/scanner/../data/live_markets.json
+Kalshi Market Scanner starting...
+Current 15-min window: 21:30 - 21:45 UTC
+Checking tickers: ['26APR022130-30', '26APR022145-45', '26APR022200-00', '26APR022215-15']
+
+Scanning all series...
+
+SCAN RESULTS - 2026-04-02 21:30 UTC
+============================================================
+
+XRP (KXXRP15M):
+  KXXRP15M-26APR021745-45 | active | YES: $0.67
+
+BNB (KXBNB15M):
+  KXBNB15M-26APR021745-45 | active | YES: $0.86
+
+============================================================
+Total tradeable markets: 2
+
+Saved to /home/ubuntu/.openclaw/workspace/workers/scanner/../data/live_markets.json

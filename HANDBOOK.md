@@ -39,6 +39,132 @@ _(Tony to fill in API details, auth requirements, market structure)_
 
 ---
 
+## 🧮 TRADING FORMULA IMPROVEMENTS
+
+### Enhanced Kelly Criterion (Standard Industry Approach)
+
+**The Formula:**
+```
+f* = (bp - q) / b
+Where:
+  p = your estimated true probability
+  q = 1 - p
+  b = net odds = (1 - market_price) / market_price
+```
+
+**Quick Reference Table:**
+
+| Your Edge | Full Kelly | Half Kelly (Recommended) | Quarter Kelly |
+|-----------|-----------|-------------------------|---------------|
+| 5%        | 10%       | 5%                      | 2.5%          |
+| 10%       | 20%       | 10%                     | 5%            |
+| 15%       | 30%       | 15%                     | 7.5%          |
+| 20%+      | 40%+      | 15% (cap)               | 10%           |
+
+**Why Half-Kelly?**
+- Captures ~75% of theoretical max growth rate
+- Cuts variance/drawdowns by ~50%
+- Protects against probability estimation errors
+- Full Kelly = 2x overbet = same growth as $0 bet
+
+**Kelly for Prediction Markets (Simplified):**
+```
+Kelly % = (Your_Prob - Market_Price) / (1 - Market_Price)
+```
+Example: Market = $0.60 (60%), Your estimate = 75%
+Kelly = (0.75 - 0.60) / (1 - 0.60) = 0.375 = 37.5% → Half Kelly = ~19%
+
+---
+
+### Exit Rules (from polymarket-bot reference implementation)
+
+| Rule | Trigger | Action |
+|------|---------|--------|
+| **Stop-Loss** | Position down >25% from entry | SELL immediately |
+| **Take-Profit** | Price reaches $0.95+ | SELL to lock gains |
+| **Edge-Gone** | Market moved past your original fair estimate | SELL, book the profit/loss |
+| **Re-estimate** | Price moved >10% from entry | Re-run AI ensemble, adjust or exit |
+| **Cooldown** | Closed a position | Block re-entry for 2 cycles |
+| **Low-Confidence Skip** | Ensemble std dev >10% | SKIP — don't trade |
+
+---
+
+### Entry Rules (What Our Bots Are Missing)
+
+1. **Minimum edge threshold:** Only trade if mispricing > 10% between your estimate and market price
+2. **Confidence filter:** Skip markets where probability estimates are inconsistent (high std dev)
+3. **Penny position skip:** Don't touch markets where price < $0.01 (can't exit efficiently)
+4. **Liquidity check:** Verify volume/spread before entering
+5. **Correlation check:** Don't stack correlated bets (e.g., multiple BTC markets = same exposure)
+
+---
+
+### Portfolio-Level Risk Management
+
+| Limit | Recommended | Our Current |
+|-------|------------|-------------|
+| Max per position | 15% bankroll | 50% (❌ too high) |
+| Max total exposure | 90% bankroll | Unknown |
+| Daily stop-loss | 20% of portfolio | None (❌) |
+| Max drawdown | 50% → halt trading | None |
+
+---
+
+### Systematic Biases to Exploit
+
+**1. Longshot Bias (HIGH PRIORITY)**
+- Retail systematically overpays for low-probability outcomes ($0.01-$0.20)
+- Professionals exploit by: SELLING tails, BUYING favorites
+- Our current DEEP_BUY strategy (<$0.15) is fighting against this edge
+
+**2. Recency Bias / Mean Reversion**
+- Prices overreact to recent news, then revert
+- Short-term negative autocorrelation
+- Strategy: Buy dips after overreaction, sell rallies
+
+**3. Cross-Platform Arbitrage**
+- Polymarket vs Kalshi price differences persist
+- Example: PM YES $0.42 + Kalshi NO $0.56 = $0.98 cost → $1.00 payout = 2% arb
+- Opportunities peak in final 2 weeks before events
+- **We could implement this with PolyClaw + Kalshi API**
+
+**4. Volume Inefficiency**
+- High-volume national markets MORE inefficient than local/state markets
+- Attention-driven mispricing overwhelms information aggregation
+- Opportunity: Focus on underfollowed niche markets
+
+---
+
+### What Our Current Bots Are Missing
+
+| Feature | Current Superbot | Recommended |
+|---------|----------------|-------------|
+| AI probability estimation | No | Claude/Gemini ensemble |
+| Dynamic re-sizing | Fixed Kelly cap | Re-run Kelly on 10%+ price moves |
+| Cooldown rules | No | 2-cycle cooldown after close |
+| Confidence filtering | No | Skip if std dev > 10% |
+| Edge-gone exit | No | Sell if market passes your estimate |
+| Portfolio-level stop-loss | No | 20% daily stop, 50% max drawdown |
+| Correlation sizing | No | Reduce when stacking correlated bets |
+| Cross-platform arb | No | Polymarket ↔ Kalshi spread monitoring |
+| Sell tails strategy | Buying deep Yes | Selling tail events (short OTM) |
+
+---
+
+### Kalshi Fee Calculator
+
+Kalshi fees: `ceil(0.07 × contracts × price × (1-price))`
+- Ranges ~0.6% (tail events) to 1.75% (mid-market $0.50)
+- Maker rebate: up to 0.44% back
+
+**Net EV after fees:**
+```
+Net EV = (p × $1) - Market_Price - Fee
+```
+Always factor fees into Kelly calculation for small-edge trades.
+
+---
+
 ## 🧮 TRADING FORMULAS & STRATEGIES
 
 ### Current Active Strategies (Superbot)

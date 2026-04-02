@@ -933,6 +933,178 @@ IF price_near_fibonacci_level(50.0, 61.8)
 
 ---
 
+## 🎯 TWO-STAGE PREDICTOR
+
+_A pre-market analysis system combining Coinbase price action with Kalshi entry timing._
+
+---
+
+### OVERVIEW
+
+The Two-Stage Predictor solves the timing problem: Kalshi markets open ~15 min before expiry, and we need directional bias BEFORE the market opens. Stage 1 gives us that bias using Coinbase 15-min candles. Stage 2 confirms or rejects based on the Kalshi opening price.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    TWO-STAGE PREDICTOR                          │
+├─────────────────────────────────────────────────────────────────┤
+│  STAGE 1 (Pre-Market)         STAGE 2 (Market Open)              │
+│  ───────────────────         ────────────────────               │
+│  Coinbase 15-min candle  →   Compare bias to Kalshi price       │
+│  Technical analysis           Entry decision                     │
+│  → Directional bias          → Confirm / Reject / Edge deeper   │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### STAGE 1: PRE-MARKET BIAS (Before Kalshi Opens)
+
+**Input:** Coinbase 15-min candles for BTC, ETH, SOL
+
+**Analysis Stack:**
+
+| Method | What It Detects | For Binary Options |
+|--------|-----------------|-------------------|
+| **Fibonacci** | 50% retracement level | Price at midpoint = reversal zone |
+| **Wyckoff** | Accumulation vs Distribution | Smart money positioning |
+| **Candlesticks** | Doji, Hammer, Engulfing | Reversal/inertia signals |
+| **RSI-4** | Overbought/Oversold | Extreme levels (25/75) |
+| **MACD** | Trend direction + momentum | Cross confirms reversal |
+
+**Fibonacci Levels (Most Reliable for 15-min):**
+- **50% retracement** = 61% reversal probability (best for binary options)
+- **61.8% retracement** = 58% reversal probability
+- Always WAIT for confirmation candle at these levels
+
+**Wyckoff Phases for Crypto:**
+- **Accumulation** (lows tested on lower volume) → Bias BULLISH
+- **Distribution** (highs tested on lower volume) → Bias BEARISH
+- **Spring** (false breakout below support) → Strong BULLISH
+- **UTAD** (false breakout above resistance) → Strong BEARISH
+
+**Candlestick Patterns (High Probability):**
+- **Hammer** at support → BULLISH reversal
+- **Shooting Star** at resistance → BEARISH reversal
+- **Bullish Engulfing** after downtrend → BULLISH
+- **Bearish Engulfing** after uptrend → BEARISH
+- **Doji** at S/R level → WAIT for confirmation
+
+**Output:**
+```
+BIAS: BULLISH | BEARISH | NEUTRAL
+Confidence: 0-95%
+Key Signals: [list of patterns detected]
+Fibonacci: [near 50%? yes/no, level price]
+Wyckoff Phase: [accumulation/distribution/markup/markdown]
+```
+
+---
+
+### STAGE 2: KALSHHI ENTRY DECISION (When Market Opens)
+
+**Input:** Stage 1 bias + Kalshi opening price
+
+**Decision Matrix:**
+
+| Bias | Kalshi Opens | Action | Kelly % |
+|------|-------------|--------|---------|
+| BULLISH | $0.35-$0.45 | BUY YES (deep drift) | Half-Kelly |
+| BULLISH | $0.45-$0.55 | Wait for confirmation | - |
+| BULLISH | $0.55+ | Maybe SELL NO (if extreme) | Half-Kelly |
+| BEARISH | $0.55-$0.65 | BUY NO (drift short) | Half-Kelly |
+| BEARISH | $0.45-$0.55 | Wait for confirmation | - |
+| BEARISH | $0.35- | Maybe SELL YES | Half-Kelly |
+| NEUTRAL | Any | No trade | - |
+
+**Entry Rules:**
+1. **Bias must match Kalshi price zone** — Don't fade the drift zone
+2. **Minimum confidence: 60%** — Skip low-confidence setups
+3. **Wait for Kalshi price to stabilize** — First 30 seconds can be volatile
+4. **Apply Wyckoff live:** Is effort (volume/price move) matching result?
+
+**Live Wyckoff Checks:**
+- **Effort vs Result:** Big candle but low volume = exhaustion, fade it
+- **Support/Resistance tests:** Third test = weaker, expect bounce/break
+- **SOS/SOW:** Sign of Strength/Weakness confirms bias
+
+**Exit Rules:**
+| Trigger | Action |
+|---------|--------|
+| Price moves 25% against you | Stop-loss |
+| Price reaches $0.95+ | Take-profit |
+| Bias reverses | Exit and reassess |
+| 10 min remaining, in profit | Consider early exit |
+
+---
+
+### IMPLEMENTATION
+
+**Coinbase Fetcher:** `/home/ubuntu/.openclaw/workspace/workers/coinbase/fetcher.py`
+```bash
+python3 fetcher.py                    # All coins (BTC, ETH, SOL)
+python3 fetcher.py --coin BTC        # Just BTC
+python3 fetcher.py --json            # JSON output for automation
+```
+
+**Recorder Pattern Analyzer:** `/home/ubuntu/.openclaw/workspace/workers/recorder/pattern_analysis.py`
+```bash
+python3 pattern_analysis.py           # Run analysis on historical data
+python3 pattern_analysis.py --json    # JSON output
+```
+Generates trading rules from `pct_above_50` correlations.
+
+**Data Flow:**
+```
+Coinbase API → fetcher.py → Stage 1 bias → Superbot entry decision
+Recorder data → pattern_analysis.py → Trading rules → Superbot strategy
+```
+
+---
+
+### RECORDER DATA INSIGHT (Tony's Key Finding)
+
+> "When price is above $0.50 for X% of the first 10 minutes, it resolves YES Y% of the time"
+
+This correlation is the CORE of our predictive power:
+- X = `pct_above_50` (what we measure)
+- Y = historical win rate (what we learn)
+
+**Pattern Analyzer** builds the lookup table:
+```
+pct_above_50: 70-80% → YES wins ~75% of time
+pct_above_50: 20-30% → YES wins ~25% of time
+```
+
+This tells us: if Kalshi opens at $0.40 and Coinbase bias is BULLISH, what's our edge?
+
+---
+
+### COMBINED SCORECARD
+
+| Factor | BULLISH Signal | BEARISH Signal |
+|--------|---------------|----------------|
+| **Coinbase Candle** | Hammer, Engulfing, Doji at support | Shooting Star, Engulfing at resistance |
+| **Fibonacci** | At 50-61.8% retracement | At 50-61.8% retracement |
+| **Wyckoff** | Accumulation, Spring, LPS | Distribution, UTAD, LPSY |
+| **RSI-4** | < 30 (oversold bounce) | > 70 (overbought rejection) |
+| **MACD** | Crossed above signal line | Crossed below signal line |
+| **Coinbase Bias** | Price rising | Price falling |
+
+**Score 5+ aligned = High conviction → Full Half-Kelly**
+**Score 3-4 aligned = Medium conviction → Quarter Kelly**
+**Score < 3 aligned = Skip**
+
+---
+
+### STATUS
+
+- ✅ Coinbase fetcher: Working
+- ✅ Pattern analyzer: Built, awaiting historical data
+- ⏳ Integration with Superbot: TODO
+- ⏳ Live Wyckoff phase detection: TODO
+
+---
+
 ## 🔧 GAPS & TODO
 
 - [ ] Polymarket integration (needs Tony to set up account + KYC)
@@ -940,7 +1112,10 @@ IF price_near_fibonacci_level(50.0, 61.8)
 - [ ] Live sports odds via websocket (Kalshi limitation)
 - [ ] RSI/MACD indicators in strategies.py
 - [ ] Test NBA game winner markets on Kalshi vs Polymarket liquidity
+- [ ] Integrate Two-Stage Predictor into Superbot
+- [ ] Live Wyckoff phase detection for Coinbase candles
+- [ ] Collect enough Recorder data for pattern analysis (>100 resolved markets)
 
 ---
 
-_Last updated: 2026-04-02 06:47 EST (Tony research)_
+_Last updated: 2026-04-02 12:07 UTC (Nerd build)_

@@ -573,10 +573,18 @@ class Superbot:
                     logger.info(f"Day P&L: ${loss:.2f} ({loss_pct:.1f}%) / ${self.day_start_balance * DAILY_STOP_LOSS_PCT:.2f} limit")
                     logger.info(f"Coins: {' | '.join(status_parts)}")
                     
-                    # Build position details for the report
+                    # Build position details for the report (with live prices)
                     positions_details = []
                     for trader in self.coin_traders.values():
                         for ticker, pos in trader.positions.items():
+                            # Fetch current price from Kalshi API
+                            mkt = self.api.get_market_by_ticker(ticker)
+                            if mkt and mkt.yes_bid and mkt.yes_ask:
+                                cur = (mkt.yes_bid + mkt.yes_ask) / 2
+                            elif mkt:
+                                cur = mkt.yes_bid or mkt.yes_ask or pos.entry_price
+                            else:
+                                cur = pos.entry_price
                             positions_details.append({
                                 "ticker": pos.ticker,
                                 "side": pos.side,
@@ -584,7 +592,7 @@ class Superbot:
                                 "size": pos.size,
                                 "strategy": pos.strategy.value if hasattr(pos.strategy, 'value') else str(pos.strategy),
                                 "open_time": datetime.fromtimestamp(pos.open_time).strftime("%Y-%m-%d %H:%M:%S UTC") if isinstance(pos.open_time, (int, float)) else str(pos.open_time),
-                                "current_price": pos.entry_price  # Will be updated when we have real market prices
+                                "current_price": cur
                             })
                     
                     self.report.update_session_stats(self.cash, total_positions, positions_details)

@@ -280,23 +280,6 @@
             display: none;
         }
         .error-banner.visible { display: block; }
-            @media (max-width: 600px) {
-            .topbar { padding: 0 12px; height: auto; flex-wrap: wrap; gap: 8px; }
-            .topbar-nav { flex-wrap: wrap; }
-            .nav-btn { padding: 8px 10px; font-size: 0.72rem; min-height: 44px; display: flex; align-items: center; }
-            .hero-banner { padding: 16px 12px 14px; }
-            .hero-title { font-size: 1.4rem; }
-            .stats-inner { flex-wrap: wrap; }
-            .overall-stat { min-width: 50%; border-right: none; border-bottom: 1px solid var(--border); padding: 12px 14px; }
-            .sport-tabs-bar { padding: 0 12px; overflow-x: auto; }
-            .sport-tabs-inner { flex-wrap: nowrap; }
-            .sport-tab { padding: 10px 14px; min-height: 44px; white-space: nowrap; }
-            .games-section { padding: 12px; }
-            .games-grid { grid-template-columns: 1fr; }
-            .games-grid { gap: 12px; }
-            .topbar-right { gap: 8px; }
-            .utc-clock, .refresh-indicator { font-size: 0.7rem; }
-        }
     </style>
 </head>
 <body>
@@ -306,7 +289,7 @@
     <div class="topbar-left">
         <a href="/" class="topbar-logo">YONTI</a>
         <nav class="topbar-nav">
-            <a href="/" class="nav-btn">← Back to Main</a>
+            <a href="/" class="nav-btn">🏠 Org Chart</a>
             <a href="/paperdashboard/" class="nav-btn">📊 Paper Dashboard</a>
             <a href="/scoreboard/" class="nav-btn active">🍝 Vito's Scoreboard</a>
         </nav>
@@ -491,7 +474,7 @@ function saveResolvedPicks() {
 // ===== VITO PICKS PARSER =====
 async function loadVitoPicks() {
     try {
-        const r = await fetch('/workers/uncle_vito/last_report.txt?t=' + Date.now());
+        const r = await fetch('http://129.80.245.91/workers/uncle_vito/last_report.txt?t=' + Date.now());
         if (!r.ok) return;
         const text = await r.text();
         parseVitoPicks(text);
@@ -505,11 +488,23 @@ function parseVitoPicks(text) {
     // Parse lines like:
     // "1. LaMelo Ball (CHA) - **OVER** points 23.5"
     // "1. CHA vs PHX - **CHA** (-6.5)"
+    // "2. MIN vs PHI - **MIN** O/U 220.5"
     // "3. OKC vs LAL - **OKC** ML"
+    // Also handles emoji prefix: "🏀 LAL vs BOS - LAL ML"
     const lines = text.split('\n');
     const propRegex = /^\s*(\d+)\.\s+(.+?)\s+\(([A-Z]{2,4})\)\s+-\s+\*\*(\w+)\*\*\s+(\w+)\s+([\d.]+)/;
     const spreadRegex = /^\s*(\d+)\.\s+([A-Z]{2,4})\s+vs\s+([A-Z]{2,4})\s+-\s+\*\*([A-Z]{2,4})\*\*\s*\((-?[\d.]+)\)/;
     const mlRegex = /^\s*(\d+)\.\s+([A-Z]{2,4})\s+vs\s+([A-Z]{2,4})\s+-\s+\*\*([A-Z]{2,4})\*\*\s+ML/i;
+    // O/U (totals) regex - format: "2. MIN vs PHI - **MIN** O/U 220.5"
+    const ouRegex = /^\s*(\d+)\.\s+([A-Z]{2,4})\s+vs\s+([A-Z]{2,4})\s+-\s+\*\*([A-Z]{2,4})\*\*\s+O\/U\s+([\d.]+)/i;
+    
+    // Also support emoji-prefixed format without bold markers:
+    // "🏀 LAL vs BOS - LAL ML"
+    // "🏀 LAL vs BOS - LAL -3.5"
+    // "⚾ Aaron Judge - OVER 1.5 HR"
+    const emojiMlRegex = /^[^\w]*(\d+)?[^\w]*\s*([A-Z]{2,4})\s+vs\s+([A-Z]{2,4})\s+-\s+([A-Z]{2,4})\s+ML/i;
+    const emojiSpreadRegex = /^[^\w]*(\d+)?[^\w]*\s*([A-Z]{2,4})\s+vs\s+([A-Z]{2,4})\s+-\s+([A-Z]{2,4})\s+(-?[\d.]+)/;
+    const emojiPropRegex = /^[^\w]*\s*(?:([A-Z]{2,4})\s+)?(.+?)(?:\s+\(([A-Z]{2,4})\))?\s+-\s+(OVER|UNDER)\s+([\d.]+)\s+(\w+)/i;
 
     for (const line of lines) {
         let match;
@@ -554,6 +549,26 @@ function parseVitoPicks(text) {
             continue;
         }
 
+        match = line.match(ouRegex);
+        if (match) {
+            const [, num, t1, t2, pickTeam, lineVal] = match;
+            const sport = teamSportMap[pickTeam] || guessSportFromTeam(pickTeam);
+            vitoPicks.push({
+                id: `ou_${num}`,
+                pickNum: parseInt(num),
+                type: 'ou',
+                team: pickTeam,
+                homeTeam: t1,
+                awayTeam: t2,
+                side: 'O/U',
+                line: parseFloat(lineVal),
+                sport,
+                text: line.trim(),
+                result: 'pending'
+            });
+            continue;
+        }
+
         match = line.match(mlRegex);
         if (match) {
             const [, num, t1, t2, pickTeam] = match;
@@ -561,6 +576,69 @@ function parseVitoPicks(text) {
             vitoPicks.push({
                 id: `ml_${num}`,
                 pickNum: parseInt(num),
+                type: 'ml',
+                team: pickTeam,
+                homeTeam: t1,
+                awayTeam: t2,
+                side: pickTeam,
+                line: null,
+                sport,
+                text: line.trim(),
+                result: 'pending'
+            });
+            continue;
+        }
+        
+        // Try emoji-prefixed formats (no bold markers)
+        match = line.match(emojiPropRegex);
+        if (match) {
+            const [, team, player, teamInParens, side, lineVal, stat] = match;
+            // Use team from group 1 or group 3 (parentheses)
+            const resolvedTeam = team || teamInParens || '';
+            const sport = teamSportMap[resolvedTeam] || (resolvedTeam ? guessSportFromTeam(resolvedTeam) : 'basketball/nba');
+            vitoPicks.push({
+                id: `prop_${Date.now()}`,
+                pickNum: 0,
+                type: 'prop',
+                team: resolvedTeam,
+                player: player.trim(),
+                side: side.toUpperCase(),
+                stat: stat.toLowerCase(),
+                line: parseFloat(lineVal),
+                sport,
+                text: line.trim(),
+                result: 'pending'
+            });
+            continue;
+        }
+        
+        match = line.match(emojiSpreadRegex);
+        if (match) {
+            const [, num, t1, t2, pickTeam, lineVal] = match;
+            const sport = teamSportMap[pickTeam] || guessSportFromTeam(pickTeam);
+            vitoPicks.push({
+                id: `spread_${Date.now()}`,
+                pickNum: num ? parseInt(num) : 0,
+                type: 'spread',
+                team: pickTeam,
+                homeTeam: t1,
+                awayTeam: t2,
+                side: pickTeam,
+                line: parseFloat(lineVal),
+                sport,
+                text: line.trim(),
+                result: 'pending'
+            });
+            continue;
+        }
+        
+        match = line.match(emojiMlRegex);
+        if (match) {
+            const [, num, t1, t2, pickTeam] = match;
+            const sport = teamSportMap[pickTeam] || guessSportFromTeam(pickTeam);
+            vitoPicks.push({
+                id: `ml_${Date.now()}`,
+                pickNum: num ? parseInt(num) : 0,
                 type: 'ml',
                 team: pickTeam,
                 homeTeam: t1,
@@ -749,7 +827,7 @@ function matchPicksToGames() {
                 continue;
             }
 
-            if (pick.type === 'spread' || pick.type === 'ml') {
+            if (pick.type === 'spread' || pick.type === 'ml' || pick.type === 'ou') {
                 const teams = [game.homeAbbr, game.awayAbbr];
                 if (teams.includes(pick.team) || teams.includes(pick.homeTeam) || teams.includes(pick.awayTeam)) {
                     matched = true;
@@ -935,6 +1013,8 @@ function renderGameCard(game) {
             pickDisplay = `<strong>${pick.team}</strong> ML`;
         } else if (pick.type === 'spread') {
             pickDisplay = `<strong>${pick.team}</strong> (${pick.line > 0 ? '+' : ''}${pick.line})`;
+        } else if (pick.type === 'ou') {
+            pickDisplay = `<strong>${pick.team}</strong> O/U ${pick.line}`;
         } else if (pick.type === 'prop') {
             pickDisplay = `<strong>${pick.side}</strong> ${pick.stat} ${pick.line}`;
         }

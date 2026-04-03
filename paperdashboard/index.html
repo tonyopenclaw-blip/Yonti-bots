@@ -194,18 +194,7 @@
         .t-time { font-family: 'JetBrains Mono', monospace; color: var(--dim); font-size: 0.68rem; }
         .t-reason { font-size: 0.66rem; color: var(--dim); max-width: 130px; overflow: hidden; text-overflow: ellipsis; }
 
-        @media (max-width: 600px) {
-            .topbar { padding: 0 12px; height: auto; flex-wrap: wrap; gap: 8px; }
-            .topbar-nav { flex-wrap: wrap; }
-            .nav-btn { padding: 8px 10px; font-size: 0.72rem; min-height: 44px; display: flex; align-items: center; }
-            .main { padding: 12px; }
-            .bot-tabs { flex-wrap: wrap; }
-            .bot-tab { padding: 10px 12px; min-height: 44px; }
-            .trade-scroll { overflow-x: auto; }
-            .trade-table { min-width: 600px; }
-            .dash-grid { grid-template-columns: 1fr; }
-            .side-col { gap: 8px; }
-        }
+        /* SIDE PANEL */
         .side-col { display: flex; flex-direction: column; gap: 10px; }
 
         /* BOT STATUS CARDS */
@@ -306,7 +295,7 @@
     <div class="topbar-left">
         <a href="/" class="topbar-logo">YONTI</a>
         <nav class="topbar-nav">
-            <a href="/" class="nav-btn">← Back to Main</a>
+            <a href="/" class="nav-btn">🏠 Org Chart</a>
             <a href="/paperdashboard/" class="nav-btn active">📊 Trading Dashboard</a>
             <a href="/scoreboard/" class="nav-btn">🍝 Vito's Scoreboard</a>
         </nav>
@@ -574,7 +563,7 @@ async function loadAllData() {
 
 async function loadSuperData() {
     try {
-        const r = await fetch('/workers/superbot/report.json?t=' + Date.now());
+        const r = await fetch('http://129.80.245.91/workers/superbot/report.json?t=' + Date.now());
         if (!r.ok) return;
         const d = await r.json();
         superStats = {
@@ -633,8 +622,8 @@ async function loadSuperData() {
 async function loadFlipData() {
     try {
         const [tr, st] = await Promise.all([
-            fetch('/workers/flip/data/flip_trades.json?t=' + Date.now()),
-            fetch('/workers/flip/data/flip_stats.json?t=' + Date.now())
+            fetch('http://129.80.245.91/workers/flip/data/flip_trades.json?t=' + Date.now()),
+            fetch('http://129.80.245.91/workers/flip/data/flip_stats.json?t=' + Date.now())
         ]);
         const trades = tr.ok ? await tr.json() : [];
         const stats = st.ok ? await st.json() : {};
@@ -692,8 +681,8 @@ async function loadFlipData() {
 async function loadThermoData() {
     try {
         const [tr, st] = await Promise.all([
-            fetch('/workers/thermostat/data/thermostat_trades.json?t=' + Date.now()),
-            fetch('/workers/thermostat/data/thermostat_stats.json?t=' + Date.now())
+            fetch('http://129.80.245.91/workers/thermostat/data/thermostat_trades.json?t=' + Date.now()),
+            fetch('http://129.80.245.91/workers/thermostat/data/thermostat_stats.json?t=' + Date.now())
         ]);
         const trades = tr.ok ? (await tr.json()).trades || [] : [];
         const stats = st.ok ? await st.json() : {};

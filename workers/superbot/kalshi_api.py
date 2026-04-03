@@ -296,3 +296,19 @@ class KalshiAPI:
         
         ts_part = f"{day}{month_abbr}{year}{hour}{minute}"
         return f"{series_ticker}-{ts_part}-{minute_suffix:02d}"
+    
+    def get_market_result(self, ticker: str) -> Optional[str]:
+        """
+        Fetch a market's settlement result.
+        Returns 'yes', 'no', or None if not settled yet.
+        """
+        result = self._get(f"/markets/{ticker}")
+        if "error" in result:
+            return None
+        
+        # Check if market is settled
+        status = result.get("status", "")
+        if status == "settled":
+            # Get the result field
+            return result.get("result", None)
+        return None

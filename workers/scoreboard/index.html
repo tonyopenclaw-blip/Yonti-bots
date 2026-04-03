@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vito's Scoreboard — Yonti</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --field: #0d1a0d;
+            --field-light: #132613;
+            --panel: #111d11;
+            --panel-alt: #0a150a;
+            --card: #1a2e1a;
+            --card-hover: #213821;
+            --border: #2a3d2a;
+            --text: #E8F0E8;
+            --text-dim: #7A987A;
+            --gold: #F0B90B;
+            --nba-red: #C8102E;
+            --nhl-blue: #003E8C;
+            --mlb-navy: #002D72;
+            --win: #00E676;
+            --loss: #FF5252;
+            --push: #FFD740;
+            --pending: #90CAF9;
+            --scheduled: #78909C;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--field);
+            color: var(--text);
+            min-height: 100vh;
+            background-image:
+                radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0,80,0,0.4) 0%, transparent 70%),
+                repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.02) 39px, rgba(255,255,255,0.02) 40px);
+        }
+
+        /* TOPBAR */
+        .topbar {
+            background: rgba(10,21,10,0.95);
+            border-bottom: 2px solid var(--border);
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 56px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(8px);
+        }
+        .topbar-left { display: flex; align-items: center; gap: 20px; }
+        .topbar-logo { font-size: 1rem; font-weight: 700; color: var(--gold); text-decoration: none; }
+        .topbar-logo:hover { text-decoration: underline; }
+        .topbar-nav { display: flex; gap: 4px; }
+        .nav-btn {
+            padding: 6px 14px; border-radius: 8px; border: none;
+            background: transparent; color: var(--text-dim); font-size: 0.8rem;
+            font-weight: 500; cursor: pointer; transition: all 0.15s; text-decoration: none;
+        }
+        .nav-btn:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+        .nav-btn.active { color: var(--gold); background: rgba(240,185,11,0.1); border: 1px solid rgba(240,185,11,0.3); }
+        .topbar-right { display: flex; align-items: center; gap: 16px; }
+        .live-badge { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--text-dim); }
+        .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--win); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        .utc-clock { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-dim); }
+        .refresh-indicator { font-size: 0.72rem; color: var(--text-dim); }
+
+        /* HERO BANNER */
+        .hero-banner {
+            background: linear-gradient(135deg, var(--panel-alt) 0%, var(--panel) 100%);
+            border-bottom: 2px solid var(--border);
+            padding: 24px 24px 20px;
+        }
+        .hero-inner { max-width: 1400px; margin: 0 auto; }
+        .hero-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .hero-sub { font-size: 0.8rem; color: var(--text-dim); }
+
+        /* STATS STRIP */
+        .stats-strip {
+            background: var(--panel);
+            border-bottom: 1px solid var(--border);
+            padding: 0;
+        }
+        .stats-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: stretch;
+        }
+        .overall-stat {
+            flex: 1;
+            padding: 16px 20px;
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .overall-stat:last-child { border-right: none; }
+        .stat-label { font-size: 0.62rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
+        .stat-main { font-family: 'JetBrains Mono', monospace; font-size: 1.8rem; font-weight: 700; line-height: 1; }
+        .stat-main.gold { color: var(--gold); }
+        .stat-main.green { color: var(--win); }
+        .stat-main.red { color: var(--loss); }
+        .stat-main.white { color: var(--text); }
+        .stat-detail { font-size: 0.68rem; color: var(--text-dim); }
+        .stat-wl { font-family: 'JetBrains Mono', monospace; font-size: 1rem; font-weight: 600; color: var(--text); }
+
+        /* SPORT TABS */
+        .sport-tabs-bar {
+            background: var(--panel-alt);
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px;
+        }
+        .sport-tabs-inner { max-width: 1400px; margin: 0 auto; display: flex; gap: 0; align-items: stretch; }
+        .sport-tab {
+            display: flex; align-items: center; gap: 8px;
+            padding: 14px 24px; border: none; background: transparent;
+            color: var(--text-dim); font-size: 0.85rem; font-weight: 600;
+            cursor: pointer; transition: all 0.15s;
+            border-bottom: 3px solid transparent;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .sport-tab:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+        .sport-tab.active { color: var(--text); border-bottom-color: var(--gold); background: rgba(240,185,11,0.05); }
+        .sport-tab .sport-icon { font-size: 1.1rem; }
+        .sport-tab .sport-wr { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; margin-left: 4px; }
+        .sport-tab .sport-wr.pos { color: var(--win); }
+        .sport-tab .sport-wr.neg { color: var(--loss); }
+
+        /* GAMES GRID */
+        .games-section { max-width: 1400px; margin: 0 auto; padding: 20px 24px; }
+        .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .section-title { font-size: 0.75rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; }
+        .last-updated { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-dim); }
+
+        .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+
+        /* GAME CARD */
+        .game-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .game-card:hover { border-color: rgba(240,185,11,0.4); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        .game-card.sport-nba { border-top: 3px solid var(--nba-red); }
+        .game-card.sport-nhl { border-top: 3px solid var(--nhl-blue); }
+        .game-card.sport-mlb { border-top: 3px solid var(--mlb-navy); }
+
+        .card-top {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 14px;
+            background: rgba(0,0,0,0.2);
+            border-bottom: 1px solid var(--border);
+        }
+        .sport-badge {
+            font-size: 0.6rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.08em; padding: 3px 8px; border-radius: 4px;
+        }
+        .sport-badge.nba { background: rgba(200,16,46,0.2); color: var(--nba-red); }
+        .sport-badge.nhl { background: rgba(0,62,140,0.2); color: var(--nhl-blue); }
+        .sport-badge.mlb { background: rgba(0,45,114,0.2); color: var(--mlb-navy); }
+
+        .game-status-badge {
+            font-size: 0.65rem; font-weight: 600; padding: 3px 8px;
+            border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        .game-status-badge.final { background: rgba(100,100,100,0.2); color: var(--text-dim); }
+        .game-status-badge.live { background: rgba(0,230,118,0.15); color: var(--win); animation: livePulse 2s infinite; }
+        .game-status-badge.scheduled { background: rgba(120,144,156,0.15); color: var(--scheduled); }
+        @keyframes livePulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+
+        .card-body { padding: 14px; }
+        .matchup {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+        .team-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 10px;
+            border-radius: 8px;
+            background: rgba(0,0,0,0.15);
+        }
+        .team-row.winner { background: rgba(0,230,118,0.08); }
+        .team-left { display: flex; align-items: center; gap: 10px; }
+        .team-logo {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.75rem; font-weight: 700;
+            background: rgba(255,255,255,0.1);
+        }
+        .team-logo.nba { background: rgba(200,16,46,0.2); color: var(--nba-red); }
+        .team-logo.nhl { background: rgba(0,62,140,0.2); color: var(--nhl-blue); }
+        .team-logo.mlb { background: rgba(0,45,114,0.2); color: var(--mlb-navy); }
+        .team-name { font-size: 0.85rem; font-weight: 600; color: var(--text); }
+        .team-record { font-size: 0.65rem; color: var(--text-dim); margin-left: 6px; }
+        .team-score {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            line-height: 1;
+            min-width: 36px;
+            text-align: right;
+        }
+        .team-score.winning { color: var(--win); }
+        .team-score.losing { color: var(--text-dim); }
+
+        /* VITO PICK SECTION */
+        .vito-pick {
+            border-top: 1px solid var(--border);
+            padding: 10px 14px;
+            background: rgba(240,185,11,0.04);
+        }
+        .vito-pick-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+        .vito-label { font-size: 0.62rem; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.08em; }
+        .pick-result {
+            font-size: 0.62rem; font-weight: 700; padding: 2px 7px;
+            border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em; margin-left: auto;
+        }
+        .pick-result.win { background: rgba(0,230,118,0.2); color: var(--win); }
+        .pick-result.loss { background: rgba(255,82,82,0.2); color: var(--loss); }
+        .pick-result.pending { background: rgba(144,202,249,0.15); color: var(--pending); }
+        .pick-result.push { background: rgba(255,215,64,0.2); color: var(--push); }
+        .pick-text { font-size: 0.78rem; color: var(--text); line-height: 1.4; }
+        .pick-text strong { color: var(--gold); }
+
+        /* NO GAMES STATE */
+        .no-games {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-dim);
+        }
+        .no-games-icon { font-size: 3rem; margin-bottom: 16px; }
+        .no-games h3 { font-size: 1.2rem; margin-bottom: 8px; color: var(--text); }
+        .no-games p { font-size: 0.85rem; }
+
+        /* LOADING */
+        .loading-overlay {
+            position: fixed; inset: 0; background: rgba(13,26,13,0.8);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 999; backdrop-filter: blur(4px);
+        }
+        .loading-overlay.hidden { display: none; }
+        .spinner { font-size: 2rem; animation: spin 1s linear infinite; }
+        @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+        /* GAME TIME */
+        .game-time { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-dim); text-align: center; margin-top: 4px; }
+
+        /* ERROR STATE */
+        .error-banner {
+            background: rgba(255,82,82,0.1);
+            border: 1px solid rgba(255,82,82,0.3);
+            border-radius: 8px;
+            padding: 10px 16px;
+            margin: 16px 24px;
+            max-width: 1400px;
+            font-size: 0.8rem;
+            color: var(--loss);
+            display: none;
+        }
+        .error-banner.visible { display: block; }
+    </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+    <div class="topbar-left">
+        <a href="/" class="topbar-logo">YONTI</a>
+        <nav class="topbar-nav">
+            <a href="/" class="nav-btn">🏠 Org Chart</a>
+            <a href="/paperdashboard/" class="nav-btn">📊 Paper Dashboard</a>
+            <a href="/scoreboard/" class="nav-btn active">🍝 Vito's Scoreboard</a>
+        </nav>
+    </div>
+    <div class="topbar-right">
+        <div class="live-badge"><span class="live-dot"></span><span>Live</span></div>
+        <span class="utc-clock" id="clock">--:--:-- UTC</span>
+        <span class="refresh-indicator" id="refreshIndicator">Refreshing in 30s</span>
+    </div>
+</div>
+
+<!-- HERO BANNER -->
+<div class="hero-banner">
+    <div class="hero-inner">
+        <div class="hero-title">🍝 Uncle Vito's Scoreboard</div>
+        <div class="hero-sub">Live scores + Vito's picks across NBA · NHL · MLB</div>
+    </div>
+</div>
+
+<!-- STATS STRIP -->
+<div class="stats-strip">
+    <div class="stats-inner" id="statsStrip">
+        <div class="overall-stat">
+            <div class="stat-label">Overall Record</div>
+            <div class="stat-main white" id="overall-record">--</div>
+            <div class="stat-detail" id="overall-detail">No picks yet</div>
+        </div>
+        <div class="overall-stat">
+            <div class="stat-label">Win Rate</div>
+            <div class="stat-main green" id="overall-wr">--%</div>
+            <div class="stat-detail" id="overall-wr-detail">Across all sports</div>
+        </div>
+        <div class="overall-stat">
+            <div class="stat-label">Today's Picks</div>
+            <div class="stat-main gold" id="today-picks">--</div>
+            <div class="stat-detail" id="today-picks-detail">Games with Vito picks</div>
+        </div>
+        <div class="overall-stat">
+            <div class="stat-label">NBA Record</div>
+            <div class="stat-main" id="nba-record" style="color:var(--nba-red);">--</div>
+            <div class="stat-detail" id="nba-wr-detail">-- win rate</div>
+        </div>
+        <div class="overall-stat">
+            <div class="stat-label">NHL Record</div>
+            <div class="stat-main" id="nhl-record" style="color:var(--nhl-blue);">--</div>
+            <div class="stat-detail" id="nhl-wr-detail">-- win rate</div>
+        </div>
+        <div class="overall-stat">
+            <div class="stat-label">MLB Record</div>
+            <div class="stat-main" id="mlb-record" style="color:var(--mlb-navy);">--</div>
+            <div class="stat-detail" id="mlb-wr-detail">-- win rate</div>
+        </div>
+    </div>
+</div>
+
+<!-- ERROR BANNER -->
+<div class="error-banner" id="errorBanner"></div>
+
+<!-- SPORT FILTER TABS -->
+<div class="sport-tabs-bar">
+    <div class="sport-tabs-inner">
+        <button class="sport-tab active" data-sport="all">
+            <span class="sport-icon">🏟️</span>
+            <span>All</span>
+            <span class="sport-wr" id="tab-wr-all"></span>
+        </button>
+        <button class="sport-tab" data-sport="basketball/nba">
+            <span class="sport-icon">🏀</span>
+            <span>NBA</span>
+            <span class="sport-wr" id="tab-wr-nba"></span>
+        </button>
+        <button class="sport-tab" data-sport="hockey/nhl">
+            <span class="sport-icon">🏒</span>
+            <span>NHL</span>
+            <span class="sport-wr" id="tab-wr-nhl"></span>
+        </button>
+        <button class="sport-tab" data-sport="baseball/mlb">
+            <span class="sport-icon">⚾</span>
+            <span>MLB</span>
+            <span class="sport-wr" id="tab-wr-mlb"></span>
+        </button>
+    </div>
+</div>
+
+<!-- GAMES SECTION -->
+<div class="games-section">
+    <div class="section-header">
+        <div class="section-title">Today's Games</div>
+        <div class="last-updated" id="lastUpdated">Loading...</div>
+    </div>
+    <div class="games-grid" id="gamesGrid">
+        <div class="no-games">
+            <div class="no-games-icon">🏟️</div>
+            <h3>Loading games...</h3>
+            <p>Fetching live scores from ESPN</p>
+        </div>
+    </div>
+</div>
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay hidden" id="loadingOverlay">
+    <div class="spinner">⚡</div>
+</div>
+
+<script>
+// ===== STATE =====
+const SPORT_COLORS = {
+    'basketball/nba': { name: 'NBA', color: '#C8102E', css: 'nba' },
+    'hockey/nhl': { name: 'NHL', color: '#003E8C', css: 'nhl' },
+    'baseball/mlb': { name: 'MLB', color: '#002D72', css: 'mlb' }
+};
+
+const ESPN_APIS = {
+    'basketball/nba': 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard',
+    'hockey/nhl': 'https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard',
+    'baseball/mlb': 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard'
+};
+
+const API_KEY = 'vito-scoreboard-v1'; // simple identifier for cache busting
+
+let allGames = []; // { id, sport, homeTeam, awayTeam, homeScore, awayScore, status, period, clock, startTime, vitoPick }
+let vitoPicks = []; // { gameId, pickText, pickType, pickSide, line, result, sport }
+let resolvedPicks = {}; // persisted in localStorage
+let activeSport = 'all';
+let refreshTimer = 30;
+let refreshInterval = null;
+
+// ===== INIT =====
+function init() {
+    updateClock();
+    setInterval(updateClock, 1000);
+    setupSportTabs();
+    loadResolvedPicks();
+    loadVitoPicks();
+    fetchAllScores();
+    startRefreshTimer();
+}
+
+// ===== CLOCK =====
+function updateClock() {
+    document.getElementById('clock').textContent = new Date().toUTCString().split(' ')[4] + ' UTC';
+}
+
+// ===== REFRESH TIMER =====
+function startRefreshTimer() {
+    refreshTimer = 30;
+    if (refreshInterval) clearInterval(refreshInterval);
+    refreshInterval = setInterval(() => {
+        refreshTimer--;
+        document.getElementById('refreshIndicator').textContent = `Refreshing in ${refreshTimer}s`;
+        if (refreshTimer <= 0) {
+            fetchAllScores();
+            refreshTimer = 30;
+        }
+    }, 1000);
+}
+
+// ===== PERSISTED RESOLVED PICKS (localStorage) =====
+function loadResolvedPicks() {
+    try {
+        const saved = localStorage.getItem('vito_resolved_picks');
+        if (saved) {
+            const data = JSON.parse(saved);
+            // Only use today's data
+            const today = new Date().toDateString();
+            if (data.date === today) {
+                resolvedPicks = data.picks || {};
+            }
+        }
+    } catch(e) {}
+}
+
+function saveResolvedPicks() {
+    try {
+        localStorage.setItem('vito_resolved_picks', JSON.stringify({
+            date: new Date().toDateString(),
+            picks: resolvedPicks
+        }));
+    } catch(e) {}
+}
+
+// ===== VITO PICKS PARSER =====
+async function loadVitoPicks() {
+    try {
+        const r = await fetch('/workers/uncle_vito/last_report.txt?t=' + Date.now());
+        if (!r.ok) return;
+        const text = await r.text();
+        parseVitoPicks(text);
+    } catch(e) {
+        console.warn('Could not load Vito picks:', e);
+    }
+}
+
+function parseVitoPicks(text) {
+    vitoPicks = [];
+    // Parse lines like:
+    // "1. LaMelo Ball (CHA) - **OVER** points 23.5"
+    // "1. CHA vs PHX - **CHA** (-6.5)"
+    // "3. OKC vs LAL - **OKC** ML"
+    const lines = text.split('\n');
+    const propRegex = /^\s*(\d+)\.\s+(.+?)\s+\(([A-Z]{2,4})\)\s+-\s+\*\*(\w+)\*\*\s+(\w+)\s+([\d.]+)/;
+    const spreadRegex = /^\s*(\d+)\.\s+([A-Z]{2,4})\s+vs\s+([A-Z]{2,4})\s+-\s+\*\*([A-Z]{2,4})\*\*\s*\((-?[\d.]+)\)/;
+    const mlRegex = /^\s*(\d+)\.\s+([A-Z]{2,4})\s+vs\s+([A-Z]{2,4})\s+-\s+\*\*([A-Z]{2,4})\*\*\s+ML/i;
+
+    for (const line of lines) {
+        let match;
+
+        match = line.match(propRegex);
+        if (match) {
+            const [, num, player, team, side, stat, lineVal] = match;
+            const sport = teamSportMap[team] || guessSportFromTeam(team);
+            vitoPicks.push({
+                id: `prop_${num}`,
+                pickNum: parseInt(num),
+                type: 'prop',
+                team,
+                player,
+                side: side.toUpperCase(),
+                stat: stat,
+                line: parseFloat(lineVal),
+                sport,
+                text: line.trim(),
+                result: 'pending'
+            });
+            continue;
+        }
+
+        match = line.match(spreadRegex);
+        if (match) {
+            const [, num, t1, t2, pickTeam, lineVal] = match;
+            const sport = teamSportMap[pickTeam] || guessSportFromTeam(pickTeam);
+            vitoPicks.push({
+                id: `spread_${num}`,
+                pickNum: parseInt(num),
+                type: 'spread',
+                team: pickTeam,
+                homeTeam: t1,
+                awayTeam: t2,
+                side: pickTeam,
+                line: parseFloat(lineVal),
+                sport,
+                text: line.trim(),
+                result: 'pending'
+            });
+            continue;
+        }
+
+        match = line.match(mlRegex);
+        if (match) {
+            const [, num, t1, t2, pickTeam] = match;
+            const sport = teamSportMap[pickTeam] || guessSportFromTeam(pickTeam);
+            vitoPicks.push({
+                id: `ml_${num}`,
+                pickNum: parseInt(num),
+                type: 'ml',
+                team: pickTeam,
+                homeTeam: t1,
+                awayTeam: t2,
+                side: pickTeam,
+                line: null,
+                sport,
+                text: line.trim(),
+                result: 'pending'
+            });
+            continue;
+        }
+    }
+}
+
+// Simple team -> sport mapping (most common teams)
+const teamSportMap = {
+    // NBA teams
+    'ATL': 'basketball/nba', 'BKN': 'basketball/nba', 'BOS': 'basketball/nba',
+    'CHA': 'basketball/nba', 'CHI': 'basketball/nba', 'CLE': 'basketball/nba',
+    'DAL': 'basketball/nba', 'DEN': 'basketball/nba', 'DET': 'basketball/nba',
+    'GSW': 'basketball/nba', 'HOU': 'basketball/nba', 'IND': 'basketball/nba',
+    'LAC': 'basketball/nba', 'LAL': 'basketball/nba', 'MEM': 'basketball/nba',
+    'MIA': 'basketball/nba', 'MIL': 'basketball/nba', 'MIN': 'basketball/nba',
+    'NOP': 'basketball/nba', 'NYK': 'basketball/nba', 'OKC': 'basketball/nba',
+    'ORL': 'basketball/nba', 'PHI': 'basketball/nba', 'PHX': 'basketball/nba',
+    'POR': 'basketball/nba', 'SAC': 'basketball/nba', 'SAS': 'basketball/nba',
+    'TOR': 'basketball/nba', 'UTAH': 'basketball/nba', 'WAS': 'basketball/nba',
+    // NHL teams
+    'ANA': 'hockey/nhl', 'BOS': 'hockey/nhl', 'BUF': 'hockey/nhl',
+    'CAR': 'hockey/nhl', 'CBJ': 'hockey/nhl', 'CGY': 'hockey/nhl',
+    'CHI': 'hockey/nhl', 'COL': 'hockey/nhl', 'DAL': 'hockey/nhl',
+    'DET': 'hockey/nhl', 'EDM': 'hockey/nhl', 'FLA': 'hockey/nhl',
+    'LAK': 'hockey/nhl', 'MIN': 'hockey/nhl', 'MTL': 'hockey/nhl',
+    'NJD': 'hockey/nhl', 'NSH': 'hockey/nhl', 'NYI': 'hockey/nhl',
+    'NYR': 'hockey/nhl', 'OTT': 'hockey/nhl', 'PHI': 'hockey/nhl',
+    'PIT': 'hockey/nhl', 'SEA': 'hockey/nhl', 'SJS': 'hockey/nhl',
+    'STL': 'hockey/nhl', 'TBL': 'hockey/nhl', 'TOR': 'hockey/nhl',
+    'UTA': 'hockey/nhl', 'VAN': 'hockey/nhl', 'VGK': 'hockey/nhl',
+    'WPG': 'hockey/nhl', 'WSH': 'hockey/nhl',
+    // MLB teams (abbreviations can vary)
+    'ATL': 'baseball/mlb', 'ARI': 'baseball/mlb', 'BAL': 'baseball/mlb',
+    'BOS': 'baseball/mlb', 'CHC': 'baseball/mlb', 'CIN': 'baseball/mlb',
+    'CLE': 'baseball/mlb', 'COL': 'baseball/mlb', 'CWS': 'baseball/mlb',
+    'DET': 'baseball/mlb', 'HOU': 'baseball/mlb', 'KC': 'baseball/mlb',
+    'LAA': 'baseball/mlb', 'LAD': 'baseball/mlb', 'MIA': 'baseball/mlb',
+    'MIL': 'baseball/mlb', 'MIN': 'baseball/mlb', 'NYM': 'baseball/mlb',
+    'NYY': 'baseball/mlb', 'OAK': 'baseball/mlb', 'PHI': 'baseball/mlb',
+    'PIT': 'baseball/mlb', 'SD': 'baseball/mlb', 'SF': 'baseball/mlb',
+    'SEA': 'baseball/mlb', 'STL': 'baseball/mlb', 'TB': 'baseball/mlb',
+    'TEX': 'baseball/mlb', 'TOR': 'baseball/mlb', 'WSH': 'baseball/mlb'
+};
+
+function guessSportFromTeam(team) {
+    if (teamSportMap[team]) return teamSportMap[team];
+    return 'basketball/nba'; // default
+}
+
+// ===== FETCH ESPN SCORES =====
+async function fetchAllScores() {
+    document.getElementById('loadingOverlay').classList.remove('hidden');
+    let hasError = false;
+
+    try {
+        const results = await Promise.allSettled([
+            fetch(ESPN_APIS['basketball/nba']),
+            fetch(ESPN_APIS['hockey/nhl']),
+            fetch(ESPN_APIS['baseball/mlb'])
+        ]);
+
+        allGames = [];
+
+        const sports = ['basketball/nba', 'hockey/nhl', 'baseball/mlb'];
+        for (let i = 0; i < sports.length; i++) {
+            const sport = sports[i];
+            const result = results[i];
+            if (result.status === 'fulfilled' && result.value.ok) {
+                try {
+                    const data = await result.value.json();
+                    processESPNData(data, sport);
+                } catch(e) {
+                    console.error(`Error processing ${sport}:`, e);
+                    hasError = true;
+                }
+            } else {
+                hasError = true;
+            }
+        }
+
+        // Match picks to games
+        matchPicksToGames();
+        resolvePickResults();
+        renderGames();
+        updateStats();
+
+        const now = new Date();
+        document.getElementById('lastUpdated').textContent =
+            `Updated ${now.toLocaleTimeString('en-US', {hour:'2-digit',minute:'2-digit',second:'2-digit'})}`;
+
+        if (hasError) {
+            showError('Some scores may be unavailable. Retrying in 30s...');
+        } else {
+            hideError();
+        }
+    } catch(e) {
+        showError('Failed to fetch scores. Check your connection.');
+    } finally {
+        document.getElementById('loadingOverlay').classList.add('hidden');
+        refreshTimer = 30;
+    }
+}
+
+function processESPNData(data, sport) {
+    const events = data.events || [];
+    const league = SPORT_COLORS[sport];
+
+    for (const event of events) {
+        const competition = event.competitions?.[0];
+        if (!competition) continue;
+
+        const status = event.status;
+        const statusDetail = status?.type?.state || 'scheduled'; // scheduled, in progress, final
+        const period = status?.period;
+        const clock = status?.displayClock || '';
+
+        const competitors = competition.competitors || [];
+        const homeComp = competitors.find(c => c.homeAway === 'home');
+        const awayComp = competitors.find(c => c.homeAway === 'away');
+
+        if (!homeComp || !awayComp) continue;
+
+        const homeTeam = homeComp.team;
+        const awayTeam = awayComp.team;
+
+        const homeScore = parseInt(homeComp.score || '0');
+        const awayScore = parseInt(awayComp.score || '0');
+
+        // Start time
+        const startTime = competition.date || event.date;
+        const venue = competition.venue?.name || '';
+
+        // Create a matchable ID
+        const gameId = `${sport}_${homeTeam.abbreviation}_${awayComp.score}`; // just a unique key
+
+        allGames.push({
+            id: `${sport}_${homeTeam.id}_${awayTeam.id}`,
+            sport,
+            sportName: league.name,
+            sportCss: league.css,
+            homeId: homeTeam.id,
+            awayId: awayTeam.id,
+            homeAbbr: homeTeam.abbreviation,
+            awayAbbr: awayTeam.abbreviation,
+            homeName: homeTeam.shortDisplayName || homeTeam.displayName,
+            awayName: awayTeam.shortDisplayName || awayTeam.displayName,
+            homeLogo: homeTeam.logo || '',
+            awayLogo: awayTeam.logo || '',
+            homeScore,
+            awayScore,
+            status: statusDetail, // 'scheduled' | 'in_progress' | 'final'
+            period,
+            clock,
+            startTime,
+            venue,
+            vitoPick: null,
+            vitoPickResult: 'pending'
+        });
+    }
+}
+
+// ===== MATCH PICKS TO GAMES =====
+function matchPicksToGames() {
+    for (const game of allGames) {
+        game.vitoPick = null;
+        game.vitoPickResult = 'pending';
+
+        // Try to find a matching pick
+        for (const pick of vitoPicks) {
+            if (pick.sport !== game.sport) continue;
+
+            let matched = false;
+
+            if (pick.type === 'prop') {
+                // Props are player-specific, harder to match without more data
+                // For now, skip prop matching
+                continue;
+            }
+
+            if (pick.type === 'spread' || pick.type === 'ml') {
+                const teams = [game.homeAbbr, game.awayAbbr];
+                if (teams.includes(pick.team) || teams.includes(pick.homeTeam) || teams.includes(pick.awayTeam)) {
+                    matched = true;
+                }
+            }
+
+            if (matched) {
+                game.vitoPick = pick;
+                game.vitoPickResult = pick.result || 'pending';
+                break;
+            }
+        }
+    }
+}
+
+// ===== RESOLVE PICK RESULTS =====
+function resolvePickResults() {
+    const sportStats = { 'basketball/nba': {w:0,l:0,p:0}, 'hockey/nhl': {w:0,l:0,p:0}, 'baseball/mlb': {w:0,l:0,p:0} };
+    const totalStats = {w:0,l:0,p:0};
+
+    for (const game of allGames) {
+        if (!game.vitoPick) continue;
+
+        const pick = game.vitoPick;
+        let result = 'pending';
+
+        if (game.status === 'final') {
+            // Check against localStorage for already-resolved picks
+            if (resolvedPicks[game.id]) {
+                result = resolvedPicks[game.id];
+            } else {
+                // Resolve based on game outcome
+                const homeWon = game.homeScore > game.awayScore;
+                const awayWon = game.awayScore > game.homeScore;
+                const pickedHome = pick.team === game.homeAbbr || pick.homeTeam === game.homeAbbr;
+                const pickedAway = pick.team === game.awayAbbr || pick.awayTeam === game.awayAbbr;
+
+                if (pick.type === 'ml') {
+                    if (pickedHome && homeWon) result = 'win';
+                    else if (pickedAway && awayWon) result = 'win';
+                    else if (pickedHome && !homeWon) result = 'loss';
+                    else if (pickedAway && !awayWon) result = 'loss';
+                } else if (pick.type === 'spread') {
+                    // Spread is more complex - for now treat as win/loss
+                    if (pickedHome && homeWon) result = 'win';
+                    else if (pickedAway && awayWon) result = 'win';
+                    else result = 'loss';
+                }
+
+                // Cache it
+                if (result !== 'pending') {
+                    resolvedPicks[game.id] = result;
+                    saveResolvedPicks();
+                }
+            }
+
+            game.vitoPickResult = result;
+            pick.result = result;
+        } else if (game.status === 'in_progress') {
+            game.vitoPickResult = 'pending';
+            pick.result = 'pending';
+        }
+    }
+
+    // Compute stats
+    for (const game of allGames) {
+        if (!game.vitoPick) continue;
+        if (game.status !== 'final') continue;
+        const r = game.vitoPickResult;
+        if (r === 'win') { sportStats[game.sport].w++; totalStats.w++; }
+        else if (r === 'loss') { sportStats[game.sport].l++; totalStats.l++; }
+        else if (r === 'push') { sportStats[game.sport].p++; totalStats.p++; }
+    }
+
+    // Store for stats update
+    window._sportStats = sportStats;
+    window._totalStats = totalStats;
+}
+
+// ===== UPDATE STATS =====
+function updateStats() {
+    const total = window._totalStats || {w:0,l:0,p:0};
+    const sport = window._sportStats || { 'basketball/nba': {w:0,l:0,p:0}, 'hockey/nhl': {w:0,l:0,p:0}, 'baseball/mlb': {w:0,l:0,p:0} };
+    const todayGames = allGames.filter(g => g.vitoPick);
+
+    const totalPlayed = total.w + total.l + total.p;
+    const totalWr = totalPlayed > 0 ? (total.w / totalPlayed * 100).toFixed(0) : '--';
+
+    document.getElementById('overall-record').textContent =
+        totalPlayed > 0 ? `${total.w}W - ${total.l}L${total.p > 0 ? ' - ' + total.p + 'P' : ''}` : '--';
+    document.getElementById('overall-wr').textContent = totalWr !== '--' ? totalWr + '%' : '--%';
+    document.getElementById('overall-wr').className = 'stat-main ' + (parseInt(totalWr) >= 50 ? 'green' : 'red');
+    document.getElementById('today-picks').textContent = todayGames.length;
+    document.getElementById('today-picks-detail').textContent = `${todayGames.filter(g=>g.status==='final').length} resolved`;
+
+    // Per-sport stats
+    for (const [sportKey, stat] of Object.entries(sport)) {
+        const played = stat.w + stat.l + stat.p;
+        const wr = played > 0 ? (stat.w / played * 100).toFixed(0) : '--';
+        const suffix = sportKey.replace('basketball/', '').replace('hockey/', '').replace('baseball/', '').toUpperCase();
+        const recEl = document.getElementById(`${suffix.substring(0,3).toLowerCase()}-record`);
+        if (recEl) recEl.textContent = played > 0 ? `${stat.w}W-${stat.l}L` : '--';
+        const wrEl = document.getElementById(`${suffix.substring(0,3).toLowerCase()}-wr-detail`);
+        if (wrEl) wrEl.textContent = played > 0 ? `${wr}% win rate` : '-- win rate';
+    }
+
+    // Tab WRs
+    for (const [sportKey, stat] of Object.entries(sport)) {
+        const suffix = sportKey.includes('nba') ? 'nba' : sportKey.includes('nhl') ? 'nhl' : 'mlb';
+        const played = stat.w + stat.l + stat.p;
+        const wr = played > 0 ? (stat.w / played * 100).toFixed(0) : null;
+        const el = document.getElementById('tab-wr-' + suffix);
+        if (el) {
+            if (wr) {
+                el.textContent = wr + '%';
+                el.className = 'sport-wr ' + (parseInt(wr) >= 50 ? 'pos' : 'neg');
+            } else {
+                el.textContent = '';
+                el.className = 'sport-wr';
+            }
+        }
+    }
+
+    // Overall tab WR
+    const overallWrEl = document.getElementById('tab-wr-all');
+    if (totalWr !== '--') {
+        overallWrEl.textContent = totalWr + '%';
+        overallWrEl.className = 'sport-wr ' + (parseInt(totalWr) >= 50 ? 'pos' : 'neg');
+    }
+}
+
+// ===== RENDER GAMES =====
+function renderGames() {
+    const grid = document.getElementById('gamesGrid');
+    let games = [...allGames];
+
+    if (activeSport !== 'all') {
+        games = games.filter(g => g.sport === activeSport);
+    }
+
+    if (games.length === 0) {
+        grid.innerHTML = `
+            <div class="no-games">
+                <div class="no-games-icon">🏟️</div>
+                <h3>No ${activeSport === 'all' ? '' : SPORT_COLORS[activeSport]?.name + ' '}Games Found</h3>
+                <p>Check back later or try a different sport filter</p>
+            </div>`;
+        return;
+    }
+
+    grid.innerHTML = games.map(game => renderGameCard(game)).join('');
+}
+
+function renderGameCard(game) {
+    const isLive = game.status === 'in_progress';
+    const isFinal = game.status === 'final';
+    const isScheduled = game.status === 'scheduled';
+
+    const homeWinning = game.homeScore > game.awayScore;
+    const awayWinning = game.awayScore > game.homeScore;
+
+    const statusBadge = isFinal
+        ? '<span class="game-status-badge final">Final</span>'
+        : isLive
+            ? `<span class="game-status-badge live">LIVE${game.period ? ' Q' + game.period : ''}${game.clock ? ' ' + game.clock : ''}</span>`
+            : '<span class="game-status-badge scheduled">' + formatStartTime(game.startTime) + '</span>';
+
+    const sportBadgeClass = SPORT_COLORS[game.sport]?.css || 'nba';
+    const sportBadgeName = SPORT_COLORS[game.sport]?.name || game.sport.toUpperCase();
+
+    let vitoPickHtml = '';
+    if (game.vitoPick) {
+        const pick = game.vitoPick;
+        let resultClass = game.vitoPickResult;
+        let resultText = game.vitoPickResult.toUpperCase();
+        if (game.vitoPickResult === 'pending') resultText = 'PENDING';
+        if (game.vitoPickResult === 'win') resultText = 'WIN ✓';
+        if (game.vitoPickResult === 'loss') resultText = 'LOSS ✗';
+        if (game.vitoPickResult === 'push') resultText = 'PUSH';
+
+        let pickDisplay = '';
+        if (pick.type === 'ml') {
+            pickDisplay = `<strong>${pick.team}</strong> ML`;
+        } else if (pick.type === 'spread') {
+            pickDisplay = `<strong>${pick.team}</strong> (${pick.line > 0 ? '+' : ''}${pick.line})`;
+        } else if (pick.type === 'prop') {
+            pickDisplay = `<strong>${pick.side}</strong> ${pick.stat} ${pick.line}`;
+        }
+
+        vitoPickHtml = `
+            <div class="vito-pick">
+                <div class="vito-pick-header">
+                    <span class="vito-label">🍝 Vito's Pick</span>
+                    <span class="pick-result ${resultClass}">${resultText}</span>
+                </div>
+                <div class="pick-text">${pickDisplay}</div>
+            </div>`;
+    }
+
+    return `
+        <div class="game-card sport-${sportBadgeClass}">
+            <div class="card-top">
+                <span class="sport-badge ${sportBadgeClass}">${sportBadgeName}</span>
+                ${statusBadge}
+            </div>
+            <div class="card-body">
+                <div class="matchup">
+                    <div class="team-row ${awayWinning ? 'winner' : ''}">
+                        <div class="team-left">
+                            ${game.awayLogo ? `<img src="${game.awayLogo}" alt="${game.awayAbbr}" style="width:28px;height:28px;border-radius:50%;object-fit:contain;background:rgba(255,255,255,0.1);">` : `<div class="team-logo ${sportBadgeClass}">${game.awayAbbr.substring(0,2)}</div>`}
+                            <span class="team-name">${game.awayAbbr}</span>
+                        </div>
+                        <span class="team-score ${awayWinning && !isScheduled ? 'winning' : 'losing'}">${isScheduled ? '--' : game.awayScore}</span>
+                    </div>
+                    <div class="team-row ${homeWinning ? 'winner' : ''}">
+                        <div class="team-left">
+                            ${game.homeLogo ? `<img src="${game.homeLogo}" alt="${game.homeAbbr}" style="width:28px;height:28px;border-radius:50%;object-fit:contain;background:rgba(255,255,255,0.1);">` : `<div class="team-logo ${sportBadgeClass}">${game.homeAbbr.substring(0,2)}</div>`}
+                            <span class="team-name">${game.homeAbbr}</span>
+                        </div>
+                        <span class="team-score ${homeWinning && !isScheduled ? 'winning' : 'losing'}">${isScheduled ? '--' : game.homeScore}</span>
+                    </div>
+                </div>
+                ${!isScheduled ? `<div class="game-time">${game.venue || ''}</div>` : ''}
+            </div>
+            ${vitoPickHtml}
+        </div>`;
+}
+
+function formatStartTime(isoString) {
+    if (!isoString) return 'TBD';
+    try {
+        const d = new Date(isoString);
+        return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+    } catch {
+        return 'TBD';
+    }
+}
+
+// ===== SPORT TABS =====
+function setupSportTabs() {
+    document.querySelectorAll('.sport-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.sport-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            activeSport = tab.dataset.sport;
+            renderGames();
+        });
+    });
+}
+
+// ===== ERROR =====
+function showError(msg) {
+    const el = document.getElementById('errorBanner');
+    el.textContent = '⚠️ ' + msg;
+    el.classList.add('visible');
+}
+function hideError() {
+    document.getElementById('errorBanner').classList.remove('visible');
+}
+
+// ===== MANUAL REFRESH =====
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'r' && e.ctrlKey) {
+        e.preventDefault();
+        fetchAllScores();
+    }
+});
+
+init();
+</script>
+</body>
+</html>

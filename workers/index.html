@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yonti — Trading Operation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0B0F1A;
+            --card: #131929;
+            --card-hover: #1A2235;
+            --border: #1E2A3F;
+            --text: #E8ECF4;
+            --text-dim: #7A8499;
+            --gold: #F0B90B;
+            --green: #00D68F;
+            --red: #EF4444;
+            --blue: #4F8DE8;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .logo {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 16px;
+        }
+        .subtitle {
+            font-size: 18px;
+            color: var(--text-dim);
+            font-weight: 300;
+        }
+        .dashboards {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px 48px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: var(--text);
+            min-width: 260px;
+        }
+        .card:hover {
+            background: var(--card-hover);
+            border-color: var(--gold);
+            transform: translateY(-4px);
+        }
+        .card-icon {
+            font-size: 36px;
+            margin-bottom: 16px;
+        }
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .card-desc {
+            font-size: 14px;
+            color: var(--text-dim);
+        }
+        .status {
+            margin-top: 60px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-dim);
+            font-size: 14px;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--green);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">YONTI</div>
+        <div class="subtitle">AI-Powered Prediction Market Trading</div>
+    </div>
+    
+    <div class="dashboards">
+        <a href="scoreboard/" class="card">
+            <div class="card-icon">📊</div>
+            <div class="card-title">Scoreboard</div>
+            <div class="card-desc">Uncle Vito's Sports Betting Report<br>Live tracking & picks</div>
+        </a>
+        <a href="paperdashboard/" class="card">
+            <div class="card-icon">🤖</div>
+            <div class="card-title">Paper Trading</div>
+            <div class="card-desc">Superbot Performance<br>Kalshi crypto binary options</div>
+        </a>
+    </div>
+    
+    <div class="status">
+        <div class="status-dot"></div>
+        Systems operational
+    </div>
+</body>
+</html>

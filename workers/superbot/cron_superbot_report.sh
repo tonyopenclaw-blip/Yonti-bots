@@ -40,18 +40,8 @@ if [ -z "$CURRENT_SUMMARY" ]; then
     exit 1
 fi
 
-# Compare with last summary
-if [ "$FORCE" != "true" ] && [ -f "$LAST_SUMMARY_FILE" ]; then
-    LAST_SUMMARY=$(cat "$LAST_SUMMARY_FILE")
-    if [ "$CURRENT_SUMMARY" == "$LAST_SUMMARY" ]; then
-        echo "No change in report state, skipping Discord."
-        echo "$CURRENT_SUMMARY" > "$LAST_SUMMARY_FILE"
-        exit 0
-    fi
-fi
-
-# State changed or first run - send to Discord
+# Always post - Tony wants updates every 15 min
 echo "$CURRENT_SUMMARY" > "$LAST_SUMMARY_FILE"
-echo "State changed, posting to Discord..."
+echo "Posting to Discord..."
 python3 paper_report.py --discord 2>&1
 echo "Done."

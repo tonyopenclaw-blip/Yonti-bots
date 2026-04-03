@@ -27,6 +27,12 @@ def build_report(d):
     open_count = d.get('open_positions', 0)
     open_str = f" | Open: {open_count}" if open_count > 0 else ""
     
+    # Calculate avg_win and avg_loss from trades
+    winning_trades = [t['pnl'] for t in d['trades'] if t['pnl'] > 0]
+    losing_trades = [t['pnl'] for t in d['trades'] if t['pnl'] < 0]
+    avg_win = sum(winning_trades) / len(winning_trades) if winning_trades else 0
+    avg_loss = sum(losing_trades) / len(losing_trades) if losing_trades else 0
+    
     # Show last 5 trades only (to stay under 2000 chars)
     recent_trades = d['trades'][-5:]
     
@@ -35,6 +41,7 @@ def build_report(d):
     msg += f"**${d['starting_balance']:.2f} → ${d['ending_balance']:.2f}** {pnl_emoji} ${pnl:+.2f}\n"
     msg += f"WR: {d['win_rate']}% ({d['winning_trades']}W/{d['losing_trades']}L){open_str}\n"
     msg += f"**Trades:** {d['total_trades']} | **Best:** +${d['largest_win']:.4f} | **Worst:** ${d['largest_loss']:.4f}\n"
+    msg += f"**Avg Win:** +${avg_win:.4f} | **Avg Loss:** ${avg_loss:.4f}\n"
     msg += f"\n**Last 5:**\n"
     
     for t in recent_trades:

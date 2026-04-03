@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yonti Org Chart</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0B0F1A;
+            --card: #131929;
+            --card-hover: #1A2235;
+            --border: #1E2A3F;
+            --text: #E8ECF4;
+            --text-dim: #7A8499;
+            --gold: #F0B90B;
+            --green: #00D68F;
+            --red: #EF4444;
+            --blue: #4F8DE8;
+            --purple: #9B59B6;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .logo {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 16px;
+        }
+        .subtitle {
+            font-size: 18px;
+            color: var(--text-dim);
+            font-weight: 300;
+        }
+        .back-link {
+            color: var(--gold);
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-block;
+            margin-bottom: 40px;
+        }
+        .back-link:hover { text-decoration: underline; }
+        .org-tree {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .level {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+        .level-label {
+            width: 100%;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+        }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px 28px;
+            text-align: center;
+            min-width: 160px;
+            transition: all 0.2s;
+        }
+        .card:hover {
+            border-color: var(--gold);
+            transform: translateY(-2px);
+        }
+        .card-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        .card-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .card-role {
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+        .card-desc {
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-top: 8px;
+            line-height: 1.4;
+        }
+        .ceo { border-color: var(--gold); }
+        .cso { border-color: var(--green); }
+        .eng { border-color: var(--blue); }
+        .research { border-color: var(--purple); }
+        .ops { border-color: var(--red); }
+        .reports { border-color: var(--text-dim); }
+        .connector {
+            width: 2px;
+            height: 30px;
+            background: var(--border);
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-link">← Back to Dashboard</a>
+    
+    <div class="header">
+        <div class="logo">YONTI</div>
+        <div class="subtitle">Organization Chart</div>
+    </div>
+    
+    <div class="org-tree">
+        <!-- EXECUTIVE -->
+        <div class="level">
+            <div class="level-label">Executive</div>
+        </div>
+        <div class="level" style="margin-top: -30px;">
+            <div class="card ceo">
+                <div class="card-icon">👑</div>
+                <div class="card-name">Tony</div>
+                <div class="card-role">CEO / Owner</div>
+                <div class="card-desc">Decision maker, project owner</div>
+            </div>
+        </div>
+        
+        <div class="connector"></div>
+        
+        <div class="level">
+            <div class="card cso">
+                <div class="card-icon">🎯</div>
+                <div class="card-name">Jenkins</div>
+                <div class="card-role">CSO / Orchestrator</div>
+                <div class="card-desc">Strategy, coordination, communication</div>
+            </div>
+        </div>
+        
+        <div class="connector"></div>
+        
+        <!-- OPERATIONS -->
+        <div class="level">
+            <div class="level-label">Operations</div>
+        </div>
+        <div class="level">
+            <div class="card eng">
+                <div class="card-icon">⚡</div>
+                <div class="card-name">Pixel</div>
+                <div class="card-role">Engineering</div>
+                <div class="card-desc">Builds systems, scripts, bots</div>
+            </div>
+            <div class="card research">
+                <div class="card-icon">🧠</div>
+                <div class="card-name">Nerd</div>
+                <div class="card-role">Research</div>
+                <div class="card-desc">Markets, patterns, strategies</div>
+            </div>
+            <div class="card ops">
+                <div class="card-icon">🔍</div>
+                <div class="card-name">Searcher</div>
+                <div class="card-role">Market Intelligence</div>
+                <div class="card-desc">Finds active markets on Kalshi</div>
+            </div>
+        </div>
+        
+        <div class="connector"></div>
+        
+        <!-- EXECUTION -->
+        <div class="level">
+            <div class="level-label">Execution Layer</div>
+        </div>
+        <div class="level">
+            <div class="card reports">
+                <div class="card-icon">🤖</div>
+                <div class="card-name">Super Bot</div>
+                <div class="card-role">Trading</div>
+                <div class="card-desc">Kalshi 15-min crypto binary options</div>
+            </div>
+            <div class="card reports">
+                <div class="card-icon">🍝</div>
+                <div class="card-name">Vito</div>
+                <div class="card-role">Betting</div>
+                <div class="card-desc">Sports betting report (NBA props)</div>
+            </div>
+            <div class="card reports">
+                <div class="card-icon">📊</div>
+                <div class="card-name">Uncle Vito</div>
+                <div class="card-role">Paper Report</div>
+                <div class="card-desc">Balance, P&L, 15-min updates</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

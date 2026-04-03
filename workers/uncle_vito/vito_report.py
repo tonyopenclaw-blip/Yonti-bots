@@ -8,7 +8,7 @@ import json
 import math
 import random
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, date, timedelta
 from typing import Optional, List, Dict, Any, Set
 from dataclasses import dataclass
 import config

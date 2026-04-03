@@ -175,11 +175,31 @@ class CoinTrader:
                 positions_changed = True
                 continue
             
-            # Check TP/SL for DRIFT strategies
-            should_exit, reason = self.strategy_engine.check_position_exit(position, mid_price)
+            # Check TP/SL for DRIFT strategies (now includes trailing stop logic)
+            should_exit, reason = self.strategy_engine.check_position_exit(position, mid_price, time_left)
             if should_exit:
                 self._close_position(ticker, reason, mid_price)
                 positions_changed = True
+                continue
+            
+            # === SCALE-IN LOGIC: Add to winning positions ===
+            # Check if we should scale in (add more to position)
+            if position.should_scale_in(mid_price):
+                scale_size = position.scale_in_size
+                # Check if we have cash for scale-in
+                if scale_size <= self.cash:
+                    # For scale-in, we add to position size but don't create new Position
+                    # We update the existing position's fields
+                    if position.side == "yes":
+                        cost = mid_price * scale_size
+                    else:
+                        cost = (1 - mid_price) * scale_size
+                    
+                    position.record_scale_in(mid_price, scale_size)
+                    self.cash -= cost
+                    logger.info(f"[{self.coin}] SCALED IN {ticker}: +${scale_size:.2f} @ ${mid_price:.4f}, new_size=${position.size:.2f}")
+                else:
+                    logger.debug(f"[{self.coin}] Insufficient cash for scale-in: ${self.cash:.2f} < ${scale_size:.2f}")
         
         return positions_changed
     
@@ -190,10 +210,12 @@ class CoinTrader:
         
         position = self.positions[ticker]
         
+        # Use avg_price for PnL calculation (accounts for scale-ins)
+        calc_price = position.avg_price if position.avg_price > 0 else position.entry_price
         if position.side == "yes":
-            pnl = position.size * (exit_price - position.entry_price)
+            pnl = position.size * (exit_price - calc_price)
         else:
-            pnl = position.size * ((1 - exit_price) - (1 - position.entry_price))
+            pnl = position.size * ((1 - exit_price) - (1 - calc_price))
         
         # Apply 1.6% Kalshi fee on positive PnL (winnings)
         gross_pnl = pnl
@@ -277,7 +299,17 @@ class CoinTrader:
             strategy=signal.strategy,
             take_profit=signal.take_profit,
             stop_loss=signal.stop_loss,
-            first_cross_direction=first_cross_dir
+            first_cross_direction=first_cross_dir,
+            # Trailing stop defaults (15% lock-in after 20% profit)
+            trailing_stop_pct=0.15,
+            trailing_stop_active=False,
+            trailing_stop_trigger_pct=0.20,
+            peak_price=signal.price,
+            scale_in_count=0,
+            max_scale_ins=2,
+            scale_in_size=signal.scale_in_size,
+            unrealized_pnl=0.0,
+            avg_price=signal.price
         )
         self.positions[ticker] = position
         

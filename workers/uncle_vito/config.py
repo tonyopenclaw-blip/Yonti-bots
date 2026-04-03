@@ -60,6 +60,9 @@ HISTORICAL_HIT_RATES = {
 DATE_FORMAT = "%m/%d/%Y"
 TIME_FORMAT = "%I:%M %p ET"
 
+# Discord webhook for Uncle Vito reports
+DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1486066262122430684/mLKWVlGJRyADWEnpDgx3n4QcI1B-JhAnDLyBHKwsK-BSmeo5lal5MYrrY_QiuOBqiNLy"
+
 # The Odds API (the-odds-api.com) - DK + FD for NBA/NHL/NCAAB
 # Free tier: 500 credits/month
 ODDS_API_KEY = "cb42c4fe578ae32bbaf58923493d26e5"  # The Odds API - DK + FD

@@ -44,10 +44,20 @@ def run(sport_filter: list = None, discord_output: bool = False, channel: str = 
     # Send to Discord if requested
     if discord_output:
         try:
-            from message import message
-            target = channel or "uncle-vito"
-            message(action="send", channel="discord", target=target, message=output)
-            print(f"\n✅ Report sent to Discord channel: {target}")
+            import subprocess
+            import json as json_module
+            # Escape the message for JSON
+            escaped_output = output.replace('"', '\\"').replace('\n', '\\n')
+            payload = f'{{"content": "{escaped_output}"}}'
+            result = subprocess.run(
+                ["curl", "-s", "-X", "POST", "-H", "Content-Type: application/json",
+                 "-d", payload, config.DISCORD_WEBHOOK_URL],
+                capture_output=True, text=True, timeout=30
+            )
+            if result.returncode == 0:
+                print(f"\n✅ Report sent to Discord channel: {channel or 'uncle-vito'}")
+            else:
+                print(f"\n⚠️ Could not send to Discord: curl returned {result.returncode}")
         except Exception as e:
             print(f"\n⚠️ Could not send to Discord: {e}")
 

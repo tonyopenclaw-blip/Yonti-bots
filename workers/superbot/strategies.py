@@ -243,8 +243,9 @@ class TradeSignal:
     reason: str  # Human readable reason
     take_profit: Optional[float] = None  # For DRIFT strategies
     stop_loss: Optional[float] = None    # For DRIFT strategies
-    tp_pct: Optional[float] = None       # TP percentage
-    sl_pct: Optional[float] = None        # SL percentage
+    tp_pct: Optional[float] = None       # TP percentage (deprecated - use trailing stop)
+    sl_pct: Optional[float] = None        # SL percentage (deprecated - use absolute)
+    scale_in_size: float = 0.0           # Additional size for scaling in (50% of initial)
 
 
 @dataclass 
@@ -260,6 +261,24 @@ class Position:
     stop_loss: Optional[float] = None
     first_cross_direction: str = ""  # Tony's first crossing insight: 'up', 'down', or ''
     
+    # === NEW: Trailing Stop & Scale-In Fields ===
+    trailing_stop_pct: float = 0.15       # 15% trailing stop (lock in profits when price retraces 15%)
+    trailing_stop_active: bool = False   # Trailing stop activates after X% profit
+    trailing_stop_trigger_pct: float = 0.20  # Activate trailing stop after 20% profit in our direction
+    peak_price: float = 0.0              # Track peak price for longs, trough for shorts
+    scale_in_count: int = 0              # Number of times we've scaled in
+    max_scale_ins: int = 2               # Max 2 scale-ins per position
+    scale_in_size: float = 0.0           # Additional size per scale-in
+    unrealized_pnl: float = 0.0          # Running unrealized PnL
+    avg_price: float = 0.0               # Weighted average entry price
+    
+    def __post_init__(self):
+        """Initialize computed fields after dataclass init."""
+        if self.avg_price == 0.0:
+            self.avg_price = self.entry_price
+        if self.peak_price == 0.0:
+            self.peak_price = self.entry_price
+    
     def current_value(self, current_price: float) -> float:
         """Calculate current value of position."""
         if self.side == "yes":
@@ -269,6 +288,78 @@ class Position:
         else:
             # Value = size * ((1 - current_price) - (1 - entry_price)) + size
             return self.size * (1 - current_price)
+    
+    def update_trailing_stop(self, current_price: float) -> bool:
+        """
+        Update trailing stop based on current price.
+        Returns True if trailing stop is now active.
+        """
+        if self.side == "yes":
+            # For YES (long): track peak price
+            if current_price > self.peak_price:
+                profit_pct = (current_price - self.entry_price) / self.entry_price
+                if profit_pct >= self.trailing_stop_trigger_pct:
+                    self.trailing_stop_active = True
+                    logger.info(f"{self.ticker}: Long trailing stop ACTIVE @ ${current_price:.4f}, peak=${self.peak_price:.4f}")
+                self.peak_price = current_price
+                return self.trailing_stop_active
+            else:
+                # Check if trailing stop was hit (price dropped X% from peak)
+                if self.trailing_stop_active:
+                    drop_from_peak = (self.peak_price - current_price) / self.peak_price
+                    if drop_from_peak >= self.trailing_stop_pct:
+                        logger.info(f"{self.ticker}: Long TRAILING STOP HIT @ ${current_price:.4f} (peak=${self.peak_price:.4f}, drop={drop_from_peak:.2%})")
+                        return True
+        else:
+            # For NO (short): track trough price
+            if current_price < self.peak_price or self.peak_price == 0.0:
+                self.peak_price = current_price
+                profit_pct = (self.entry_price - current_price) / self.entry_price
+                if profit_pct >= self.trailing_stop_trigger_pct:
+                    self.trailing_stop_active = True
+                    logger.info(f"{self.ticker}: Short trailing stop ACTIVE @ ${current_price:.4f}, trough=${self.peak_price:.4f}")
+                return self.trailing_stop_active
+            else:
+                # Check if trailing stop was hit (price rose X% from trough)
+                if self.trailing_stop_active:
+                    rise_from_trough = (current_price - self.peak_price) / self.peak_price
+                    if rise_from_trough >= self.trailing_stop_pct:
+                        logger.info(f"{self.ticker}: Short TRAILING STOP HIT @ ${current_price:.4f} (trough=${self.peak_price:.4f}, rise={rise_from_trough:.2%})")
+                        return True
+        return False
+    
+    def should_scale_in(self, current_price: float) -> bool:
+        """
+        Check if we should scale in (add to winning position).
+        Scale in when: price moved 10%+ in our direction, we haven't maxed out scale-ins,
+        and we have room before TP.
+        """
+        if self.scale_in_count >= self.max_scale_ins:
+            return False
+        
+        if self.side == "yes":
+            profit_pct = (current_price - self.entry_price) / self.entry_price
+            # Scale in if we're up 10-40% (not at TP yet, but moving right direction)
+            if 0.10 <= profit_pct <= 0.50 and current_price < (self.take_profit or 0.95):
+                # Also check we're not too close to SL
+                if self.stop_loss and current_price > (self.stop_loss * 1.2):
+                    return True
+        else:
+            profit_pct = (self.entry_price - current_price) / self.entry_price
+            # Scale in if we're up 10-40%
+            if 0.10 <= profit_pct <= 0.50 and current_price > (self.take_profit or 0.05):
+                # Also check we're not too close to SL
+                if self.stop_loss and current_price < (self.stop_loss * 0.8):
+                    return True
+        return False
+    
+    def record_scale_in(self, new_price: float, additional_size: float):
+        """Record a scale-in: update average price and size."""
+        total_cost = (self.size * self.avg_price) + (additional_size * new_price)
+        self.size += additional_size
+        self.avg_price = total_cost / self.size
+        self.scale_in_count += 1
+        logger.info(f"{self.ticker}: SCALED IN @ ${new_price:.4f} (+${additional_size:.2f}), new size=${self.size:.2f}, avg_price=${self.avg_price:.4f}, scale_ins={self.scale_in_count}")
 
 
 class StrategyEngine:
@@ -464,15 +555,15 @@ Your estimate:"""
     
     def _check_drift_buy(self, market: Market, mid_price: float, time_left: int) -> Optional[TradeSignal]:
         """
-        DRIFT BUY: YES $0.30-$0.38 → mean reversion, TP at $0.90+, SL at $0.22
+        DRIFT BUY: YES $0.30-$0.38 → mean reversion, HOLD TO END, trailing stop only
         
-        TP: lock in near-wins when price reaches $0.90
-        SL: absolute $0.22 (Nerd's research - not percentage)
-        Dead zone: no trades $0.45-$0.55
+        Tony's Feedback:
+        - TP was too tight ($0.90) - killed winners
+        - Now: NO fixed TP, use trailing stop to lock in profits
+        - Scale in: add more if price moves in our direction
         
-        FIRST CROSS INSIGHT: If crossed DOWN first (price went from above $0.50 to below),
-        drift_buy is weaker because momentum is downward. Skip if first cross was down.
-        Only take drift_buy if first cross was UP or hasn't crossed yet (below midline).
+        SL: absolute $0.22 (tight, but not triggered unless we're wrong)
+        Trailing stop: activates after 20% profit, locks in 15% from peak
         """
         # Skip dead zone ($0.45-$0.55)
         if DEAD_ZONE_MIN <= mid_price <= DEAD_ZONE_MAX:
@@ -493,25 +584,23 @@ Your estimate:"""
             return None
         
         # Integrate Coinbase bias - use as signal boost, not a filter
-        # Bias just modifies our confidence, doesn't block entries
         coin = market.ticker.replace('KX', '').replace('15M', '')
         bias = get_coinbase_bias(coin)
         if bias == 'bearish':
-            # Mild bullish bias check - allow drift_buy even with neutral/bearish bias
-            # since we need to trade to make $200
             logger.debug(f"DRIFT BUY: {market.ticker} - Coinbase bias={bias}, using as signal boost only")
         
         # Calculate size using Kelly with historical strategy performance
         prob = mid_price
         size, kelly_pct = self.calculate_kelly_size(Strategy.DRIFT_BUY, prob)
         
-        # Calculate TP and SL prices
-        # TP: Lock in profit when YES reaches $0.90+ (near maximum)
-        tp_price = DRIFT_TP_PRICE  # $0.90 absolute threshold
-        # SL: Absolute $0.22 stop loss (Nerd's research)
+        # Calculate SL only (NO tight TP anymore)
+        # Let winners run to $0.95 or trailing stop
         sl_price = DRIFT_BUY_STOP_LOSS  # $0.22 absolute
         
-        logger.info(f"DRIFT BUY signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, TP=${tp_price:.4f}, SL=${sl_price:.4f}, Coinbase={bias}, first_cross={preferred_side or 'none'}")
+        # Scale-in size: 50% of original bet
+        scale_in_size = size * 0.5
+        
+        logger.info(f"DRIFT BUY signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, SL=${sl_price:.4f}, TRAILING STOP active, Coinbase={bias}, first_cross={preferred_side or 'none'}")
         
         return TradeSignal(
             strategy=Strategy.DRIFT_BUY,
@@ -519,24 +608,26 @@ Your estimate:"""
             side="yes", 
             price=mid_price,
             size=size,
-            reason=f"DRIFT BUY: YES at ${mid_price:.4f} (mean reversion), TP ${tp_price:.2f}, SL ${sl_price:.2f}, Coinbase={bias}, first_cross={preferred_side}",
-            take_profit=tp_price,
+            reason=f"DRIFT BUY: YES at ${mid_price:.4f} (mean reversion), NO FIXED TP - trailing stop only, SL ${sl_price:.2f}, scale_in=${scale_in_size:.2f}, Coinbase={bias}, first_cross={preferred_side}",
+            take_profit=0.95,  # Loose TP - only exit if REALLY close to max
             stop_loss=sl_price,
-            tp_pct=DRIFT_TP_PCT,
-            sl_pct=DRIFT_SL_PCT
+            tp_pct=None,  # No percentage-based TP
+            sl_pct=None
         )
     
     def _check_drift_short(self, market: Market, mid_price: float, time_left: int) -> Optional[TradeSignal]:
         """
-        DRIFT SHORT: YES $0.55-$0.62 → sell overpriced, TP 20%, SL at $0.75
+        DRIFT SHORT: YES $0.55-$0.62 → sell overpriced, HOLD TO END, trailing stop only
         This means we're SELLING YES (betting it will go down)
         
-        SL: absolute $0.75 stop loss (Nerd's research - not percentage)
-        Dead zone: no trades $0.45-$0.55
+        Tony's Feedback:
+        - TP was too tight (20% gain) - killed winners
+        - Now: NO fixed TP, use trailing stop to lock in profits  
+        - Scale in: add more if price moves in our direction
         
-        FIRST CROSS INSIGHT: If crossed UP first (price went from below $0.50 to above),
-        drift_short is weaker because momentum is upward. Skip if first cross was up.
-        Only take drift_short if first cross was DOWN or hasn't crossed yet (above midline).
+        SL: absolute $0.75 (tight, but not triggered unless we're wrong)
+        Trailing stop: activates after 20% profit, locks in 15% from trough
+        Dead zone: no trades $0.45-$0.55
         """
         # Skip dead zone ($0.45-$0.55)
         if DEAD_ZONE_MIN <= mid_price <= DEAD_ZONE_MAX:
@@ -557,17 +648,16 @@ Your estimate:"""
             return None
         
         # For short, probability of YES going DOWN is (1 - price)
-        # We sell YES at current price, expecting it to drop
-        prob = 1 - mid_price  # Probability that YES loses
+        prob = 1 - mid_price
         size, kelly_pct = self.calculate_kelly_size(Strategy.DRIFT_SHORT, prob)
         
-        # Calculate TP and SL for short position
-        # TP: YES drops, we profit. TP means price drops by 20%
-        tp_price = mid_price * (1 - DRIFT_TP_PCT)
-        # SL: Absolute $0.75 stop loss (Nerd's research)
+        # SL only - no tight TP
         sl_price = DRIFT_SHORT_STOP_LOSS  # $0.75 absolute
         
-        logger.info(f"DRIFT SHORT signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, TP=${tp_price:.4f}, SL=${sl_price:.4f}, first_cross={preferred_side or 'none'}")
+        # Scale-in size: 50% of original bet
+        scale_in_size = size * 0.5
+        
+        logger.info(f"DRIFT SHORT signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, SL=${sl_price:.4f}, TRAILING STOP active, first_cross={preferred_side or 'none'}")
         
         return TradeSignal(
             strategy=Strategy.DRIFT_SHORT,
@@ -575,34 +665,50 @@ Your estimate:"""
             side="no",  # We SELL YES (buy NO)
             price=mid_price,
             size=size,
-            reason=f"DRIFT SHORT: Selling YES at ${mid_price:.4f} (overpriced), TP ${tp_price:.4f}, SL ${sl_price:.4f}",
-            take_profit=tp_price,
+            reason=f"DRIFT SHORT: Selling YES at ${mid_price:.4f} (overpriced), NO FIXED TP - trailing stop only, SL ${sl_price:.4f}, scale_in=${scale_in_size:.2f}",
+            take_profit=0.05,  # Loose TP - only exit if REALLY close to max ($0.05 = near zero)
             stop_loss=sl_price,
-            tp_pct=DRIFT_TP_PCT,
-            sl_pct=DRIFT_SL_PCT
+            tp_pct=None,
+            sl_pct=None
         )
     
-    def check_position_exit(self, position: Position, current_price: float) -> Tuple[bool, str]:
+    def check_position_exit(self, position: Position, current_price: float, time_left: int) -> Tuple[bool, str]:
         """
         Check if a position should be exited.
+        Uses TRAILING STOP logic instead of fixed tight TP.
+        Let winners run! Only exit on trailing stop or hard SL.
+        
         Returns (should_exit, reason).
         """
         if position.strategy == Strategy.DEEP_SHORT:
             # No exit for DEEP SHORT - ride to expiry (we're fading the longshot)
             return False, ""
         
-        if position.take_profit is not None:
-            # Check TP
-            if position.side == "yes" and current_price >= position.take_profit:
-                return True, f"TP hit: ${current_price:.4f} >= ${position.take_profit:.4f}"
-            if position.side == "no" and current_price <= position.take_profit:
-                return True, f"TP hit: ${current_price:.4f} <= ${position.take_profit:.4f}"
-        
+        # === HARD STOP LOSS (only exit if we're wrong) ===
         if position.stop_loss is not None:
-            # Check SL
             if position.side == "yes" and current_price <= position.stop_loss:
-                return True, f"SL hit: ${current_price:.4f} <= ${position.stop_loss:.4f}"
+                return True, f"HARD SL hit: ${current_price:.4f} <= ${position.stop_loss:.4f}"
             if position.side == "no" and current_price >= position.stop_loss:
-                return True, f"SL hit: ${current_price:.4f} >= ${position.stop_loss:.4f}"
+                return True, f"HARD SL hit: ${current_price:.4f} >= ${position.stop_loss:.4f}"
+        
+        # === NEAR-EXPIRY EXIT (last 30 seconds - take whatever we got) ===
+        if time_left <= 30:
+            logger.info(f"{position.ticker}: Near expiry ({time_left}s) - closing position")
+            return True, f"Expiry: closing at ${current_price:.4f}"
+        
+        # === TRAILING STOP EXIT (Tony's feedback: let winners run, lock in with trailing) ===
+        trailing_hit = position.update_trailing_stop(current_price)
+        if trailing_hit:
+            return True, f"TRAILING STOP: locked in profits"
+        
+        # === TIGHT TP DISABLED ===
+        # Old code snapped profits too early at fixed TP (e.g., $0.90)
+        # Now we let winners run. Only use TP if we're REALLY close to max profit.
+        # If YES >= $0.95 or NO >= $0.95 (i.e., YES <= $0.05), take profit
+        if position.take_profit is not None:
+            if position.side == "yes" and current_price >= 0.95:
+                return True, f"Near-max TP: ${current_price:.4f} >= $0.95"
+            if position.side == "no" and current_price <= 0.05:
+                return True, f"Near-max TP: ${current_price:.4f} <= $0.05"
         
         return False, ""

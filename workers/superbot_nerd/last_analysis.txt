@@ -1,18 +1,18 @@
 🧠 **SUPERBOT NERD ANALYSIS** 🧠
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📉 Session P&L: $-2.28 | WR: 75.0% | Balance: $97.72
+📉 Session P&L: $-8.63 | WR: 48.8% | Balance: $91.37
 
-✅ **Correct Zone Trades:** 4W/0L (100%) | P&L: +$0.30
-✅ **drift_buy:** 4W/2L (67%) | $-0.02
-   → 4/6 entries OUTSIDE $0.35–$0.45 zone
-✅ **drift_short:** 2W/0L (100%) | +$0.20
+✅ **Correct Zone Trades:** 18W/14L (56%) | P&L: +$0.16
+❌ **drift_buy:** 9W/16L (36%) | $-0.87
+   → 11/25 entries OUTSIDE $0.35–$0.45 zone
+✅ **drift_short:** 12W/6L (67%) | +$0.60
 
 📋 **Last 5 Trades:**
-  ✅ R030600-00 | drift_buy | E:$0.34 | +$0.04 | TRAILING STOP: locked in profi
-  ✅ R030600-00 | drift_short | E:$0.60 | +$0.11 | TRAILING STOP: locked in profi
-  ❌ R030600-00 | drift_buy | E:$0.32 | -$0.10 | HARD SL hit: $0.1250 <= $0.220
-  ❌ R030600-00 | drift_buy | E:$0.33 | -$0.10 | HARD SL hit: $0.1400 <= $0.220
-  ✅ R030600-00 | drift_short | E:$0.56 | +$0.09 | TRAILING STOP: locked in profi
+  ✅ R030845-45 | drift_short | E:$0.61 | +$0.10 | TRAILING STOP: locked in profi
+  ✅ R030845-45 | drift_short | E:$0.59 | +$0.22 | TRAILING STOP: locked in profi
+  ❌ R030845-45 | drift_buy | E:$0.36 | -$0.09 | HARD SL hit: $0.1850 <= $0.220
+  ✅ R030845-45 | drift_buy | E:$0.34 | +$0.03 | TRAILING STOP: locked in profi
+  ✅ R030845-45 | drift_buy | E:$0.36 | +$0.06 | TRAILING STOP: locked in profi
 
 🎯 **Recommendations:**
-  → no critical issues detected — continue monitoring
+  → drift_buy win rate low — check entries are in $0.35–$0.45 zone only

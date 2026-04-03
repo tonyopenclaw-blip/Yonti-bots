@@ -7,8 +7,9 @@ Fetches sports data from ESPN API and generates daily betting reports.
 import json
 import math
 import random
+import logging
 from datetime import datetime, timedelta
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Set
 from dataclasses import dataclass
 import config
 
@@ -16,6 +17,13 @@ try:
     import requests
 except ImportError:
     requests = None
+
+# Setup logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger("uncle_vito")
 
 
 @dataclass
@@ -143,6 +151,234 @@ class SourceSignals:
         for source_key, source in self.sources.items():
             summaries.append(f"**{source['name']}** ({int(source['weight']*100)}%)")
         return ", ".join(summaries)
+
+
+class DraftKingsClient:
+    """
+    Client for fetching DraftKings DFS player availability and salaries.
+    Cross-references with hardcoded player maps to identify rest days.
+    """
+    
+    # DK API endpoints
+    DK_SPORTS_URL = "https://api.draftkings.com/sites/US-DK/sports/v1/sports"
+    DK_DRAFTABLES_URL = "https://api.draftkings.com/draftgroups/v1/draftgroups/{draft_group_id}/draftables"
+    
+    # Sport to DK sport key mapping
+    DK_SPORT_KEYS = {
+        "NBA": "NBA",
+        "NHL": "NHL", 
+        "MLB": "MLB",
+    }
+    
+    def __init__(self):
+        self._active_players: Dict[str, Set[str]] = {}  # sport -> set of player names
+        self._draft_groups: Dict[str, str] = {}  # sport -> draft_group_id
+        self._last_fetch: Dict[str, datetime] = {}  # sport -> last fetch time
+        self._cache_duration = timedelta(minutes=15)  # Cache for 15 minutes
+        self._fetch_failed = False
+        
+    def _get_headers(self) -> Dict[str, str]:
+        """Get headers needed for DK API requests."""
+        return {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "Accept": "application/json",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Origin": "https://www.draftkings.com",
+            "Referer": "https://www.draftkings.com/",
+        }
+    
+    def _fetch_json(self, url: str) -> Optional[Dict]:
+        """Fetch JSON from URL with error handling."""
+        if not requests:
+            logger.warning("requests library not available, DK API unavailable")
+            self._fetch_failed = True
+            return None
+            
+        try:
+            response = requests.get(url, headers=self._get_headers(), timeout=10)
+            if response.status_code == 200:
+                return response.json()
+            elif response.status_code == 403:
+                logger.warning("DK API access denied (403) - server-side calls blocked by Akamai")
+                self._fetch_failed = True
+                return None
+            else:
+                logger.warning(f"DK API returned status {response.status_code}")
+                return None
+        except Exception as e:
+            logger.warning(f"DK API fetch failed: {e}")
+            self._fetch_failed = True
+            return None
+    
+    def _get_sport_key_for_dk(self, sport: str) -> Optional[str]:
+        """Get the DK sport key for a given sport."""
+        return self.DK_SPORT_KEYS.get(sport)
+    
+    def fetch_draft_groups(self, sport: str) -> Optional[str]:
+        """
+        Fetch active draft group ID for a sport.
+        Returns the draft_group_id or None if unavailable.
+        """
+        # Check cache first
+        if sport in self._draft_groups:
+            last_fetch = self._last_fetch.get(sport)
+            if last_fetch and datetime.now() - last_fetch < self._cache_duration:
+                return self._draft_groups[sport]
+        
+        # Fetch sports list to find draft group
+        data = self._fetch_json(self.DK_SPORTS_URL)
+        if not data:
+            return None
+            
+        try:
+            sports = data.get("sports", [])
+            dk_sport_key = self._get_sport_key_for_dk(sport)
+            
+            for sport_data in sports:
+                if sport_data.get("name") == dk_sport_key or sport_data.get(" abbreviation") == dk_sport_key:
+                    # Look for active draft group
+                    for category in sport_data.get("categories", []):
+                        for contest in category.get("contests", []):
+                            draft_group_id = contest.get("draftGroupId")
+                            if draft_group_id:
+                                self._draft_groups[sport] = draft_group_id
+                                self._last_fetch[sport] = datetime.now()
+                                logger.info(f"Found DK draft group for {sport}: {draft_group_id}")
+                                return draft_group_id
+        except Exception as e:
+            logger.warning(f"Error parsing DK sports response: {e}")
+            return None
+            
+        return None
+    
+    def fetch_draftables(self, sport: str) -> List[Dict]:
+        """
+        Fetch draftable players (with salaries) for a sport's current slate.
+        Returns list of player dicts with name, team, salary, position.
+        """
+        draft_group_id = self.fetch_draft_groups(sport)
+        if not draft_group_id:
+            return []
+            
+        url = self.DK_DRAFTABLES_URL.format(draft_group_id=draft_group_id)
+        data = self._fetch_json(url)
+        
+        if not data:
+            return []
+            
+        draftables = []
+        try:
+            for draftable in data.get("draftables", []):
+                player_info = draftable.get("player", {})
+                player_name = player_info.get("fullName", "")
+                if not player_name:
+                    continue
+                    
+                team = player_info.get("teamAbbreviation", "")
+                salary = draftable.get("salary", 0)
+                position = draftable.get("position", "")
+                
+                draftables.append({
+                    "name": player_name,
+                    "team": team,
+                    "salary": salary,
+                    "position": position,
+                    "player_id": player_info.get("id", ""),
+                })
+                
+            logger.info(f"Fetched {len(draftables)} draftables from DK for {sport}")
+        except Exception as e:
+            logger.warning(f"Error parsing DK draftables response: {e}")
+            return []
+            
+        return draftables
+    
+    def fetch_active_players(self, sport: str) -> Set[str]:
+        """
+        Fetch the set of active (draftable) player names for a sport.
+        Uses caching to avoid repeated API calls.
+        """
+        # Check cache first
+        if sport in self._active_players:
+            last_fetch = self._last_fetch.get(sport)
+            if last_fetch and datetime.now() - last_fetch < self._cache_duration:
+                return self._active_players[sport]
+        
+        # Fetch fresh data
+        draftables = self.fetch_draftables(sport)
+        player_names = {d["name"] for d in draftables}
+        
+        self._active_players[sport] = player_names
+        self._last_fetch[sport] = datetime.now()
+        
+        return player_names
+    
+    def is_player_active_dk(self, player_name: str, team_abbrev: str, sport: str) -> bool:
+        """
+        Check if a player is active in the current DK DFS slate.
+        
+        Args:
+            player_name: Full name of the player
+            team_abbrev: Team abbreviation (e.g., "PHI", "LAL")
+            sport: Sport (NBA, NHL, MLB)
+            
+        Returns:
+            True if player is in the DK slate, False otherwise
+        """
+        # If DK API failed, we can't verify - assume active
+        if self._fetch_failed:
+            return True
+            
+        active_players = self.fetch_active_players(sport)
+        
+        # Direct name match
+        if player_name in active_players:
+            return True
+            
+        # Try partial name matching (first + last name)
+        name_parts = player_name.lower().split()
+        if len(name_parts) >= 2:
+            first, last = name_parts[0], name_parts[-1]
+            for active_name in active_players:
+                active_parts = active_name.lower().split()
+                if len(active_parts) >= 2 and active_parts[0] == first and active_parts[-1] == last:
+                    return True
+                    
+        return False
+    
+    def get_rest_day_players(self, hardcoded_players: List[tuple], team_abbr: str, sport: str) -> List[tuple]:
+        """
+        Filter hardcoded players and return those NOT in DK slate (rest days).
+        
+        Args:
+            hardcoded_players: List of (player_name, stat_type, line) tuples
+            team_abbr: Team abbreviation
+            sport: Sport (NBA, NHL, MLB)
+            
+        Returns:
+            List of players that are NOT in the DK slate (probable rest days)
+        """
+        rest_day_players = []
+        active_players = self.fetch_active_players(sport)
+        
+        for player_name, stat_type, line in hardcoded_players:
+            if player_name not in active_players:
+                # Try partial matching
+                name_parts = player_name.lower().split()
+                if len(name_parts) >= 2:
+                    first, last = name_parts[0], name_parts[-1]
+                    found = False
+                    for active_name in active_players:
+                        active_parts = active_name.lower().split()
+                        if len(active_parts) >= 2 and active_parts[0] == first and active_parts[-1] == last:
+                            found = True
+                            break
+                    if not found:
+                        rest_day_players.append((player_name, stat_type, line))
+                else:
+                    rest_day_players.append((player_name, stat_type, line))
+                    
+        return rest_day_players
 
 
 class OddsCalculator:
@@ -315,9 +551,11 @@ class UncleVitoReport:
         self.espn = ESPNClient()
         self.sources = SourceSignals()
         self.odds = OddsCalculator()
+        self.dk = DraftKingsClient()  # DraftKings DFS client for player availability
         self.games: Dict[str, List[Game]] = {}
         self.prop_picks: List[PropPick] = []
         self.winner_picks: List[WinnerPick] = []
+        self._rest_day_warnings: Dict[str, List[str]] = {}  # sport -> list of warning messages
 
     def fetch_todays_games(self) -> Dict[str, List[Game]]:
         """Fetch today's games across all configured sports."""
@@ -623,13 +861,38 @@ class UncleVitoReport:
                 if abbr in player_map:
                     players = player_map[abbr]
                     for player, stat, line in players[:2]:
-                        simulated.append({
-                            "player": player,
-                            "team": abbr,
-                            "stat_type": stat,
-                            "line": line,
-                            "sport": sport
-                        })
+                        # Check if player is active on DK slate
+                        is_active = self.dk.is_player_active_dk(player, abbr, sport)
+                        
+                        if is_active:
+                            simulated.append({
+                                "player": player,
+                                "team": abbr,
+                                "stat_type": stat,
+                                "line": line,
+                                "sport": sport,
+                                "dk_active": True,
+                            })
+                        else:
+                            # Log warning for rest day / missing player
+                            warning_msg = f"⚠️ {player} ({abbr}) - likely REST DAY or INJURED (not in DK slate)"
+                            logger.warning(warning_msg)
+                            
+                            # Track rest day warnings by sport
+                            if sport not in self._rest_day_warnings:
+                                self._rest_day_warnings[sport] = []
+                            self._rest_day_warnings[sport].append(f"{player} ({abbr})")
+                            
+                            # Still include with rest_day flag for visibility
+                            simulated.append({
+                                "player": player,
+                                "team": abbr,
+                                "stat_type": stat,
+                                "line": line,
+                                "sport": sport,
+                                "dk_active": False,
+                                "rest_day": True,
+                            })
 
         return simulated
 
@@ -788,12 +1051,26 @@ class UncleVitoReport:
 
         report.append("")
         report.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+        
+        # Show rest day warnings if any players are missing from DK slate
+        if self._rest_day_warnings:
+            report.append("")
+            report.append("🛋️ **POSSIBLE REST DAYS** (not in DK DFS slate):")
+            for sport, players in self._rest_day_warnings.items():
+                emoji = sport_emoji.get(sport, "🏆")
+                for player_info in players:
+                    report.append(f"  {emoji} {player_info}")
+        
+        report.append("")
         report.append("⚠️ _Do your own homework. Uncle Vito don't miss._")
 
         return "\n".join(report)
 
     def generate_report(self) -> str:
         """Generate the full betting report."""
+        # Clear rest day warnings from previous report
+        self._rest_day_warnings = {}
+        
         # Fetch games
         self.fetch_todays_games()
 

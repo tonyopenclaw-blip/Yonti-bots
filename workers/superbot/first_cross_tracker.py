@@ -1,8 +1,39 @@
 #!/usr/bin/env python3
 """
-🎯 First Cross Tracker - Non-invasive market prediction analyzer
-Tracks whether the first cross through $0.50 predicts final direction.
-Runs alongside Superbot/Recorder without affecting trading behavior.
+🎯 Target Cross Tracker - Non-invasive market prediction analyzer
+Tracks TWO first-cross signals per market:
+1. Actual coin price crossing through the Kalshi TARGET PRICE (floor_strike)
+2. YES price crossing through $0.50 midpoint
+
+Both signals are tracked independently and compared to final outcome.
+
+Example data structure:
+{
+  "timestamp": "2026-04-03T12:00:00+00:00",
+  "coin": "BTC",
+  "market": "26APR030600-00",
+  "target_price": 66920.50,
+  
+  "yes_first_cross": "up",           // NEW: YES crossing $0.50 first
+  "yes_cross_price": 0.501,         // NEW: YES price at cross
+  "yes_cross_time": "13:01:23",     // NEW: timestamp of YES cross
+  
+  "coin_first_cross": "up",         // existing: coin crossing target first
+  "coin_price_at_cross": 66920.50,  // Existing: coin price at target cross
+  
+  "coin_price_at_yes_cross": 66744.09,  // NEW: coin price when YES crossed $0.50
+  
+  "final_yes_price": 0.72,
+  "final_coin_price": 67050.00,
+  "yes_won": true,
+  
+  "analysis": {
+    "yes_cross_correct": true,    // did YES crossing $0.50 predict outcome?
+    "coin_cross_correct": true    // did coin crossing target predict outcome?
+  }
+}
+
+Non-invasive: runs alongside Superbot/Recorder without affecting trading behavior.
 """
 
 import json
@@ -10,6 +41,7 @@ import logging
 import os
 import sys
 import time
+import requests
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, Optional, Set
@@ -25,10 +57,54 @@ from config import (
 from kalshi_api import KalshiAPI
 
 # =============================================================================
+# COINBASE API FOR ACTUAL PRICES
+# =============================================================================
+COINBASE_API = "https://api.exchange.coinbase.com"
+COINBASE_PRODUCTS = {
+    "BTC": "BTC-USD",
+    "ETH": "ETH-USD",
+    "SOL": "SOL-USD",
+    "BNB": "BNB-USD",
+    "DOGE": "DOGE-USD",
+    "XRP": "XRP-USD",
+    "HYPE": "HYPE-USD",
+    "ADA": "ADA-USD",
+}
+
+def get_coinbase_price(coin: str) -> Optional[float]:
+    """
+    Fetch the current price for a coin from Coinbase Exchange API.
+    Returns the latest trade price or None if fetch fails.
+    """
+    product_id = COINBASE_PRODUCTS.get(coin.upper())
+    if not product_id:
+        return None
+    
+    try:
+        url = f"{COINBASE_API}/products/{product_id}/ticker"
+        response = requests.get(url, timeout=5)
+        response.raise_for_status()
+        data = response.json()
+        price = float(data.get('price', 0))
+        return price
+    except Exception as e:
+        logger.warning(f"Failed to fetch Coinbase price for {coin}: {e}")
+        return None
+
+def get_all_coinbase_prices() -> Dict[str, float]:
+    """Fetch current prices for all coins."""
+    prices = {}
+    for coin in COINS:
+        price = get_coinbase_price(coin)
+        if price is not None:
+            prices[coin] = price
+    return prices
+
+# =============================================================================
 # LOGGING SETUP
 # =============================================================================
 LOG_DIR.mkdir(exist_ok=True)
-LOG_FILE = LOG_DIR / "first_cross_tracker.log"
+LOG_FILE = LOG_DIR / "target_cross_tracker.log"
 
 logging.basicConfig(
     level=getattr(logging, LOG_LEVEL),
@@ -44,40 +120,67 @@ logger = logging.getLogger(__name__)
 # =============================================================================
 # CONFIG
 # =============================================================================
-OUTPUT_FILE = Path(__file__).parent / "first_cross_data.json"
+OUTPUT_FILE = Path(__file__).parent / "target_cross_data.json"
 POLL_INTERVAL_SEC = 2  # Poll every 2 seconds for active markets
 
-# Midpoint for cross detection
+# Midpoint threshold for YES price
 MIDPOINT = 0.50
 
 
 @dataclass
 class MarketTracking:
-    """Tracks first cross data for a single market."""
+    """Tracks first cross data for a single market through the target price AND YES $0.50 midpoint."""
     coin: str
     ticker: str
-    market_time: str  # Series ticker like "KXBT15M-26APR030600-00"
-    first_cross_direction: Optional[str] = None  # "up" or "down"
-    first_cross_price: Optional[float] = None
-    first_cross_ts: Optional[str] = None
-    samples_above_50: Set[int] = None  # Track which seconds were above 50
-    samples_below_50: Set[int] = None  # Track which seconds were below 50
+    market_time: str  # Series ticker like "26APR030600-00"
+    target_price: float  # floor_strike from Kalshi - the target level to track
+    
+    # --- YES $0.50 midpoint crossing (NEW) ---
+    yes_first_cross: Optional[str] = None  # "up" or "down" through $0.50
+    yes_cross_price: Optional[float] = None  # YES price at cross
+    yes_cross_time: Optional[str] = None  # HH:MM:SS timestamp of YES cross
+    coin_price_at_yes_cross: Optional[float] = None  # Coin price when YES crossed $0.50
+    yes_samples_above: list = None  # List of (timestamp, yes_price) when YES > $0.50
+    yes_samples_below: list = None  # List of (timestamp, yes_price) when YES < $0.50
+    
+    # --- Coin target crossing (existing) ---
+    first_cross_direction: Optional[str] = None  # "up" or "down" through target
+    first_cross_ts: Optional[str] = None  # ISO timestamp of first cross
+    coin_price_at_cross: Optional[float] = None  # Actual coin price when crossed target
+    samples_above_target: list = None  # List of (timestamp, price) when above target
+    samples_below_target: list = None  # List of (timestamp, price) when below target
+    
     started_tracking: bool = False
     finalized: bool = False
-    final_price: Optional[float] = None
-    final_direction: Optional[str] = None
-    correct: Optional[bool] = None
+    final_coin_price: Optional[float] = None  # Actual coin price at series expiry
+    final_yes_price: Optional[float] = None  # YES price at series expiry
+    yes_won: Optional[bool] = None  # Did YES win?
+    analysis: Optional[Dict] = None  # Prediction accuracy analysis
+    
+    _start_ts: float = None  # Wall-clock time when tracking started
     
     def __post_init__(self):
-        if self.samples_above_50 is None:
-            self.samples_above_50 = set()
-        if self.samples_below_50 is None:
-            self.samples_below_50 = set()
+        if self.yes_samples_above is None:
+            self.yes_samples_above = []
+        if self.yes_samples_below is None:
+            self.yes_samples_below = []
+        if self.samples_above_target is None:
+            self.samples_above_target = []
+        if self.samples_below_target is None:
+            self.samples_below_target = []
+        if self._start_ts is None:
+            self._start_ts = time.time()
+        if self.analysis is None:
+            self.analysis = {}
 
 
-class FirstCrossTracker:
+class TargetCrossTracker:
     """
-    Tracks first crosses through $0.50 midpoint for all coin markets.
+    Tracks TWO first-cross signals per market:
+    1. Actual crypto price crossing through the TARGET PRICE (floor_strike)
+    2. YES price crossing through $0.50 midpoint
+    
+    Both signals are tracked independently and compared to final outcome.
     
     Non-invasive: Only reads data, never trades.
     Runs alongside Superbot/Recorder to collect prediction accuracy stats.
@@ -94,7 +197,10 @@ class FirstCrossTracker:
         self._load_existing_data()
         
         logger.info("=" * 60)
-        logger.info("🎯 FIRST CROSS TRACKER INITIALIZED!")
+        logger.info("🎯 TARGET CROSS TRACKER INITIALIZED!")
+        logger.info("Tracking TWO signals per market:")
+        logger.info("  1. Coin price crossing Kalshi TARGET (floor_strike)")
+        logger.info("  2. YES price crossing $0.50 midpoint")
         logger.info(f"Coins: {', '.join(COINS)}")
         logger.info(f"Output file: {self.output_file}")
         logger.info(f"Existing records: {len(self.existing_tickers)} markets")
@@ -107,10 +213,10 @@ class FirstCrossTracker:
                 with open(self.output_file, 'r') as f:
                     data = json.load(f)
                     if isinstance(data, list):
-                        self.existing_tickers = {r.get('ticker', '') for r in data if r.get('ticker')}
+                        self.existing_tickers = {r.get('market', '').replace('_', '-') for r in data if r.get('market')}
                 logger.info(f"Loaded {len(self.existing_tickers)} existing market records")
             except json.JSONDecodeError:
-                logger.warning("Could not parse existing first_cross_data.json")
+                logger.warning("Could not parse existing target_cross_data.json")
     
     def _extract_coin(self, ticker: str) -> str:
         """Extract coin symbol from ticker like KXBTC15M-26APR030600-00"""
@@ -128,86 +234,237 @@ class FirstCrossTracker:
             return f"{parts[1]}-{parts[2]}"  # 26APR030600-00
         return ticker
     
-    def _get_mid_price(self, yes_bid: float, yes_ask: float) -> float:
-        """Calculate midpoint price from bid/ask."""
-        if yes_bid > 0 and yes_ask > 0:
-            return (yes_bid + yes_ask) / 2
-        elif yes_bid > 0:
-            return yes_bid
-        elif yes_ask > 0:
-            return yes_ask
-        return 0.50  # Default to midpoint
-    
-    def _detect_cross(self, tracking: MarketTracking, yes_bid: float, yes_ask: float) -> Optional[str]:
+    def _get_floor_strike(self, ticker: str) -> Optional[float]:
         """
-        Detect if price just crossed $0.50.
-        Returns "up" if crossed up through midpoint, "down" if crossed down, None if no cross.
+        Fetch the floor_strike (target price) for a market from raw API response.
+        Returns None if not available.
         """
-        mid = self._get_mid_price(yes_bid, yes_ask)
-        current_second = tracking.samples_above_50.__len__() + tracking.samples_below_50.__len__()
-        
-        if tracking.first_cross_direction is not None:
-            # Already detected first cross, no need to check again
+        result = self.api._get(f"/markets/{ticker}")
+        if "error" in result:
             return None
         
-        if mid > MIDPOINT:
-            tracking.samples_above_50.add(current_second)
+        market_data = result.get("market", {})
+        if not market_data:
+            return None
+        
+        # floor_strike is the target price for the market
+        floor_strike = market_data.get("floor_strike")
+        if floor_strike is not None:
+            return float(floor_strike)
+        
+        # Fallback: try to parse from yes_sub_title if available
+        yes_sub_title = market_data.get("yes_sub_title", "")
+        if "Target Price:" in yes_sub_title:
+            import re
+            match = re.search(r'\$?([\d,]+\.?\d*)', yes_sub_title)
+            if match:
+                price_str = match.group(1).replace(',', '')
+                return float(price_str)
+        
+        return None
+    
+    def _get_yes_price(self, ticker: str) -> Optional[float]:
+        """
+        Fetch the current YES price for a market from the API.
+        Returns price between 0.00-1.00 or None if not available.
+        """
+        result = self.api._get(f"/markets/{ticker}")
+        if "error" in result:
+            return None
+        
+        market_data = result.get("market", {})
+        if not market_data:
+            return None
+        
+        # Get YES bid/ask to calculate midpoint
+        yes_bid = market_data.get("yes_bid")
+        yes_ask = market_data.get("yes_ask")
+        
+        if yes_bid is not None and yes_ask is not None:
+            return (float(yes_bid) + float(yes_ask)) / 2.0
+        
+        # Fallback to yes_price if available
+        yes_price = market_data.get("yes_price")
+        if yes_price is not None:
+            return float(yes_price)
+        
+        return None
+    
+    def _get_market_result(self, ticker: str) -> Optional[str]:
+        """Check if market settled and return result."""
+        result = self.api._get(f"/markets/{ticker}")
+        if "error" in result:
+            return None
+        
+        market_data = result.get("market", {})
+        status = market_data.get("status", "")
+        if status == "settled":
+            return market_data.get("result", None)  # 'yes' or 'no'
+        return None
+    
+    def _detect_yes_cross_through_midpoint(
+        self, 
+        tracking: MarketTracking, 
+        yes_price: float,
+        coin_price: float
+    ) -> Optional[str]:
+        """
+        Detect if YES price just crossed through $0.50 midpoint.
+        Returns "up" if crossed up through $0.50, "down" if crossed down, None if no cross.
+        
+        NEW: Also record coin price at the moment of YES cross.
+        """
+        current_ts = time.time()
+        current_time_str = datetime.now(timezone.utc).strftime("%H:%M:%S")
+        
+        if tracking.yes_first_cross is not None:
+            # Already detected first YES cross
+            return None
+        
+        if yes_price > MIDPOINT:
+            tracking.yes_samples_above.append((current_ts, yes_price))
         else:
-            tracking.samples_below_50.add(current_second)
+            tracking.yes_samples_below.append((current_ts, yes_price))
         
         # Check if we have samples on both sides
-        if len(tracking.samples_above_50) > 0 and len(tracking.samples_below_50) > 0:
-            # First cross detected!
-            # Determine direction based on which sample came first
-            min_above = min(tracking.samples_above_50) if tracking.samples_above_50 else float('inf')
-            min_below = min(tracking.samples_below_50) if tracking.samples_below_50 else float('inf')
+        if len(tracking.yes_samples_above) > 0 and len(tracking.yes_samples_below) > 0:
+            # First YES cross detected!
+            first_above = min(ts for ts, _ in tracking.yes_samples_above)
+            first_below = min(ts for ts, _ in tracking.yes_samples_below)
             
-            if min_below < min_above:
-                # Was below first, then went above = cross UP
+            if first_below < first_above:
+                # Was below first, then went above = cross UP through $0.50
+                tracking.yes_first_cross = "up"
+            else:
+                # Was above first, then went below = cross DOWN through $0.50
+                tracking.yes_first_cross = "down"
+            
+            tracking.yes_cross_time = current_time_str
+            tracking.yes_cross_price = yes_price
+            tracking.coin_price_at_yes_cross = coin_price
+            
+            logger.info(
+                f"💰 YES CROSS {tracking.ticker} | "
+                f"Direction: {tracking.yes_first_cross} | "
+                f"YES: ${yes_price:.3f} | "
+                f"Coin: ${coin_price:,.2f} | "
+                f"Time: {tracking.yes_cross_time}"
+            )
+            
+            return tracking.yes_first_cross
+        
+        return None
+    
+    def _detect_cross_through_target(
+        self, 
+        tracking: MarketTracking, 
+        coin_price: float
+    ) -> Optional[str]:
+        """
+        Detect if coin price just crossed through the target price.
+        Returns "up" if crossed up through target, "down" if crossed down, None if no cross.
+        """
+        current_ts = time.time()
+        target = tracking.target_price
+        
+        if tracking.first_cross_direction is not None:
+            # Already detected first cross
+            return None
+        
+        if coin_price > target:
+            tracking.samples_above_target.append((current_ts, coin_price))
+        else:
+            tracking.samples_below_target.append((current_ts, coin_price))
+        
+        # Check if we have samples on both sides
+        if len(tracking.samples_above_target) > 0 and len(tracking.samples_below_target) > 0:
+            # First cross detected!
+            first_above = min(ts for ts, _ in tracking.samples_above_target)
+            first_below = min(ts for ts, _ in tracking.samples_below_target)
+            
+            if first_below < first_above:
+                # Was below first, then went above = cross UP through target
                 tracking.first_cross_direction = "up"
             else:
-                # Was above first, then went below = cross DOWN
+                # Was above first, then went below = cross DOWN through target
                 tracking.first_cross_direction = "down"
             
-            tracking.first_cross_price = mid
             tracking.first_cross_ts = datetime.now(timezone.utc).isoformat()
+            tracking.coin_price_at_cross = coin_price
+            
+            logger.info(
+                f"🚦 COIN CROSS {tracking.ticker} | "
+                f"Direction: {tracking.first_cross_direction} | "
+                f"Target: ${target:,.2f} | "
+                f"Coin Price: ${coin_price:,.2f}"
+            )
+            
             return tracking.first_cross_direction
         
         return None
     
-    def _check_for_final_result(self, ticker: str) -> Optional[str]:
-        """Check if a market is settled and return result."""
-        result = self.api.get_market_result(ticker)
-        return result  # Returns 'yes', 'no', or None
-    
     def poll_markets(self):
         """Poll all coin series for markets and track crosses."""
         self.poll_count += 1
+        
+        # First, get current coin prices
+        coin_prices = get_all_coinbase_prices()
         
         for coin in COINS:
             series_ticker = SERIES_TICKERS.get(coin)
             if not series_ticker:
                 continue
             
+            coin_price = coin_prices.get(coin)
+            
             # Get open markets for this series
             markets = self.api.get_open_markets(series_ticker)
             
-            # Also check if any tracked markets for this series are now closed
-            for ticker, tracking in list(self.tracked_markets.items()):
-                if tracking.coin != coin or tracking.finalized:
+            for market in markets:
+                ticker = market.ticker
+                
+                # Skip if already finalized
+                if ticker in self.tracked_markets and self.tracked_markets[ticker].finalized:
                     continue
                 
-                # Check if this market is still in the open markets list
-                still_open = any(m.ticker == ticker for m in markets)
+                # Skip if already processed
+                if ticker in self.existing_tickers and ticker not in self.tracked_markets:
+                    continue
                 
-                if not still_open:
-                    # Market may have closed - check for result
-                    result = self._check_for_final_result(ticker)
-                    if result is not None:
-                        self._finalize_market(tracking, result)
+                # Start tracking if new market
+                if ticker not in self.tracked_markets:
+                    # Get floor_strike from raw API response
+                    floor_strike = self._get_floor_strike(ticker)
+                    
+                    if floor_strike is None:
+                        logger.debug(f"Could not get floor_strike for {ticker}, skipping")
+                        continue
+                    
+                    market_time = self._extract_market_time(ticker)
+                    tracking = MarketTracking(
+                        coin=coin,
+                        ticker=ticker,
+                        market_time=market_time,
+                        target_price=floor_strike,
+                        started_tracking=True
+                    )
+                    self.tracked_markets[ticker] = tracking
+                    logger.info(
+                        f"📊 Started tracking {ticker} | "
+                        f"{coin} target: ${floor_strike:,.2f}"
+                    )
+                
+                # Process YES price cross detection (NEW)
+                tracking = self.tracked_markets[ticker]
+                yes_price = self._get_yes_price(ticker)
+                if yes_price is not None and coin_price is not None:
+                    self._detect_yes_cross_through_midpoint(tracking, yes_price, coin_price)
+                
+                # Process coin price cross detection (existing)
+                if coin_price is not None:
+                    self._detect_cross_through_target(tracking, coin_price)
         
-        # Also periodically check closed markets for any we might have missed
-        # Do this every 10 polls to avoid excessive API calls
+        # Check for closed markets every 10 polls
         if self.poll_count % 10 == 0:
             self._check_closed_markets()
     
@@ -217,8 +474,7 @@ class FirstCrossTracker:
             if tracking.finalized:
                 continue
             
-            # Check if market is still open
-            result = self.api.get_market_result(ticker)
+            result = self._get_market_result(ticker)
             if result is not None:
                 self._finalize_market(tracking, result)
     
@@ -226,30 +482,52 @@ class FirstCrossTracker:
         """Finalize tracking data when market closes."""
         tracking.finalized = True
         
-        # Get final price from the result
-        # Result is 'yes' or 'no' - YES closing above 0.50 = YES won
-        if result == 'yes':
-            tracking.final_direction = "up"
-            tracking.final_price = 1.0  # YES at expiry = $1.00
-        else:
-            tracking.final_direction = "down"
-            tracking.final_price = 0.0  # NO at expiry = YES = $0.00
+        # YES won means price ended up ABOVE target
+        # NO won means price ended up BELOW target
+        tracking.yes_won = (result == 'yes')
         
-        # Determine if prediction was correct
-        if tracking.first_cross_direction is not None:
-            tracking.correct = (tracking.first_cross_direction == tracking.final_direction)
+        # Get final coin price
+        final_price = get_coinbase_price(tracking.coin)
+        if final_price:
+            tracking.final_coin_price = final_price
+        
+        # Get final YES price
+        final_yes = self._get_yes_price(tracking.ticker)
+        if final_yes is not None:
+            tracking.final_yes_price = final_yes
+        
+        # Analyze YES $0.50 cross prediction (NEW)
+        if tracking.yes_first_cross is not None:
+            if tracking.yes_first_cross == "up":
+                # YES crossed up through $0.50 -> predicts YES will win
+                tracking.analysis["yes_cross_correct"] = tracking.yes_won == True
+            else:  # "down"
+                # YES crossed down through $0.50 -> predicts NO will win
+                tracking.analysis["yes_cross_correct"] = tracking.yes_won == False
         else:
-            # No first cross detected - cannot evaluate
-            tracking.correct = None
+            tracking.analysis["yes_cross_correct"] = None
+        
+        # Analyze coin target cross prediction (existing)
+        if tracking.first_cross_direction is not None:
+            if tracking.first_cross_direction == "up":
+                # Crossed up first means we expect YES to win (price above target)
+                tracking.analysis["coin_cross_correct"] = tracking.yes_won == True
+            else:  # "down"
+                # Crossed down first means we expect NO to win (price below target)
+                tracking.analysis["coin_cross_correct"] = tracking.yes_won == False
+        else:
+            tracking.analysis["coin_cross_correct"] = None
         
         # Save to file
         self._save_record(tracking)
         
         logger.info(
             f"🏁 FINALIZED {tracking.ticker} | "
-            f"First cross: {tracking.first_cross_direction} @ ${tracking.first_cross_price or 0:.4f} | "
-            f"Final: {tracking.final_direction} @ ${tracking.final_price:.2f} | "
-            f"Correct: {tracking.correct}"
+            f"YES cross: {tracking.yes_first_cross or 'N/A'} @ {tracking.yes_cross_time or 'N/A'} | "
+            f"Coin cross: {tracking.first_cross_direction or 'N/A'} @ ${tracking.coin_price_at_cross or 0:,.2f} | "
+            f"YES {'WON' if tracking.yes_won else 'LOST'} | "
+            f"YES cross correct: {tracking.analysis.get('yes_cross_correct')} | "
+            f"Coin cross correct: {tracking.analysis.get('coin_cross_correct')}"
         )
         
         # Remove from active tracking
@@ -260,13 +538,36 @@ class FirstCrossTracker:
         record = {
             "timestamp": tracking.first_cross_ts or datetime.now(timezone.utc).isoformat(),
             "coin": tracking.coin,
-            "ticker": tracking.ticker,
-            "market_time": tracking.market_time,
-            "first_cross": tracking.first_cross_direction,
-            "first_cross_price": tracking.first_cross_price,
-            "final_price": tracking.final_price,
-            "final_direction": tracking.final_direction,
-            "correct": tracking.correct
+            "market": tracking.market_time,  # e.g., "26APR030600-00"
+            "target_price": tracking.target_price,
+            
+            # NEW: YES $0.50 midpoint crossing
+            "yes_first_cross": tracking.yes_first_cross,
+            "yes_cross_price": tracking.yes_cross_price,
+            "yes_cross_time": tracking.yes_cross_time,
+            "coin_price_at_yes_cross": tracking.coin_price_at_yes_cross,
+            
+            # Existing: Coin target crossing
+            "coin_first_cross": tracking.first_cross_direction,
+            "coin_price_at_cross": tracking.coin_price_at_cross,
+            
+            # Final state
+            "final_yes_price": tracking.final_yes_price,
+            "final_coin_price": tracking.final_coin_price,
+            "yes_won": tracking.yes_won,
+            
+            # Analysis
+            "analysis": {
+                "yes_cross_correct": tracking.analysis.get("yes_cross_correct"),
+                "coin_cross_correct": tracking.analysis.get("coin_cross_correct"),
+            },
+            
+            "notes": (
+                f"YES crossed {'UP' if tracking.yes_first_cross == 'up' else 'DOWN' if tracking.yes_first_cross == 'down' else 'NEITHER'} "
+                f"through $0.50 first at {tracking.yes_cross_time or 'N/A'}; "
+                f"{tracking.coin} crossed {'UP' if tracking.first_cross_direction == 'up' else 'DOWN' if tracking.first_cross_direction == 'down' else 'NEITHER'} "
+                f"through target ${tracking.target_price:,.2f} at {tracking.first_cross_ts or 'N/A'}"
+            )
         }
         
         # Load existing data
@@ -282,10 +583,12 @@ class FirstCrossTracker:
             except (json.JSONDecodeError, FileNotFoundError):
                 records = []
         
-        # Check for duplicate
+        # Check for duplicate by market_time + coin (more stable than full ticker)
         existing_idx = None
+        record_key = f"{tracking.coin}_{tracking.market_time}"
         for i, r in enumerate(records):
-            if r.get('ticker') == tracking.ticker:
+            r_key = f"{r.get('coin', '')}_{r.get('market', '')}"
+            if r_key == record_key:
                 existing_idx = i
                 break
         
@@ -299,35 +602,6 @@ class FirstCrossTracker:
         # Save
         with open(self.output_file, 'w') as f:
             json.dump(records, f, indent=2)
-    
-    def process_market(self, ticker: str, yes_bid: float, yes_ask: float):
-        """Process a single market sample."""
-        if ticker in self.existing_tickers and ticker not in self.tracked_markets:
-            # Already processed this market
-            return
-        
-        if ticker not in self.tracked_markets:
-            # Start tracking new market
-            coin = self._extract_coin(ticker)
-            market_time = self._extract_market_time(ticker)
-            tracking = MarketTracking(
-                coin=coin,
-                ticker=ticker,
-                market_time=market_time,
-                started_tracking=True
-            )
-            self.tracked_markets[ticker] = tracking
-            logger.debug(f"📊 Started tracking {ticker} ({coin})")
-        
-        # Detect cross
-        tracking = self.tracked_markets[ticker]
-        cross = self._detect_cross(tracking, yes_bid, yes_ask)
-        
-        if cross:
-            logger.info(
-                f"🚦 FIRST CROSS {tracking.ticker} | "
-                f"Direction: {cross} | Price: ${tracking.first_cross_price:.4f}"
-            )
     
     def get_accuracy_stats(self) -> Dict:
         """Calculate accuracy statistics by coin."""
@@ -345,18 +619,46 @@ class FirstCrossTracker:
         # Calculate stats by coin
         stats = {}
         for coin in COINS:
-            coin_records = [r for r in records if r.get('coin') == coin and r.get('correct') is not None]
+            coin_records = [
+                r for r in records 
+                if r.get('coin') == coin and r.get('analysis', {}).get('coin_cross_correct') is not None
+            ]
             if coin_records:
                 total = len(coin_records)
-                correct = sum(1 for r in coin_records if r.get('correct'))
+                coin_correct = sum(1 for r in coin_records if r.get('analysis', {}).get('coin_cross_correct'))
+                
+                # YES cross stats (NEW)
+                yes_cross_records = [r for r in coin_records if r.get('yes_first_cross') is not None]
+                yes_cross_correct = sum(1 for r in yes_cross_records if r.get('analysis', {}).get('yes_cross_correct'))
+                
+                # Coin cross breakdown
+                cross_up_records = [r for r in coin_records if r.get('coin_first_cross') == 'up']
+                cross_down_records = [r for r in coin_records if r.get('coin_first_cross') == 'down']
+                
+                cross_up_correct = sum(1 for r in cross_up_records if r.get('analysis', {}).get('coin_cross_correct'))
+                cross_down_correct = sum(1 for r in cross_down_records if r.get('analysis', {}).get('coin_cross_correct'))
+                
+                # YES cross breakdown (NEW)
+                yes_up_records = [r for r in yes_cross_records if r.get('yes_first_cross') == 'up']
+                yes_down_records = [r for r in yes_cross_records if r.get('yes_first_cross') == 'down']
+                yes_up_correct = sum(1 for r in yes_up_records if r.get('analysis', {}).get('yes_cross_correct'))
+                yes_down_correct = sum(1 for r in yes_down_records if r.get('analysis', {}).get('yes_cross_correct'))
+                
                 stats[coin] = {
                     "total": total,
-                    "correct": correct,
-                    "accuracy": correct / total if total > 0 else 0,
-                    "cross_up_correct": sum(1 for r in coin_records if r.get('first_cross') == 'up' and r.get('correct')),
-                    "cross_down_correct": sum(1 for r in coin_records if r.get('first_cross') == 'down' and r.get('correct')),
-                    "cross_up_total": sum(1 for r in coin_records if r.get('first_cross') == 'up'),
-                    "cross_down_total": sum(1 for r in coin_records if r.get('first_cross') == 'down'),
+                    "coin_cross_correct": coin_correct,
+                    "coin_cross_accuracy": coin_correct / total if total > 0 else 0,
+                    "yes_cross_correct": yes_cross_correct,
+                    "yes_cross_total": len(yes_cross_records),
+                    "yes_cross_accuracy": yes_cross_correct / len(yes_cross_records) if yes_cross_records else 0,
+                    "coin_cross_up_correct": cross_up_correct,
+                    "coin_cross_up_total": len(cross_up_records),
+                    "coin_cross_down_correct": cross_down_correct,
+                    "coin_cross_down_total": len(cross_down_records),
+                    "yes_cross_up_correct": yes_up_correct,
+                    "yes_cross_up_total": len(yes_up_records),
+                    "yes_cross_down_correct": yes_down_correct,
+                    "yes_cross_down_total": len(yes_down_records),
                 }
         
         return stats
@@ -366,7 +668,10 @@ class FirstCrossTracker:
         stats = self.get_accuracy_stats()
         
         logger.info("=" * 60)
-        logger.info("📊 FIRST CROSS ACCURACY STATS")
+        logger.info("🎯 TARGET CROSS ACCURACY STATS")
+        logger.info("Tracking TWO signals per market:")
+        logger.info("  1. Coin price crossing through TARGET (floor_strike)")
+        logger.info("  2. YES price crossing through $0.50 midpoint")
         logger.info("=" * 60)
         
         if not stats:
@@ -374,35 +679,33 @@ class FirstCrossTracker:
             return
         
         for coin, s in sorted(stats.items()):
-            up_acc = s['cross_up_correct'] / s['cross_up_total'] if s['cross_up_total'] > 0 else 0
-            down_acc = s['cross_down_correct'] / s['cross_down_total'] if s['cross_down_total'] > 0 else 0
-            logger.info(
-                f"  {coin}: {s['accuracy']:.1%} accuracy ({s['correct']}/{s['total']}) | "
-                f"UP: {up_acc:.1%} ({s['cross_up_correct']}/{s['cross_up_total']}) | "
-                f"DOWN: {down_acc:.1%} ({s['cross_down_correct']}/{s['cross_down_total']})"
-            )
+            logger.info(f"  {coin}:")
+            logger.info(f"    COIN CROSS: {s['coin_cross_accuracy']:.1%} ({s['coin_cross_correct']}/{s['total']})")
+            if s['coin_cross_up_total'] > 0:
+                up_acc = s['coin_cross_up_correct'] / s['coin_cross_up_total']
+                logger.info(f"      UP:   {up_acc:.1%} ({s['coin_cross_up_correct']}/{s['coin_cross_up_total']})")
+            if s['coin_cross_down_total'] > 0:
+                down_acc = s['coin_cross_down_correct'] / s['coin_cross_down_total']
+                logger.info(f"      DOWN: {down_acc:.1%} ({s['coin_cross_down_correct']}/{s['coin_cross_down_total']})")
+            
+            logger.info(f"    YES CROSS: {s['yes_cross_accuracy']:.1%} ({s['yes_cross_correct']}/{s['yes_cross_total']})")
+            if s['yes_cross_up_total'] > 0:
+                yes_up_acc = s['yes_cross_up_correct'] / s['yes_cross_up_total']
+                logger.info(f"      UP:   {yes_up_acc:.1%} ({s['yes_cross_up_correct']}/{s['yes_cross_up_total']})")
+            if s['yes_cross_down_total'] > 0:
+                yes_down_acc = s['yes_cross_down_correct'] / s['yes_cross_down_total']
+                logger.info(f"      DOWN: {yes_down_acc:.1%} ({s['yes_cross_down_correct']}/{s['yes_cross_down_total']})")
         
         logger.info("=" * 60)
     
     def run(self):
         """Main tracking loop."""
-        logger.info("🚀 First Cross Tracker starting main loop...")
+        logger.info("🚀 Target Cross Tracker starting main loop...")
         
         try:
             while True:
                 try:
-                    # Poll all markets
                     self.poll_markets()
-                    
-                    # Get current prices for all tracked markets
-                    for coin in COINS:
-                        series_ticker = SERIES_TICKERS.get(coin)
-                        if not series_ticker:
-                            continue
-                        
-                        markets = self.api.get_open_markets(series_ticker)
-                        for market in markets:
-                            self.process_market(market.ticker, market.yes_bid, market.yes_ask)
                     
                     # Print stats every 60 polls (~2 minutes)
                     if self.poll_count % 60 == 0 and self.poll_count > 0:
@@ -411,7 +714,7 @@ class FirstCrossTracker:
                     time.sleep(POLL_INTERVAL_SEC)
                     
                 except KeyboardInterrupt:
-                    logger.info("⏹️ First Cross Tracker shutting down...")
+                    logger.info("⏹️ Target Cross Tracker shutting down...")
                     break
                 except Exception as e:
                     logger.error(f"❌ Error in tracking loop: {e}")
@@ -422,12 +725,12 @@ class FirstCrossTracker:
         
         # Final stats
         self.print_stats()
-        logger.info("👋 First Cross Tracker done!")
+        logger.info("👋 Target Cross Tracker done!")
 
 
 def main():
     """Entry point."""
-    tracker = FirstCrossTracker()
+    tracker = TargetCrossTracker()
     tracker.run()
 
 

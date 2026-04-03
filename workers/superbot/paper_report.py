@@ -20,35 +20,30 @@ def format_trade(t):
     return f"  {emoji} {side_emoji} {t['ticker'].split('-')[1][-6:]} | E=${t['entry_price']:.3f} → X=${t['exit_price']:.3f} | PnL ${t['pnl']:+.4f} | {t['strategy']}"
 
 def build_report(d):
-    """Build Discord embed from report data."""
+    """Build short Discord embed from report data."""
     pnl = d['total_pnl']
     pnl_emoji = "🟢" if pnl >= 0 else "🔴"
     
-    # Active positions
     open_count = d.get('open_positions', 0)
-    open_str = f" | Open: {open_count} positions" if open_count > 0 else ""
+    open_str = f" | Open: {open_count}" if open_count > 0 else ""
     
-    msg = f"""**📊 YONTI PAPER TRADING REPORT**
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-**Account:** ${d['starting_balance']:.2f} → **${d['ending_balance']:.2f}** {pnl_emoji} ${pnl:+.2f}
-**Win Rate:** {d['win_rate']}% ({d['winning_trades']}W / {d['losing_trades']}L)
-**Total Trades:** {d['total_trades']}{open_str}
-
-**Closed Trades:**
-"""
+    # Show last 5 trades only (to stay under 2000 chars)
+    recent_trades = d['trades'][-5:]
     
-    # Add closed trades
-    for t in d['trades']:
-        msg += format_trade(t) + "\n"
+    msg = f"**📊 YONTI PAPER TRADING**\n"
+    msg += f"━━━━━━━━━━━━━━━━━━━━━━\n"
+    msg += f"**${d['starting_balance']:.2f} → ${d['ending_balance']:.2f}** {pnl_emoji} ${pnl:+.2f}\n"
+    msg += f"WR: {d['win_rate']}% ({d['winning_trades']}W/{d['losing_trades']}L){open_str}\n"
+    msg += f"**Trades:** {d['total_trades']} | **Best:** +${d['largest_win']:.4f} | **Worst:** ${d['largest_loss']:.4f}\n"
+    msg += f"\n**Last 5:**\n"
     
-    # Best/worst
-    msg += f"""
-**Best:** +${d['largest_win']:.4f} | **Worst:** ${d['largest_loss']:.4f}
-
-🤖 Bot: `drift_buy` / `drift_short` + trailing stop + scale-in
-⏱️ Report generated: {datetime.utcnow().strftime('%H:%M UTC')}"""
-
+    for t in recent_trades:
+        emoji = "✅" if t['pnl'] > 0 else "❌"
+        side = "📈" if t['side'] == 'yes' else "📉"
+        msg += f"{emoji} {side} {t['ticker'].split('-')[1][-6:]} E=${t['entry_price']:.3f} X=${t['exit_price']:.3f} PnL ${t['pnl']:+.4f}\n"
+    
+    msg += f"\n🤖 drift_buy/sell + trailing stop"
+    
     return msg
 
 def post_discord(message):

@@ -27,6 +27,7 @@ COINS = ['BTC', 'ETH', 'BNB', 'SOL', 'DOGE', 'XRP', 'HYPE', 'ADA']  # All coins 
 SERIES_TICKERS = {coin: f'KX{coin}15M' for coin in COINS}
 
 KALSHI_ACCESS_KEY = os.getenv("KALSHI_ACCESS_KEY", "")
+KALSHI_TRACKER_KEY = os.getenv("KALSHI_TRACKER_KEY", "dd143eb9-ac4a-4cc2-bb17-11b47147a8fe")
 
 # =============================================================================
 # PAPER TRADING CONFIG
@@ -89,8 +90,8 @@ DEEP_MIN_TIME_LEFT_SEC = 120  # Need time for the penny odds to play out
 # FIX: Only enter in the $0.30-$0.35 zone where RSI and MACD confirm oversold
 DRIFT_BUY_ENABLED = True
 DRIFT_BUY_MIN_PRICE = 0.30   # Strong support zone
-DRIFT_BUY_MAX_PRICE = 0.38   # TIGHTENED from 0.45 — avoid mid-range noise
-# IMPORTANT: This means many setups that previously triggered (0.38-0.45) will be skipped.
+DRIFT_BUY_MAX_PRICE = 0.35   # TIGHTENED from 0.38 — only best entries ($0.30-$0.35 is high-conviction)
+# IMPORTANT: This means many setups that previously triggered (0.35-0.45) will be skipped.
 # That's correct. Only take the best entries.
 DRIFT_MIN_TIME_LEFT_SEC = 180  # 3+ minutes (tightened from 2 min)
 DRIFT_BUY_STOP_LOSS = 0.22    # Absolute $0.22 SL — tighter than old $0.25 (false break protection)
@@ -100,9 +101,9 @@ DRIFT_TP_PRICE = 0.90         # TP at $0.90 (lowered from $0.95 — lock in prof
 # Previous config: DRIFT_SHORT_MIN_PRICE = 0.50 (WRONG — this IS the dead zone boundary)
 # Previous config: DRIFT_SHORT_MAX_PRICE = 0.70 (OK but entries 0.60-0.70 are too high)
 # Previous WR: 38.9% but PnL = -$0.38 (wins too small, losses too big)
-# FIX: Only enter 0.55-0.62 zone with confirmed overbought signal
+# FIX: Only enter 0.57-0.62 zone with confirmed overbought signal (tightened from 0.55-0.62)
 DRIFT_SHORT_ENABLED = True
-DRIFT_SHORT_MIN_PRICE = 0.55  # Start of valid zone
+DRIFT_SHORT_MIN_PRICE = 0.57  # TIGHTENED from 0.55 — avoid weak setups at lower prices
 DRIFT_SHORT_MAX_PRICE = 0.62   # TIGHTENED from 0.70 — entries above 0.62 have poor WR
 DRIFT_SHORT_SL_PRICE = 0.75    # Absolute $0.75 SL (Nerd's research)
 DRIFT_SHORT_STOP_LOSS = 0.75   # Alias for DRIFT_SHORT_SL_PRICE (used in strategies.py)

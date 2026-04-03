@@ -51,7 +51,7 @@ from dataclasses import dataclass, asdict
 sys.path.insert(0, str(Path(__file__).parent))
 
 from config import (
-    KALSHI_ACCESS_KEY, COINS, SERIES_TICKERS,
+    KALSHI_ACCESS_KEY, KALSHI_TRACKER_KEY, COINS, SERIES_TICKERS,
     LOG_DIR, LOG_LEVEL, LOG_FORMAT, LOG_DATE_FORMAT
 )
 from kalshi_api import KalshiAPI
@@ -187,7 +187,7 @@ class TargetCrossTracker:
     """
     
     def __init__(self):
-        self.api = KalshiAPI(access_key=KALSHI_ACCESS_KEY)
+        self.api = KalshiAPI(access_key=KALSHI_TRACKER_KEY)
         self.tracked_markets: Dict[str, MarketTracking] = {}
         self.output_file = OUTPUT_FILE
         self.poll_count = 0

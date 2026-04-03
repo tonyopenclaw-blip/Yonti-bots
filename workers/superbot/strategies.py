@@ -262,9 +262,9 @@ class Position:
     first_cross_direction: str = ""  # Tony's first crossing insight: 'up', 'down', or ''
     
     # === NEW: Trailing Stop & Scale-In Fields ===
-    trailing_stop_pct: float = 0.15       # 15% trailing stop (lock in profits when price retraces 15%)
+    trailing_stop_pct: float = 0.25       # WIDENED to 25% (was 15%) - let winners run more
     trailing_stop_active: bool = False   # Trailing stop activates after X% profit
-    trailing_stop_trigger_pct: float = 0.20  # Activate trailing stop after 20% profit in our direction
+    trailing_stop_trigger_pct: float = 0.30  # WIDENED: activate after 30% profit (was 20%)
     peak_price: float = 0.0              # Track peak price for longs, trough for shorts
     scale_in_count: int = 0              # Number of times we've scaled in
     max_scale_ins: int = 2               # Max 2 scale-ins per position
@@ -555,7 +555,7 @@ Your estimate:"""
     
     def _check_drift_buy(self, market: Market, mid_price: float, time_left: int) -> Optional[TradeSignal]:
         """
-        DRIFT BUY: YES $0.30-$0.38 → mean reversion, HOLD TO END, trailing stop only
+        DRIFT BUY: YES $0.30-$0.35 → mean reversion, HOLD TO END, trailing stop only
         
         Tony's Feedback:
         - TP was too tight ($0.90) - killed winners
@@ -563,7 +563,8 @@ Your estimate:"""
         - Scale in: add more if price moves in our direction
         
         SL: absolute $0.22 (tight, but not triggered unless we're wrong)
-        Trailing stop: activates after 20% profit, locks in 15% from peak
+        Trailing stop: WIDENED - activates after 30% profit, locks in 25% from peak (was 20%/15%)
+        Entry zone tightened to $0.30-$0.35 (was $0.30-$0.38) for higher conviction setups only
         """
         # Skip dead zone ($0.45-$0.55)
         if DEAD_ZONE_MIN <= mid_price <= DEAD_ZONE_MAX:
@@ -617,7 +618,7 @@ Your estimate:"""
     
     def _check_drift_short(self, market: Market, mid_price: float, time_left: int) -> Optional[TradeSignal]:
         """
-        DRIFT SHORT: YES $0.55-$0.62 → sell overpriced, HOLD TO END, trailing stop only
+        DRIFT SHORT: YES $0.57-$0.62 → sell overpriced, HOLD TO END, trailing stop only
         This means we're SELLING YES (betting it will go down)
         
         Tony's Feedback:
@@ -626,7 +627,8 @@ Your estimate:"""
         - Scale in: add more if price moves in our direction
         
         SL: absolute $0.75 (tight, but not triggered unless we're wrong)
-        Trailing stop: activates after 20% profit, locks in 15% from trough
+        Trailing stop: WIDENED - activates after 30% profit, locks in 25% from trough (was 20%/15%)
+        Entry zone tightened to $0.57-$0.62 (was $0.55-$0.62) for higher conviction only
         Dead zone: no trades $0.45-$0.55
         """
         # Skip dead zone ($0.45-$0.55)

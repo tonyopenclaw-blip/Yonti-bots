@@ -74,6 +74,7 @@ class PropPick:
     odds: int
     source_signal: str = ""
     confidence: int = 70
+    rest_day: bool = False  # Track if player is a rest day (not in DK slate)
 
 
 @dataclass
@@ -302,6 +303,9 @@ class DraftKingsClient:
         if sport in self._active_players:
             last_fetch = self._last_fetch.get(sport)
             if last_fetch and datetime.now() - last_fetch < self._cache_duration:
+                # Cache hit - but if cached set is empty, the API previously failed
+                if not self._active_players[sport]:
+                    self._fetch_failed = True  # API failed, mark it
                 return self._active_players[sport]
         
         # Fetch fresh data
@@ -325,9 +329,10 @@ class DraftKingsClient:
         Returns:
             True if player is in the DK slate, False otherwise
         """
-        # If DK API failed, we can't verify - assume active
+        # If DK API failed, we can't verify - assume player is OUT (conservative)
+        # "If they're not in DK DFS, they can't be in any parlay"
         if self._fetch_failed:
-            return True
+            return False
             
         active_players = self.fetch_active_players(sport)
         
@@ -582,6 +587,9 @@ class UncleVitoReport:
         simulated_props = self._simulate_player_props(all_games)
 
         for prop in simulated_props:
+            # Skip rest day players (they are OUT)
+            if prop.get("rest_day", False):
+                continue
             if len(picks) >= num_legs:
                 break
 
@@ -711,6 +719,11 @@ class UncleVitoReport:
             # Get props
             props = self.generate_props_parlay(sport, config.PARLAY_LEGS)
             for prop in props:
+                # DEFENSIVE CHECK: Verify player is actually active on DK slate
+                # This is a safety net in case rest_day flag wasn't set correctly upstream
+                if not self.dk.is_player_active_dk(prop.player, prop.team, sport):
+                    logger.warning(f"Skipping {prop.player} ({prop.team}) in confidence parlay - not in DK slate")
+                    continue
                 if prop.confidence >= min_confidence:
                     all_picks.append({
                         "type": "prop",
@@ -872,6 +885,7 @@ class UncleVitoReport:
                                 "line": line,
                                 "sport": sport,
                                 "dk_active": True,
+                                "rest_day": False,  # Explicitly set - NOT a rest day
                             })
                         else:
                             # Log warning for rest day / missing player

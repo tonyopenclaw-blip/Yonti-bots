@@ -194,7 +194,18 @@
         .t-time { font-family: 'JetBrains Mono', monospace; color: var(--dim); font-size: 0.68rem; }
         .t-reason { font-size: 0.66rem; color: var(--dim); max-width: 130px; overflow: hidden; text-overflow: ellipsis; }
 
-        /* SIDE PANEL */
+        @media (max-width: 600px) {
+            .topbar { padding: 0 12px; height: auto; flex-wrap: wrap; gap: 8px; }
+            .topbar-nav { flex-wrap: wrap; }
+            .nav-btn { padding: 8px 10px; font-size: 0.72rem; min-height: 44px; display: flex; align-items: center; }
+            .main { padding: 12px; }
+            .bot-tabs { flex-wrap: wrap; }
+            .bot-tab { padding: 10px 12px; min-height: 44px; }
+            .trade-scroll { overflow-x: auto; }
+            .trade-table { min-width: 600px; }
+            .dash-grid { grid-template-columns: 1fr; }
+            .side-col { gap: 8px; }
+        }
         .side-col { display: flex; flex-direction: column; gap: 10px; }
 
         /* BOT STATUS CARDS */

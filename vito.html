@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uncle Vito's Picks — Yonti</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0B0F1A;
+            --card: #131929;
+            --card-hover: #1A2235;
+            --border: #1E2A3F;
+            --text: #E8ECF4;
+            --text-dim: #7A8499;
+            --gold: #F0B90B;
+            --green: #00D68F;
+            --red: #EF4444;
+            --nba-red: #C8102E;
+            --win: #00E676;
+            --loss: #FF5252;
+            --pending: #90CAF9;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* TOPBAR */
+        .topbar {
+            background: rgba(11,15,26,0.95);
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 56px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(8px);
+        }
+        .topbar-left { display: flex; align-items: center; gap: 20px; }
+        .topbar-logo { font-size: 1rem; font-weight: 700; color: var(--gold); text-decoration: none; }
+        .topbar-logo:hover { text-decoration: underline; }
+        .topbar-nav { display: flex; gap: 4px; }
+        .nav-btn {
+            padding: 6px 14px; border-radius: 8px; border: none;
+            background: transparent; color: var(--text-dim); font-size: 0.8rem;
+            font-weight: 500; cursor: pointer; transition: all 0.15s; text-decoration: none;
+        }
+        .nav-btn:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+        .nav-btn.active { color: var(--gold); background: rgba(240,185,11,0.1); border: 1px solid rgba(240,185,11,0.3); }
+        .topbar-right { display: flex; align-items: center; gap: 16px; }
+        .utc-clock { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-dim); }
+
+        /* HERO */
+        .hero {
+            text-align: center;
+            padding: 60px 24px 40px;
+            background: linear-gradient(180deg, rgba(240,185,11,0.06) 0%, transparent 100%);
+            border-bottom: 1px solid var(--border);
+        }
+        .hero-icon { font-size: 64px; margin-bottom: 16px; }
+        .hero-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+        .hero-sub {
+            font-size: 1rem;
+            color: var(--text-dim);
+            max-width: 500px;
+            margin: 0 auto 32px;
+            line-height: 1.6;
+        }
+
+        /* LIVE CTA */
+        .live-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--gold);
+            color: #000;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 14px 32px;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: all 0.2s;
+            box-shadow: 0 4px 20px rgba(240,185,11,0.3);
+        }
+        .live-cta:hover {
+            background: #FFCA2E;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(240,185,11,0.4);
+        }
+        .live-cta .pulse {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            background: #000;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+
+        /* NOTE BANNER */
+        .note-banner {
+            max-width: 700px;
+            margin: 32px auto 0;
+            padding: 14px 20px;
+            background: rgba(79,141,232,0.1);
+            border: 1px solid rgba(79,141,232,0.25);
+            border-radius: 10px;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+        .note-banner strong { color: #4F8DE8; }
+
+        /* STATS */
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            padding: 40px 24px;
+            flex-wrap: wrap;
+        }
+        .stat-box {
+            text-align: center;
+            min-width: 120px;
+        }
+        .stat-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--gold);
+            line-height: 1;
+        }
+        .stat-val.green { color: var(--green); }
+        .stat-val.red { color: var(--red); }
+        .stat-lbl {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-top: 6px;
+        }
+
+        /* PICKS SECTION */
+        .picks-section {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px 60px;
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .section-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .last-updated {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+        }
+
+        /* PICK CARD */
+        .pick-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .pick-card:hover {
+            border-color: rgba(240,185,11,0.4);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .pick-card.sport-nba { border-left: 4px solid var(--nba-red); }
+        .pick-card.sport-nhl { border-left: 4px solid #003E8C; }
+        .pick-card.sport-mlb { border-left: 4px solid #002D72; }
+
+        .pick-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            background: rgba(0,0,0,0.2);
+            border-bottom: 1px solid var(--border);
+        }
+        .sport-tag {
+            font-size: 0.6rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.08em; padding: 3px 8px; border-radius: 4px;
+        }
+        .sport-tag.nba { background: rgba(200,16,46,0.2); color: var(--nba-red); }
+        .sport-tag.nhl { background: rgba(0,62,140,0.2); color: #4F8DE8; }
+        .sport-tag.mlb { background: rgba(0,45,114,0.2); color: #5B9BD5; }
+        .pick-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--text-dim);
+        }
+        .pick-body { padding: 14px 16px; }
+        .pick-game {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-bottom: 8px;
+        }
+        .pick-text {
+            font-size: 0.95rem;
+            color: var(--text);
+            line-height: 1.5;
+        }
+        .pick-text strong { color: var(--gold); font-weight: 700; }
+        .pick-type-tag {
+            display: inline-block;
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: rgba(240,185,11,0.1);
+            color: var(--gold);
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        .pick-result {
+            font-size: 0.65rem; font-weight: 700; padding: 3px 10px;
+            border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        .pick-result.win { background: rgba(0,230,118,0.2); color: var(--win); }
+        .pick-result.loss { background: rgba(255,82,82,0.2); color: var(--loss); }
+        .pick-result.pending { background: rgba(144,202,249,0.15); color: var(--pending); }
+
+        /* FOOTER NOTE */
+        .footer-note {
+            text-align: center;
+            padding: 24px;
+            border-top: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+        .footer-note a { color: var(--gold); text-decoration: none; }
+        .footer-note a:hover { text-decoration: underline; }
+
+        @media (max-width: 600px) {
+            .topbar { padding: 0 12px; height: auto; flex-wrap: wrap; gap: 8px; }
+            .topbar-nav { flex-wrap: wrap; }
+            .nav-btn { padding: 8px 10px; font-size: 0.72rem; min-height: 44px; display: flex; align-items: center; }
+            .hero { padding: 40px 16px 28px; }
+            .hero-icon { font-size: 48px; }
+            .hero-title { font-size: 2rem; }
+            .stats-row { gap: 20px; padding: 24px 16px; }
+            .stat-val { font-size: 1.8rem; }
+            .picks-section { padding: 0 12px 40px; }
+            .live-cta { padding: 12px 24px; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+    <div class="topbar-left">
+        <a href="/" class="topbar-logo">YONTI</a>
+        <nav class="topbar-nav">
+            <a href="/" class="nav-btn">← Back to Main</a>
+            <a href="/paperdashboard/" class="nav-btn">📊 Paper Dashboard</a>
+            <a href="/vito.html" class="nav-btn active">🍝 Vito's Picks</a>
+        </nav>
+    </div>
+    <div class="topbar-right">
+        <span class="utc-clock" id="clock">--:--:-- UTC</span>
+    </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+    <div class="hero-icon">🍝</div>
+    <div class="hero-title">Uncle Vito's Picks</div>
+    <div class="hero-sub">
+        AI-powered sports betting analysis across NBA, NHL, and MLB.<br>
+        Powered by Yonti's prediction engine.
+    </div>
+    <a href="http://129.80.245.91/scoreboard/" class="live-cta" target="_blank" rel="noopener">
+        <span class="pulse"></span>
+        View Live Scoreboard
+    </a>
+    <div class="note-banner">
+        <strong>Note:</strong> Live picks are updated in real-time on the main scoreboard server.
+        This page shows a static snapshot for reference. For up-to-the-minute picks,
+        game scores, and Vito's analysis — visit the live scoreboard above.
+    </div>
+</div>
+
+<!-- STATS (Snapshot) -->
+<div class="stats-row">
+    <div class="stat-box">
+        <div class="stat-val green">61%</div>
+        <div class="stat-lbl">Win Rate (7d)</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-val">142</div>
+        <div class="stat-lbl">Picks This Week</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-val" style="color:#4F8DE8;">NBA 58%</div>
+        <div class="stat-lbl">Top Sport</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-val" style="color:#F0B90B;">+23.4</div>
+        <div class="stat-lbl">Units Gained</div>
+    </div>
+</div>
+
+<!-- PICKS SECTION -->
+<div class="picks-section">
+    <div class="section-header">
+        <div class="section-title">🍝 Today's Picks</div>
+        <div class="last-updated" id="lastUpdated">-- Last Updated: --</div>
+    </div>
+
+    <!-- Sample NBA Pick 1 -->
+    <div class="pick-card sport-nba">
+        <div class="pick-top">
+            <span class="sport-tag nba">NBA</span>
+            <span class="pick-num">#1 · Spread</span>
+        </div>
+        <div class="pick-body">
+            <div class="pick-game">OKC vs LAL — Apr 3, 2026</div>
+            <div class="pick-text">
+                <span class="pick-type-tag">Spread</span>
+                <strong>OKC Thunder</strong> (-4.5)
+            </div>
+        </div>
+    </div>
+
+    <!-- Sample NBA Pick 2 -->
+    <div class="pick-card sport-nba">
+        <div class="pick-top">
+            <span class="sport-tag nba">NBA</span>
+            <span class="pick-num">#2 · Player Prop</span>
+        </div>
+        <div class="pick-body">
+            <div class="pick-game">DEN vs BOS — Apr 3, 2026</div>
+            <div class="pick-text">
+                <span class="pick-type-tag">Prop</span>
+                <strong>Nikola Jokic (DEN)</strong> — OVER 28.5 Points
+            </div>
+        </div>
+    </div>
+
+    <!-- Sample NBA Pick 3 -->
+    <div class="pick-card sport-nba">
+        <div class="pick-top">
+            <span class="sport-tag nba">NBA</span>
+            <span class="pick-num">#3 · ML</span>
+        </div>
+        <div class="pick-body">
+            <div class="pick-game">PHX vs GSW — Apr 3, 2026</div>
+            <div class="pick-text">
+                <span class="pick-type-tag">ML</span>
+                <strong>Golden State Warriors</strong> ML
+            </div>
+        </div>
+    </div>
+
+    <!-- Sample NHL Pick -->
+    <div class="pick-card sport-nhl">
+        <div class="pick-top">
+            <span class="sport-tag nhl">NHL</span>
+            <span class="pick-num">#4 · Spread</span>
+        </div>
+        <div class="pick-body">
+            <div class="pick-game">BOS vs TOR — Apr 3, 2026</div>
+            <div class="pick-text">
+                <span class="pick-type-tag">Spread</span>
+                <strong>Boston Bruins</strong> (-1.5)
+            </div>
+        </div>
+    </div>
+
+    <!-- Sample MLB Pick -->
+    <div class="pick-card sport-mlb">
+        <div class="pick-top">
+            <span class="sport-tag mlb">MLB</span>
+            <span class="pick-num">#5 · ML</span>
+        </div>
+        <div class="pick-body">
+            <div class="pick-game">NYY vs BOS — Apr 3, 2026</div>
+            <div class="pick-text">
+                <span class="pick-type-tag">ML</span>
+                <strong>New York Yankees</strong> ML
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-note">
+        🍝 Picks are generated by Uncle Vito's AI analysis engine.<br>
+        For live picks and real-time score updates —
+        <a href="http://129.80.245.91/scoreboard/" target="_blank" rel="noopener">visit the live scoreboard →</a>
+    </div>
+</div>
+
+<script>
+function updateClock() {
+    const el = document.getElementById('clock');
+    if (el) {
+        const now = new Date();
+        el.textContent = now.toUTCString().split(' ')[4] + ' UTC';
+    }
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+// Set last updated to today
+const el = document.getElementById('lastUpdated');
+if (el) {
+    const now = new Date();
+    el.textContent = 'Last Updated: ' + now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' ' + now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+}
+</script>
+</body>
+</html>

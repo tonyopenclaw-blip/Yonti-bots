@@ -280,6 +280,23 @@
             display: none;
         }
         .error-banner.visible { display: block; }
+            @media (max-width: 600px) {
+            .topbar { padding: 0 12px; height: auto; flex-wrap: wrap; gap: 8px; }
+            .topbar-nav { flex-wrap: wrap; }
+            .nav-btn { padding: 8px 10px; font-size: 0.72rem; min-height: 44px; display: flex; align-items: center; }
+            .hero-banner { padding: 16px 12px 14px; }
+            .hero-title { font-size: 1.4rem; }
+            .stats-inner { flex-wrap: wrap; }
+            .overall-stat { min-width: 50%; border-right: none; border-bottom: 1px solid var(--border); padding: 12px 14px; }
+            .sport-tabs-bar { padding: 0 12px; overflow-x: auto; }
+            .sport-tabs-inner { flex-wrap: nowrap; }
+            .sport-tab { padding: 10px 14px; min-height: 44px; white-space: nowrap; }
+            .games-section { padding: 12px; }
+            .games-grid { grid-template-columns: 1fr; }
+            .games-grid { gap: 12px; }
+            .topbar-right { gap: 8px; }
+            .utc-clock, .refresh-indicator { font-size: 0.7rem; }
+        }
     </style>
 </head>
 <body>

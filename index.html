@@ -61,6 +61,14 @@
             text-decoration: none;
             color: var(--text);
             min-width: 260px;
+            min-height: 44px;
+        }
+        @media (max-width: 600px) {
+            .dashboards { gap: 16px; }
+            .card { padding: 28px 24px; min-width: 140px; }
+            .card-icon { font-size: 28px; }
+            .card-title { font-size: 17px; }
+            .logo { font-size: 36px; }
         }
         .card:hover {
             background: var(--card-hover);
@@ -112,6 +120,11 @@
             <div class="card-icon">📊</div>
             <div class="card-title">Scoreboard</div>
             <div class="card-desc">Uncle Vito's Sports Betting Report<br>Live tracking & picks</div>
+        </a>
+        <a href="vito.html" class="card">
+            <div class="card-icon">🍝</div>
+            <div class="card-title">Vito's Picks</div>
+            <div class="card-desc">Uncle Vito's Sports Betting Report<br>NBA, NHL, MLB picks & analysis</div>
         </a>
         <a href="paperdashboard/" class="card">
             <div class="card-icon">🤖</div>

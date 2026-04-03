@@ -27,7 +27,7 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Prepare artifact directory
-        run: mkdir -p _site && cp index.html _site/ && cp -r scoreboard _site/ && cp -r paperdashboard _site/ && cp org.html _site/
+        run: mkdir -p _site && cp index.html _site/ && cp -r scoreboard _site/ && cp -r paperdashboard _site/ && cp org.html _site/ && cp vito.html _site/
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

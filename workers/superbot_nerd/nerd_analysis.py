@@ -278,5 +278,37 @@ def main():
         print("\n⏭️ No change, skipping Discord post.")
 
 
+def check_first_cross_ready():
+    """Check if First Cross Tracker has 30+ records, notify Tony if ready."""
+    import json as json_lib
+    
+    cross_path = "/home/ubuntu/.openclaw/workspace/workers/superbot/target_cross_data.json"
+    flag_path = "/home/ubuntu/.openclaw/workspace/workers/superbot_nerd/first_cross_ready.txt"
+    
+    if not os.path.exists(cross_path):
+        return
+    
+    try:
+        with open(cross_path) as f:
+            data = json_lib.load(f)
+        count = len(data)
+        
+        # Already notified?
+        if os.path.exists(flag_path):
+            return
+        
+        if count >= 30:
+            msg = "🎯 **First Cross Data Ready!**\n"
+            msg += f"{count} markets accumulated. Nerd ready to analyze.\n"
+            msg += "@tbruno94 - ready when you are sir."
+            post_to_discord(msg)
+            with open(flag_path, "w") as f:
+                f.write(str(count))
+            print(f"\n🔔 Notified Tony: {count} first cross records ready!")
+    except Exception as e:
+        print(f"First cross check error: {e}")
+
+
 if __name__ == "__main__":
+    check_first_cross_ready()
     main()

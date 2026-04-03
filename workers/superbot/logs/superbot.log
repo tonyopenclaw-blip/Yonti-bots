@@ -4017,3 +4017,246 @@
 2026-04-03 18:52:14 | INFO | Day P&L: $3.04 (3.0%) / $100.00 limit
 2026-04-03 18:52:14 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: drift_buy yes@0.34 | DOGE: drift_buy yes@0.33 | XRP: drift_buy yes@0.33 | HYPE: idle | ADA: idle
 2026-04-03 18:52:14 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:10:58 | INFO | CoinTrader initialized for BTC (KXBTC15M)
+2026-04-03 19:10:58 | INFO | CoinTrader initialized for ETH (KXETH15M)
+2026-04-03 19:10:58 | INFO | CoinTrader initialized for BNB (KXBNB15M)
+2026-04-03 19:10:58 | INFO | CoinTrader initialized for SOL (KXSOL15M)
+2026-04-03 19:10:58 | INFO | CoinTrader initialized for DOGE (KXDOGE15M)
+2026-04-03 19:10:58 | INFO | CoinTrader initialized for XRP (KXXRP15M)
+2026-04-03 19:10:58 | INFO | CoinTrader initialized for HYPE (KXHYPE15M)
+2026-04-03 19:10:58 | INFO | CoinTrader initialized for ADA (KXADA15M)
+2026-04-03 19:10:58 | INFO | ============================================================
+2026-04-03 19:10:58 | INFO | SUPERBOT INITIALIZED - PAPER MODE - SMART POLLING
+2026-04-03 19:10:58 | INFO | Coins: ['BTC', 'ETH', 'BNB', 'SOL', 'DOGE', 'XRP', 'HYPE', 'ADA']
+2026-04-03 19:10:58 | INFO | Tickers: ['KXBTC15M', 'KXETH15M', 'KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXXRP15M', 'KXHYPE15M', 'KXADA15M']
+2026-04-03 19:10:58 | INFO | Starting balance: $100.00
+2026-04-03 19:10:58 | INFO | Balance floor: $3.00
+2026-04-03 19:10:58 | INFO | Max bet per coin: $3.00
+2026-04-03 19:10:58 | INFO | Idle poll: 10s per series | Active poll: 1s
+2026-04-03 19:10:58 | INFO | Cooldown: 0 cycles after position close
+2026-04-03 19:10:58 | INFO | Daily stop-loss: 100% (100% of $100.00 = $100.00 max loss)
+2026-04-03 19:10:58 | INFO | ============================================================
+2026-04-03 19:10:58 | INFO | Starting SMART POLLING trading loop (Recorder's approach)...
+2026-04-03 19:10:58 | INFO | Report session started: 2026-04-03 19:10:58 UTC
+2026-04-03 19:10:58 | INFO | 😴 IDLE: checked KXBTC15M (poll #1) | Day P&L: $0.00 (0.0%)
+2026-04-03 19:11:28 | INFO | Status: cash=$100.00, positions=0, loop=30, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:11:28 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-03 19:11:28 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:11:28 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:11:58 | INFO | Status: cash=$100.00, positions=0, loop=59, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:11:58 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-03 19:11:58 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:11:58 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:12:28 | INFO | Status: cash=$100.00, positions=0, loop=88, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:12:28 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-03 19:12:28 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:12:28 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:12:58 | INFO | Status: cash=$100.00, positions=0, loop=117, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:12:58 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-03 19:12:58 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:12:58 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:13:28 | INFO | Status: cash=$100.00, positions=0, loop=146, active_series=['KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:13:28 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-03 19:13:28 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:13:28 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:13:59 | INFO | Status: cash=$100.00, positions=0, loop=175, active_series=['KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:13:59 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-03 19:13:59 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:13:59 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:14:29 | INFO | Status: cash=$100.00, positions=0, loop=204, active_series=['KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:14:29 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-03 19:14:29 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:14:29 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:14:59 | INFO | Status: cash=$100.00, positions=0, loop=233, active_series=['KXSOL15M', 'KXXRP15M', 'KXHYPE15M']
+2026-04-03 19:14:59 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-03 19:14:59 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:14:59 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:15:02 | INFO | DRIFT SHORT signal: KXXRP15M-26APR031530-30 @ $0.6000, size=$0.50, Kelly=0.00%, SL=$0.7500, TRAILING STOP active, first_cross=none
+2026-04-03 19:15:02 | INFO | [XRP] Opened drift_short: no KXXRP15M-26APR031530-30 @ $0.6000, size=$0.50, cost=$0.20
+2026-04-03 19:15:02 | INFO | 🚀 [XRP] TRADE EXECUTED: drift_short no KXXRP15M-26APR031530-30 @ $0.6000, size=$0.50
+2026-04-03 19:15:23 | INFO | DRIFT SHORT signal: KXSOL15M-26APR031530-30 @ $0.5700, size=$0.50, Kelly=0.00%, SL=$0.7500, TRAILING STOP active, first_cross=none
+2026-04-03 19:15:23 | INFO | [SOL] Opened drift_short: no KXSOL15M-26APR031530-30 @ $0.5700, size=$0.50, cost=$0.21
+2026-04-03 19:15:23 | INFO | 🚀 [SOL] TRADE EXECUTED: drift_short no KXSOL15M-26APR031530-30 @ $0.5700, size=$0.50
+2026-04-03 19:15:29 | INFO | Status: cash=$99.58, positions=2, loop=262, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:15:29 | INFO | Day P&L: $0.42 (0.4%) / $100.00 limit
+2026-04-03 19:15:29 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: drift_short no@0.57 | DOGE: idle | XRP: drift_short no@0.60 | HYPE: idle | ADA: idle
+2026-04-03 19:15:29 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:15:52 | INFO | DRIFT SHORT signal: KXETH15M-26APR031530-30 @ $0.5850, size=$0.50, Kelly=0.00%, SL=$0.7500, TRAILING STOP active, first_cross=none
+2026-04-03 19:15:52 | INFO | [ETH] Opened drift_short: no KXETH15M-26APR031530-30 @ $0.5850, size=$0.50, cost=$0.21
+2026-04-03 19:15:52 | INFO | 🚀 [ETH] TRADE EXECUTED: drift_short no KXETH15M-26APR031530-30 @ $0.5850, size=$0.50
+2026-04-03 19:15:59 | INFO | Status: cash=$99.38, positions=3, loop=291, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:15:59 | INFO | Day P&L: $0.62 (0.6%) / $100.00 limit
+2026-04-03 19:15:59 | INFO | Coins: BTC: idle | ETH: drift_short no@0.58 | BNB: idle | SOL: drift_short no@0.57 | DOGE: idle | XRP: drift_short no@0.60 | HYPE: idle | ADA: idle
+2026-04-03 19:15:59 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:16:11 | INFO | DRIFT SHORT signal: KXBNB15M-26APR031530-30 @ $0.6000, size=$0.50, Kelly=0.00%, SL=$0.7500, TRAILING STOP active, first_cross=none
+2026-04-03 19:16:11 | INFO | [BNB] Opened drift_short: no KXBNB15M-26APR031530-30 @ $0.6000, size=$0.50, cost=$0.20
+2026-04-03 19:16:11 | INFO | 🚀 [BNB] TRADE EXECUTED: drift_short no KXBNB15M-26APR031530-30 @ $0.6000, size=$0.50
+2026-04-03 19:16:16 | INFO | FIRST_CROSS: KXBTC15M-26APR031530-30 crossed UP through $0.50 (was $0.4550, now $0.5900)
+2026-04-03 19:16:16 | INFO | DRIFT SHORT signal: KXBTC15M-26APR031530-30 @ $0.5900, size=$0.50, Kelly=0.00%, SL=$0.7500, TRAILING STOP active, first_cross=yes
+2026-04-03 19:16:16 | INFO | [BTC] Opened drift_short: no KXBTC15M-26APR031530-30 @ $0.5900, size=$0.50, cost=$0.21
+2026-04-03 19:16:16 | INFO | 🚀 [BTC] TRADE EXECUTED: drift_short no KXBTC15M-26APR031530-30 @ $0.5900, size=$0.50
+2026-04-03 19:16:29 | INFO | Status: cash=$98.97, positions=5, loop=320, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:16:29 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:16:29 | INFO | Coins: BTC: drift_short no@0.59 | ETH: drift_short no@0.58 | BNB: drift_short no@0.60 | SOL: drift_short no@0.57 | DOGE: idle | XRP: drift_short no@0.60 | HYPE: idle | ADA: idle
+2026-04-03 19:16:29 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:16:59 | INFO | Status: cash=$98.97, positions=5, loop=349, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:16:59 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:16:59 | INFO | Coins: BTC: drift_short no@0.59 | ETH: drift_short no@0.58 | BNB: drift_short no@0.60 | SOL: drift_short no@0.57 | DOGE: idle | XRP: drift_short no@0.60 | HYPE: idle | ADA: idle
+2026-04-03 19:17:00 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:17:22 | INFO | [ETH] Closed KXETH15M-26APR031530-30: HARD SL hit: $0.7500 >= $0.7500, PnL=$-0.08
+2026-04-03 19:17:22 | INFO | Strategy drift_short stats: W=0.00%, R=12.12x, Kelly=0.00%
+2026-04-03 19:17:22 | INFO | Trade recorded: KXETH15M-26APR031530-30 no drift_short PnL=$-0.08
+2026-04-03 19:17:22 | INFO | [ETH] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-03 19:17:30 | INFO | Status: cash=$98.97, positions=4, loop=378, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:17:30 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:17:30 | INFO | Coins: BTC: drift_short no@0.59 | ETH: idle | BNB: drift_short no@0.60 | SOL: drift_short no@0.57 | DOGE: idle | XRP: drift_short no@0.60 | HYPE: idle | ADA: idle
+2026-04-03 19:17:30 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:17:31 | INFO | KXBTC15M-26APR031530-30: SCALED IN @ $0.5250 (+$0.00), new size=$0.50, avg_price=$0.5900, scale_ins=1
+2026-04-03 19:17:31 | INFO | [BTC] SCALED IN KXBTC15M-26APR031530-30: +$0.00 @ $0.5250, new_size=$0.50
+2026-04-03 19:17:32 | INFO | KXBTC15M-26APR031530-30: SCALED IN @ $0.5250 (+$0.00), new size=$0.50, avg_price=$0.5900, scale_ins=2
+2026-04-03 19:17:32 | INFO | [BTC] SCALED IN KXBTC15M-26APR031530-30: +$0.00 @ $0.5250, new_size=$0.50
+2026-04-03 19:18:00 | INFO | Status: cash=$98.97, positions=4, loop=407, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:18:00 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:18:00 | INFO | Coins: BTC: drift_short no@0.59 | ETH: idle | BNB: drift_short no@0.60 | SOL: drift_short no@0.57 | DOGE: idle | XRP: drift_short no@0.60 | HYPE: idle | ADA: idle
+2026-04-03 19:18:00 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:18:30 | INFO | Status: cash=$98.97, positions=4, loop=436, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:18:30 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:18:30 | INFO | Coins: BTC: drift_short no@0.59 | ETH: idle | BNB: drift_short no@0.60 | SOL: drift_short no@0.57 | DOGE: idle | XRP: drift_short no@0.60 | HYPE: idle | ADA: idle
+2026-04-03 19:18:30 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:18:47 | INFO | [XRP] Closed KXXRP15M-26APR031530-30: HARD SL hit: $0.7600 >= $0.7500, PnL=$-0.08
+2026-04-03 19:18:47 | INFO | Strategy drift_short stats: W=0.00%, R=12.50x, Kelly=0.00%
+2026-04-03 19:18:47 | INFO | Trade recorded: KXXRP15M-26APR031530-30 no drift_short PnL=$-0.08
+2026-04-03 19:18:47 | INFO | [XRP] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-03 19:19:00 | INFO | Status: cash=$98.97, positions=3, loop=465, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:19:00 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:19:00 | INFO | Coins: BTC: drift_short no@0.59 | ETH: idle | BNB: drift_short no@0.60 | SOL: drift_short no@0.57 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:19:00 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:19:31 | INFO | Status: cash=$98.97, positions=3, loop=494, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:19:31 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:19:31 | INFO | Coins: BTC: drift_short no@0.59 | ETH: idle | BNB: drift_short no@0.60 | SOL: drift_short no@0.57 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:19:31 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:19:41 | INFO | [BNB] Closed KXBNB15M-26APR031530-30: HARD SL hit: $0.7650 >= $0.7500, PnL=$-0.08
+2026-04-03 19:19:41 | INFO | Strategy drift_short stats: W=0.00%, R=12.12x, Kelly=0.00%
+2026-04-03 19:19:41 | INFO | Trade recorded: KXBNB15M-26APR031530-30 no drift_short PnL=$-0.08
+2026-04-03 19:19:41 | INFO | [BNB] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-03 19:20:01 | INFO | Status: cash=$98.97, positions=2, loop=523, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:20:01 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:20:01 | INFO | Coins: BTC: drift_short no@0.59 | ETH: idle | BNB: idle | SOL: drift_short no@0.57 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:20:01 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:20:01 | INFO | KXBTC15M-26APR031530-30: Short trailing stop ACTIVE @ $0.4650, trough=$0.4650
+2026-04-03 19:20:01 | INFO | [BTC] Closed KXBTC15M-26APR031530-30: TRAILING STOP: locked in profits, Gross PnL=$0.06, Fee=$0.001, Net PnL=$0.06
+2026-04-03 19:20:01 | INFO | Strategy drift_short stats: W=100.00%, R=0.06x, Kelly=20.00%
+2026-04-03 19:20:01 | INFO | Trade recorded: KXBTC15M-26APR031530-30 no drift_short PnL=$0.06
+2026-04-03 19:20:01 | INFO | [BTC] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-03 19:20:31 | INFO | Status: cash=$98.97, positions=1, loop=552, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:20:31 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:20:31 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: drift_short no@0.57 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:20:31 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:21:01 | INFO | Status: cash=$98.97, positions=1, loop=581, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:21:01 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:21:01 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: drift_short no@0.57 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:21:01 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:21:31 | INFO | Status: cash=$98.97, positions=1, loop=610, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:21:31 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:21:31 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: drift_short no@0.57 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:21:31 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:21:53 | INFO | [SOL] Closed KXSOL15M-26APR031530-30: HARD SL hit: $0.7700 >= $0.7500, PnL=$-0.10
+2026-04-03 19:21:53 | INFO | Strategy drift_short stats: W=0.00%, R=10.00x, Kelly=0.00%
+2026-04-03 19:21:53 | INFO | Trade recorded: KXSOL15M-26APR031530-30 no drift_short PnL=$-0.10
+2026-04-03 19:21:53 | INFO | [SOL] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-03 19:22:01 | INFO | Status: cash=$98.97, positions=0, loop=639, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:22:01 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:22:01 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:22:01 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:22:31 | INFO | Status: cash=$98.97, positions=0, loop=668, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:22:31 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:22:31 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:22:31 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:23:01 | INFO | Status: cash=$98.97, positions=0, loop=697, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:23:01 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:23:01 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:23:01 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:23:32 | INFO | Status: cash=$98.97, positions=0, loop=726, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:23:32 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:23:32 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:23:32 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:24:02 | INFO | Status: cash=$98.97, positions=0, loop=755, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:24:02 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:24:02 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:24:02 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:24:32 | INFO | Status: cash=$98.97, positions=0, loop=784, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:24:32 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:24:32 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:24:32 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:25:02 | INFO | Status: cash=$98.97, positions=0, loop=813, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:25:02 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:25:02 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:25:02 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:25:32 | INFO | Status: cash=$98.97, positions=0, loop=842, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:25:32 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:25:32 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:25:32 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:26:02 | INFO | Status: cash=$98.97, positions=0, loop=871, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:26:02 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:26:02 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:26:02 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:26:32 | INFO | Status: cash=$98.97, positions=0, loop=900, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:26:32 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:26:32 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:26:32 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:27:02 | INFO | Status: cash=$98.97, positions=0, loop=929, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:27:02 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:27:02 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:27:02 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:27:32 | INFO | Status: cash=$98.97, positions=0, loop=958, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:27:32 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:27:32 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:27:32 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:28:03 | INFO | Status: cash=$98.97, positions=0, loop=987, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:28:03 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:28:03 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:28:03 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:28:33 | INFO | Status: cash=$98.97, positions=0, loop=1016, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:28:33 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:28:33 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:28:33 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:29:03 | INFO | Status: cash=$98.97, positions=0, loop=1045, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:29:03 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:29:03 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:29:03 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:29:33 | INFO | Status: cash=$98.97, positions=0, loop=1074, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:29:33 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:29:33 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:29:33 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:30:03 | INFO | Status: cash=$98.97, positions=0, loop=1103, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:30:03 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:30:03 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:30:03 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:30:33 | INFO | Status: cash=$98.97, positions=0, loop=1132, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:30:33 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:30:33 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:30:33 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:30:47 | INFO | FIRST_CROSS: KXXRP15M-26APR031545-45 crossed UP through $0.50 (was $0.4350, now $0.5150)
+2026-04-03 19:31:01 | INFO | FIRST_CROSS: KXBTC15M-26APR031545-45 crossed DOWN through $0.50 (was $0.5550, now $0.4850)
+2026-04-03 19:31:03 | INFO | Status: cash=$98.97, positions=0, loop=1161, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:31:03 | INFO | Day P&L: $1.03 (1.0%) / $100.00 limit
+2026-04-03 19:31:03 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-03 19:31:03 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:31:17 | INFO | DRIFT SHORT signal: KXXRP15M-26APR031545-45 @ $0.5700, size=$0.50, Kelly=0.00%, SL=$0.7500, TRAILING STOP active, first_cross=yes
+2026-04-03 19:31:17 | INFO | [XRP] Opened drift_short: no KXXRP15M-26APR031545-45 @ $0.5700, size=$0.50, cost=$0.21
+2026-04-03 19:31:17 | INFO | 🚀 [XRP] TRADE EXECUTED: drift_short no KXXRP15M-26APR031545-45 @ $0.5700, size=$0.50
+2026-04-03 19:31:33 | INFO | Status: cash=$98.76, positions=1, loop=1190, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXETH15M', 'KXXRP15M', 'KXHYPE15M', 'KXBTC15M']
+2026-04-03 19:31:33 | INFO | Day P&L: $1.24 (1.2%) / $100.00 limit
+2026-04-03 19:31:33 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: drift_short no@0.57 | HYPE: idle | ADA: idle
+2026-04-03 19:31:33 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-03 19:31:37 | INFO | FIRST_CROSS: KXETH15M-26APR031545-45 crossed UP through $0.50 (was $0.4450, now $0.5850)
+2026-04-03 19:31:37 | INFO | DRIFT SHORT signal: KXETH15M-26APR031545-45 @ $0.5850, size=$0.50, Kelly=0.00%, SL=$0.7500, TRAILING STOP active, first_cross=yes
+2026-04-03 19:31:37 | INFO | [ETH] Opened drift_short: no KXETH15M-26APR031545-45 @ $0.5850, size=$0.50, cost=$0.21
+2026-04-03 19:31:37 | INFO | 🚀 [ETH] TRADE EXECUTED: drift_short no KXETH15M-26APR031545-45 @ $0.5850, size=$0.50
+2026-04-03 19:31:53 | INFO | DRIFT SHORT signal: KXSOL15M-26APR031545-45 @ $0.6150, size=$0.50, Kelly=0.00%, SL=$0.7500, TRAILING STOP active, first_cross=none
+2026-04-03 19:31:53 | INFO | [SOL] Opened drift_short: no KXSOL15M-26APR031545-45 @ $0.6150, size=$0.50, cost=$0.19
+2026-04-03 19:31:53 | INFO | 🚀 [SOL] TRADE EXECUTED: drift_short no KXSOL15M-26APR031545-45 @ $0.6150, size=$0.50
+2026-04-03 19:31:57 | INFO | DRIFT SHORT signal: KXBNB15M-26APR031545-45 @ $0.5800, size=$0.50, Kelly=0.00%, SL=$0.7500, TRAILING STOP active, first_cross=none
+2026-04-03 19:31:57 | INFO | [BNB] Opened drift_short: no KXBNB15M-26APR031545-45 @ $0.5800, size=$0.50, cost=$0.21
+2026-04-03 19:31:57 | INFO | 🚀 [BNB] TRADE EXECUTED: drift_short no KXBNB15M-26APR031545-45 @ $0.5800, size=$0.50
+2026-04-03 19:31:57 | INFO | FIRST_CROSS: KXDOGE15M-26APR031545-45 crossed UP through $0.50 (was $0.4600, now $0.5600)

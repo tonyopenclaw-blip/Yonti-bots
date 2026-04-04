@@ -611,15 +611,25 @@ class Superbot:
         
         # === NERD v2: Coinbase pre-filter ===
         # Check Coinbase first (free, every 10s)
+        # NOTE: Pre-filter checks if BTC price crosses $0.50 midpoint.
+        # Since BTC is ~$67k, this rarely triggers. We use it as a signal boost,
+        # but MUST periodically call Kalshi anyway to discover markets.
         coinbase_cross = self.coinbase_filter.check_cross(coin)
         
-        # Only call Kalshi if Coinbase detected a cross OR we have open positions
-        # This dramatically reduces API calls
         has_positions = len(trader.positions) > 0
         
-        if not has_positions and coinbase_cross is None:
+        # Track cycles to periodically force Kalshi calls (market discovery)
+        # Without this, pre-filter blocks ALL Kalshi calls when BTC is far from $0.50
+        if not hasattr(self, '_discovery_cycle_counter'):
+            self._discovery_cycle_counter = {}
+        self._discovery_cycle_counter[series_ticker] = self._discovery_cycle_counter.get(series_ticker, 0) + 1
+        force_kalshi_call = self._discovery_cycle_counter[series_ticker] >= 4  # Every 4th cycle (~2 min)
+        if force_kalshi_call:
+            self._discovery_cycle_counter[series_ticker] = 0
+        
+        if not has_positions and coinbase_cross is None and not force_kalshi_call:
             # No cross detected by Coinbase, skip this Kalshi call
-            # Remove from active series if no positions
+            # (unless we need to force market discovery)
             self.active_series.discard(series_ticker)
             return False
         

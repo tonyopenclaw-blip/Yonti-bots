@@ -61,6 +61,23 @@ def run(sport_filter: list = None, discord_output: bool = False, channel: str = 
         except Exception as e:
             print(f"\n⚠️ Could not send to Discord: {e}")
 
+    # Generate and write HTML report
+    try:
+        html_output = report.format_report_html()
+        html_paths = [
+            "/home/ubuntu/.openclaw/workspace/vito.html",
+            "/var/www/html/vito.html",
+        ]
+        for path in html_paths:
+            try:
+                with open(path, "w") as f:
+                    f.write(html_output)
+                print(f"🍝 HTML written to {path}")
+            except Exception as e:
+                print(f"⚠️ Failed to write HTML to {path}: {e}")
+    except Exception as e:
+        print(f"⚠️ Failed to generate HTML: {e}")
+
     return output
 
 

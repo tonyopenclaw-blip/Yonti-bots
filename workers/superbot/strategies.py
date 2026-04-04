@@ -14,6 +14,7 @@ from enum import Enum
 from config import (
     MAX_BET, MIN_BET, KELLY_FRACTION,
     DEEP_SHORT_ENABLED, DEEP_SHORT_MAX_PRICE, DEEP_MIN_TIME_LEFT_SEC,
+    DEEP_BUY_ENABLED, DEEP_BUY_MAX_PRICE, DEEP_BUY_MIN_PRICE, DEEP_BUY_TP_PRICE,
     DRIFT_BUY_MIN_PRICE, DRIFT_BUY_MAX_PRICE, DRIFT_MIN_TIME_LEFT_SEC,
     DRIFT_SHORT_MIN_PRICE, DRIFT_SHORT_MAX_PRICE, DRIFT_SHORT_SL_PRICE,
     DRIFT_TP_PCT, DRIFT_SL_PCT, KELLY_TRACKED_TRADES, KELLY_MAX_CAP,
@@ -49,6 +50,7 @@ def get_coinbase_bias(coin: str) -> str:
 class Strategy(Enum):
     # DEPRECATED: DRIFT_BUY and DRIFT_SHORT disabled per Nerd's strategy v2
     DEEP_SHORT = "deep_short"  # Disabled
+    DEEP_BUY = "deep_buy"      # NEW: penny odds - buy YES at $0.03-$0.15
     DRIFT_BUY = "drift_buy"    # DISABLED - drift doesn't work
     DRIFT_SHORT = "drift_short"  # DISABLED - drift doesn't work
     FIRST_CROSS = "first_cross"  # PRIMARY: Only trade on first cross
@@ -305,6 +307,7 @@ class StrategyTracker:
         # Store recent trade results per strategy: each entry is (pnl, won)
         self._history: Dict[Strategy, deque] = {
             Strategy.DEEP_SHORT: deque(maxlen=tracked_trades),
+            Strategy.DEEP_BUY: deque(maxlen=tracked_trades),
             Strategy.DRIFT_BUY: deque(maxlen=tracked_trades),  # DISABLED but track for history
             Strategy.DRIFT_SHORT: deque(maxlen=tracked_trades),  # DISABLED but track for history
             Strategy.FIRST_CROSS: deque(maxlen=tracked_trades),
@@ -951,17 +954,17 @@ class StrategyEngine:
         # Check time in market - if > 3 min and no first cross, check momentum
         market_age_sec = 900 - time_left  # Approximate
         if market_age_sec > 180:  # 3 minutes
-            # Check Coinbase momentum
-            coin = market.ticker.replace('KX', '').replace('15M', '')
-            bias = get_coinbase_bias(coin)
+            # Check Coinbase momentum - use the coin param passed to evaluate_market (not ticker extraction!)
+            # ticker = 'KXBTC15M-26APR041000-00', coin = 'BTC'
+            bias = get_coinbase_bias(coin) if coin else 'neutral'
             
             # Only if momentum is strong AND price at extreme
-            if bias != 'neutral' and (mid_price < 0.35 or mid_price > 0.65):
+            if bias != 'neutral' and (mid_price < 0.05 or mid_price > 0.95):
                 # Momentum fallback - same-side bias as momentum
-                if bias == 'bullish' and mid_price < 0.35:
+                if bias == 'bullish' and mid_price < 0.05:
                     side = 'yes'
                     reason_suffix = 'momentum fallback: bullish at extreme'
-                elif bias == 'bearish' and mid_price > 0.65:
+                elif bias == 'bearish' and mid_price > 0.95:
                     side = 'no'
                     reason_suffix = 'momentum fallback: bearish at extreme'
                 else:

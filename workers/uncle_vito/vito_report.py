@@ -1092,6 +1092,86 @@ class UncleVitoReport:
         return self.format_report()
 
 
+    def format_report_html(self) -> str:
+        """Format the betting report as HTML."""
+        total_games = sum(len(games) for games in self.games.values())
+        date_str = datetime.now().strftime("%m/%d/%Y")
+        
+        sport_emoji = {"NBA": "🏀", "NHL": "🧊", "MLB": "⚾"}
+        
+        html = '''<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uncle Vito's Picks - Yonti</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #0B0F1A; --card: #131929; --border: #1E2A3F; --text: #E8ECF4; --text-dim: #7A8499; --gold: #F0B90B; --gold-border: rgba(240,185,11,0.3); --nba: #C8102E; --nhl: #003E8C; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Inter, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+        .topbar { background: rgba(11,15,26,0.95); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 56px; }
+        .topbar-logo { font-size: 1rem; font-weight: 700; color: var(--gold); text-decoration: none; }
+        .container { max-width: 900px; margin: 0 auto; padding: 24px; }
+        .report-header { background: linear-gradient(135deg, rgba(240,185,11,0.08), rgba(240,185,11,0.03)); border: 1px solid var(--gold-border); border-radius: 16px; padding: 28px 32px; margin-bottom: 24px; text-align: center; }
+        .report-icon { font-size: 48px; margin-bottom: 10px; }
+        .report-title { font-family: Oswald, sans-serif; font-size: 2.4rem; font-weight: 700; color: var(--gold); }
+        .report-date { font-family: JetBrains Mono, monospace; font-size: 0.85rem; color: var(--text-dim); margin-top: 8px; }
+        .sport-section { margin-bottom: 32px; }
+        .sport-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .sport-name { font-family: Oswald, sans-serif; font-size: 1.6rem; font-weight: 700; text-transform: uppercase; }
+        .game-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; margin-bottom: 12px; }
+        .game-teams { font-family: Oswald, sans-serif; font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; }
+        .pick { padding: 6px 12px; background: var(--bg); border-radius: 6px; margin-bottom: 4px; font-size: 0.9rem; }
+        .footer { text-align: center; padding: 40px 0; color: var(--text-dim); font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <a href="/" class="topbar-logo">&larr; Yonti</a>
+        <span style="font-family: JetBrains Mono, monospace; font-size: 0.8rem; color: var(--text-dim);__DATE_STR__</span>
+    </div>
+    <div class="container">
+        <div class="report-header">
+            <div class="report-icon">&#127834;</div>
+            <div class="report-title">UNCLE VITO'S PICKS</div>
+            <div class="report-date">__DATE_STR__ | __TOTAL_GAMES__ games</div>
+        </div>
+__LEAGUE_SECTIONS__
+        <div class="footer">
+            &#127834; Uncle Vito's Picks - Yonti Trading Operation<br>
+            <span style="color: #FF5252;">&#9888; Do your own homework. Uncle Vito don't miss.</span>
+        </div>
+    </div>
+</body>
+</html>'''
+        
+        league_html = ""
+        for sport in config.SPORTS:
+            if sport in self.games and self.games[sport]:
+                emoji = sport_emoji.get(sport, "&#127942;")
+                color = "var(--nba)" if sport == "NBA" else "var(--nhl)"
+                section = f'<div class="sport-section"><div class="sport-header"><div class="sport-name" style="color: {color};">{emoji} {sport}</div></div>'
+                league_parlays = self.generate_league_parlays(sport)
+                game_picks = league_parlays.get("game_picks", [])
+                if not game_picks:
+                    section += '<div class="game-card">No picks available</div>'
+                else:
+                    for pick in game_picks[:5]:
+                        teams = f"{pick.team} vs {pick.opponent}"
+                        game_line = f"{pick.pick_type.title()} {pick.line} ({pick.odds})"
+                        section += f'<div class="game-card"><div class="game-teams">{teams}</div><div class="pick">{game_line}</div></div>'
+                section += '</div>'
+                league_html += section
+        
+        html = html.replace("__DATE_STR__", date_str)
+        html = html.replace("__TOTAL_GAMES__", str(total_games))
+        html = html.replace("__LEAGUE_SECTIONS__", league_html)
+        
+        return html
+
+
+
 def main():
     """Main entry point."""
     print("🍝 Generating Uncle Vito's Betting Report...")

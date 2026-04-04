@@ -1,0 +1,44 @@
+2026-04-04 13:57:03 | INFO | CoinTrader initialized for BTC (KXBTC15M)
+2026-04-04 13:57:03 | INFO | CoinTrader initialized for ETH (KXETH15M)
+2026-04-04 13:57:03 | INFO | CoinTrader initialized for BNB (KXBNB15M)
+2026-04-04 13:57:03 | INFO | CoinTrader initialized for SOL (KXSOL15M)
+2026-04-04 13:57:03 | INFO | CoinTrader initialized for DOGE (KXDOGE15M)
+2026-04-04 13:57:03 | INFO | CoinTrader initialized for XRP (KXXRP15M)
+2026-04-04 13:57:03 | INFO | CoinTrader initialized for HYPE (KXHYPE15M)
+2026-04-04 13:57:03 | INFO | CoinTrader initialized for ADA (KXADA15M)
+2026-04-04 13:57:03 | INFO | ============================================================
+2026-04-04 13:57:03 | INFO | SUPERBOT INITIALIZED - NERD v2 STRATEGY
+2026-04-04 13:57:03 | INFO | Coins: ['BTC', 'ETH', 'BNB', 'SOL', 'DOGE', 'XRP', 'HYPE', 'ADA']
+2026-04-04 13:57:03 | INFO | Tickers: ['KXBTC15M', 'KXETH15M', 'KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXXRP15M', 'KXHYPE15M', 'KXADA15M']
+2026-04-04 13:57:03 | INFO | Starting balance: $100.00
+2026-04-04 13:57:03 | INFO | Max positions: 3 (was 5)
+2026-04-04 13:57:03 | INFO | Max bet per trade: $2.00
+2026-04-04 13:57:03 | INFO | Max daily loss: $5.00
+2026-04-04 13:57:03 | INFO | Max daily trades: 30
+2026-04-04 13:57:03 | INFO | Coinbase pre-filter: poll every 10s (FREE)
+2026-04-04 13:57:03 | INFO | Kalshi polling: every 30s (was 2s)
+2026-04-04 13:57:03 | INFO | STRATEGY: First Cross ONLY (no drift)
+2026-04-04 13:57:03 | INFO | ============================================================
+2026-04-04 13:57:03 | INFO | Starting SMART POLLING trading loop (Recorder's approach)...
+2026-04-04 13:57:03 | INFO | Report session started: 2026-04-04 13:57:03 UTC
+2026-04-04 13:57:03 | INFO | 😴 IDLE: checked KXBTC15M (poll #1) | Day P&L: $0.00 (0.0%)
+2026-04-04 13:57:33 | INFO | Status: cash=$100.00, positions=0, loop=1, active_series=[]
+2026-04-04 13:57:33 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 13:57:33 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 13:57:33 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 13:58:03 | INFO | Status: cash=$100.00, positions=0, loop=2, active_series=[]
+2026-04-04 13:58:03 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 13:58:03 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 13:58:03 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 13:58:33 | INFO | Status: cash=$100.00, positions=0, loop=3, active_series=[]
+2026-04-04 13:58:33 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 13:58:33 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 13:58:33 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 13:59:03 | INFO | Status: cash=$100.00, positions=0, loop=4, active_series=[]
+2026-04-04 13:59:03 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 13:59:03 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 13:59:03 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 13:59:33 | INFO | Status: cash=$100.00, positions=0, loop=5, active_series=[]
+2026-04-04 13:59:33 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 13:59:33 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 13:59:33 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json

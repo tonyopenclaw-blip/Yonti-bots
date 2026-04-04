@@ -213,8 +213,8 @@ LOG_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 # =============================================================================
 # TRADING LOOP CONFIG - Smart Polling (Recorder's Approach)
 # =============================================================================
-IDLE_POLL_INTERVAL_SEC = 10    # When NO active markets: poll 1 series per 10 sec
-ACTIVE_POLL_INTERVAL_SEC = 1   # When market IS active: poll every 1 sec
+IDLE_POLL_INTERVAL_SEC = 20    # When NO active markets: poll 1 series per 20 sec (increased from 10 to reduce rate limits)
+ACTIVE_POLL_INTERVAL_SEC = 3   # When market IS active: poll every 3 sec (increased from 1 to reduce rate limits)
 LOOP_INTERVAL_SEC = 10   # Legacy fallback
 MAX_OPEN_POSITIONS = 5    # Maximum concurrent positions
 

@@ -2,11 +2,17 @@
 
 import logging
 import requests
+import time
 from typing import Dict, List, Optional, Any
 from datetime import datetime
 from dataclasses import dataclass
 
 from config import KALSHI_BASE_URL, SERIES_TICKERS, MARKETS_LIMIT, KALSHI_ACCESS_KEY
+
+# Rate limiting constants
+API_CALL_DELAY_SEC = 0.2  # Small delay between API calls to avoid hammering
+MAX_RETRIES = 3
+INITIAL_BACKOFF_SEC = 1.0  # Initial backoff for 429 errors
 
 logger = logging.getLogger(__name__)
 
@@ -51,26 +57,75 @@ class KalshiAPI:
         })
     
     def _get(self, endpoint: str, params: Optional[Dict] = None) -> Dict[str, Any]:
-        """Make GET request to Kalshi API."""
+        """Make GET request to Kalshi API with retry and backoff for 429 errors."""
         url = f"{self.base_url}{endpoint}"
-        try:
-            resp = self.session.get(url, params=params, timeout=10)
-            resp.raise_for_status()
-            return resp.json()
-        except requests.RequestException as e:
-            logger.error(f"API GET failed: {url} | Error: {e}")
-            return {"error": str(e)}
+        backoff = INITIAL_BACKOFF_SEC
+        
+        for attempt in range(MAX_RETRIES):
+            try:
+                # Small delay before each call to avoid hammering
+                if attempt > 0 or endpoint != "/markets":  # Skip initial delay for first call
+                    time.sleep(API_CALL_DELAY_SEC)
+                
+                resp = self.session.get(url, params=params, timeout=10)
+                
+                if resp.status_code == 429:
+                    # Rate limited - retry with exponential backoff
+                    retry_after = resp.headers.get('Retry-After', str(int(backoff)))
+                    wait_time = int(retry_after) if retry_after.isdigit() else backoff
+                    logger.warning(f"Rate limited (429) on {url}, attempt {attempt+1}/{MAX_RETRIES}, waiting {wait_time}s")
+                    time.sleep(wait_time)
+                    backoff *= 2  # Exponential backoff
+                    continue
+                
+                resp.raise_for_status()
+                return resp.json()
+                
+            except requests.RequestException as e:
+                if attempt < MAX_RETRIES - 1:
+                    logger.warning(f"API GET failed (attempt {attempt+1}/{MAX_RETRIES}): {url} | Error: {e}, retrying...")
+                    time.sleep(backoff)
+                    backoff *= 2
+                    continue
+                logger.error(f"API GET failed after {MAX_RETRIES} attempts: {url} | Error: {e}")
+                return {"error": str(e)}
+        
+        return {"error": "Max retries exceeded"}
     
     def _post(self, endpoint: str, data: Optional[Dict] = None) -> Dict[str, Any]:
-        """Make POST request to Kalshi API."""
+        """Make POST request to Kalshi API with retry and backoff for 429 errors."""
         url = f"{self.base_url}{endpoint}"
-        try:
-            resp = self.session.post(url, json=data, timeout=10)
-            resp.raise_for_status()
-            return resp.json()
-        except requests.RequestException as e:
-            logger.error(f"API POST failed: {url} | Error: {e}")
-            return {"error": str(e)}
+        backoff = INITIAL_BACKOFF_SEC
+        
+        for attempt in range(MAX_RETRIES):
+            try:
+                # Small delay before each call
+                time.sleep(API_CALL_DELAY_SEC)
+                
+                resp = self.session.post(url, json=data, timeout=10)
+                
+                if resp.status_code == 429:
+                    # Rate limited - retry with exponential backoff
+                    retry_after = resp.headers.get('Retry-After', str(int(backoff)))
+                    wait_time = int(retry_after) if retry_after.isdigit() else backoff
+                    logger.warning(f"Rate limited (429) on {url}, attempt {attempt+1}/{MAX_RETRIES}, waiting {wait_time}s")
+                    time.sleep(wait_time)
+                    backoff *= 2
+                    continue
+                
+                resp.raise_for_status()
+                return resp.json()
+                
+            except requests.RequestException as e:
+                if attempt < MAX_RETRIES - 1:
+                    logger.warning(f"API POST failed (attempt {attempt+1}/{MAX_RETRIES}): {url} | Error: {e}, retrying...")
+                    time.sleep(backoff)
+                    backoff *= 2
+                    continue
+                logger.error(f"API POST failed after {MAX_RETRIES} attempts: {url} | Error: {e}")
+                return {"error": str(e)}
+        
+        return {"error": "Max retries exceeded"}
     
     def get_open_markets(self, series_ticker: str = None) -> List[Market]:
         """

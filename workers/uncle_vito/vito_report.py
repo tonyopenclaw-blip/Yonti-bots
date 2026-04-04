@@ -89,6 +89,379 @@ class WinnerPick:
     confidence: int = 70
 
 
+class OddsAPIClient:
+    """
+    Client for fetching real player props from The Odds API.
+    API docs: https://the-odds-api.com/
+    Flow:
+      1. GET /sports/{sport}/events/?regions=us  -> get event IDs + team names
+      2. GET /sports/{sport}/events/{eventId}/odds?markets=player_points,... -> get props per game
+    Sport keys: basketball_nba, icehockey_nhl, baseball_mlb
+    """
+    
+    ODDS_API_BASE = "https://api.the-odds-api.com/v4"
+    
+    # Sport key mapping: internal sport name -> The Odds API sport key
+    SPORT_KEYS = {
+        "NBA": "basketball_nba",
+        "NHL": "icehockey_nhl",
+        "MLB": "baseball_mlb",
+    }
+    
+    # Markets to fetch per sport
+    MARKETS = {
+        "NBA": ["player_points", "player_rebounds", "player_assists", "player_threes", "player_blocks", "player_steals"],
+        "NHL": ["player_points", "player_goals"],
+        "MLB": ["player_hits", "player_runs", "player_rbi", "player_home_runs", "player_strikeouts"],
+    }
+    
+    def __init__(self, api_key: str):
+        self.api_key = api_key
+        self._event_cache: Dict[str, List[Dict]] = {}  # sport -> list of events
+        self._props_cache: Dict[str, Dict[str, Any]] = {}  # event_id -> props data
+        self._last_fetch: Dict[str, datetime] = {}
+        self._cache_duration = timedelta(minutes=30)  # Cache events for 30 min
+        self._api_usage_remaining: int = 500
+        
+    def _get_headers(self) -> Dict[str, str]:
+        return {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+            "Accept": "application/json",
+        }
+    
+    def _fetch_json(self, url: str, params: Dict = None) -> Optional[Dict]:
+        """Fetch JSON from URL with error handling."""
+        if not requests:
+            logger.warning("requests library not available, Odds API unavailable")
+            return None
+        
+        # Add API key to params
+        if params is None:
+            params = {}
+        params["apiKey"] = self.api_key
+        
+        try:
+            response = requests.get(
+                url,
+                headers=self._get_headers(),
+                params=params,
+                timeout=15
+            )
+            
+            # Track API usage
+            remaining = response.headers.get("x-requests-remaining")
+            if remaining:
+                self._api_usage_remaining = int(remaining)
+                logger.info(f"Odds API usage: {self._api_usage_remaining} requests remaining")
+            
+            if response.status_code == 200:
+                return response.json()
+            elif response.status_code == 429:
+                logger.warning("Odds API rate limited")
+                return None
+            else:
+                logger.warning(f"Odds API returned status {response.status_code}")
+                return None
+        except Exception as e:
+            logger.warning(f"Odds API fetch failed: {e}")
+            return None
+    
+    def _fetch_events(self, sport: str) -> List[Dict]:
+        """
+        Fetch upcoming events for a sport.
+        Returns list of event dicts with id, home_team, away_team, commence_time.
+        """
+        api_sport_key = self.SPORT_KEYS.get(sport)
+        if not api_sport_key:
+            return []
+        
+        # Check cache
+        if sport in self._event_cache:
+            last_fetch = self._last_fetch.get(sport)
+            if last_fetch and datetime.now() - last_fetch < self._cache_duration:
+                return self._event_cache[sport]
+        
+        url = f"{self.ODDS_API_BASE}/sports/{api_sport_key}/events/"
+        params = {"regions": "us", "markets": "h2h", "oddsFormat": "american"}
+        
+        data = self._fetch_json(url, params)
+        if not data:
+            return self._event_cache.get(sport, [])
+        
+        events = []
+        for event in data:
+            events.append({
+                "id": event.get("id", ""),
+                "sport_key": event.get("sport_key", ""),
+                "home_team": event.get("home_team", ""),
+                "away_team": event.get("away_team", ""),
+                "commence_time": event.get("commence_time", ""),
+                "bookmakers": event.get("bookmakers", []),
+            })
+        
+        self._event_cache[sport] = events
+        self._last_fetch[sport] = datetime.now()
+        logger.info(f"Fetched {len(events)} events for {sport}")
+        
+        return events
+    
+    def fetch_player_props(self, sport: str) -> List[Dict[str, Any]]:
+        """
+        Fetch all player props for a sport from The Odds API.
+        Returns list of prop dicts with player, team, stat_type, line, over_odds, under_odds.
+        """
+        events = self._fetch_events(sport)
+        if not events:
+            logger.warning(f"No events found for {sport}")
+            return []
+        
+        api_sport_key = self.SPORT_KEYS.get(sport)
+        markets = ",".join(self.MARKETS.get(sport, []))
+        all_props = []
+        
+        for event in events:
+            event_id = event["id"]
+            
+            # Check props cache
+            if event_id in self._props_cache:
+                all_props.extend(self._props_cache[event_id])
+                continue
+            
+            # Fetch props for this event
+            url = f"{self.ODDS_API_BASE}/sports/{api_sport_key}/events/{event_id}/odds"
+            params = {
+                "regions": "us",
+                "markets": markets,
+                "oddsFormat": "american",
+            }
+            
+            data = self._fetch_json(url, params)
+            if not data:
+                continue
+            
+            event_props = self._parse_props_response(data, sport)
+            self._props_cache[event_id] = event_props
+            all_props.extend(event_props)
+            
+            # Be respectful of rate limits - small delay
+            import time
+            time.sleep(0.1)
+        
+        logger.info(f"Fetched {len(all_props)} props for {sport}")
+        return all_props
+    
+    def _parse_props_response(self, data: Dict, sport: str) -> List[Dict[str, Any]]:
+        """
+        Parse The Odds API response into standardized prop dicts.
+        Response format:
+        {
+          "id": "event_id",
+          "home_team": "Nuggets",
+          "away_team": "Spurs",
+          "bookmakers": [{
+            "key": "fanduel",
+            "markets": [{
+              "key": "player_points",
+              "outcomes": [
+                {"name": "Over", "description": "Nikola Jokic", "price": 1.98, "point": 26.5},
+                {"name": "Under", "description": "Nikola Jokic", "price": 1.8, "point": 26.5}
+              ]
+            }]
+          }]
+        }
+        """
+        props = []
+        
+        # Team name normalization - map full names to abbreviations
+        home_team = data.get("home_team", "")
+        away_team = data.get("away_team", "")
+        
+        for bookmaker in data.get("bookmakers", []):
+            bookmaker_key = bookmaker.get("key", "")
+            
+            # Prefer DraftKings and FanDuel
+            if bookmaker_key not in ["draftkings", "fanduel", "barstool", "pointsbetus"]:
+                continue
+            
+            for market in bookmaker.get("markets", []):
+                market_key = market.get("key", "")
+                
+                # Skip non-player markets
+                if not market_key.startswith("player_"):
+                    continue
+                
+                # Map market key to stat type
+                stat_type = self._map_market_to_stat(market_key)
+                if not stat_type:
+                    continue
+                
+                for outcome in market.get("outcomes", []):
+                    player_name = outcome.get("description", "")
+                    if not player_name:
+                        continue
+                    
+                    direction = "over" if outcome.get("name", "").lower() == "over" else "under"
+                    line = outcome.get("point", 0)
+                    price = outcome.get("price", -110)
+                    
+                    # Determine which team this player is on
+                    team_abbr = self._get_team_abbr(player_name, home_team, away_team)
+                    
+                    if team_abbr:
+                        props.append({
+                            "player": player_name,
+                            "team": team_abbr,
+                            "stat_type": stat_type,
+                            "line": line,
+                            "direction": direction,
+                            "odds": price,
+                            "bookmaker": bookmaker_key,
+                            "sport": sport,
+                        })
+        
+        return props
+    
+    def _map_market_to_stat(self, market_key: str) -> Optional[str]:
+        """Map The Odds API market key to internal stat type."""
+        mapping = {
+            "player_points": "points",
+            "player_rebounds": "rebounds",
+            "player_assists": "assists",
+            "player_threes": "threes",
+            "player_blocks": "blocks",
+            "player_steals": "steals",
+            "player_turnovers": "turnovers",
+            "player_points_rebounds_assists": "pra",
+            "player_goals": "goals",
+            "player_points": "points",
+            "player_hits": "hits",
+            "player_runs": "runs",
+            "player_rbi": "rbi",
+            "player_home_runs": "home_runs",
+            "player_strikeouts": "strikeouts",
+        }
+        return mapping.get(market_key)
+    
+    def _get_team_abbr(self, player_name: str, home_team: str, away_team: str) -> Optional[str]:
+        """
+        Try to determine which team a player is on based on team rosters.
+        Returns team abbreviation or None.
+        """
+        # Player name to team mapping (partial match)
+        player_team_map = {
+            # NBA
+            "Tyrese Maxey": "PHI", "Paul George": "PHI",
+            "Jordan Poole": "WSH",
+            "Paolo Banchero": "ORL", "Franz Wagner": "ORL",
+            "Trae Young": "ATL", "Jalen Johnson": "ATL",
+            "Tyler Herro": "MIA", "Bam Adebayo": "MIA",
+            "Jayson Tatum": "BOS", "Jaylen Brown": "BOS",
+            "Jaren Jackson Jr.": "MEM", "Desmond Bane": "MEM",
+            "Karl-Anthony Towns": "NY", "Jalen Brunson": "NY",
+            "LeBron James": "LAL", "Luka Doncic": "LAL",
+            "Nikola Jokic": "DEN", "Jamal Murray": "DEN",
+            "Stephen Curry": "GSW", "Klay Thompson": "GSW",
+            "Giannis Antetokounmpo": "MIL", "Damian Lillard": "MIL",
+            "Kyrie Irving": "DAL", "Dereck Lively": "DAL",
+            "Shai Gilgeous-Alexander": "OKC", "Jalen Williams": "OKC",
+            "Donovan Mitchell": "CLE", "Darius Garland": "CLE",
+            "Anthony Edwards": "MIN", "Julius Randle": "MIN",
+            "Alperen Sengun": "HOU", "Fred VanVleet": "HOU",
+            "Victor Wembanyama": "SAS", "Chris Paul": "SAS",
+            "Kevin Durant": "PHX", "Devin Booker": "PHX",
+            "Zion Williamson": "NOP", "CJ McCollum": "NOP",
+            "De'Aaron Fox": "SAC", "Domantas Sabonis": "SAC",
+            "Tyrese Haliburton": "IND", "Pascal Siakam": "IND",
+            "Lauri Markkanen": "UTAH",
+            "LaMelo Ball": "CHA", "Miles Bridges": "CHA",
+            "Cameron Thomas": "BKN",
+            "Cade Cunningham": "DET", "Jaden Ivey": "DET",
+            "Scottie Barnes": "TOR", "RJ Barrett": "TOR",
+            "Anfernee Simons": "POR",
+            "Zach LaVine": "CHI", "Nikola Vucevic": "CHI",
+            "Kawhi Leonard": "LAC", "James Harden": "LAC",
+            # NHL
+            "Connor McDavid": "EDM", "Leon Draisaitl": "EDM",
+            "Nathan MacKinnon": "COL",
+            "Auston Matthews": "TOR", "Mitch Marner": "TOR",
+            "David Pastrnak": "BOS",
+            "Artemi Panarin": "NYR",
+            "Bo Horvat": "NYI",
+            "Matthew Tkachuk": "FLA",
+            "Nikita Kucherov": "TBL",
+            "Sebastian Aho": "CAR",
+            "Jack Hughes": "NJD",
+            "Sidney Crosby": "PIT",
+            "Alex Ovechkin": "WSH",
+            "Travis Konecny": "PHI",
+            "Tage Thompson": "BUF",
+            "Brady Tkachuk": "OTT",
+            "Cole Caufield": "MTL",
+            "Lucas Raymond": "DET",
+            "Johnny Gaudreau": "CBJ",
+            "Robert Thomas": "STL",
+            "Kirill Kaprizov": "MIN",
+            "Roman Josi": "NSH",
+            "Jason Robertson": "DAL",
+            "Mark Scheifele": "WPG",
+            "Nazem Kadri": "CGY",
+            "Leo Carlsson": "ANA",
+            "Anze Kopitar": "LA",
+            "Timo Meier": "SJ",
+            "Jack Eichel": "VGK",
+            "Clayton Keller": "ARI",
+            "Patrick Kane": "CHI",
+            # MLB
+            "Aaron Judge": "NYY", "Juan Soto": "NYY",
+            "Mookie Betts": "LAD", "Shohei Ohtani": "LAD",
+            "Rafael Devers": "BOS",
+            "Kyle Schwarber": "PHI",
+            "Jose Altuve": "HOU",
+            "Ronald Acuna Jr.": "ATL",
+            "Manny Machado": "SD",
+            "Nolan Arenado": "STL",
+            "Christopher Morel": "CHC",
+            "Francisco Lindor": "NYM",
+            "Vladimir Guerrero Jr.": "TOR",
+            "Julio Rodriguez": "SEA",
+            "Corey Seager": "TEX",
+            "Christian Yelich": "MIL",
+            "Jose Ramirez": "CLE",
+            "Logan Webb": "SF",
+            "Elly De La Cruz": "CIN",
+            "Jazz Chisholm": "MIA",
+            "Carlos Correa": "MIN",
+            "Mike Trout": "LAA",
+            "Ryan McMahon": "COL",
+            "Lawrence Butler": "OAK",
+            "Bobby Witt Jr.": "KC",
+            "Isaac Paredes": "TB",
+            "Oneil Cruz": "PIT",
+            "Gunnar Henderson": "BAL",
+            "Ketel Marte": "AZ",
+            "James Wood": "WSH",
+        }
+        
+        # Try direct match
+        if player_name in player_team_map:
+            return player_team_map[player_name]
+        
+        # Try partial match (first + last name)
+        name_parts = player_name.lower().split()
+        if len(name_parts) >= 2:
+            first, last = name_parts[0], name_parts[-1]
+            for known_player, abbr in player_team_map.items():
+                known_parts = known_player.lower().split()
+                if len(known_parts) >= 2 and known_parts[0] == first and known_parts[-1] == last:
+                    return abbr
+        
+        return None
+    
+    def get_api_usage(self) -> int:
+        """Return remaining API requests."""
+        return self._api_usage_remaining
+
+
 class SourceSignals:
     """
     Simulates source signal aggregation from betting sources.
@@ -557,10 +930,13 @@ class UncleVitoReport:
         self.sources = SourceSignals()
         self.odds = OddsCalculator()
         self.dk = DraftKingsClient()  # DraftKings DFS client for player availability
+        self.odds_api = OddsAPIClient(config.ODDS_API_KEY)  # The Odds API for real player props
         self.games: Dict[str, List[Game]] = {}
         self.prop_picks: List[PropPick] = []
         self.winner_picks: List[WinnerPick] = []
         self._rest_day_warnings: Dict[str, List[str]] = {}  # sport -> list of warning messages
+        self._odds_api_props: Dict[str, List[Dict]] = {}  # sport -> list of props from Odds API
+        self._odds_api_fetched: Dict[str, bool] = {}  # sport -> whether we've fetched today
 
     def fetch_todays_games(self) -> Dict[str, List[Game]]:
         """Fetch today's games across all configured sports."""
@@ -747,11 +1123,75 @@ class UncleVitoReport:
         all_picks.sort(key=lambda x: x["confidence"], reverse=True)
         return all_picks[:5]
 
+    def _fetch_odds_api_props(self, sport: str) -> List[Dict]:
+        """
+        Fetch player props from The Odds API for a sport.
+        Returns list of prop dicts with real odds data.
+        """
+        # Check if we already fetched today
+        if self._odds_api_fetched.get(sport):
+            return self._odds_api_props.get(sport, [])
+        
+        try:
+            props = self.odds_api.fetch_player_props(sport)
+            self._odds_api_props[sport] = props
+            self._odds_api_fetched[sport] = True
+            
+            # Log API usage
+            remaining = self.odds_api.get_api_usage()
+            logger.info(f"Odds API: {len(props)} props fetched for {sport}. {remaining} requests remaining.")
+            
+            return props
+        except Exception as e:
+            logger.warning(f"Failed to fetch Odds API props for {sport}: {e}")
+            self._odds_api_fetched[sport] = True  # Mark as fetched to avoid retry
+            return []
+
     def _simulate_player_props(self, games: List[tuple]) -> List[Dict]:
         """
-        Simulate player props based on available games.
-        Maps real teams to star players with realistic lines.
+        Get player props - first from The Odds API (real data), then fallback to simulation.
+        The Odds API provides real prop lines and odds from DraftKings/FanDuel.
         """
+        # First, try to get real props from Odds API
+        all_props = []
+        
+        for game, sport in games:
+            # Fetch from Odds API if not already fetched
+            api_props = self._fetch_odds_api_props(sport)
+            
+            # Filter props to only include players from this game
+            home_abbr = game.home_team.abbreviation
+            away_abbr = game.away_team.abbreviation
+            
+            for prop in api_props:
+                if prop.get("team") in [home_abbr, away_abbr]:
+                    # Check if player is active on DK slate
+                    # Only check if DK API is working (not blocked)
+                    dk_working = not self.dk._fetch_failed
+                    is_active = self.dk.is_player_active_dk(prop["player"], prop["team"], sport) if dk_working else True
+                    
+                    prop_entry = {
+                        "player": prop["player"],
+                        "team": prop["team"],
+                        "stat_type": prop["stat_type"],
+                        "line": prop["line"],
+                        "sport": sport,
+                        "direction": prop.get("direction", "over"),
+                        "odds": prop.get("odds", config.DEFAULT_PROP_ODDS),
+                        "bookmaker": prop.get("bookmaker", "unknown"),
+                        "dk_active": is_active,
+                        "rest_day": not is_active,
+                        "source": "odds_api",
+                    }
+                    all_props.append(prop_entry)
+        
+        # If we got real props from Odds API, return them
+        if all_props:
+            logger.info(f"Using {len(all_props)} real props from Odds API")
+            return all_props
+        
+        # Fallback to simulation if Odds API returned nothing
+        logger.info("Odds API returned no props, falling back to simulation")
         simulated = []
 
         # Star players mapped by team name (handles full names + abbreviations)
@@ -785,8 +1225,7 @@ class UncleVitoReport:
             "TOR": [("Scottie Barnes", "rebounds", 7.5), ("RJ Barrett", "points", 20.5)],
             "POR": [("Anfernee Simons", "points", 22.5)],
             "CHI": [("Zach LaVine", "points", 24.5), ("Nikola Vucevic", "rebounds", 9.5)],
-            " LAC": [("Kawhi Leonard", "points", 23.5), ("James Harden", "assists", 8.5)],
-            "DET": [("Cade Cunningham", "points", 22.5)],
+            "LAC": [("Kawhi Leonard", "points", 23.5), ("James Harden", "assists", 8.5)],
             # NHL teams
             "NHL": [
                 ("Connor McDavid", "points", 1.5),
@@ -1084,6 +1523,9 @@ class UncleVitoReport:
         """Generate the full betting report."""
         # Clear rest day warnings from previous report
         self._rest_day_warnings = {}
+        # Clear Odds API cache for fresh data
+        self._odds_api_fetched = {}
+        self._odds_api_props = {}
         
         # Fetch games
         self.fetch_todays_games()

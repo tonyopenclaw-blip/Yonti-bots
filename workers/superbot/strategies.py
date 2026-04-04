@@ -391,11 +391,11 @@ class TradeSignal:
     tp_pct: Optional[float] = None       # TP percentage (deprecated - use trailing stop)
     sl_pct: Optional[float] = None        # SL percentage (deprecated - use absolute)
     scale_in_size: float = 0.0           # Additional size for scaling in (50% of initial)
-    # === TONYS MOMENTUM STRATEGY: Flat 20% trailing stop everywhere ===
-    trailing_stop_pct: float = 0.20       # 20% buffer (drop/rise from peak before exit)
-    trailing_stop_trigger_pct: float = 0.20  # 20% profit before trailing stop activates
+    # === TONYS MOMENTUM STRATEGY: Flat 30% trailing stop everywhere (was 20%) ===
+    trailing_stop_pct: float = 0.30       # 30% buffer (drop/rise from peak before exit)
+    trailing_stop_trigger_pct: float = 0.30  # 30% profit before trailing stop activates
     confidence: int = 50                  # Signal confidence 0-100
-    trailing_stop_buffer: float = 0.20   # 20% buffer (alias for clarity)
+    trailing_stop_buffer: float = 0.30   # 30% buffer (alias for clarity)
     max_hold_minutes: int = 10           # Dynamic based on entry zone
 
 
@@ -412,10 +412,10 @@ class Position:
     stop_loss: Optional[float] = None
     first_cross_direction: str = ""  # Tony's first crossing insight: 'up', 'down', or ''
     
-    # === TONYS MOMENTUM STRATEGY: Flat 20% trailing stop everywhere ===
-    trailing_stop_pct: float = 0.20       # 20% buffer (drop/rise from peak before exit)
-    trailing_stop_active: bool = False   # Trailing stop activates after 20% profit
-    trailing_stop_trigger_pct: float = 0.20  # 20% profit before trailing stop activates
+    # === TONYS MOMENTUM STRATEGY: Flat 30% trailing stop everywhere (was 20%) ===
+    trailing_stop_pct: float = 0.30       # 30% buffer (drop/rise from peak before exit)
+    trailing_stop_active: bool = False   # Trailing stop activates after 30% profit
+    trailing_stop_trigger_pct: float = 0.30  # 30% profit before trailing stop activates
     peak_price: float = 0.0              # Track peak price for longs, trough for shorts
     scale_in_count: int = 0              # Number of times we've scaled in
     max_scale_ins: int = 2               # Max 2 scale-ins per position
@@ -443,16 +443,15 @@ class Position:
 
     def update_trailing_stop_confidence(self, current_price: float, confidence: int) -> bool:
         """
-        Update trailing stop with FLAT 30% (Tony's Momentum Strategy - was 20%).
-        
-        Trigger: 30% profit
-        Buffer: 30% drop from peak before exit
+        Update trailing stop using instance variables (now 30% for MOMENTUM, confidence-based for DRIFT).
         
         Returns True if trailing stop is now active.
         """
-        # Tony's Momentum Strategy: flat 30% everywhere (wider to let winners run)
-        ts_buffer = 0.30
-        ts_trigger = 0.30
+        # Use the trailing stop values from the Position (set from TradeSignal at position creation)
+        # MOMENTUM strategies: flat 30%/30%
+        # DRIFT strategies: confidence-based (25%-45% buffer, 30%-60% trigger)
+        ts_buffer = self.trailing_stop_pct
+        ts_trigger = self.trailing_stop_trigger_pct
         
         if self.side == "yes":
             if current_price > self.peak_price:
@@ -872,7 +871,7 @@ class StrategyEngine:
                     logger.info(
                         f"MOMENTUM_FORCE SIGNAL: {market.ticker} | "
                         f"Side: {side} @ ${mid_price:.4f} | Size: ${size:.2f} | "
-                        f"CONF={confidence} | TS=20%/20% | Coinbase={bias} | age={market_age_sec:.0f}s"
+                        f"CONF={confidence} | TS=30%/30% | Coinbase={bias} | age={market_age_sec:.0f}s"
                     )
                     
                     return TradeSignal(
@@ -884,10 +883,10 @@ class StrategyEngine:
                         reason=f"MOMENTUM_FORCE: {reason_suffix}, Coinbase={bias}, CONF={confidence}",
                         take_profit=0.95 if side == "yes" else 0.05,
                         stop_loss=None,
-                        trailing_stop_pct=0.20,   # 20% buffer
-                        trailing_stop_trigger_pct=0.20,  # 20% trigger
+                        trailing_stop_pct=0.30,   # 30% buffer (was 20%)
+                        trailing_stop_trigger_pct=0.30,  # 30% trigger
                         confidence=confidence,
-                        trailing_stop_buffer=0.20,
+                        trailing_stop_buffer=0.30,
                         max_hold_minutes=8
                     )
         
@@ -932,10 +931,10 @@ class StrategyEngine:
                         reason=f"FIRST_CROSS: {reason_suffix}, target=${target_price:,.2f}, Kelly={kelly_pct:.2%}, CONF={confidence}",
                         take_profit=0.95 if side == "yes" else 0.05,
                         stop_loss=None,
-                        trailing_stop_pct=0.20,   # FLAT 20% per Tony
-                        trailing_stop_trigger_pct=0.20,  # FLAT 20% per Tony
+                        trailing_stop_pct=0.30,   # FLAT 30% per Tony (was 20%)
+                        trailing_stop_trigger_pct=0.30,  # FLAT 30% per Tony
                         confidence=confidence,
-                        trailing_stop_buffer=0.20,
+                        trailing_stop_buffer=0.30,
                         max_hold_minutes=10
                     )
         
@@ -972,10 +971,10 @@ class StrategyEngine:
                         reason=f"FIRST_CROSS: {reason_suffix}, CONF={confidence}, Kelly={kelly_pct:.2%}",
                         take_profit=0.95 if side == "yes" else 0.05,
                         stop_loss=None,
-                        trailing_stop_pct=0.20,   # FLAT 20% per Tony
-                        trailing_stop_trigger_pct=0.20,  # FLAT 20% per Tony
+                        trailing_stop_pct=0.30,   # FLAT 30% per Tony (was 20%)
+                        trailing_stop_trigger_pct=0.30,  # FLAT 30% per Tony
                         confidence=confidence,
-                        trailing_stop_buffer=0.20,
+                        trailing_stop_buffer=0.30,
                         max_hold_minutes=max_hold
                     )
         
@@ -1178,22 +1177,22 @@ Your estimate:"""
         # Scale-in size: 50% of original bet
         scale_in_size = size * 0.5
         
-        # Confidence-based trailing stop buffer (wider for high confidence)
+        # Confidence-based trailing stop buffer (wider for high confidence - Tony: let winners run!)
         if confidence >= 96:
-            ts_buffer = 0.35
-            ts_trigger = 0.50
+            ts_buffer = 0.45
+            ts_trigger = 0.60
         elif confidence >= 81:
-            ts_buffer = 0.30
-            ts_trigger = 0.40
+            ts_buffer = 0.40
+            ts_trigger = 0.50
         elif confidence >= 61:
+            ts_buffer = 0.35
+            ts_trigger = 0.40
+        elif confidence >= 31:
+            ts_buffer = 0.30
+            ts_trigger = 0.35
+        else:
             ts_buffer = 0.25
             ts_trigger = 0.30
-        elif confidence >= 31:
-            ts_buffer = 0.20
-            ts_trigger = 0.25
-        else:
-            ts_buffer = 0.15
-            ts_trigger = 0.20
         
         # Max hold time based on confidence
         max_hold = 15 if confidence >= 61 else 10 if confidence >= 31 else 8
@@ -1267,22 +1266,22 @@ Your estimate:"""
         # Scale-in size: 50% of original bet
         scale_in_size = size * 0.5
         
-        # Confidence-based trailing stop buffer (wider for high confidence)
+        # Confidence-based trailing stop buffer (wider for high confidence - Tony: let winners run!)
         if confidence >= 96:
-            ts_buffer = 0.35
-            ts_trigger = 0.50
+            ts_buffer = 0.45
+            ts_trigger = 0.60
         elif confidence >= 81:
-            ts_buffer = 0.30
-            ts_trigger = 0.40
+            ts_buffer = 0.40
+            ts_trigger = 0.50
         elif confidence >= 61:
+            ts_buffer = 0.35
+            ts_trigger = 0.40
+        elif confidence >= 31:
+            ts_buffer = 0.30
+            ts_trigger = 0.35
+        else:
             ts_buffer = 0.25
             ts_trigger = 0.30
-        elif confidence >= 31:
-            ts_buffer = 0.20
-            ts_trigger = 0.25
-        else:
-            ts_buffer = 0.15
-            ts_trigger = 0.20
         
         # Max hold time based on confidence
         max_hold = 15 if confidence >= 61 else 10 if confidence >= 31 else 8
@@ -1352,7 +1351,7 @@ Your estimate:"""
             return True, f"Max hold time: {hold_time_min:.1f}min > {max_hold_minutes}min"
         
         # === CONFIDENCE-BASED TRAILING STOP EXIT ===
-        # Use flat 20% trailing stop (Tony's Momentum Strategy)
+        # Use trailing stop from position (30% for MOMENTUM, confidence-based for DRIFT)
         trailing_hit = position.update_trailing_stop_confidence(current_price, position.confidence)
         if trailing_hit:
             return True, f"TRAILING STOP: locked in profits"

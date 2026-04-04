@@ -816,11 +816,16 @@ function renderBotTabPnls() {
 // ===== OPEN POSITIONS =====
 // Live prices come from superbot's report.json (server fetches Kalshi, no CORS issue)
 function calcUnrealizedPnl(entry, current, side, size) {
+    // Tony's unified P&L formula: YES and NO use the SAME formula
+    // WIN (current > entry): abs(current - entry) × size × 0.984  (fee applies)
+    // LOSE (current < entry): abs(current - entry) × size  (no fee, negative result)
     if (current === null || current === undefined || entry === 0) return null;
-    if (side === 'yes') {
-        return size * (current - entry);
+    const priceDiff = Math.abs(current - entry);
+    const pnl = priceDiff * size;
+    if (current > entry) {
+        return pnl * 0.984;  // WIN: fee taken
     } else {
-        return size * ((1 - current) - (1 - entry));
+        return -pnl;          // LOSE: no fee, result is negative
     }
 }
 

@@ -294,16 +294,19 @@ class CoinTrader:
         
         # Use avg_price for PnL calculation (accounts for scale-ins)
         calc_price = position.avg_price if position.avg_price > 0 else position.entry_price
-        if position.side == "yes":
-            pnl = position.size * (exit_price - calc_price)
-        else:
-            pnl = position.size * ((1 - exit_price) - (1 - calc_price))
         
-        # Apply 1.6% Kalshi fee on positive PnL (winnings)
-        gross_pnl = pnl
-        if pnl > 0:
-            pnl = pnl * 0.984  # Net after 1.6% fee
-            logger.info(f"[{self.coin}] Closed {ticker}: {reason}, Gross PnL=${gross_pnl:.2f}, Fee=${gross_pnl - pnl:.3f}, Net PnL=${pnl:.2f}")
+        # Tony's unified P&L formula: YES and NO use the SAME formula
+        # WIN (exit > entry): abs(exit - entry) × shares × 0.984  (fee applies)
+        # LOSE (exit < entry): abs(exit - entry) × shares  (no fee, negative result)
+        price_diff = abs(exit_price - calc_price)
+        pnl = price_diff * position.size
+        if exit_price > calc_price:
+            pnl = pnl * 0.984  # WIN: fee taken
+        else:
+            pnl = -pnl          # LOSE: no fee, result is negative
+        
+        if pnl >= 0:
+            logger.info(f"[{self.coin}] Closed {ticker}: {reason}, PnL=${pnl:.2f}")
         else:
             logger.info(f"[{self.coin}] Closed {ticker}: {reason}, PnL=${pnl:.2f}")
         
@@ -382,10 +385,10 @@ class CoinTrader:
             take_profit=signal.take_profit,
             stop_loss=signal.stop_loss,
             first_cross_direction=first_cross_dir,
-            # Trailing stop defaults (15% lock-in after 20% profit)
-            trailing_stop_pct=0.15,
+            # Use trailing stop values from TradeSignal (now 30% per Tony's request)
+            trailing_stop_pct=signal.trailing_stop_pct,
             trailing_stop_active=False,
-            trailing_stop_trigger_pct=0.20,
+            trailing_stop_trigger_pct=signal.trailing_stop_trigger_pct,
             peak_price=signal.price,
             scale_in_count=0,
             max_scale_ins=2,

@@ -53,8 +53,9 @@ class Strategy(Enum):
     DEEP_BUY = "deep_buy"      # NEW: penny odds - buy YES at $0.03-$0.15
     DRIFT_BUY = "drift_buy"    # DISABLED - drift doesn't work
     DRIFT_SHORT = "drift_short"  # DISABLED - drift doesn't work
-    FIRST_CROSS = "first_cross"  # PRIMARY: Only trade on first cross
-    MOMENTUM_FALLBACK = "momentum_fallback"  # FALLBACK: Only when no first cross after 3 min
+    MOMENTUM = "momentum"        # PRIMARY: Momentum + extreme = buy
+    MOMENTUM_FORCE = "momentum_force"  # FORCE: No cross after 1 min + momentum clear
+    FIRST_CROSS = "first_cross"  # BACKUP: Only if no momentum signal
     NONE = "none"
 
 
@@ -310,8 +311,9 @@ class StrategyTracker:
             Strategy.DEEP_BUY: deque(maxlen=tracked_trades),
             Strategy.DRIFT_BUY: deque(maxlen=tracked_trades),  # DISABLED but track for history
             Strategy.DRIFT_SHORT: deque(maxlen=tracked_trades),  # DISABLED but track for history
+            Strategy.MOMENTUM: deque(maxlen=tracked_trades),
+            Strategy.MOMENTUM_FORCE: deque(maxlen=tracked_trades),
             Strategy.FIRST_CROSS: deque(maxlen=tracked_trades),
-            Strategy.MOMENTUM_FALLBACK: deque(maxlen=tracked_trades),
         }
     
     def record_trade(self, strategy: Strategy, pnl: float):
@@ -389,13 +391,11 @@ class TradeSignal:
     tp_pct: Optional[float] = None       # TP percentage (deprecated - use trailing stop)
     sl_pct: Optional[float] = None        # SL percentage (deprecated - use absolute)
     scale_in_size: float = 0.0           # Additional size for scaling in (50% of initial)
-    # First Cross specific
-    trailing_stop_pct: float = 0.25       # Trailing stop percentage
-    trailing_stop_trigger_pct: float = 0.30  # Profit % before trailing stop activates
-    # === NEW TRAILING STOP v2 (Nerd's strategy) ===
+    # === TONYS MOMENTUM STRATEGY: Flat 20% trailing stop everywhere ===
+    trailing_stop_pct: float = 0.20       # 20% buffer (drop/rise from peak before exit)
+    trailing_stop_trigger_pct: float = 0.20  # 20% profit before trailing stop activates
     confidence: int = 50                  # Signal confidence 0-100
-    trailing_stop_buffer: float = 0.30   # Default 30% buffer
-    trailing_stop_trigger_pct: float = 0.40  # Activate after 40% profit (was 30%)
+    trailing_stop_buffer: float = 0.20   # 20% buffer (alias for clarity)
     max_hold_minutes: int = 10           # Dynamic based on entry zone
 
 
@@ -412,16 +412,17 @@ class Position:
     stop_loss: Optional[float] = None
     first_cross_direction: str = ""  # Tony's first crossing insight: 'up', 'down', or ''
     
-    # === NEW: Trailing Stop & Scale-In Fields ===
-    trailing_stop_pct: float = 0.25       # WIDENED to 25% (was 15%) - let winners run more
-    trailing_stop_active: bool = False   # Trailing stop activates after X% profit
-    trailing_stop_trigger_pct: float = 0.30  # WIDENED: activate after 30% profit (was 20%)
+    # === TONYS MOMENTUM STRATEGY: Flat 20% trailing stop everywhere ===
+    trailing_stop_pct: float = 0.20       # 20% buffer (drop/rise from peak before exit)
+    trailing_stop_active: bool = False   # Trailing stop activates after 20% profit
+    trailing_stop_trigger_pct: float = 0.20  # 20% profit before trailing stop activates
     peak_price: float = 0.0              # Track peak price for longs, trough for shorts
     scale_in_count: int = 0              # Number of times we've scaled in
     max_scale_ins: int = 2               # Max 2 scale-ins per position
     scale_in_size: float = 0.0           # Additional size per scale-in
     unrealized_pnl: float = 0.0          # Running unrealized PnL
     avg_price: float = 0.0               # Weighted average entry price
+    confidence: int = 50                 # Signal confidence 0-100 (for trailing stop logging)
     
     def __post_init__(self):
         """Initialize computed fields after dataclass init."""
@@ -442,29 +443,16 @@ class Position:
 
     def update_trailing_stop_confidence(self, current_price: float, confidence: int) -> bool:
         """
-        Update trailing stop with NEW NERD v2 BUFFER.
+        Update trailing stop with FLAT 20% (Tony's Momentum Strategy).
         
-        TRAILING_STOP_TRIGGER_PCT = 0.40 (activate after 40% profit)
-        Buffer by confidence:
-        - CONF 80+: 35% buffer
-        - CONF 60-79: 30% buffer
-        - CONF 40-59: 25% buffer
+        Trigger: 20% profit
+        Buffer: 20% drop from peak before exit
         
         Returns True if trailing stop is now active.
         """
-        # Determine buffers based on NEW Nerd v2 confidence tiers
-        if confidence >= 80:
-            ts_buffer = 0.35
-            ts_trigger = 0.40
-        elif confidence >= 60:
-            ts_buffer = 0.30
-            ts_trigger = 0.40
-        elif confidence >= 40:
-            ts_buffer = 0.25
-            ts_trigger = 0.40
-        else:
-            # CONF <40: skip entirely (shouldn't trade)
-            return False
+        # Tony's Momentum Strategy: flat 20% everywhere, ignore confidence
+        ts_buffer = 0.20
+        ts_trigger = 0.20
         
         if self.side == "yes":
             if current_price > self.peak_price:
@@ -579,10 +567,15 @@ class StrategyEngine:
         self.first_cross = FirstCrossTracker()  # YES price midpoint crossing (existing)
         self.coin_first_cross = FirstCrossCoinTracker()  # Coin price vs target crossing (new)
         self._floor_strikes: Dict[str, float] = {}  # Cache floor_strike per ticker
+        self._market_open_times: Dict[str, float] = {}  # Track when each market opened (for 1-min force logic)
     
     def reset_cross_tracker(self, ticker: str):
         """Reset the first cross tracker for a ticker (when market expires/closes)."""
         self.first_cross.reset(ticker)
+        if ticker in self._market_open_times:
+            del self._market_open_times[ticker]
+        if ticker in self._floor_strikes:
+            del self._floor_strikes[ticker]
     
     def update_cash(self, cash: float):
         """Update available cash for Kelly sizing."""
@@ -791,17 +784,12 @@ class StrategyEngine:
     
     def evaluate_market(self, market: Market, coin: str = None) -> Optional[TradeSignal]:
         """
-        Evaluate a market and return a trading signal if conditions are met.
+        TONY'S MOMENTUM STRATEGY - Priority Order:
+        1. MOMENTUM (PRIMARY) - momentum signal AND price at extreme → BUY immediately
+        2. NO CROSS AFTER 1 MIN - start buying on momentum side anyway (force it)
+        3. FIRST CROSS (BACKUP) - only if no momentum signal
         
-        FIRST CROSS STRATEGY (from target_cross_tracker.py):
-        1. At market open: get floor_strike (target price) from Kalshi
-        2. Every 5s: track coin price via Coinbase
-        3. When coin price crosses the target price in either direction → trade in that direction
-        4. Use trailing stop as configured (same for both YES and NO)
-        
-        Entry logic:
-        - up cross (coin crosses ABOVE target) → buy YES
-        - down cross (coin crosses BELOW target) → buy NO
+        Trailing Stop: FLAT 20% everywhere (trigger=20%, buffer=20%)
         """
         
         # Use mid price for decision
@@ -810,8 +798,101 @@ class StrategyEngine:
         
         logger.debug(f"Evaluating {market.ticker}: price=${mid_price:.4f}, time_left={time_left}s")
         
-        # === FIRST CROSS STRATEGY: Coin price vs target price ===
-        # First, ensure we have the floor_strike for this ticker
+        # === Track market open time for 1-min force logic ===
+        if market.ticker not in self._market_open_times:
+            self._market_open_times[market.ticker] = time.time()
+        
+        market_age_sec = time.time() - self._market_open_times.get(market.ticker, time.time())
+        
+        # === DEEP BUY: Penny odds ($0.03-$0.15) - checked independently ===
+        deep_buy_signal = self._check_deep_buy(market, mid_price, time_left)
+        if deep_buy_signal:
+            return deep_buy_signal
+        
+        # === Get Coinbase bias ===
+        bias = get_coinbase_bias(coin) if coin else 'neutral'
+        
+        # === PRIORITY 1: MOMENTUM (PRIMARY) ===
+        # Momentum + extreme price → take trade immediately (no time gate)
+        # Price at extreme: < $0.10 (extreme low) or > $0.90 (extreme high)
+        if bias != 'neutral' and (mid_price < 0.10 or mid_price > 0.90):
+            if bias == 'bullish' and mid_price < 0.10:
+                side = 'yes'
+                reason_suffix = 'momentum PRIMARY: bullish + extreme low'
+            elif bias == 'bearish' and mid_price > 0.90:
+                side = 'no'
+                reason_suffix = 'momentum PRIMARY: bearish + extreme high'
+            else:
+                bias = None  # No valid momentum signal
+            
+            if bias is not None:
+                confidence = 60  # Momentum signal gets decent confidence
+                size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.MOMENTUM, mid_price, confidence)
+                
+                if confidence >= 40:
+                    logger.info(
+                        f"MOMENTUM SIGNAL: {market.ticker} | "
+                        f"Side: {side} @ ${mid_price:.4f} | Size: ${size:.2f} | "
+                        f"CONF={confidence} | TS=20%/20% | Coinbase={bias}"
+                    )
+                    
+                    return TradeSignal(
+                        strategy=Strategy.MOMENTUM,
+                        ticker=market.ticker,
+                        side=side,
+                        price=mid_price,
+                        size=size,
+                        reason=f"MOMENTUM: {reason_suffix}, Coinbase={bias}, CONF={confidence}",
+                        take_profit=0.95 if side == "yes" else 0.05,
+                        stop_loss=None,
+                        trailing_stop_pct=0.20,   # 20% buffer
+                        trailing_stop_trigger_pct=0.20,  # 20% trigger
+                        confidence=confidence,
+                        trailing_stop_buffer=0.20,
+                        max_hold_minutes=10
+                    )
+        
+        # === PRIORITY 2: MOMENTUM_FORCE (no cross after 1 min) ===
+        # Force entry on momentum side if no first cross after 60 seconds
+        if market_age_sec >= 60 and bias != 'neutral':
+            if bias == 'bullish':
+                side = 'yes'
+                reason_suffix = 'momentum FORCE: bullish after 1min, no cross'
+            elif bias == 'bearish':
+                side = 'no'
+                reason_suffix = 'momentum FORCE: bearish after 1min, no cross'
+            else:
+                bias = None
+            
+            if bias is not None:
+                confidence = 50  # Lower confidence for forced entries
+                size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.MOMENTUM_FORCE, mid_price, confidence)
+                
+                if confidence >= 40:
+                    logger.info(
+                        f"MOMENTUM_FORCE SIGNAL: {market.ticker} | "
+                        f"Side: {side} @ ${mid_price:.4f} | Size: ${size:.2f} | "
+                        f"CONF={confidence} | TS=20%/20% | Coinbase={bias} | age={market_age_sec:.0f}s"
+                    )
+                    
+                    return TradeSignal(
+                        strategy=Strategy.MOMENTUM_FORCE,
+                        ticker=market.ticker,
+                        side=side,
+                        price=mid_price,
+                        size=size,
+                        reason=f"MOMENTUM_FORCE: {reason_suffix}, Coinbase={bias}, CONF={confidence}",
+                        take_profit=0.95 if side == "yes" else 0.05,
+                        stop_loss=None,
+                        trailing_stop_pct=0.20,   # 20% buffer
+                        trailing_stop_trigger_pct=0.20,  # 20% trigger
+                        confidence=confidence,
+                        trailing_stop_buffer=0.20,
+                        max_hold_minutes=8
+                    )
+        
+        # === PRIORITY 3: FIRST CROSS (BACKUP - only if no momentum signal) ===
+        # --- First Cross: Coin price vs target price ---
         if market.ticker not in self._floor_strikes:
             if self.api is not None:
                 floor_strike = self.coin_first_cross.get_floor_strike(market.ticker, self.api)
@@ -819,14 +900,11 @@ class StrategyEngine:
                     self._floor_strikes[market.ticker] = floor_strike
                     logger.info(f"FIRST_CROSS: {market.ticker} target price set to ${floor_strike:,.2f}")
         
-        # Check for coin price crossing the target
         if market.ticker in self._floor_strikes and coin:
             target_price = self._floor_strikes[market.ticker]
             cross_direction = self.coin_first_cross.check_cross(market.ticker, coin, target_price, self.api)
             
             if cross_direction:
-                # Coin crossed the target! Generate signal in that direction
-                # up cross = buy YES, down cross = buy NO
                 if cross_direction == "up":
                     side = "yes"
                     reason_suffix = "coin crossed ABOVE target"
@@ -834,170 +912,72 @@ class StrategyEngine:
                     side = "no"
                     reason_suffix = "coin crossed BELOW target"
                 
-                # Calculate confidence for First Cross strategy
                 confidence = self.calculate_confidence(Strategy.FIRST_CROSS, market, coin, mid_price, time_left)
-                
                 prob = mid_price
                 size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.FIRST_CROSS, prob, confidence)
                 
-                # Confidence-based trailing stop buffer
-                if confidence >= 81:
-                    ts_buffer = 0.30
-                    ts_trigger = 0.40
-                elif confidence >= 61:
-                    ts_buffer = 0.25
-                    ts_trigger = 0.30
-                else:
-                    ts_buffer = 0.20
-                    ts_trigger = 0.25
-                
-                logger.info(
-                    f"FIRST_CROSS SIGNAL: {market.ticker} | "
-                    f"Direction: {cross_direction} | "
-                    f"Target: ${target_price:,.2f} | "
-                    f"Side: {side} @ ${mid_price:.4f} | "
-                    f"Size: ${size:.2f} | CONF={confidence}"
-                )
-                
-                return TradeSignal(
-                    strategy=Strategy.FIRST_CROSS,
-                    ticker=market.ticker,
-                    side=side,
-                    price=mid_price,
-                    size=size,
-                    reason=f"FIRST_CROSS: {reason_suffix}, target=${target_price:,.2f}, Kelly={kelly_pct:.2%}, CONF={confidence}",
-                    take_profit=0.95 if side == "yes" else 0.05,
-                    stop_loss=None,
-                    trailing_stop_pct=ts_buffer,
-                    trailing_stop_trigger_pct=ts_trigger,
-                    confidence=confidence,
-                    trailing_stop_buffer=ts_buffer,
-                    max_hold_minutes=15 if confidence >= 61 else 10
-                )
+                if confidence >= 40:
+                    logger.info(
+                        f"FIRST_CROSS SIGNAL (coin): {market.ticker} | "
+                        f"Direction: {cross_direction} | Target: ${target_price:,.2f} | "
+                        f"Side: {side} @ ${mid_price:.4f} | Size: ${size:.2f} | CONF={confidence}"
+                    )
+                    
+                    return TradeSignal(
+                        strategy=Strategy.FIRST_CROSS,
+                        ticker=market.ticker,
+                        side=side,
+                        price=mid_price,
+                        size=size,
+                        reason=f"FIRST_CROSS: {reason_suffix}, target=${target_price:,.2f}, Kelly={kelly_pct:.2%}, CONF={confidence}",
+                        take_profit=0.95 if side == "yes" else 0.05,
+                        stop_loss=None,
+                        trailing_stop_pct=0.20,   # FLAT 20% per Tony
+                        trailing_stop_trigger_pct=0.20,  # FLAT 20% per Tony
+                        confidence=confidence,
+                        trailing_stop_buffer=0.20,
+                        max_hold_minutes=10
+                    )
         
-        # === FIRST CROSS ONLY (Nerd v2) ===
-        # No drift strategies - drift was losing money
-        # Only trade on first cross of midpoint ($0.50)
-        
+        # --- First Cross: Midpoint crossing ---
         cross_event = self.first_cross.update(market.ticker, mid_price)
         
-        # If price is in dead zone and hasn't crossed, WAIT
         if self.first_cross.should_wait(market.ticker, mid_price):
-            logger.debug(f"FIRST_CROSS: {market.ticker} in dead zone (${mid_price:.4f}) and hasn't crossed yet - WAITING")
-            return None
-        
-        # Check for first cross signal (this is the PRIMARY strategy)
-        preferred_side = self.first_cross.get_preferred_side(market.ticker)
-        if preferred_side:
-            # First cross detected! Generate signal in that direction
-            # UP cross = buy YES, DOWN cross = buy NO
-            if preferred_side == 'yes':
-                side = 'yes'
-                reason_suffix = 'crossed UP first'
-            else:
-                side = 'no'
-                reason_suffix = 'crossed DOWN first'
-            
-            # Calculate confidence for First Cross
-            confidence = self.calculate_confidence(Strategy.FIRST_CROSS, market, coin, mid_price, time_left)
-            
-            prob = mid_price
-            size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.FIRST_CROSS, prob, confidence)
-            
-            # Skip if confidence too low
-            if confidence < 40:
-                logger.debug(f"FIRST_CROSS: {market.ticker} confidence {confidence} < 40 - SKIPPING")
-                return None
-            
-            # NEW trailing stop logic (Nerd v2)
-            if confidence >= 80:
-                ts_buffer = 0.35
-            elif confidence >= 60:
-                ts_buffer = 0.30
-            else:
-                ts_buffer = 0.25
-            ts_trigger = 0.40  # Activate after 40% profit
-            
-            # Dynamic max hold based on entry price (Nerd v2)
-            if 0.70 <= mid_price <= 1.00:
-                max_hold = 8   # High odds - 8 min max
-            elif 0.40 <= mid_price <= 0.60:
-                max_hold = 10  # Mid odds - 10 min max
-            else:
-                max_hold = 12  # Low odds - 12 min max
-            
-            logger.info(
-                f"FIRST_CROSS SIGNAL: {market.ticker} | "
-                f"Direction: {preferred_side} | "
-                f"Side: {side} @ ${mid_price:.4f} | "
-                f"Size: ${size:.2f} | CONF={confidence} | "
-                f"TS={ts_buffer:.0%}buffer/{ts_trigger:.0%}trigger | max_hold={max_hold}min"
-            )
-            
-            return TradeSignal(
-                strategy=Strategy.FIRST_CROSS,
-                ticker=market.ticker,
-                side=side,
-                price=mid_price,
-                size=size,
-                reason=f"FIRST_CROSS: {reason_suffix}, CONF={confidence}, Kelly={kelly_pct:.2%}",
-                take_profit=0.95 if side == "yes" else 0.05,
-                stop_loss=None,
-                trailing_stop_pct=ts_buffer,
-                trailing_stop_trigger_pct=ts_trigger,
-                confidence=confidence,
-                trailing_stop_buffer=ts_buffer,
-                max_hold_minutes=max_hold
-            )
-        
-        # FALLBACK: Momentum + Trailing Stop (only when no first cross after 3 min)
-        # Check time in market - if > 3 min and no first cross, check momentum
-        market_age_sec = 900 - time_left  # Approximate
-        if market_age_sec > 180:  # 3 minutes
-            # Check Coinbase momentum - use the coin param passed to evaluate_market (not ticker extraction!)
-            # ticker = 'KXBTC15M-26APR041000-00', coin = 'BTC'
-            bias = get_coinbase_bias(coin) if coin else 'neutral'
-            
-            # Only if momentum is strong AND price at extreme
-            if bias != 'neutral' and (mid_price < 0.05 or mid_price > 0.95):
-                # Momentum fallback - same-side bias as momentum
-                if bias == 'bullish' and mid_price < 0.05:
-                    side = 'yes'
-                    reason_suffix = 'momentum fallback: bullish at extreme'
-                elif bias == 'bearish' and mid_price > 0.95:
-                    side = 'no'
-                    reason_suffix = 'momentum fallback: bearish at extreme'
-                else:
-                    return None  # No momentum signal
+            logger.debug(f"FIRST_CROSS: {market.ticker} in dead zone (${mid_price:.4f}) - WAITING")
+        else:
+            preferred_side = self.first_cross.get_preferred_side(market.ticker)
+            if preferred_side:
+                side = 'yes' if preferred_side == 'yes' else 'no'
+                reason_suffix = 'crossed UP first' if preferred_side == 'yes' else 'crossed DOWN first'
                 
-                confidence = 50  # Lower confidence for fallback
-                size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.MOMENTUM_FALLBACK, mid_price, confidence)
+                confidence = self.calculate_confidence(Strategy.FIRST_CROSS, market, coin, mid_price, time_left)
+                prob = mid_price
+                size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.FIRST_CROSS, prob, confidence)
                 
-                if confidence < 40:
-                    return None
-                
-                logger.info(
-                    f"MOMENTUM FALLBACK: {market.ticker} | "
-                    f"Side: {side} @ ${mid_price:.4f} | "
-                    f"Size: ${size:.2f} | CONF={confidence} | "
-                    f"Reason: {reason_suffix}"
-                )
-                
-                return TradeSignal(
-                    strategy=Strategy.MOMENTUM_FALLBACK,
-                    ticker=market.ticker,
-                    side=side,
-                    price=mid_price,
-                    size=size,
-                    reason=f"MOMENTUM_FALLBACK: {reason_suffix}",
-                    take_profit=0.95 if side == "yes" else 0.05,
-                    stop_loss=None,
-                    trailing_stop_pct=0.35,  # Wider buffer for fallback
-                    trailing_stop_trigger_pct=0.40,
-                    confidence=confidence,
-                    trailing_stop_buffer=0.35,
-                    max_hold_minutes=8  # Shorter hold for fallback
-                )
+                if confidence >= 40:
+                    max_hold = 10  # Standard hold time
+                    
+                    logger.info(
+                        f"FIRST_CROSS SIGNAL (midpoint): {market.ticker} | "
+                        f"Direction: {preferred_side} | Side: {side} @ ${mid_price:.4f} | "
+                        f"Size: ${size:.2f} | CONF={confidence} | TS=20%/20% | max_hold={max_hold}min"
+                    )
+                    
+                    return TradeSignal(
+                        strategy=Strategy.FIRST_CROSS,
+                        ticker=market.ticker,
+                        side=side,
+                        price=mid_price,
+                        size=size,
+                        reason=f"FIRST_CROSS: {reason_suffix}, CONF={confidence}, Kelly={kelly_pct:.2%}",
+                        take_profit=0.95 if side == "yes" else 0.05,
+                        stop_loss=None,
+                        trailing_stop_pct=0.20,   # FLAT 20% per Tony
+                        trailing_stop_trigger_pct=0.20,  # FLAT 20% per Tony
+                        confidence=confidence,
+                        trailing_stop_buffer=0.20,
+                        max_hold_minutes=max_hold
+                    )
         
         return None
     
@@ -1096,6 +1076,52 @@ Your estimate:"""
             reason=f"DEEP SHORT: Selling YES at ${mid_price:.4f} (< ${DEEP_SHORT_MAX_PRICE}), fading the longshot, CONF={confidence}",
             take_profit=None,  # No TP - ride to expiry
             stop_loss=None,     # No SL - ride to expiry
+            confidence=confidence,
+            trailing_stop_buffer=0.0,
+            max_hold_minutes=15
+        )
+    
+    def _check_deep_buy(self, market: Market, mid_price: float, time_left: int) -> Optional[TradeSignal]:
+        """
+        DEEP BUY: YES $0.03-$0.15 → buy penny odds, ride to $0.95
+        
+        Nerd's research: Markets priced at $0.03-$0.15 are penny odds that can
+        jump 5-30x if the coin moves right. We buy YES cheap and hold to expiry
+        or take profit at $0.95.
+        
+        Entry: $0.03 <= YES <= $0.15
+        No stop-loss (binary - max loss is the price you paid)
+        Take profit: $0.95 (ride to full resolution)
+        Min time left: 2 minutes (need time for penny odds to play out)
+        """
+        if not DEEP_BUY_ENABLED:
+            return None
+        
+        if not (DEEP_BUY_MIN_PRICE <= mid_price <= DEEP_BUY_MAX_PRICE):
+            return None
+        
+        if time_left < 120:  # 2 min minimum for penny odds
+            logger.debug(f"DEEP BUY: {market.ticker} - not enough time left ({time_left}s)")
+            return None
+        
+        # Calculate size using Kelly with historical strategy performance
+        prob = mid_price  # Probability of YES winning
+        
+        # Calculate confidence
+        confidence = self.calculate_confidence(Strategy.DEEP_BUY, market, None, mid_price, time_left)
+        size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.DEEP_BUY, prob, confidence)
+        
+        logger.info(f"DEEP BUY signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, CONF={confidence}, time_left={time_left}s")
+        
+        return TradeSignal(
+            strategy=Strategy.DEEP_BUY,
+            ticker=market.ticker,
+            side="yes",  # Buy YES - penny odds
+            price=mid_price,
+            size=size,
+            reason=f"DEEP BUY: YES at ${mid_price:.4f} (penny odds ${DEEP_BUY_MIN_PRICE}-${DEEP_BUY_MAX_PRICE}), ride to ${DEEP_BUY_TP_PRICE}, CONF={confidence}",
+            take_profit=DEEP_BUY_TP_PRICE,  # $0.95 target
+            stop_loss=None,  # No SL - ride to expiry, max loss is the entry price
             confidence=confidence,
             trailing_stop_buffer=0.0,
             max_hold_minutes=15
@@ -1228,6 +1254,9 @@ Your estimate:"""
         # For short, probability of YES going DOWN is (1 - price)
         prob = 1 - mid_price
         
+        # Extract coin from ticker for Coinbase bias
+        coin = market.ticker.replace('KX', '').replace('15M', '')
+        
         # Calculate confidence score
         confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
         size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.DRIFT_SHORT, prob, confidence)
@@ -1291,6 +1320,12 @@ Your estimate:"""
             # No exit for DEEP SHORT - ride to expiry (we're fading the longshot)
             return False, ""
         
+        # === NEAR-EXPIRY EXIT (last 60 seconds - take whatever we got) ===
+        MIN_TIME_BEFORE_EXPIRY = 60
+        if time_left <= MIN_TIME_BEFORE_EXPIRY:
+            logger.info(f"{position.ticker}: Near expiry ({time_left}s <= {MIN_TIME_BEFORE_EXPIRY}s) - closing position")
+            return True, f"Expiry: closing at ${current_price:.4f}"
+        
         # === HARD STOP LOSS (only exit if we're wrong) ===
         if position.stop_loss is not None:
             if position.side == "yes" and current_price <= position.stop_loss:
@@ -1298,15 +1333,7 @@ Your estimate:"""
             if position.side == "no" and current_price >= position.stop_loss:
                 return True, f"HARD SL hit: ${current_price:.4f} >= ${position.stop_loss:.4f}"
         
-        # === NEAR-EXPIRY EXIT (last 60 seconds - take whatever we got) ===
-        if time_left <= MIN_TIME_BEFORE_EXPIRY:
-            logger.info(f"{position.ticker}: Near expiry ({time_left}s <= {MIN_TIME_BEFORE_EXPIRY}s) - closing position")
-            return True, f"Expiry: closing at ${current_price:.4f}"
-        
         # === MAX HOLD TIME (dynamic based on entry price - Nerd v2) ===
-        # Entry $0.70-1.00: 8 min max
-        # Entry $0.40-0.60: 10 min max
-        # Entry $0.15-0.30: 12 min max
         entry_price = position.entry_price
         if 0.70 <= entry_price <= 1.00:
             max_hold_minutes = 8
@@ -1315,24 +1342,20 @@ Your estimate:"""
         else:
             max_hold_minutes = 12
         
-        # Force close 1 minute before expiry (Nerd v2)
-        MIN_TIME_BEFORE_EXPIRY = 60
-        
         # Check if position has been open too long
         import time
         hold_time_sec = time.time() - position.open_time
         hold_time_min = hold_time_sec / 60
         
         if hold_time_min > max_hold_minutes:
-            logger.info(f"{position.ticker}: Max hold time exceeded ({hold_time_min:.1f}min > {max_hold_minutes}min, CONF={confidence}) - closing")
+            logger.info(f"{position.ticker}: Max hold time exceeded ({hold_time_min:.1f}min > {max_hold_minutes}min) - closing")
             return True, f"Max hold time: {hold_time_min:.1f}min > {max_hold_minutes}min"
         
         # === CONFIDENCE-BASED TRAILING STOP EXIT ===
-        # High confidence = wider buffer (let winners run longer)
-        # Low confidence = tighter buffer (lock in profits faster)
-        trailing_hit = position.update_trailing_stop_confidence(current_price, confidence)
+        # Use flat 20% trailing stop (Tony's Momentum Strategy)
+        trailing_hit = position.update_trailing_stop_confidence(current_price, position.confidence)
         if trailing_hit:
-            return True, f"CONF={confidence} TRAILING STOP: locked in profits"
+            return True, f"TRAILING STOP: locked in profits"
         
         # === NEAR-MAX PROFIT EXIT ===
         # If we're REALLY close to max profit ($0.95 for YES, $0.05 for NO), take it

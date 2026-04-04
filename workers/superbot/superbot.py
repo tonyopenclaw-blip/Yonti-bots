@@ -611,27 +611,22 @@ class Superbot:
         
         # === NERD v2: Coinbase pre-filter ===
         # Check Coinbase first (free, every 10s)
-        # NOTE: Pre-filter checks if BTC price crosses $0.50 midpoint.
-        # Since BTC is ~$67k, this rarely triggers. We use it as a signal boost,
-        # but MUST periodically call Kalshi anyway to discover markets.
+        # NOTE: Pre-filter is a signal boost, NOT a gate.
+        # In IDLE mode, we ALWAYS call Kalshi to discover markets.
+        # Pre-filter cross detection is used for trade signals, not discovery.
         coinbase_cross = self.coinbase_filter.check_cross(coin)
         
         has_positions = len(trader.positions) > 0
         
-        # Track cycles to periodically force Kalshi calls (market discovery)
-        # Without this, pre-filter blocks ALL Kalshi calls when BTC is far from $0.50
-        if not hasattr(self, '_discovery_cycle_counter'):
-            self._discovery_cycle_counter = {}
-        self._discovery_cycle_counter[series_ticker] = self._discovery_cycle_counter.get(series_ticker, 0) + 1
-        force_kalshi_call = self._discovery_cycle_counter[series_ticker] >= 4  # Every 4th cycle (~2 min)
-        if force_kalshi_call:
-            self._discovery_cycle_counter[series_ticker] = 0
-        
-        if not has_positions and coinbase_cross is None and not force_kalshi_call:
-            # No cross detected by Coinbase, skip this Kalshi call
-            # (unless we need to force market discovery)
-            self.active_series.discard(series_ticker)
-            return False
+        # In IDLE mode (no active series), ALWAYS call Kalshi to discover markets
+        # Don't let pre-filter block market discovery
+        if not has_positions and not self.active_series:
+            # IDLE mode: force Kalshi call for market discovery
+            pass  # Continue to Kalshi call
+        elif not has_positions and coinbase_cross is None:
+            # ACTIVE mode but no positions and no Coinbase signal - still check for markets
+            pass  # Continue to Kalshi call
+        # else: has positions or Coinbase signal - proceed with Kalshi call
         
         # Use get_open_markets - hits /markets?status=open
         markets = self.api.get_open_markets(series_ticker)

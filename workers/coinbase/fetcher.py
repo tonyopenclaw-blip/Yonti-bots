@@ -31,6 +31,11 @@ PRODUCTS = {
     "BTC": "BTC-USD",
     "ETH": "ETH-USD",
     "SOL": "SOL-USD",
+    "BNB": "BNB-USD",
+    "DOGE": "DOGE-USD",
+    "XRP": "XRP-USD",
+    "HYPE": "HYPE-USD",
+    "ADA": "ADA-USD",
 }
 
 GRANULARITY = 900  # 15 minutes in seconds
@@ -287,11 +292,11 @@ def main():
     results = multi_coin_analysis(coins=coins, hours=args.hours)
     
     # Write bias to JSON file for superbot to read
-    bias_output = {
-        'BTC': results[0]['bias'].lower() if len(results) > 0 and results[0]['coin'] == 'BTC' else 'neutral',
-        'ETH': next((r['bias'].lower() for r in results if r['coin'] == 'ETH'), 'neutral'),
-        'SOL': next((r['bias'].lower() for r in results if r['coin'] == 'SOL'), 'neutral'),
-    }
+    # Dynamic: build from all coins in PRODUCTS that have results
+    bias_output = {}
+    for coin in PRODUCTS.keys():
+        coin_result = next((r['bias'].lower() for r in results if r['coin'] == coin), 'neutral')
+        bias_output[coin] = coin_result
     bias_file = Path(__file__).parent / "last_bias.json"
     with open(bias_file, 'w') as f:
         json.dump(bias_output, f)

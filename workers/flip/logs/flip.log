@@ -6810,3 +6810,952 @@ AttributeError: 'MarketPosition' object has no attribute 'status'
 2026-04-04 13:59:38 | INFO |   ORL: $0.60 [WAIT] | NOP: $0.37 [SELL @ $0.85]
 2026-04-04 13:59:38 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
 2026-04-04 13:59:38 | INFO | ------------------------------------------------------------
+2026-04-04 14:00:38 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:00:38 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:00:38 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:00:38 | INFO | ------------------------------------------------------------
+2026-04-04 14:00:38 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:00:38 | INFO |   NYK: $0.45 [BUY ZONE] | ATL: $0.47 [BUY ZONE]
+2026-04-04 14:00:38 | INFO |   ORL: $0.33 [BUY ZONE] | DET: $0.58 [BUY ZONE]
+2026-04-04 14:00:38 | INFO |   HOU: $0.57 [SELL @ $0.85] | GSW: $0.40 [SELL @ $0.85]
+2026-04-04 14:00:38 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:00:38 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:00:38 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:00:38 | INFO |   ORL: $0.60 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:00:38 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:00:38 | INFO | ------------------------------------------------------------
+2026-04-04 14:01:38 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:01:38 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:01:38 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:01:39 | INFO | ------------------------------------------------------------
+2026-04-04 14:01:39 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:01:39 | INFO |   NYK: $0.47 [BUY ZONE] | ATL: $0.47 [BUY ZONE]
+2026-04-04 14:01:39 | INFO |   ORL: $0.33 [BUY ZONE] | DET: $0.58 [BUY ZONE]
+2026-04-04 14:01:39 | INFO |   HOU: $0.57 [SELL @ $0.85] | GSW: $0.40 [SELL @ $0.85]
+2026-04-04 14:01:39 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:01:39 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:01:39 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:01:39 | INFO |   ORL: $0.60 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:01:39 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:01:39 | INFO | ------------------------------------------------------------
+2026-04-04 14:01:39 | INFO | ==================================================
+2026-04-04 14:01:39 | INFO | SIMPLE FLIP BOT STATS
+2026-04-04 14:01:39 | INFO | Runtime: 101.4 minutes
+2026-04-04 14:01:39 | INFO | Balance: $88.18
+2026-04-04 14:01:39 | INFO | Total positions: 18
+2026-04-04 14:01:39 | INFO | Position states: {'pending_sell': 18}
+2026-04-04 14:01:39 | INFO | Total trades: 18 (18 buys, 0 sells)
+2026-04-04 14:01:39 | INFO | Session PnL: $0.00
+2026-04-04 14:01:39 | INFO | ==================================================
+2026-04-04 14:02:39 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:02:39 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:02:39 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:02:39 | INFO | ------------------------------------------------------------
+2026-04-04 14:02:39 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:02:39 | INFO |   NYK: $0.47 [BUY ZONE] | ATL: $0.47 [BUY ZONE]
+2026-04-04 14:02:39 | INFO |   ORL: $0.33 [BUY ZONE] | DET: $0.58 [BUY ZONE]
+2026-04-04 14:02:39 | INFO |   HOU: $0.57 [SELL @ $0.85] | GSW: $0.40 [SELL @ $0.85]
+2026-04-04 14:02:39 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:02:39 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:02:39 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:02:39 | INFO |   ORL: $0.60 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:02:39 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:02:39 | INFO | ------------------------------------------------------------
+2026-04-04 14:03:39 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:03:39 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:03:39 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:03:40 | INFO | ------------------------------------------------------------
+2026-04-04 14:03:40 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:03:40 | INFO |   NYK: $0.47 [BUY ZONE] | ATL: $0.47 [BUY ZONE]
+2026-04-04 14:03:40 | INFO |   ORL: $0.33 [BUY ZONE] | DET: $0.58 [BUY ZONE]
+2026-04-04 14:03:40 | INFO |   HOU: $0.57 [SELL @ $0.85] | GSW: $0.40 [SELL @ $0.85]
+2026-04-04 14:03:40 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:03:40 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:03:40 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:03:40 | INFO |   ORL: $0.60 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:03:40 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:03:40 | INFO | ------------------------------------------------------------
+2026-04-04 14:04:40 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:04:40 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:04:40 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:04:40 | INFO | ------------------------------------------------------------
+2026-04-04 14:04:40 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:04:40 | INFO |   NYK: $0.47 [BUY ZONE] | ATL: $0.47 [BUY ZONE]
+2026-04-04 14:04:40 | INFO |   ORL: $0.33 [BUY ZONE] | DET: $0.58 [BUY ZONE]
+2026-04-04 14:04:40 | INFO |   HOU: $0.57 [SELL @ $0.85] | GSW: $0.40 [SELL @ $0.85]
+2026-04-04 14:04:40 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:04:40 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:04:40 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:04:40 | INFO |   ORL: $0.60 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:04:40 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:04:40 | INFO | ------------------------------------------------------------
+2026-04-04 14:05:40 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:05:40 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:05:40 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:05:41 | INFO | ------------------------------------------------------------
+2026-04-04 14:05:41 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:05:41 | INFO |   NYK: $0.47 [BUY ZONE] | ATL: $0.47 [BUY ZONE]
+2026-04-04 14:05:41 | INFO |   ORL: $0.33 [BUY ZONE] | DET: $0.58 [BUY ZONE]
+2026-04-04 14:05:41 | INFO |   HOU: $0.57 [SELL @ $0.85] | GSW: $0.40 [SELL @ $0.85]
+2026-04-04 14:05:41 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:05:41 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:05:41 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:05:41 | INFO |   ORL: $0.60 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:05:41 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:05:41 | INFO | ------------------------------------------------------------
+2026-04-04 14:06:41 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:06:41 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:06:41 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:06:42 | INFO | ------------------------------------------------------------
+2026-04-04 14:06:42 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:06:42 | INFO |   NYK: $0.47 [BUY ZONE] | ATL: $0.47 [BUY ZONE]
+2026-04-04 14:06:42 | INFO |   ORL: $0.33 [BUY ZONE] | DET: $0.58 [BUY ZONE]
+2026-04-04 14:06:42 | INFO |   HOU: $0.57 [SELL @ $0.85] | GSW: $0.40 [SELL @ $0.85]
+2026-04-04 14:06:42 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:06:42 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:06:42 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:06:42 | INFO |   ORL: $0.60 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:06:42 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:06:42 | INFO | ------------------------------------------------------------
+2026-04-04 14:06:42 | INFO | ==================================================
+2026-04-04 14:06:42 | INFO | SIMPLE FLIP BOT STATS
+2026-04-04 14:06:42 | INFO | Runtime: 106.4 minutes
+2026-04-04 14:06:42 | INFO | Balance: $88.18
+2026-04-04 14:06:42 | INFO | Total positions: 18
+2026-04-04 14:06:42 | INFO | Position states: {'pending_sell': 18}
+2026-04-04 14:06:42 | INFO | Total trades: 18 (18 buys, 0 sells)
+2026-04-04 14:06:42 | INFO | Session PnL: $0.00
+2026-04-04 14:06:42 | INFO | ==================================================
+2026-04-04 14:07:42 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:07:42 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:07:42 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:07:42 | INFO | ------------------------------------------------------------
+2026-04-04 14:07:42 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:07:42 | INFO |   NYK: $0.47 [BUY ZONE] | ATL: $0.47 [BUY ZONE]
+2026-04-04 14:07:42 | INFO |   ORL: $0.35 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:07:42 | INFO |   HOU: $0.57 [SELL @ $0.85] | GSW: $0.40 [SELL @ $0.85]
+2026-04-04 14:07:42 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:07:42 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:07:42 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:07:42 | INFO |   ORL: $0.60 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:07:42 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:07:42 | INFO | ------------------------------------------------------------
+2026-04-04 14:08:42 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:08:42 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:08:42 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:08:43 | INFO | ------------------------------------------------------------
+2026-04-04 14:08:43 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:08:43 | INFO |   NYK: $0.47 [BUY ZONE] | ATL: $0.47 [BUY ZONE]
+2026-04-04 14:08:43 | INFO |   ORL: $0.35 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:08:43 | INFO |   HOU: $0.57 [SELL @ $0.85] | GSW: $0.40 [SELL @ $0.85]
+2026-04-04 14:08:43 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:08:43 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:08:43 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:08:43 | INFO |   ORL: $0.60 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:08:43 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:08:43 | INFO | ------------------------------------------------------------
+2026-04-04 14:09:43 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:09:43 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:09:43 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:09:43 | INFO | ------------------------------------------------------------
+2026-04-04 14:09:43 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:09:43 | INFO |   NYK: $0.47 [BUY ZONE] | ATL: $0.47 [BUY ZONE]
+2026-04-04 14:09:43 | INFO |   ORL: $0.35 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:09:43 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:09:43 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:09:43 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:09:43 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:09:43 | INFO |   ORL: $0.60 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:09:43 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:09:43 | INFO | ------------------------------------------------------------
+2026-04-04 14:10:43 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:10:43 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:10:43 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:10:44 | INFO | ------------------------------------------------------------
+2026-04-04 14:10:44 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:10:44 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:10:44 | INFO |   ORL: $0.36 [BUY ZONE] | DET: $0.60 [WAIT]
+2026-04-04 14:10:44 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:10:44 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:10:44 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:10:44 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:10:44 | INFO |   ORL: $0.60 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:10:44 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:10:44 | INFO | ------------------------------------------------------------
+2026-04-04 14:11:44 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:11:44 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:11:44 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:11:44 | INFO | ------------------------------------------------------------
+2026-04-04 14:11:44 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:11:44 | INFO |   NYK: $0.47 [BUY ZONE] | ATL: $0.47 [BUY ZONE]
+2026-04-04 14:11:44 | INFO |   ORL: $0.40 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:11:44 | INFO |   HOU: $0.57 [SELL @ $0.85] | GSW: $0.37 [SELL @ $0.85]
+2026-04-04 14:11:44 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:11:44 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:11:44 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:11:44 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:11:44 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:11:44 | INFO | ------------------------------------------------------------
+2026-04-04 14:11:44 | INFO | ==================================================
+2026-04-04 14:11:44 | INFO | SIMPLE FLIP BOT STATS
+2026-04-04 14:11:44 | INFO | Runtime: 111.5 minutes
+2026-04-04 14:11:44 | INFO | Balance: $88.18
+2026-04-04 14:11:44 | INFO | Total positions: 18
+2026-04-04 14:11:44 | INFO | Position states: {'pending_sell': 18}
+2026-04-04 14:11:44 | INFO | Total trades: 18 (18 buys, 0 sells)
+2026-04-04 14:11:44 | INFO | Session PnL: $0.00
+2026-04-04 14:11:44 | INFO | ==================================================
+2026-04-04 14:12:44 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:12:44 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:12:44 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:12:45 | INFO | ------------------------------------------------------------
+2026-04-04 14:12:45 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:12:45 | INFO |   NYK: $0.47 [BUY ZONE] | ATL: $0.47 [BUY ZONE]
+2026-04-04 14:12:45 | INFO |   ORL: $0.40 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:12:45 | INFO |   HOU: $0.57 [SELL @ $0.85] | GSW: $0.36 [SELL @ $0.85]
+2026-04-04 14:12:45 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:12:45 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:12:45 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:12:45 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:12:45 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:12:45 | INFO | ------------------------------------------------------------
+2026-04-04 14:13:45 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:13:45 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:13:45 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:13:45 | INFO | ------------------------------------------------------------
+2026-04-04 14:13:45 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:13:45 | INFO |   NYK: $0.47 [BUY ZONE] | ATL: $0.47 [BUY ZONE]
+2026-04-04 14:13:45 | INFO |   ORL: $0.40 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:13:45 | INFO |   HOU: $0.57 [SELL @ $0.85] | GSW: $0.36 [SELL @ $0.85]
+2026-04-04 14:13:45 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:13:45 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:13:45 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:13:45 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:13:45 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:13:45 | INFO | ------------------------------------------------------------
+2026-04-04 14:14:46 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:14:46 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:14:46 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:14:46 | INFO | ------------------------------------------------------------
+2026-04-04 14:14:46 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:14:46 | INFO |   NYK: $0.47 [BUY ZONE] | ATL: $0.47 [BUY ZONE]
+2026-04-04 14:14:46 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:14:46 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:14:46 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:14:46 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:14:46 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:14:46 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:14:46 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:14:46 | INFO | ------------------------------------------------------------
+2026-04-04 14:15:46 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:15:46 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:15:46 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:15:46 | INFO | ------------------------------------------------------------
+2026-04-04 14:15:46 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:15:46 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:15:46 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:15:46 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:15:46 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:15:46 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:15:46 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:15:46 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:15:46 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:15:46 | INFO | ------------------------------------------------------------
+2026-04-04 14:16:46 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:16:46 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:16:46 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:16:47 | INFO | ------------------------------------------------------------
+2026-04-04 14:16:47 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:16:47 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:16:47 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:16:47 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:16:47 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:16:47 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:16:47 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:16:47 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:16:47 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:16:47 | INFO | ------------------------------------------------------------
+2026-04-04 14:16:47 | INFO | ==================================================
+2026-04-04 14:16:47 | INFO | SIMPLE FLIP BOT STATS
+2026-04-04 14:16:47 | INFO | Runtime: 116.5 minutes
+2026-04-04 14:16:47 | INFO | Balance: $88.18
+2026-04-04 14:16:47 | INFO | Total positions: 18
+2026-04-04 14:16:47 | INFO | Position states: {'pending_sell': 18}
+2026-04-04 14:16:47 | INFO | Total trades: 18 (18 buys, 0 sells)
+2026-04-04 14:16:47 | INFO | Session PnL: $0.00
+2026-04-04 14:16:47 | INFO | ==================================================
+2026-04-04 14:17:47 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:17:47 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:17:47 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:17:47 | INFO | ------------------------------------------------------------
+2026-04-04 14:17:47 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:17:47 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:17:47 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:17:47 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:17:47 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:17:47 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:17:47 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:17:47 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:17:47 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:17:47 | INFO | ------------------------------------------------------------
+2026-04-04 14:18:47 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:18:47 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:18:47 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:18:48 | INFO | ------------------------------------------------------------
+2026-04-04 14:18:48 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:18:48 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:18:48 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:18:48 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:18:48 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:18:48 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:18:48 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:18:48 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:18:48 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:18:48 | INFO | ------------------------------------------------------------
+2026-04-04 14:19:48 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:19:48 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:19:48 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:19:48 | INFO | ------------------------------------------------------------
+2026-04-04 14:19:48 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:19:48 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:19:48 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:19:48 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:19:48 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:19:48 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:19:48 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:19:48 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:19:48 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:19:48 | INFO | ------------------------------------------------------------
+2026-04-04 14:20:48 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:20:48 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:20:48 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:20:49 | INFO | ------------------------------------------------------------
+2026-04-04 14:20:49 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:20:49 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:20:49 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:20:49 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:20:49 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:20:49 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:20:49 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:20:49 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:20:49 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:20:49 | INFO | ------------------------------------------------------------
+2026-04-04 14:21:49 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:21:49 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:21:49 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:21:49 | INFO | ------------------------------------------------------------
+2026-04-04 14:21:49 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:21:49 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:21:49 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:21:49 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:21:49 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:21:49 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:21:49 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:21:49 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:21:49 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:21:49 | INFO | ------------------------------------------------------------
+2026-04-04 14:21:49 | INFO | ==================================================
+2026-04-04 14:21:49 | INFO | SIMPLE FLIP BOT STATS
+2026-04-04 14:21:49 | INFO | Runtime: 121.6 minutes
+2026-04-04 14:21:49 | INFO | Balance: $88.18
+2026-04-04 14:21:49 | INFO | Total positions: 18
+2026-04-04 14:21:49 | INFO | Position states: {'pending_sell': 18}
+2026-04-04 14:21:49 | INFO | Total trades: 18 (18 buys, 0 sells)
+2026-04-04 14:21:49 | INFO | Session PnL: $0.00
+2026-04-04 14:21:49 | INFO | ==================================================
+2026-04-04 14:22:49 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:22:49 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:22:49 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:22:50 | INFO | ------------------------------------------------------------
+2026-04-04 14:22:50 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:22:50 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:22:50 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:22:50 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:22:50 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:22:50 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:22:50 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:22:50 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:22:50 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:22:50 | INFO | ------------------------------------------------------------
+2026-04-04 14:23:50 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:23:50 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:23:50 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:23:51 | INFO | ------------------------------------------------------------
+2026-04-04 14:23:51 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:23:51 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:23:51 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:23:51 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:23:51 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:23:51 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:23:51 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:23:51 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:23:51 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:23:51 | INFO | ------------------------------------------------------------
+2026-04-04 14:24:51 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:24:51 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:24:51 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:24:51 | INFO | ------------------------------------------------------------
+2026-04-04 14:24:51 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:24:51 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:24:51 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:24:51 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:24:51 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:24:51 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:24:51 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:24:51 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:24:51 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:24:51 | INFO | ------------------------------------------------------------
+2026-04-04 14:25:51 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:25:51 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:25:51 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:25:52 | INFO | ------------------------------------------------------------
+2026-04-04 14:25:52 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:25:52 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:25:52 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:25:52 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:25:52 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:25:52 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:25:52 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:25:52 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:25:52 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:25:52 | INFO | ------------------------------------------------------------
+2026-04-04 14:26:52 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:26:52 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:26:52 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:26:52 | INFO | ------------------------------------------------------------
+2026-04-04 14:26:52 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:26:52 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:26:52 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:26:52 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:26:52 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:26:52 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:26:52 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:26:52 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:26:52 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:26:52 | INFO | ------------------------------------------------------------
+2026-04-04 14:26:52 | INFO | ==================================================
+2026-04-04 14:26:52 | INFO | SIMPLE FLIP BOT STATS
+2026-04-04 14:26:52 | INFO | Runtime: 126.6 minutes
+2026-04-04 14:26:52 | INFO | Balance: $88.18
+2026-04-04 14:26:52 | INFO | Total positions: 18
+2026-04-04 14:26:52 | INFO | Position states: {'pending_sell': 18}
+2026-04-04 14:26:52 | INFO | Total trades: 18 (18 buys, 0 sells)
+2026-04-04 14:26:52 | INFO | Session PnL: $0.00
+2026-04-04 14:26:52 | INFO | ==================================================
+2026-04-04 14:27:52 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:27:52 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:27:52 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:27:53 | INFO | ------------------------------------------------------------
+2026-04-04 14:27:53 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:27:53 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:27:53 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:27:53 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:27:53 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:27:53 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:27:53 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:27:53 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:27:53 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:27:53 | INFO | ------------------------------------------------------------
+2026-04-04 14:28:53 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:28:53 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:28:53 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:28:53 | INFO | ------------------------------------------------------------
+2026-04-04 14:28:53 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:28:53 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:28:53 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:28:53 | INFO |   HOU: $0.59 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:28:53 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:28:53 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:28:53 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:28:53 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:28:53 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:28:53 | INFO | ------------------------------------------------------------
+2026-04-04 14:29:53 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:29:53 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:29:53 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:29:54 | INFO | ------------------------------------------------------------
+2026-04-04 14:29:54 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:29:54 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:29:54 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:29:54 | INFO |   HOU: $0.59 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:29:54 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:29:54 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:29:54 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:29:54 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:29:54 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:29:54 | INFO | ------------------------------------------------------------
+2026-04-04 14:30:54 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:30:54 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:30:54 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:30:54 | INFO | ------------------------------------------------------------
+2026-04-04 14:30:54 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:30:54 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:30:54 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:30:54 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:30:54 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:30:54 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:30:54 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:30:54 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:30:54 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:30:54 | INFO | ------------------------------------------------------------
+2026-04-04 14:31:54 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:31:54 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:31:54 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:31:55 | INFO | ------------------------------------------------------------
+2026-04-04 14:31:55 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:31:55 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:31:55 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:31:55 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:31:55 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:31:55 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:31:55 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:31:55 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:31:55 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:31:55 | INFO | ------------------------------------------------------------
+2026-04-04 14:31:55 | INFO | ==================================================
+2026-04-04 14:31:55 | INFO | SIMPLE FLIP BOT STATS
+2026-04-04 14:31:55 | INFO | Runtime: 131.6 minutes
+2026-04-04 14:31:55 | INFO | Balance: $88.18
+2026-04-04 14:31:55 | INFO | Total positions: 18
+2026-04-04 14:31:55 | INFO | Position states: {'pending_sell': 18}
+2026-04-04 14:31:55 | INFO | Total trades: 18 (18 buys, 0 sells)
+2026-04-04 14:31:55 | INFO | Session PnL: $0.00
+2026-04-04 14:31:55 | INFO | ==================================================
+2026-04-04 14:32:55 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:32:55 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:32:55 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:32:55 | INFO | ------------------------------------------------------------
+2026-04-04 14:32:55 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:32:55 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:32:55 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:32:55 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:32:55 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:32:55 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.25 [SELL @ $0.85]
+2026-04-04 14:32:55 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:32:55 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:32:55 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:32:55 | INFO | ------------------------------------------------------------
+2026-04-04 14:33:55 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:33:55 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:33:55 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:33:56 | INFO | ------------------------------------------------------------
+2026-04-04 14:33:56 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:33:56 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:33:56 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:33:56 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:33:56 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:33:56 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.26 [SELL @ $0.85]
+2026-04-04 14:33:56 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:33:56 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:33:56 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:33:56 | INFO | ------------------------------------------------------------
+2026-04-04 14:34:56 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:34:56 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:34:56 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:34:56 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXNBAGAME-26APR05PHXCHI-CHI | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXNBAGAME-26APR05PHXCHI-CHI
+2026-04-04 14:34:56 | WARNING | Failed to fetch market KXNBAGAME-26APR05PHXCHI-CHI: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXNBAGAME-26APR05PHXCHI-CHI
+2026-04-04 14:34:56 | WARNING | Could not fetch market for KXNBAGAME-26APR05PHXCHI-CHI
+2026-04-04 14:34:56 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXNBAGAME-26APR05WASBKN-WAS | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXNBAGAME-26APR05WASBKN-WAS
+2026-04-04 14:34:56 | WARNING | Failed to fetch market KXNBAGAME-26APR05WASBKN-WAS: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXNBAGAME-26APR05WASBKN-WAS
+2026-04-04 14:34:56 | WARNING | Could not fetch market for KXNBAGAME-26APR05WASBKN-WAS
+2026-04-04 14:34:56 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXNBAGAME-26APR04DETPHI-PHI | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXNBAGAME-26APR04DETPHI-PHI
+2026-04-04 14:34:56 | WARNING | Failed to fetch market KXNBAGAME-26APR04DETPHI-PHI: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXNBAGAME-26APR04DETPHI-PHI
+2026-04-04 14:34:56 | WARNING | Could not fetch market for KXNBAGAME-26APR04DETPHI-PHI
+2026-04-04 14:34:56 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXNBAGAME-26APR04SASDEN-SAS | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXNBAGAME-26APR04SASDEN-SAS
+2026-04-04 14:34:56 | WARNING | Failed to fetch market KXNBAGAME-26APR04SASDEN-SAS: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXNBAGAME-26APR04SASDEN-SAS
+2026-04-04 14:34:56 | WARNING | Could not fetch market for KXNBAGAME-26APR04SASDEN-SAS
+2026-04-04 14:34:56 | ERROR | API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXNBAGAME-26APR04WASMIA-WAS | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXNBAGAME-26APR04WASMIA-WAS
+2026-04-04 14:34:56 | WARNING | Failed to fetch market KXNBAGAME-26APR04WASMIA-WAS: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXNBAGAME-26APR04WASMIA-WAS
+2026-04-04 14:34:56 | WARNING | Could not fetch market for KXNBAGAME-26APR04WASMIA-WAS
+2026-04-04 14:34:56 | INFO | ------------------------------------------------------------
+2026-04-04 14:34:56 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:34:56 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:34:56 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:34:56 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:34:56 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:34:56 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.26 [SELL @ $0.85]
+2026-04-04 14:34:56 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:34:56 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:34:56 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:34:56 | INFO | ------------------------------------------------------------
+2026-04-04 14:35:56 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:35:56 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:35:56 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:35:57 | INFO | ------------------------------------------------------------
+2026-04-04 14:35:57 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:35:57 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:35:57 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:35:57 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:35:57 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:35:57 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.26 [SELL @ $0.85]
+2026-04-04 14:35:57 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:35:57 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:35:57 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:35:57 | INFO | ------------------------------------------------------------
+2026-04-04 14:36:57 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:36:57 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:36:57 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:36:57 | INFO | ------------------------------------------------------------
+2026-04-04 14:36:57 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:36:57 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:36:57 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:36:57 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:36:57 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:36:57 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.26 [SELL @ $0.85]
+2026-04-04 14:36:57 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:36:57 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:36:57 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:36:57 | INFO | ------------------------------------------------------------
+2026-04-04 14:36:57 | INFO | ==================================================
+2026-04-04 14:36:57 | INFO | SIMPLE FLIP BOT STATS
+2026-04-04 14:36:57 | INFO | Runtime: 136.7 minutes
+2026-04-04 14:36:57 | INFO | Balance: $88.18
+2026-04-04 14:36:57 | INFO | Total positions: 18
+2026-04-04 14:36:57 | INFO | Position states: {'pending_sell': 18}
+2026-04-04 14:36:57 | INFO | Total trades: 18 (18 buys, 0 sells)
+2026-04-04 14:36:57 | INFO | Session PnL: $0.00
+2026-04-04 14:36:57 | INFO | ==================================================
+2026-04-04 14:37:57 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:37:57 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:37:57 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:37:58 | INFO | ------------------------------------------------------------
+2026-04-04 14:37:58 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:37:58 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:37:58 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:37:58 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:37:58 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:37:58 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.26 [SELL @ $0.85]
+2026-04-04 14:37:58 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:37:58 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:37:58 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:37:58 | INFO | ------------------------------------------------------------
+2026-04-04 14:38:58 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:38:58 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:38:58 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:38:58 | INFO | ------------------------------------------------------------
+2026-04-04 14:38:58 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:38:58 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:38:58 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:38:58 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:38:58 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:38:58 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.26 [SELL @ $0.85]
+2026-04-04 14:38:58 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:38:58 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:38:58 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:38:58 | INFO | ------------------------------------------------------------
+2026-04-04 14:39:58 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:39:58 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:39:58 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:39:59 | INFO | ------------------------------------------------------------
+2026-04-04 14:39:59 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:39:59 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:39:59 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:39:59 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:39:59 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:39:59 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.26 [SELL @ $0.85]
+2026-04-04 14:39:59 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:39:59 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:39:59 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:39:59 | INFO | ------------------------------------------------------------
+2026-04-04 14:40:59 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:40:59 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:40:59 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:40:59 | INFO | ------------------------------------------------------------
+2026-04-04 14:40:59 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:40:59 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:40:59 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:40:59 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:40:59 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:40:59 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.26 [SELL @ $0.85]
+2026-04-04 14:40:59 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:40:59 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:40:59 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:40:59 | INFO | ------------------------------------------------------------
+2026-04-04 14:42:00 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:42:00 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:42:00 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:42:00 | INFO | ------------------------------------------------------------
+2026-04-04 14:42:00 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:42:00 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:42:00 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:42:00 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:42:00 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:42:00 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.26 [SELL @ $0.85]
+2026-04-04 14:42:00 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:42:00 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:42:00 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:42:00 | INFO | ------------------------------------------------------------
+2026-04-04 14:42:00 | INFO | ==================================================
+2026-04-04 14:42:00 | INFO | SIMPLE FLIP BOT STATS
+2026-04-04 14:42:00 | INFO | Runtime: 141.7 minutes
+2026-04-04 14:42:00 | INFO | Balance: $88.18
+2026-04-04 14:42:00 | INFO | Total positions: 18
+2026-04-04 14:42:00 | INFO | Position states: {'pending_sell': 18}
+2026-04-04 14:42:00 | INFO | Total trades: 18 (18 buys, 0 sells)
+2026-04-04 14:42:00 | INFO | Session PnL: $0.00
+2026-04-04 14:42:00 | INFO | ==================================================
+2026-04-04 14:43:00 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:43:00 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:43:00 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:43:01 | INFO | ------------------------------------------------------------
+2026-04-04 14:43:01 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:43:01 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:43:01 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:43:01 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:43:01 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:43:01 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.26 [SELL @ $0.85]
+2026-04-04 14:43:01 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:43:01 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:43:01 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:43:01 | INFO | ------------------------------------------------------------
+2026-04-04 14:44:01 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:44:01 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:44:01 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:44:01 | INFO | ------------------------------------------------------------
+2026-04-04 14:44:01 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:44:01 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:44:01 | INFO |   ORL: $0.38 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:44:01 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:44:01 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:44:01 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.26 [SELL @ $0.85]
+2026-04-04 14:44:01 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:44:01 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:44:01 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:44:01 | INFO | ------------------------------------------------------------
+2026-04-04 14:45:01 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:45:01 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:45:01 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:45:02 | INFO | ------------------------------------------------------------
+2026-04-04 14:45:02 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:45:02 | INFO |   NYK: $0.47 [BUY ZONE] | ATL: $0.47 [BUY ZONE]
+2026-04-04 14:45:02 | INFO |   ORL: $0.35 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:45:02 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.38 [SELL @ $0.85]
+2026-04-04 14:45:02 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:45:02 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.26 [SELL @ $0.85]
+2026-04-04 14:45:02 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:45:02 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:45:02 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:45:02 | INFO | ------------------------------------------------------------
+2026-04-04 14:46:02 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:46:02 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:46:02 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:46:02 | INFO | ------------------------------------------------------------
+2026-04-04 14:46:02 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:46:02 | INFO |   NYK: $0.47 [BUY ZONE] | ATL: $0.47 [BUY ZONE]
+2026-04-04 14:46:02 | INFO |   ORL: $0.36 [BUY ZONE] | DET: $0.59 [BUY ZONE]
+2026-04-04 14:46:02 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.38 [SELL @ $0.85]
+2026-04-04 14:46:02 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:46:02 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.26 [SELL @ $0.85]
+2026-04-04 14:46:02 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:46:02 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:46:02 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:46:02 | INFO | ------------------------------------------------------------
+2026-04-04 14:47:02 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:47:02 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:47:02 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:47:03 | INFO | ------------------------------------------------------------
+2026-04-04 14:47:03 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:47:03 | INFO |   NYK: $0.47 [BUY ZONE] | ATL: $0.47 [BUY ZONE]
+2026-04-04 14:47:03 | INFO |   ORL: $0.36 [BUY ZONE] | DET: $0.60 [WAIT]
+2026-04-04 14:47:03 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:47:03 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:47:03 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.26 [SELL @ $0.85]
+2026-04-04 14:47:03 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:47:03 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:47:03 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:47:03 | INFO | ------------------------------------------------------------
+2026-04-04 14:47:03 | INFO | ==================================================
+2026-04-04 14:47:03 | INFO | SIMPLE FLIP BOT STATS
+2026-04-04 14:47:03 | INFO | Runtime: 146.8 minutes
+2026-04-04 14:47:03 | INFO | Balance: $88.18
+2026-04-04 14:47:03 | INFO | Total positions: 18
+2026-04-04 14:47:03 | INFO | Position states: {'pending_sell': 18}
+2026-04-04 14:47:03 | INFO | Total trades: 18 (18 buys, 0 sells)
+2026-04-04 14:47:03 | INFO | Session PnL: $0.00
+2026-04-04 14:47:03 | INFO | ==================================================
+2026-04-04 14:48:03 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:48:03 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:48:03 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:48:03 | INFO | ------------------------------------------------------------
+2026-04-04 14:48:03 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:48:03 | INFO |   NYK: $0.47 [BUY ZONE] | ATL: $0.47 [BUY ZONE]
+2026-04-04 14:48:03 | INFO |   ORL: $0.36 [BUY ZONE] | DET: $0.60 [WAIT]
+2026-04-04 14:48:03 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:48:03 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:48:03 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.26 [SELL @ $0.85]
+2026-04-04 14:48:03 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:48:03 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:48:03 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:48:03 | INFO | ------------------------------------------------------------
+2026-04-04 14:49:03 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:49:03 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:49:03 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:49:04 | INFO | ------------------------------------------------------------
+2026-04-04 14:49:04 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:49:04 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:49:04 | INFO |   ORL: $0.36 [BUY ZONE] | DET: $0.60 [WAIT]
+2026-04-04 14:49:04 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:49:04 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:49:04 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.26 [SELL @ $0.85]
+2026-04-04 14:49:04 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:49:04 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:49:04 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:49:04 | INFO | ------------------------------------------------------------
+2026-04-04 14:50:04 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:50:04 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:50:04 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:50:04 | INFO | ------------------------------------------------------------
+2026-04-04 14:50:04 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:50:04 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:50:04 | INFO |   ORL: $0.36 [BUY ZONE] | DET: $0.60 [WAIT]
+2026-04-04 14:50:04 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:50:04 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:50:04 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.26 [SELL @ $0.85]
+2026-04-04 14:50:04 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:50:04 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:50:04 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:50:04 | INFO | ------------------------------------------------------------
+2026-04-04 14:51:04 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:51:04 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:51:04 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:51:05 | INFO | ------------------------------------------------------------
+2026-04-04 14:51:05 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:51:05 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:51:05 | INFO |   ORL: $0.36 [BUY ZONE] | DET: $0.60 [WAIT]
+2026-04-04 14:51:05 | INFO |   HOU: $0.58 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:51:05 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:51:05 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.26 [SELL @ $0.85]
+2026-04-04 14:51:05 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:51:05 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:51:05 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:51:05 | INFO | ------------------------------------------------------------
+2026-04-04 14:52:05 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:52:05 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:52:05 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:52:06 | INFO | ------------------------------------------------------------
+2026-04-04 14:52:06 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:52:06 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:52:06 | INFO |   ORL: $0.36 [BUY ZONE] | DET: $0.60 [WAIT]
+2026-04-04 14:52:06 | INFO |   HOU: $0.59 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:52:06 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:52:06 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.26 [SELL @ $0.85]
+2026-04-04 14:52:06 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:52:06 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:52:06 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:52:06 | INFO | ------------------------------------------------------------
+2026-04-04 14:52:06 | INFO | ==================================================
+2026-04-04 14:52:06 | INFO | SIMPLE FLIP BOT STATS
+2026-04-04 14:52:06 | INFO | Runtime: 151.8 minutes
+2026-04-04 14:52:06 | INFO | Balance: $88.18
+2026-04-04 14:52:06 | INFO | Total positions: 18
+2026-04-04 14:52:06 | INFO | Position states: {'pending_sell': 18}
+2026-04-04 14:52:06 | INFO | Total trades: 18 (18 buys, 0 sells)
+2026-04-04 14:52:06 | INFO | Session PnL: $0.00
+2026-04-04 14:52:06 | INFO | ==================================================
+2026-04-04 14:53:06 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:53:06 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:53:06 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:53:06 | INFO | ------------------------------------------------------------
+2026-04-04 14:53:06 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:53:06 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:53:06 | INFO |   ORL: $0.36 [BUY ZONE] | DET: $0.60 [WAIT]
+2026-04-04 14:53:06 | INFO |   HOU: $0.59 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:53:06 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:53:06 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.26 [SELL @ $0.85]
+2026-04-04 14:53:06 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:53:06 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:53:06 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:53:06 | INFO | ------------------------------------------------------------
+2026-04-04 14:54:06 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:54:06 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:54:06 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:54:07 | INFO | ------------------------------------------------------------
+2026-04-04 14:54:07 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:54:07 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:54:07 | INFO |   ORL: $0.36 [BUY ZONE] | DET: $0.60 [WAIT]
+2026-04-04 14:54:07 | INFO |   HOU: $0.59 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:54:07 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:54:07 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.26 [SELL @ $0.85]
+2026-04-04 14:54:07 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:54:07 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:54:07 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:54:07 | INFO | ------------------------------------------------------------
+2026-04-04 14:55:07 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:55:07 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:55:07 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:55:07 | INFO | ------------------------------------------------------------
+2026-04-04 14:55:07 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:55:07 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:55:07 | INFO |   ORL: $0.36 [BUY ZONE] | DET: $0.60 [WAIT]
+2026-04-04 14:55:07 | INFO |   HOU: $0.59 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:55:07 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:55:07 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.26 [SELL @ $0.85]
+2026-04-04 14:55:07 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:55:07 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:55:07 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:55:07 | INFO | ------------------------------------------------------------
+2026-04-04 14:56:07 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:56:07 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:56:07 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:56:08 | INFO | ------------------------------------------------------------
+2026-04-04 14:56:08 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:56:08 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:56:08 | INFO |   ORL: $0.36 [BUY ZONE] | DET: $0.60 [WAIT]
+2026-04-04 14:56:08 | INFO |   HOU: $0.59 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:56:08 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:56:08 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.26 [SELL @ $0.85]
+2026-04-04 14:56:08 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:56:08 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:56:08 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:56:08 | INFO | ------------------------------------------------------------
+2026-04-04 14:57:08 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:57:08 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:57:08 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:57:08 | INFO | ------------------------------------------------------------
+2026-04-04 14:57:08 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:57:08 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:57:08 | INFO |   ORL: $0.37 [BUY ZONE] | DET: $0.60 [WAIT]
+2026-04-04 14:57:08 | INFO |   HOU: $0.59 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:57:08 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:57:08 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.26 [SELL @ $0.85]
+2026-04-04 14:57:08 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:57:08 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:57:08 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:57:08 | INFO | ------------------------------------------------------------
+2026-04-04 14:57:08 | INFO | ==================================================
+2026-04-04 14:57:08 | INFO | SIMPLE FLIP BOT STATS
+2026-04-04 14:57:08 | INFO | Runtime: 156.9 minutes
+2026-04-04 14:57:08 | INFO | Balance: $88.18
+2026-04-04 14:57:08 | INFO | Total positions: 18
+2026-04-04 14:57:08 | INFO | Position states: {'pending_sell': 18}
+2026-04-04 14:57:08 | INFO | Total trades: 18 (18 buys, 0 sells)
+2026-04-04 14:57:08 | INFO | Session PnL: $0.00
+2026-04-04 14:57:08 | INFO | ==================================================
+2026-04-04 14:58:08 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:58:08 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:58:08 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:58:09 | INFO | ------------------------------------------------------------
+2026-04-04 14:58:09 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:58:09 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:58:09 | INFO |   ORL: $0.37 [BUY ZONE] | DET: $0.60 [WAIT]
+2026-04-04 14:58:09 | INFO |   HOU: $0.59 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:58:09 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:58:09 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.26 [SELL @ $0.85]
+2026-04-04 14:58:09 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:58:09 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:58:09 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:58:09 | INFO | ------------------------------------------------------------
+2026-04-04 14:59:09 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:59:09 | INFO | Fetched 100 markets for KXNBAGAME
+2026-04-04 14:59:09 | INFO | Checking 18 pending positions for finalized markets...
+2026-04-04 14:59:09 | INFO | ------------------------------------------------------------
+2026-04-04 14:59:09 | INFO | NBA GAME MARKETS STATUS:
+2026-04-04 14:59:09 | INFO |   NYK: $0.48 [BUY ZONE] | ATL: $0.48 [BUY ZONE]
+2026-04-04 14:59:09 | INFO |   ORL: $0.37 [BUY ZONE] | DET: $0.60 [WAIT]
+2026-04-04 14:59:09 | INFO |   HOU: $0.59 [SELL @ $0.85] | GSW: $0.39 [SELL @ $0.85]
+2026-04-04 14:59:09 | INFO |   SAC: $0.13 [SELL @ $0.85] | LAC: $0.85 [WAIT]
+2026-04-04 14:59:09 | INFO |   LAL: $0.72 [WAIT] | DAL: $0.26 [SELL @ $0.85]
+2026-04-04 14:59:09 | INFO |   MIN: $0.51 [SELL @ $0.85] | CHA: $0.48 [SELL @ $0.85]
+2026-04-04 14:59:09 | INFO |   ORL: $0.61 [WAIT] | NOP: $0.37 [SELL @ $0.85]
+2026-04-04 14:59:09 | INFO |   UTA: $0.05 [SELL @ $0.85] | OKC: $0.95 [WAIT]
+2026-04-04 14:59:09 | INFO | ------------------------------------------------------------

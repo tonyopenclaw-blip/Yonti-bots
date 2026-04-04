@@ -29525,3 +29525,1580 @@ NameError: name 'coin' is not defined
 2026-04-04 10:59:44 | INFO | Day P&L: $42.08 (42.1%) / $100.00 limit
 2026-04-04 10:59:44 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
 2026-04-04 10:59:44 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:00:03 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:00:16 | INFO | Status: cash=$57.92, positions=0, loop=5802, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:00:16 | INFO | Day P&L: $42.08 (42.1%) / $100.00 limit
+2026-04-04 11:00:16 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:00:16 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:00:19 | INFO | FIRST_CROSS: KXBNB15M-26APR040715-15 target price set to $589.98
+2026-04-04 11:00:19 | INFO | FIRST_CROSS: KXSOL15M-26APR040715-15 target price set to $80.22
+2026-04-04 11:00:26 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXBTC15M-26APR040715-15, attempt 1/3, waiting 1s
+2026-04-04 11:00:27 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXBTC15M-26APR040715-15, attempt 2/3, waiting 2s
+2026-04-04 11:00:29 | INFO | FIRST_CROSS: KXBTC15M-26APR040715-15 target price set to $67,162.37
+2026-04-04 11:00:29 | INFO | FIRST_CROSS: KXDOGE15M-26APR040715-15 target price set to $0.09
+2026-04-04 11:00:30 | INFO | FIRST_CROSS: KXXRP15M-26APR040715-15 target price set to $1.31
+2026-04-04 11:00:30 | INFO | FIRST_CROSS: KXHYPE15M-26APR040715-15 target price set to $35.79
+2026-04-04 11:00:36 | INFO | FIRST_CROSS: KXBTC15M-26APR040715-15 | Direction: down | Target: $67,162.37 | Coin Price: $67,162.36
+2026-04-04 11:00:36 | INFO | FIRST_CROSS SIGNAL: KXBTC15M-26APR040715-15 | Direction: down | Target: $67,162.37 | Side: no @ $0.5050 | Size: $0.50 | CONF=33
+2026-04-04 11:00:36 | INFO | [BTC] Opened first_cross: no KXBTC15M-26APR040715-15 @ $0.5050, size=$0.50, cost=$0.25
+2026-04-04 11:00:36 | INFO | 🚀 [BTC] TRADE EXECUTED: first_cross no KXBTC15M-26APR040715-15 @ $0.5050, size=$0.50
+2026-04-04 11:00:40 | INFO | FIRST_CROSS: KXETH15M-26APR040715-15 target price set to $2,054.27
+2026-04-04 11:00:40 | INFO | FIRST_CROSS: KXHYPE15M-26APR040715-15 | Direction: up | Target: $35.79 | Coin Price: $35.82
+2026-04-04 11:00:40 | INFO | FIRST_CROSS SIGNAL: KXHYPE15M-26APR040715-15 | Direction: up | Target: $35.79 | Side: yes @ $0.5000 | Size: $0.50 | CONF=38
+2026-04-04 11:00:40 | INFO | [HYPE] Opened first_cross: yes KXHYPE15M-26APR040715-15 @ $0.5000, size=$0.50, cost=$0.25
+2026-04-04 11:00:40 | INFO | 🚀 [HYPE] TRADE EXECUTED: first_cross yes KXHYPE15M-26APR040715-15 @ $0.5000, size=$0.50
+2026-04-04 11:00:43 | INFO | FIRST_CROSS: KXSOL15M-26APR040715-15 | Direction: up | Target: $80.22 | Coin Price: $80.23
+2026-04-04 11:00:43 | INFO | FIRST_CROSS SIGNAL: KXSOL15M-26APR040715-15 | Direction: up | Target: $80.22 | Side: yes @ $0.4350 | Size: $0.50 | CONF=33
+2026-04-04 11:00:43 | INFO | [SOL] Opened first_cross: yes KXSOL15M-26APR040715-15 @ $0.4350, size=$0.50, cost=$0.22
+2026-04-04 11:00:43 | INFO | 🚀 [SOL] TRADE EXECUTED: first_cross yes KXSOL15M-26APR040715-15 @ $0.4350, size=$0.50
+2026-04-04 11:00:49 | INFO | Status: cash=$57.20, positions=3, loop=5811, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:00:49 | INFO | Day P&L: $42.80 (42.8%) / $100.00 limit
+2026-04-04 11:00:49 | INFO | Coins: BTC: first_cross no@0.51 | ETH: idle | BNB: idle | SOL: first_cross yes@0.43 | DOGE: idle | XRP: idle | HYPE: first_cross yes@0.50 | ADA: idle
+2026-04-04 11:00:50 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:00:50 | INFO | FIRST_CROSS: KXETH15M-26APR040715-15 | Direction: down | Target: $2,054.27 | Coin Price: $2,054.25
+2026-04-04 11:00:50 | INFO | FIRST_CROSS SIGNAL: KXETH15M-26APR040715-15 | Direction: down | Target: $2,054.27 | Side: no @ $0.3800 | Size: $0.50 | CONF=46
+2026-04-04 11:00:50 | INFO | [ETH] Opened first_cross: no KXETH15M-26APR040715-15 @ $0.3800, size=$0.50, cost=$0.31
+2026-04-04 11:00:50 | INFO | 🚀 [ETH] TRADE EXECUTED: first_cross no KXETH15M-26APR040715-15 @ $0.3800, size=$0.50
+2026-04-04 11:00:56 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:00:57 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 2/3, waiting 2s
+2026-04-04 11:00:59 | INFO | FIRST_CROSS: KXDOGE15M-26APR040715-15 | Direction: up | Target: $0.09 | Coin Price: $0.09
+2026-04-04 11:00:59 | INFO | FIRST_CROSS SIGNAL: KXDOGE15M-26APR040715-15 | Direction: up | Target: $0.09 | Side: yes @ $0.5200 | Size: $0.50 | CONF=38
+2026-04-04 11:00:59 | INFO | [DOGE] Opened first_cross: yes KXDOGE15M-26APR040715-15 @ $0.5200, size=$0.50, cost=$0.26
+2026-04-04 11:00:59 | INFO | 🚀 [DOGE] TRADE EXECUTED: first_cross yes KXDOGE15M-26APR040715-15 @ $0.5200, size=$0.50
+2026-04-04 11:00:59 | INFO | FIRST_CROSS: KXXRP15M-26APR040715-15 crossed UP through $0.50 (was $0.4250, now $0.5600)
+2026-04-04 11:01:03 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:01:22 | INFO | Status: cash=$56.63, positions=5, loop=5820, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:01:22 | INFO | Day P&L: $43.37 (43.4%) / $100.00 limit
+2026-04-04 11:01:22 | INFO | Coins: BTC: first_cross no@0.51 | ETH: first_cross no@0.38 | BNB: idle | SOL: first_cross yes@0.43 | DOGE: first_cross yes@0.52 | XRP: idle | HYPE: first_cross yes@0.50 | ADA: idle
+2026-04-04 11:01:23 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:01:30 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:01:35 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:01:40 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:01:45 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:01:50 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:01:55 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:02:00 | INFO | KXHYPE15M-26APR040715-15: CONF=50 Long trailing stop ACTIVE @ $0.6800, peak=$0.6150, buffer=20%
+2026-04-04 11:02:00 | INFO | [HYPE] Closed KXHYPE15M-26APR040715-15: CONF=50 TRAILING STOP: locked in profits, Gross PnL=$0.09, Fee=$0.001, Net PnL=$0.09
+2026-04-04 11:02:00 | INFO | Strategy first_cross stats: W=100.00%, R=0.08x, Kelly=20.00%
+2026-04-04 11:02:00 | INFO | Trade recorded: KXHYPE15M-26APR040715-15 yes first_cross PnL=$0.09
+2026-04-04 11:02:00 | INFO | [HYPE] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-04 11:02:03 | INFO | Status: cash=$56.63, positions=4, loop=5829, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:02:03 | INFO | Day P&L: $43.37 (43.4%) / $100.00 limit
+2026-04-04 11:02:03 | INFO | Coins: BTC: first_cross no@0.51 | ETH: first_cross no@0.38 | BNB: idle | SOL: first_cross yes@0.43 | DOGE: first_cross yes@0.52 | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:02:03 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXBTC15M-26APR040715-15, attempt 1/3, waiting 1s
+2026-04-04 11:02:05 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXBTC15M-26APR040715-15, attempt 2/3, waiting 2s
+2026-04-04 11:02:08 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:02:29 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:02:30 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:02:36 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:02:41 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:02:46 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:02:51 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:02:56 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:03:01 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:03:06 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:03:11 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:03:16 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:03:21 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:03:26 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:03:34 | INFO | Status: cash=$56.63, positions=4, loop=5849, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:03:34 | INFO | Day P&L: $43.37 (43.4%) / $100.00 limit
+2026-04-04 11:03:34 | INFO | Coins: BTC: first_cross no@0.51 | ETH: first_cross no@0.38 | BNB: idle | SOL: first_cross yes@0.43 | DOGE: first_cross yes@0.52 | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:03:35 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXBTC15M-26APR040715-15, attempt 1/3, waiting 1s
+2026-04-04 11:03:36 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXBTC15M-26APR040715-15, attempt 2/3, waiting 2s
+2026-04-04 11:03:39 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:03:57 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:03:59 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 2/3, waiting 2s
+2026-04-04 11:04:01 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 3/3, waiting 4s
+2026-04-04 11:04:05 | WARNING | Failed to fetch markets: Max retries exceeded
+2026-04-04 11:04:08 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:04:13 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:04:18 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:04:23 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:04:28 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:04:36 | INFO | Status: cash=$56.63, positions=4, loop=5862, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:04:36 | INFO | Day P&L: $43.37 (43.4%) / $100.00 limit
+2026-04-04 11:04:36 | INFO | Coins: BTC: first_cross no@0.51 | ETH: first_cross no@0.38 | BNB: idle | SOL: first_cross yes@0.43 | DOGE: first_cross yes@0.52 | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:04:36 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXBTC15M-26APR040715-15, attempt 1/3, waiting 1s
+2026-04-04 11:04:38 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXBTC15M-26APR040715-15, attempt 2/3, waiting 2s
+2026-04-04 11:04:41 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:04:56 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:05:01 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:05:06 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:05:11 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:05:16 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:05:21 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:05:26 | INFO | FIRST_CROSS: KXBNB15M-26APR040715-15 crossed DOWN through $0.50 (was $0.5700, now $0.3750)
+2026-04-04 11:05:29 | INFO | Status: cash=$56.63, positions=4, loop=5874, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:05:29 | INFO | Day P&L: $43.37 (43.4%) / $100.00 limit
+2026-04-04 11:05:29 | INFO | Coins: BTC: first_cross no@0.51 | ETH: first_cross no@0.38 | BNB: idle | SOL: first_cross yes@0.43 | DOGE: first_cross yes@0.52 | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:05:30 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXBTC15M-26APR040715-15, attempt 1/3, waiting 1s
+2026-04-04 11:05:31 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXBTC15M-26APR040715-15, attempt 2/3, waiting 2s
+2026-04-04 11:05:33 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXBTC15M-26APR040715-15, attempt 3/3, waiting 4s
+2026-04-04 11:05:37 | WARNING | Failed to fetch market KXBTC15M-26APR040715-15: Max retries exceeded
+2026-04-04 11:05:37 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXETH15M-26APR040715-15, attempt 1/3, waiting 1s
+2026-04-04 11:05:39 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXETH15M-26APR040715-15, attempt 2/3, waiting 2s
+2026-04-04 11:05:41 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:06:00 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:06:07 | INFO | KXETH15M-26APR040715-15: CONF=50 Short trailing stop ACTIVE @ $0.2050, trough=$0.2050, buffer=20%
+2026-04-04 11:06:07 | INFO | [ETH] Closed KXETH15M-26APR040715-15: CONF=50 TRAILING STOP: locked in profits, Gross PnL=$0.09, Fee=$0.001, Net PnL=$0.09
+2026-04-04 11:06:07 | INFO | Strategy first_cross stats: W=86.36%, R=0.65x, Kelly=20.00%
+2026-04-04 11:06:07 | INFO | Trade recorded: KXETH15M-26APR040715-15 no first_cross PnL=$0.09
+2026-04-04 11:06:07 | INFO | [ETH] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-04 11:06:13 | INFO | Status: cash=$56.63, positions=3, loop=5884, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:06:13 | INFO | Day P&L: $43.37 (43.4%) / $100.00 limit
+2026-04-04 11:06:13 | INFO | Coins: BTC: first_cross no@0.51 | ETH: idle | BNB: idle | SOL: first_cross yes@0.43 | DOGE: first_cross yes@0.52 | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:06:14 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:06:45 | INFO | Status: cash=$56.63, positions=3, loop=5894, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:06:45 | INFO | Day P&L: $43.37 (43.4%) / $100.00 limit
+2026-04-04 11:06:45 | INFO | Coins: BTC: first_cross no@0.51 | ETH: idle | BNB: idle | SOL: first_cross yes@0.43 | DOGE: first_cross yes@0.52 | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:06:45 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:07:01 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:07:02 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:07:07 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:07:12 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:07:17 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:07:23 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:07:28 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:07:33 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:07:38 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:07:43 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:07:48 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:07:53 | INFO | FIRST_CROSS: KXXRP15M-26APR040715-15 | Direction: down | Target: $1.31 | Coin Price: $1.31
+2026-04-04 11:07:53 | INFO | FIRST_CROSS SIGNAL: KXXRP15M-26APR040715-15 | Direction: down | Target: $1.31 | Side: no @ $0.6150 | Size: $0.50 | CONF=48
+2026-04-04 11:07:53 | INFO | [XRP] Opened first_cross: no KXXRP15M-26APR040715-15 @ $0.6150, size=$0.50, cost=$0.19
+2026-04-04 11:07:53 | INFO | 🚀 [XRP] TRADE EXECUTED: first_cross no KXXRP15M-26APR040715-15 @ $0.6150, size=$0.50
+2026-04-04 11:07:56 | INFO | Status: cash=$56.44, positions=4, loop=5910, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:07:56 | INFO | Day P&L: $43.56 (43.6%) / $100.00 limit
+2026-04-04 11:07:56 | INFO | Coins: BTC: first_cross no@0.51 | ETH: idle | BNB: idle | SOL: first_cross yes@0.43 | DOGE: first_cross yes@0.52 | XRP: first_cross no@0.61 | HYPE: idle | ADA: idle
+2026-04-04 11:07:57 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:08:03 | INFO | FIRST_CROSS: KXBNB15M-26APR040715-15 | Direction: down | Target: $589.98 | Coin Price: $589.90
+2026-04-04 11:08:03 | INFO | FIRST_CROSS SIGNAL: KXBNB15M-26APR040715-15 | Direction: down | Target: $589.98 | Side: no @ $0.5200 | Size: $0.50 | CONF=43
+2026-04-04 11:08:03 | INFO | [BNB] Opened first_cross: no KXBNB15M-26APR040715-15 @ $0.5200, size=$0.50, cost=$0.24
+2026-04-04 11:08:03 | INFO | 🚀 [BNB] TRADE EXECUTED: first_cross no KXBNB15M-26APR040715-15 @ $0.5200, size=$0.50
+2026-04-04 11:08:03 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:08:08 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:08:13 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:08:18 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:08:23 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:08:28 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:08:33 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:08:38 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:08:43 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:08:48 | INFO | FIRST_CROSS: KXHYPE15M-26APR040715-15 crossed DOWN through $0.50 (was $0.5850, now $0.4150)
+2026-04-04 11:08:51 | INFO | Status: cash=$56.20, positions=5, loop=5922, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:08:51 | INFO | Day P&L: $43.80 (43.8%) / $100.00 limit
+2026-04-04 11:08:51 | INFO | Coins: BTC: first_cross no@0.51 | ETH: idle | BNB: first_cross no@0.52 | SOL: first_cross yes@0.43 | DOGE: first_cross yes@0.52 | XRP: first_cross no@0.61 | HYPE: idle | ADA: idle
+2026-04-04 11:08:53 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:09:05 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:09:06 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:09:07 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 2/3, waiting 2s
+2026-04-04 11:09:16 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:09:17 | INFO | DRIFT BUY signal: KXHYPE15M-26APR040715-15 @ $0.3450, size=$0.50, Kelly=4.00%, CONF=32, SL=$0.2000, TS=20%buffer/25%trigger, Coinbase=neutral, first_cross=no
+2026-04-04 11:09:17 | INFO | [HYPE] Opened drift_buy: yes KXHYPE15M-26APR040715-15 @ $0.3450, size=$0.50, cost=$0.17
+2026-04-04 11:09:17 | INFO | 🚀 [HYPE] TRADE EXECUTED: drift_buy yes KXHYPE15M-26APR040715-15 @ $0.3450, size=$0.50
+2026-04-04 11:09:23 | INFO | Status: cash=$56.03, positions=6, loop=5930, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:09:23 | INFO | Day P&L: $43.97 (44.0%) / $100.00 limit
+2026-04-04 11:09:23 | INFO | Coins: BTC: first_cross no@0.51 | ETH: idle | BNB: first_cross no@0.52 | SOL: first_cross yes@0.43 | DOGE: first_cross yes@0.52 | XRP: first_cross no@0.61 | HYPE: drift_buy yes@0.34 | ADA: idle
+2026-04-04 11:09:24 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:09:39 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:09:41 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 2/3, waiting 2s
+2026-04-04 11:09:43 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 3/3, waiting 4s
+2026-04-04 11:09:47 | WARNING | Failed to fetch markets: Max retries exceeded
+2026-04-04 11:09:50 | INFO | KXBTC15M-26APR040715-15: CONF=50 Short trailing stop ACTIVE @ $0.3150, trough=$0.3150, buffer=20%
+2026-04-04 11:09:50 | INFO | [BTC] Closed KXBTC15M-26APR040715-15: CONF=50 TRAILING STOP: locked in profits, Gross PnL=$0.10, Fee=$0.002, Net PnL=$0.09
+2026-04-04 11:09:50 | INFO | Strategy first_cross stats: W=80.95%, R=0.76x, Kelly=20.00%
+2026-04-04 11:09:50 | INFO | Trade recorded: KXBTC15M-26APR040715-15 no first_cross PnL=$0.09
+2026-04-04 11:09:50 | INFO | [BTC] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-04 11:09:50 | INFO | FIRST_CROSS: KXBTC15M-26APR040715-15 crossed DOWN through $0.50 (was $0.5050, now $0.3150)
+2026-04-04 11:09:50 | INFO | DRIFT BUY signal: KXBTC15M-26APR040715-15 @ $0.3150, size=$0.50, Kelly=4.00%, CONF=40, SL=$0.2000, TS=20%buffer/25%trigger, Coinbase=neutral, first_cross=no
+2026-04-04 11:09:50 | INFO | [BTC] Opened drift_buy: yes KXBTC15M-26APR040715-15 @ $0.3150, size=$0.50, cost=$0.16
+2026-04-04 11:09:50 | INFO | 🚀 [BTC] TRADE EXECUTED: drift_buy yes KXBTC15M-26APR040715-15 @ $0.3150, size=$0.50
+2026-04-04 11:09:56 | INFO | Status: cash=$55.87, positions=6, loop=5938, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:09:56 | INFO | Day P&L: $44.13 (44.1%) / $100.00 limit
+2026-04-04 11:09:56 | INFO | Coins: BTC: drift_buy yes@0.32 | ETH: idle | BNB: first_cross no@0.52 | SOL: first_cross yes@0.43 | DOGE: first_cross yes@0.52 | XRP: first_cross no@0.61 | HYPE: drift_buy yes@0.34 | ADA: idle
+2026-04-04 11:09:57 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:10:18 | INFO | KXHYPE15M-26APR040715-15: CONF=50 Long trailing stop ACTIVE @ $0.6250, peak=$0.3450, buffer=20%
+2026-04-04 11:10:18 | INFO | [HYPE] Closed KXHYPE15M-26APR040715-15: CONF=50 TRAILING STOP: locked in profits, Gross PnL=$0.14, Fee=$0.002, Net PnL=$0.14
+2026-04-04 11:10:18 | INFO | Strategy drift_buy stats: W=53.85%, R=1.02x, Kelly=8.46%
+2026-04-04 11:10:18 | INFO | Trade recorded: KXHYPE15M-26APR040715-15 yes drift_buy PnL=$0.14
+2026-04-04 11:10:18 | INFO | [HYPE] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-04 11:10:28 | INFO | Status: cash=$55.87, positions=5, loop=5948, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:10:28 | INFO | Day P&L: $44.13 (44.1%) / $100.00 limit
+2026-04-04 11:10:28 | INFO | Coins: BTC: drift_buy yes@0.32 | ETH: idle | BNB: first_cross no@0.52 | SOL: first_cross yes@0.43 | DOGE: first_cross yes@0.52 | XRP: first_cross no@0.61 | HYPE: idle | ADA: idle
+2026-04-04 11:10:29 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:10:41 | INFO | KXBTC15M-26APR040715-15: CONF=50 Long trailing stop ACTIVE @ $0.6150, peak=$0.3150, buffer=20%
+2026-04-04 11:10:41 | INFO | [BTC] Closed KXBTC15M-26APR040715-15: CONF=50 TRAILING STOP: locked in profits, Gross PnL=$0.15, Fee=$0.002, Net PnL=$0.15
+2026-04-04 11:10:41 | INFO | Strategy drift_buy stats: W=54.55%, R=0.82x, Kelly=0.00%
+2026-04-04 11:10:41 | INFO | Trade recorded: KXBTC15M-26APR040715-15 yes drift_buy PnL=$0.15
+2026-04-04 11:10:41 | INFO | [BTC] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-04 11:10:41 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:10:46 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:10:51 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:10:56 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:11:01 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:11:06 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:11:11 | INFO | KXSOL15M-26APR040715-15: Max hold time exceeded (10.5min > 10min, CONF=50) - closing
+2026-04-04 11:11:11 | INFO | [SOL] Closed KXSOL15M-26APR040715-15: Max hold time: 10.5min > 10min, PnL=$-0.12
+2026-04-04 11:11:11 | INFO | Strategy first_cross stats: W=75.00%, R=0.41x, Kelly=13.35%
+2026-04-04 11:11:11 | INFO | Trade recorded: KXSOL15M-26APR040715-15 yes first_cross PnL=$-0.12
+2026-04-04 11:11:11 | INFO | [SOL] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-04 11:11:11 | INFO | KXDOGE15M-26APR040715-15: Max hold time exceeded (10.2min > 10min, CONF=50) - closing
+2026-04-04 11:11:11 | INFO | [DOGE] Closed KXDOGE15M-26APR040715-15: Max hold time: 10.2min > 10min, PnL=$-0.02
+2026-04-04 11:11:11 | INFO | Strategy first_cross stats: W=87.50%, R=0.94x, Kelly=20.00%
+2026-04-04 11:11:11 | INFO | Trade recorded: KXDOGE15M-26APR040715-15 yes first_cross PnL=$-0.02
+2026-04-04 11:11:11 | INFO | [DOGE] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-04 11:11:11 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:11:15 | INFO | Status: cash=$55.87, positions=2, loop=5959, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:11:15 | INFO | Day P&L: $44.13 (44.1%) / $100.00 limit
+2026-04-04 11:11:15 | INFO | Coins: BTC: idle | ETH: idle | BNB: first_cross no@0.52 | SOL: idle | DOGE: idle | XRP: first_cross no@0.61 | HYPE: idle | ADA: idle
+2026-04-04 11:11:15 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXBNB15M-26APR040715-15, attempt 1/3, waiting 1s
+2026-04-04 11:11:17 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXBNB15M-26APR040715-15, attempt 2/3, waiting 2s
+2026-04-04 11:11:19 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:11:19 | INFO | DRIFT BUY signal: KXHYPE15M-26APR040715-15 @ $0.3150, size=$0.50, Kelly=4.00%, CONF=37, SL=$0.2000, TS=20%buffer/25%trigger, Coinbase=neutral, first_cross=no
+2026-04-04 11:11:19 | INFO | [HYPE] Opened drift_buy: yes KXHYPE15M-26APR040715-15 @ $0.3150, size=$0.50, cost=$0.16
+2026-04-04 11:11:19 | INFO | 🚀 [HYPE] TRADE EXECUTED: drift_buy yes KXHYPE15M-26APR040715-15 @ $0.3150, size=$0.50
+2026-04-04 11:11:28 | INFO | FIRST_CROSS: KXDOGE15M-26APR040715-15 crossed UP through $0.50 (was $0.4900, now $0.6250)
+2026-04-04 11:11:34 | INFO | KXBNB15M-26APR040715-15: CONF=50 Short trailing stop ACTIVE @ $0.2550, trough=$0.2550, buffer=20%
+2026-04-04 11:11:34 | INFO | [BNB] Closed KXBNB15M-26APR040715-15: CONF=50 TRAILING STOP: locked in profits, Gross PnL=$0.13, Fee=$0.002, Net PnL=$0.13
+2026-04-04 11:11:34 | INFO | Strategy first_cross stats: W=84.21%, R=0.63x, Kelly=20.00%
+2026-04-04 11:11:34 | INFO | Trade recorded: KXBNB15M-26APR040715-15 no first_cross PnL=$0.13
+2026-04-04 11:11:34 | INFO | [BNB] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-04 11:11:43 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:11:45 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 2/3, waiting 2s
+2026-04-04 11:11:47 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 3/3, waiting 4s
+2026-04-04 11:11:51 | WARNING | Failed to fetch markets: Max retries exceeded
+2026-04-04 11:11:54 | INFO | Status: cash=$55.71, positions=2, loop=5968, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:11:54 | INFO | Day P&L: $44.29 (44.3%) / $100.00 limit
+2026-04-04 11:11:54 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: first_cross no@0.61 | HYPE: drift_buy yes@0.32 | ADA: idle
+2026-04-04 11:11:54 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:12:19 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:12:26 | INFO | Status: cash=$55.71, positions=2, loop=5978, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:12:26 | INFO | Day P&L: $44.29 (44.3%) / $100.00 limit
+2026-04-04 11:12:26 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: first_cross no@0.61 | HYPE: drift_buy yes@0.32 | ADA: idle
+2026-04-04 11:12:26 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:12:45 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:12:46 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 2/3, waiting 2s
+2026-04-04 11:12:48 | INFO | [HYPE] Closed KXHYPE15M-26APR040715-15: HARD SL hit: $0.1750 <= $0.2000, PnL=$-0.07
+2026-04-04 11:12:48 | INFO | Strategy drift_buy stats: W=50.00%, R=1.04x, Kelly=1.72%
+2026-04-04 11:12:48 | INFO | Trade recorded: KXHYPE15M-26APR040715-15 yes drift_buy PnL=$-0.07
+2026-04-04 11:12:48 | INFO | [HYPE] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-04 11:12:57 | INFO | Status: cash=$55.71, positions=1, loop=5987, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:12:57 | INFO | Day P&L: $44.29 (44.3%) / $100.00 limit
+2026-04-04 11:12:57 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: first_cross no@0.61 | HYPE: idle | ADA: idle
+2026-04-04 11:12:57 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:13:16 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:13:17 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 2/3, waiting 2s
+2026-04-04 11:13:28 | INFO | Status: cash=$55.71, positions=1, loop=5996, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:13:28 | INFO | Day P&L: $44.29 (44.3%) / $100.00 limit
+2026-04-04 11:13:28 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: first_cross no@0.61 | HYPE: idle | ADA: idle
+2026-04-04 11:13:28 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:13:40 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:13:42 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 2/3, waiting 2s
+2026-04-04 11:13:44 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 3/3, waiting 4s
+2026-04-04 11:13:48 | WARNING | Failed to fetch markets: Max retries exceeded
+2026-04-04 11:13:48 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:14:01 | INFO | Status: cash=$55.71, positions=1, loop=6004, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:14:01 | INFO | Day P&L: $44.29 (44.3%) / $100.00 limit
+2026-04-04 11:14:01 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: first_cross no@0.61 | HYPE: idle | ADA: idle
+2026-04-04 11:14:02 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:14:20 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:14:30 | INFO | KXXRP15M-26APR040715-15: Near expiry (29s) - closing position
+2026-04-04 11:14:30 | INFO | [XRP] Closed KXXRP15M-26APR040715-15: Expiry: closing at $0.9730, PnL=$-0.18
+2026-04-04 11:14:30 | INFO | Strategy first_cross stats: W=52.63%, R=0.51x, Kelly=0.00%
+2026-04-04 11:14:30 | INFO | Trade recorded: KXXRP15M-26APR040715-15 no first_cross PnL=$-0.18
+2026-04-04 11:14:30 | INFO | [XRP] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-04 11:14:33 | INFO | Status: cash=$55.71, positions=0, loop=6014, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:14:33 | INFO | Day P&L: $44.29 (44.3%) / $100.00 limit
+2026-04-04 11:14:33 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:14:33 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:14:39 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:14:41 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 2/3, waiting 2s
+2026-04-04 11:14:43 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 3/3, waiting 4s
+2026-04-04 11:14:47 | WARNING | Failed to fetch markets: Max retries exceeded
+2026-04-04 11:14:47 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:14:48 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 2/3, waiting 2s
+2026-04-04 11:15:05 | INFO | Status: cash=$55.71, positions=0, loop=6021, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:15:05 | INFO | Day P&L: $44.29 (44.3%) / $100.00 limit
+2026-04-04 11:15:05 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:15:05 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:15:18 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:15:19 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXHYPE15M-26APR040730-30, attempt 1/3, waiting 1s
+2026-04-04 11:15:20 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXHYPE15M-26APR040730-30, attempt 2/3, waiting 2s
+2026-04-04 11:15:23 | INFO | FIRST_CROSS: KXHYPE15M-26APR040730-30 target price set to $35.81
+2026-04-04 11:15:26 | INFO | FIRST_CROSS: KXETH15M-26APR040730-30 target price set to $2,052.91
+2026-04-04 11:15:29 | INFO | FIRST_CROSS: KXDOGE15M-26APR040730-30 target price set to $0.09
+2026-04-04 11:15:32 | INFO | FIRST_CROSS: KXBNB15M-26APR040730-30 target price set to $590.11
+2026-04-04 11:15:35 | INFO | Status: cash=$55.71, positions=0, loop=6029, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:15:35 | INFO | Day P&L: $44.29 (44.3%) / $100.00 limit
+2026-04-04 11:15:35 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:15:35 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:15:36 | INFO | FIRST_CROSS: KXSOL15M-26APR040730-30 target price set to $80.18
+2026-04-04 11:15:36 | INFO | FIRST_CROSS: KXXRP15M-26APR040730-30 target price set to $1.32
+2026-04-04 11:15:43 | INFO | FIRST_CROSS: KXBTC15M-26APR040730-30 target price set to $67,166.18
+2026-04-04 11:15:52 | INFO | FIRST_CROSS: KXETH15M-26APR040730-30 crossed DOWN through $0.50 (was $0.5450, now $0.4150)
+2026-04-04 11:16:02 | INFO | FIRST_CROSS: KXDOGE15M-26APR040730-30 crossed DOWN through $0.50 (was $0.5300, now $0.4200)
+2026-04-04 11:16:05 | INFO | FIRST_CROSS: KXSOL15M-26APR040730-30 crossed DOWN through $0.50 (was $0.5400, now $0.4350)
+2026-04-04 11:16:08 | INFO | Status: cash=$55.71, positions=0, loop=6039, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:16:08 | INFO | Day P&L: $44.29 (44.3%) / $100.00 limit
+2026-04-04 11:16:08 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:16:08 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:16:12 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:16:13 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 2/3, waiting 2s
+2026-04-04 11:16:15 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 3/3, waiting 4s
+2026-04-04 11:16:19 | WARNING | Failed to fetch markets: Max retries exceeded
+2026-04-04 11:16:22 | INFO | FIRST_CROSS: KXXRP15M-26APR040730-30 | Direction: up | Target: $1.32 | Coin Price: $1.32
+2026-04-04 11:16:22 | INFO | FIRST_CROSS SIGNAL: KXXRP15M-26APR040730-30 | Direction: up | Target: $1.32 | Side: yes @ $0.4150 | Size: $0.50 | CONF=30
+2026-04-04 11:16:22 | INFO | [XRP] Opened first_cross: yes KXXRP15M-26APR040730-30 @ $0.4150, size=$0.50, cost=$0.21
+2026-04-04 11:16:22 | INFO | 🚀 [XRP] TRADE EXECUTED: first_cross yes KXXRP15M-26APR040730-30 @ $0.4150, size=$0.50
+2026-04-04 11:16:22 | INFO | FIRST_CROSS: KXHYPE15M-26APR040730-30 | Direction: down | Target: $35.81 | Coin Price: $35.78
+2026-04-04 11:16:22 | INFO | FIRST_CROSS SIGNAL: KXHYPE15M-26APR040730-30 | Direction: down | Target: $35.81 | Side: no @ $0.2700 | Size: $0.50 | CONF=58
+2026-04-04 11:16:22 | INFO | [HYPE] Opened first_cross: no KXHYPE15M-26APR040730-30 @ $0.2700, size=$0.50, cost=$0.36
+2026-04-04 11:16:22 | INFO | 🚀 [HYPE] TRADE EXECUTED: first_cross no KXHYPE15M-26APR040730-30 @ $0.2700, size=$0.50
+2026-04-04 11:16:41 | INFO | Status: cash=$55.14, positions=2, loop=6047, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:16:41 | INFO | Day P&L: $44.86 (44.9%) / $100.00 limit
+2026-04-04 11:16:41 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: first_cross yes@0.42 | HYPE: first_cross no@0.27 | ADA: idle
+2026-04-04 11:16:41 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXXRP15M-26APR040730-30, attempt 1/3, waiting 1s
+2026-04-04 11:16:43 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXHYPE15M-26APR040730-30, attempt 1/3, waiting 1s
+2026-04-04 11:16:44 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXHYPE15M-26APR040730-30, attempt 2/3, waiting 2s
+2026-04-04 11:16:46 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXHYPE15M-26APR040730-30, attempt 3/3, waiting 4s
+2026-04-04 11:16:50 | WARNING | Failed to fetch market KXHYPE15M-26APR040730-30: Max retries exceeded
+2026-04-04 11:16:50 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:17:06 | INFO | DRIFT BUY signal: KXSOL15M-26APR040730-30 @ $0.3350, size=$0.50, Kelly=4.00%, CONF=35, SL=$0.2000, TS=20%buffer/25%trigger, Coinbase=neutral, first_cross=no
+2026-04-04 11:17:06 | INFO | [SOL] Opened drift_buy: yes KXSOL15M-26APR040730-30 @ $0.3350, size=$0.50, cost=$0.17
+2026-04-04 11:17:06 | INFO | 🚀 [SOL] TRADE EXECUTED: drift_buy yes KXSOL15M-26APR040730-30 @ $0.3350, size=$0.50
+2026-04-04 11:17:06 | INFO | DRIFT BUY signal: KXDOGE15M-26APR040730-30 @ $0.3300, size=$0.50, Kelly=4.00%, CONF=43, SL=$0.2000, TS=20%buffer/25%trigger, Coinbase=neutral, first_cross=no
+2026-04-04 11:17:06 | INFO | [DOGE] Opened drift_buy: yes KXDOGE15M-26APR040730-30 @ $0.3300, size=$0.50, cost=$0.16
+2026-04-04 11:17:06 | INFO | 🚀 [DOGE] TRADE EXECUTED: drift_buy yes KXDOGE15M-26APR040730-30 @ $0.3300, size=$0.50
+2026-04-04 11:17:21 | INFO | Status: cash=$54.81, positions=4, loop=6057, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:17:21 | INFO | Day P&L: $45.19 (45.2%) / $100.00 limit
+2026-04-04 11:17:21 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: drift_buy yes@0.33 | DOGE: drift_buy yes@0.33 | XRP: first_cross yes@0.42 | HYPE: first_cross no@0.27 | ADA: idle
+2026-04-04 11:17:22 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXSOL15M-26APR040730-30, attempt 1/3, waiting 1s
+2026-04-04 11:17:23 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXDOGE15M-26APR040730-30, attempt 1/3, waiting 1s
+2026-04-04 11:17:25 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXXRP15M-26APR040730-30, attempt 1/3, waiting 1s
+2026-04-04 11:17:26 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:17:26 | INFO | DRIFT BUY signal: KXETH15M-26APR040730-30 @ $0.3350, size=$0.50, Kelly=4.00%, CONF=35, SL=$0.2000, TS=20%buffer/25%trigger, Coinbase=neutral, first_cross=no
+2026-04-04 11:17:26 | INFO | [ETH] Opened drift_buy: yes KXETH15M-26APR040730-30 @ $0.3350, size=$0.50, cost=$0.17
+2026-04-04 11:17:26 | INFO | 🚀 [ETH] TRADE EXECUTED: drift_buy yes KXETH15M-26APR040730-30 @ $0.3350, size=$0.50
+2026-04-04 11:17:48 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:17:49 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 2/3, waiting 2s
+2026-04-04 11:17:51 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 3/3, waiting 4s
+2026-04-04 11:17:55 | WARNING | Failed to fetch markets: Max retries exceeded
+2026-04-04 11:17:58 | INFO | Status: cash=$54.64, positions=5, loop=6065, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:17:58 | INFO | Day P&L: $45.36 (45.4%) / $100.00 limit
+2026-04-04 11:17:58 | INFO | Coins: BTC: idle | ETH: drift_buy yes@0.34 | BNB: idle | SOL: drift_buy yes@0.33 | DOGE: drift_buy yes@0.33 | XRP: first_cross yes@0.42 | HYPE: first_cross no@0.27 | ADA: idle
+2026-04-04 11:17:59 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:17:59 | INFO | DRIFT BUY signal: KXBNB15M-26APR040730-30 @ $0.3050, size=$0.50, Kelly=5.00%, CONF=51, SL=$0.2000, TS=20%buffer/25%trigger, Coinbase=neutral, first_cross=none
+2026-04-04 11:17:59 | INFO | [BNB] Opened drift_buy: yes KXBNB15M-26APR040730-30 @ $0.3050, size=$0.50, cost=$0.15
+2026-04-04 11:17:59 | INFO | 🚀 [BNB] TRADE EXECUTED: drift_buy yes KXBNB15M-26APR040730-30 @ $0.3050, size=$0.50
+2026-04-04 11:18:05 | INFO | KXDOGE15M-26APR040730-30: CONF=50 Long trailing stop ACTIVE @ $0.4450, peak=$0.3300, buffer=20%
+2026-04-04 11:18:05 | INFO | [DOGE] Closed KXDOGE15M-26APR040730-30: CONF=50 TRAILING STOP: locked in profits, Gross PnL=$0.06, Fee=$0.001, Net PnL=$0.06
+2026-04-04 11:18:05 | INFO | Strategy drift_buy stats: W=33.33%, R=0.73x, Kelly=0.00%
+2026-04-04 11:18:05 | INFO | Trade recorded: KXDOGE15M-26APR040730-30 yes drift_buy PnL=$0.06
+2026-04-04 11:18:05 | INFO | [DOGE] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-04 11:18:05 | INFO | KXXRP15M-26APR040730-30: CONF=50 Long trailing stop ACTIVE @ $0.5650, peak=$0.4850, buffer=20%
+2026-04-04 11:18:05 | INFO | [XRP] Closed KXXRP15M-26APR040730-30: CONF=50 TRAILING STOP: locked in profits, Gross PnL=$0.07, Fee=$0.001, Net PnL=$0.07
+2026-04-04 11:18:05 | INFO | Strategy first_cross stats: W=55.00%, R=0.49x, Kelly=0.00%
+2026-04-04 11:18:05 | INFO | Trade recorded: KXXRP15M-26APR040730-30 yes first_cross PnL=$0.07
+2026-04-04 11:18:05 | INFO | [XRP] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-04 11:18:05 | INFO | FIRST_CROSS: KXXRP15M-26APR040730-30 crossed UP through $0.50 (was $0.4150, now $0.5650)
+2026-04-04 11:18:12 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:18:13 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 2/3, waiting 2s
+2026-04-04 11:18:15 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 3/3, waiting 4s
+2026-04-04 11:18:19 | WARNING | Failed to fetch markets: Max retries exceeded
+2026-04-04 11:18:19 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:18:23 | INFO | KXETH15M-26APR040730-30: SCALED IN @ $0.3950 (+$0.00), new size=$0.50, avg_price=$0.3350, scale_ins=1
+2026-04-04 11:18:23 | INFO | [ETH] SCALED IN KXETH15M-26APR040730-30: +$0.00 @ $0.3950, new_size=$0.50
+2026-04-04 11:18:26 | INFO | KXETH15M-26APR040730-30: SCALED IN @ $0.3950 (+$0.00), new size=$0.50, avg_price=$0.3350, scale_ins=2
+2026-04-04 11:18:26 | INFO | [ETH] SCALED IN KXETH15M-26APR040730-30: +$0.00 @ $0.3950, new_size=$0.50
+2026-04-04 11:18:27 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:18:31 | INFO | Status: cash=$54.49, positions=4, loop=6072, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:18:31 | INFO | Day P&L: $45.51 (45.5%) / $100.00 limit
+2026-04-04 11:18:31 | INFO | Coins: BTC: idle | ETH: drift_buy yes@0.34 | BNB: drift_buy yes@0.31 | SOL: drift_buy yes@0.33 | DOGE: idle | XRP: idle | HYPE: first_cross no@0.27 | ADA: idle
+2026-04-04 11:18:32 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:18:35 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:18:40 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:18:45 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:18:50 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:18:55 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:19:00 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:19:08 | INFO | Status: cash=$54.49, positions=4, loop=6080, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:19:08 | INFO | Day P&L: $45.51 (45.5%) / $100.00 limit
+2026-04-04 11:19:08 | INFO | Coins: BTC: idle | ETH: drift_buy yes@0.34 | BNB: drift_buy yes@0.31 | SOL: drift_buy yes@0.33 | DOGE: idle | XRP: idle | HYPE: first_cross no@0.27 | ADA: idle
+2026-04-04 11:19:09 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:19:19 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:19:20 | INFO | KXHYPE15M-26APR040730-30: CONF=50 Short trailing stop ACTIVE @ $0.1850, trough=$0.1850, buffer=20%
+2026-04-04 11:19:20 | INFO | [HYPE] Closed KXHYPE15M-26APR040730-30: CONF=50 TRAILING STOP: locked in profits, Gross PnL=$0.04, Fee=$0.001, Net PnL=$0.04
+2026-04-04 11:19:20 | INFO | Strategy first_cross stats: W=100.00%, R=0.08x, Kelly=20.00%
+2026-04-04 11:19:20 | INFO | Trade recorded: KXHYPE15M-26APR040730-30 no first_cross PnL=$0.04
+2026-04-04 11:19:20 | INFO | [HYPE] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-04 11:19:26 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:19:27 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 2/3, waiting 2s
+2026-04-04 11:19:42 | INFO | Status: cash=$54.49, positions=3, loop=6089, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:19:42 | INFO | Day P&L: $45.51 (45.5%) / $100.00 limit
+2026-04-04 11:19:42 | INFO | Coins: BTC: idle | ETH: drift_buy yes@0.34 | BNB: drift_buy yes@0.31 | SOL: drift_buy yes@0.33 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:19:42 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:19:45 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:19:47 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 2/3, waiting 2s
+2026-04-04 11:19:49 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 3/3, waiting 4s
+2026-04-04 11:19:53 | WARNING | Failed to fetch markets: Max retries exceeded
+2026-04-04 11:19:53 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:19:54 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 2/3, waiting 2s
+2026-04-04 11:20:15 | INFO | Status: cash=$54.49, positions=3, loop=6096, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:20:15 | INFO | Day P&L: $45.51 (45.5%) / $100.00 limit
+2026-04-04 11:20:15 | INFO | Coins: BTC: idle | ETH: drift_buy yes@0.34 | BNB: drift_buy yes@0.31 | SOL: drift_buy yes@0.33 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:20:15 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXETH15M-26APR040730-30, attempt 1/3, waiting 1s
+2026-04-04 11:20:16 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXETH15M-26APR040730-30, attempt 2/3, waiting 2s
+2026-04-04 11:20:19 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXBNB15M-26APR040730-30, attempt 1/3, waiting 1s
+2026-04-04 11:20:20 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXBNB15M-26APR040730-30, attempt 2/3, waiting 2s
+2026-04-04 11:20:22 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXBNB15M-26APR040730-30, attempt 3/3, waiting 4s
+2026-04-04 11:20:26 | WARNING | Failed to fetch market KXBNB15M-26APR040730-30: Max retries exceeded
+2026-04-04 11:20:26 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXSOL15M-26APR040730-30, attempt 1/3, waiting 1s
+2026-04-04 11:20:28 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets/KXSOL15M-26APR040730-30, attempt 2/3, waiting 2s
+2026-04-04 11:20:30 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:20:30 | INFO | KXETH15M-26APR040730-30: CONF=50 Long trailing stop ACTIVE @ $0.4550, peak=$0.3950, buffer=20%
+2026-04-04 11:20:30 | INFO | [ETH] Closed KXETH15M-26APR040730-30: CONF=50 TRAILING STOP: locked in profits, Gross PnL=$0.06, Fee=$0.001, Net PnL=$0.06
+2026-04-04 11:20:30 | INFO | Strategy drift_buy stats: W=50.00%, R=0.84x, Kelly=0.00%
+2026-04-04 11:20:30 | INFO | Trade recorded: KXETH15M-26APR040730-30 yes drift_buy PnL=$0.06
+2026-04-04 11:20:30 | INFO | [ETH] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-04 11:20:30 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:20:31 | INFO | FIRST_CROSS: KXDOGE15M-26APR040730-30 | Direction: up | Target: $0.09 | Coin Price: $0.09
+2026-04-04 11:20:31 | INFO | FIRST_CROSS SIGNAL: KXDOGE15M-26APR040730-30 | Direction: up | Target: $0.09 | Side: yes @ $0.5450 | Size: $0.50 | CONF=43
+2026-04-04 11:20:31 | INFO | [DOGE] Opened first_cross: yes KXDOGE15M-26APR040730-30 @ $0.5450, size=$0.50, cost=$0.27
+2026-04-04 11:20:31 | INFO | 🚀 [DOGE] TRADE EXECUTED: first_cross yes KXDOGE15M-26APR040730-30 @ $0.5450, size=$0.50
+2026-04-04 11:20:37 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:20:42 | INFO | FIRST_CROSS: KXETH15M-26APR040730-30 | Direction: up | Target: $2,052.91 | Coin Price: $2,052.96
+2026-04-04 11:20:42 | INFO | FIRST_CROSS SIGNAL: KXETH15M-26APR040730-30 | Direction: up | Target: $2,052.91 | Side: yes @ $0.4550 | Size: $0.50 | CONF=38
+2026-04-04 11:20:42 | INFO | [ETH] Opened first_cross: yes KXETH15M-26APR040730-30 @ $0.4550, size=$0.50, cost=$0.23
+2026-04-04 11:20:42 | INFO | 🚀 [ETH] TRADE EXECUTED: first_cross yes KXETH15M-26APR040730-30 @ $0.4550, size=$0.50
+2026-04-04 11:20:42 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:20:47 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:20:52 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:20:57 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:21:02 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:21:11 | INFO | Status: cash=$53.99, positions=4, loop=6105, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:21:11 | INFO | Day P&L: $46.01 (46.0%) / $100.00 limit
+2026-04-04 11:21:11 | INFO | Coins: BTC: idle | ETH: first_cross yes@0.45 | BNB: drift_buy yes@0.31 | SOL: drift_buy yes@0.33 | DOGE: first_cross yes@0.55 | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:21:11 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:21:30 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:21:31 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 2/3, waiting 2s
+2026-04-04 11:21:36 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:21:41 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:21:46 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:21:51 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:21:56 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:22:01 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:22:07 | INFO | [BNB] Closed KXBNB15M-26APR040730-30: HARD SL hit: $0.1950 <= $0.2000, PnL=$-0.06
+2026-04-04 11:22:07 | INFO | Strategy drift_buy stats: W=54.55%, R=1.16x, Kelly=15.38%
+2026-04-04 11:22:07 | INFO | Trade recorded: KXBNB15M-26APR040730-30 yes drift_buy PnL=$-0.06
+2026-04-04 11:22:07 | INFO | [BNB] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-04 11:22:07 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:22:12 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:22:17 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:22:18 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 2/3, waiting 2s
+2026-04-04 11:22:20 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 3/3, waiting 4s
+2026-04-04 11:22:24 | WARNING | Failed to fetch markets: Max retries exceeded
+2026-04-04 11:22:24 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:22:29 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:22:34 | ERROR | Error in trading loop: name 'coin' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 615, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 540, in _check_and_trade_series
+    signal = trader.strategy_engine.evaluate_market(market, coin)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 921, in evaluate_market
+    signal = self._check_drift_short(market, mid_price, time_left)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/strategies.py", line 1155, in _check_drift_short
+    confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+NameError: name 'coin' is not defined
+2026-04-04 11:22:42 | INFO | Status: cash=$53.99, positions=3, loop=6124, active_series=['KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXBNB15M', 'KXBTC15M', 'KXETH15M', 'KXXRP15M']
+2026-04-04 11:22:42 | INFO | Day P&L: $46.01 (46.0%) / $100.00 limit
+2026-04-04 11:22:42 | INFO | Coins: BTC: idle | ETH: first_cross yes@0.45 | BNB: idle | SOL: drift_buy yes@0.33 | DOGE: first_cross yes@0.55 | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:22:43 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:22:52 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-04 11:22:54 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 2/3, waiting 2s
+2026-04-04 11:22:54 | INFO | Received signal 15, shutting down...
+2026-04-04 11:22:56 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 3/3, waiting 4s
+2026-04-04 11:22:57 | INFO | Received signal 15, shutting down...
+2026-04-04 11:23:00 | WARNING | Failed to fetch markets: Max retries exceeded
+2026-04-04 11:31:02 | INFO | CoinTrader initialized for BTC (KXBTC15M)
+2026-04-04 11:31:02 | INFO | CoinTrader initialized for ETH (KXETH15M)
+2026-04-04 11:31:02 | INFO | CoinTrader initialized for BNB (KXBNB15M)
+2026-04-04 11:31:02 | INFO | CoinTrader initialized for SOL (KXSOL15M)
+2026-04-04 11:31:02 | INFO | CoinTrader initialized for DOGE (KXDOGE15M)
+2026-04-04 11:31:02 | INFO | CoinTrader initialized for XRP (KXXRP15M)
+2026-04-04 11:31:02 | INFO | CoinTrader initialized for HYPE (KXHYPE15M)
+2026-04-04 11:31:02 | INFO | CoinTrader initialized for ADA (KXADA15M)
+2026-04-04 11:31:02 | INFO | ============================================================
+2026-04-04 11:31:02 | INFO | SUPERBOT INITIALIZED - NERD v2 STRATEGY
+2026-04-04 11:31:02 | INFO | Coins: ['BTC', 'ETH', 'BNB', 'SOL', 'DOGE', 'XRP', 'HYPE', 'ADA']
+2026-04-04 11:31:02 | INFO | Tickers: ['KXBTC15M', 'KXETH15M', 'KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXXRP15M', 'KXHYPE15M', 'KXADA15M']
+2026-04-04 11:31:02 | INFO | Starting balance: $100.00
+2026-04-04 11:31:02 | INFO | Max positions: 3 (was 5)
+2026-04-04 11:31:02 | INFO | Max bet per trade: $3.00
+2026-04-04 11:31:02 | INFO | Max daily loss: $5.00
+2026-04-04 11:31:02 | INFO | Max daily trades: 30
+2026-04-04 11:31:02 | INFO | Coinbase pre-filter: poll every 10s (FREE)
+2026-04-04 11:31:02 | INFO | Kalshi polling: every 30s (was 2s)
+2026-04-04 11:31:02 | INFO | STRATEGY: First Cross ONLY (no drift)
+2026-04-04 11:31:02 | INFO | ============================================================
+2026-04-04 11:31:02 | INFO | Starting SMART POLLING trading loop (Recorder's approach)...
+2026-04-04 11:31:02 | INFO | Report session started: 2026-04-04 11:31:02 UTC
+2026-04-04 11:31:02 | INFO | 😴 IDLE: checked KXBTC15M (poll #1) | Day P&L: $0.00 (0.0%)
+2026-04-04 11:31:07 | INFO | Received signal 15, shutting down...
+2026-04-04 11:31:32 | INFO | Status: cash=$100.00, positions=0, loop=1, active_series=[]
+2026-04-04 11:31:32 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:31:32 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:31:32 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:31:32 | INFO | Shutting down superbot...
+2026-04-04 11:31:32 | INFO | Report session ended: 2026-04-04 11:31:32 UTC
+2026-04-04 11:31:32 | INFO | Report saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.html
+2026-04-04 11:31:32 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:31:32 | INFO | ============================================================
+2026-04-04 11:31:32 | INFO | FINAL BALANCE: $100.00
+2026-04-04 11:31:32 | INFO | Total trades: 0
+2026-04-04 11:31:32 | INFO | Report saved to: /home/ubuntu/.openclaw/workspace/workers/superbot/report.html
+2026-04-04 11:31:32 | INFO | ============================================================
+2026-04-04 11:31:38 | INFO | CoinTrader initialized for BTC (KXBTC15M)
+2026-04-04 11:31:38 | INFO | CoinTrader initialized for ETH (KXETH15M)
+2026-04-04 11:31:38 | INFO | CoinTrader initialized for BNB (KXBNB15M)
+2026-04-04 11:31:38 | INFO | CoinTrader initialized for SOL (KXSOL15M)
+2026-04-04 11:31:38 | INFO | CoinTrader initialized for DOGE (KXDOGE15M)
+2026-04-04 11:31:38 | INFO | CoinTrader initialized for XRP (KXXRP15M)
+2026-04-04 11:31:38 | INFO | CoinTrader initialized for HYPE (KXHYPE15M)
+2026-04-04 11:31:38 | INFO | CoinTrader initialized for ADA (KXADA15M)
+2026-04-04 11:31:38 | INFO | ============================================================
+2026-04-04 11:31:38 | INFO | SUPERBOT INITIALIZED - NERD v2 STRATEGY
+2026-04-04 11:31:38 | INFO | Coins: ['BTC', 'ETH', 'BNB', 'SOL', 'DOGE', 'XRP', 'HYPE', 'ADA']
+2026-04-04 11:31:38 | INFO | Tickers: ['KXBTC15M', 'KXETH15M', 'KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXXRP15M', 'KXHYPE15M', 'KXADA15M']
+2026-04-04 11:31:38 | INFO | Starting balance: $100.00
+2026-04-04 11:31:38 | INFO | Max positions: 3 (was 5)
+2026-04-04 11:31:38 | INFO | Max bet per trade: $2.00
+2026-04-04 11:31:38 | INFO | Max daily loss: $5.00
+2026-04-04 11:31:38 | INFO | Max daily trades: 30
+2026-04-04 11:31:38 | INFO | Coinbase pre-filter: poll every 10s (FREE)
+2026-04-04 11:31:38 | INFO | Kalshi polling: every 30s (was 2s)
+2026-04-04 11:31:38 | INFO | STRATEGY: First Cross ONLY (no drift)
+2026-04-04 11:31:38 | INFO | ============================================================
+2026-04-04 11:31:38 | INFO | Starting SMART POLLING trading loop (Recorder's approach)...
+2026-04-04 11:31:38 | INFO | Report session started: 2026-04-04 11:31:38 UTC
+2026-04-04 11:31:38 | INFO | 😴 IDLE: checked KXBTC15M (poll #1) | Day P&L: $0.00 (0.0%)
+2026-04-04 11:31:43 | INFO | Received signal 15, shutting down...
+2026-04-04 11:32:08 | INFO | Status: cash=$100.00, positions=0, loop=1, active_series=[]
+2026-04-04 11:32:08 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:32:08 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:32:08 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:32:08 | INFO | Shutting down superbot...
+2026-04-04 11:32:08 | INFO | Report session ended: 2026-04-04 11:32:08 UTC
+2026-04-04 11:32:08 | INFO | Report saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.html
+2026-04-04 11:32:08 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:32:08 | INFO | ============================================================
+2026-04-04 11:32:08 | INFO | FINAL BALANCE: $100.00
+2026-04-04 11:32:08 | INFO | Total trades: 0
+2026-04-04 11:32:08 | INFO | Report saved to: /home/ubuntu/.openclaw/workspace/workers/superbot/report.html
+2026-04-04 11:32:08 | INFO | ============================================================
+2026-04-04 11:32:13 | INFO | CoinTrader initialized for BTC (KXBTC15M)
+2026-04-04 11:32:13 | INFO | CoinTrader initialized for ETH (KXETH15M)
+2026-04-04 11:32:13 | INFO | CoinTrader initialized for BNB (KXBNB15M)
+2026-04-04 11:32:13 | INFO | CoinTrader initialized for SOL (KXSOL15M)
+2026-04-04 11:32:13 | INFO | CoinTrader initialized for DOGE (KXDOGE15M)
+2026-04-04 11:32:13 | INFO | CoinTrader initialized for XRP (KXXRP15M)
+2026-04-04 11:32:13 | INFO | CoinTrader initialized for HYPE (KXHYPE15M)
+2026-04-04 11:32:13 | INFO | CoinTrader initialized for ADA (KXADA15M)
+2026-04-04 11:32:13 | INFO | ============================================================
+2026-04-04 11:32:13 | INFO | SUPERBOT INITIALIZED - NERD v2 STRATEGY
+2026-04-04 11:32:13 | INFO | Coins: ['BTC', 'ETH', 'BNB', 'SOL', 'DOGE', 'XRP', 'HYPE', 'ADA']
+2026-04-04 11:32:13 | INFO | Tickers: ['KXBTC15M', 'KXETH15M', 'KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXXRP15M', 'KXHYPE15M', 'KXADA15M']
+2026-04-04 11:32:13 | INFO | Starting balance: $100.00
+2026-04-04 11:32:13 | INFO | Max positions: 3 (was 5)
+2026-04-04 11:32:13 | INFO | Max bet per trade: $2.00
+2026-04-04 11:32:13 | INFO | Max daily loss: $5.00
+2026-04-04 11:32:13 | INFO | Max daily trades: 30
+2026-04-04 11:32:13 | INFO | Coinbase pre-filter: poll every 10s (FREE)
+2026-04-04 11:32:13 | INFO | Kalshi polling: every 30s (was 2s)
+2026-04-04 11:32:13 | INFO | STRATEGY: First Cross ONLY (no drift)
+2026-04-04 11:32:13 | INFO | ============================================================
+2026-04-04 11:32:13 | INFO | Starting SMART POLLING trading loop (Recorder's approach)...
+2026-04-04 11:32:13 | INFO | Report session started: 2026-04-04 11:32:13 UTC
+2026-04-04 11:32:13 | INFO | 😴 IDLE: checked KXBTC15M (poll #1) | Day P&L: $0.00 (0.0%)
+2026-04-04 11:32:43 | INFO | Status: cash=$100.00, positions=0, loop=1, active_series=[]
+2026-04-04 11:32:43 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:32:43 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:32:43 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:33:13 | INFO | Status: cash=$100.00, positions=0, loop=2, active_series=[]
+2026-04-04 11:33:13 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:33:13 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:33:13 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:33:43 | INFO | Status: cash=$100.00, positions=0, loop=3, active_series=[]
+2026-04-04 11:33:43 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:33:43 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:33:43 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:34:13 | INFO | Status: cash=$100.00, positions=0, loop=4, active_series=[]
+2026-04-04 11:34:13 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:34:13 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:34:13 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:34:43 | INFO | Status: cash=$100.00, positions=0, loop=5, active_series=[]
+2026-04-04 11:34:43 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:34:43 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:34:43 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:35:13 | INFO | Status: cash=$100.00, positions=0, loop=6, active_series=[]
+2026-04-04 11:35:13 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:35:13 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:35:13 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:35:43 | INFO | Status: cash=$100.00, positions=0, loop=7, active_series=[]
+2026-04-04 11:35:43 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:35:43 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:35:43 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:36:13 | INFO | Status: cash=$100.00, positions=0, loop=8, active_series=[]
+2026-04-04 11:36:13 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:36:13 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:36:13 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:36:43 | INFO | Status: cash=$100.00, positions=0, loop=9, active_series=[]
+2026-04-04 11:36:43 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:36:43 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:36:43 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:37:13 | INFO | Status: cash=$100.00, positions=0, loop=10, active_series=[]
+2026-04-04 11:37:13 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:37:13 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:37:13 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:37:43 | INFO | Status: cash=$100.00, positions=0, loop=11, active_series=[]
+2026-04-04 11:37:43 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:37:43 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:37:43 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:38:14 | INFO | Status: cash=$100.00, positions=0, loop=12, active_series=[]
+2026-04-04 11:38:14 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:38:14 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:38:14 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:38:44 | INFO | Status: cash=$100.00, positions=0, loop=13, active_series=[]
+2026-04-04 11:38:44 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:38:44 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:38:44 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:39:14 | INFO | Status: cash=$100.00, positions=0, loop=14, active_series=[]
+2026-04-04 11:39:14 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:39:14 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:39:14 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:39:44 | INFO | Status: cash=$100.00, positions=0, loop=15, active_series=[]
+2026-04-04 11:39:44 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:39:44 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:39:44 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:40:14 | INFO | Status: cash=$100.00, positions=0, loop=16, active_series=[]
+2026-04-04 11:40:14 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:40:14 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:40:14 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:40:44 | INFO | Status: cash=$100.00, positions=0, loop=17, active_series=[]
+2026-04-04 11:40:44 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:40:44 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:40:44 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:41:14 | INFO | Status: cash=$100.00, positions=0, loop=18, active_series=[]
+2026-04-04 11:41:14 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:41:14 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:41:14 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:41:44 | INFO | Status: cash=$100.00, positions=0, loop=19, active_series=[]
+2026-04-04 11:41:44 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:41:44 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:41:44 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:42:14 | INFO | Status: cash=$100.00, positions=0, loop=20, active_series=[]
+2026-04-04 11:42:14 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:42:14 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:42:14 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:42:44 | INFO | Status: cash=$100.00, positions=0, loop=21, active_series=[]
+2026-04-04 11:42:44 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:42:44 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:42:44 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:43:14 | INFO | Status: cash=$100.00, positions=0, loop=22, active_series=[]
+2026-04-04 11:43:14 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:43:14 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:43:14 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:43:44 | INFO | Status: cash=$100.00, positions=0, loop=23, active_series=[]
+2026-04-04 11:43:44 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:43:44 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:43:44 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:44:14 | INFO | Status: cash=$100.00, positions=0, loop=24, active_series=[]
+2026-04-04 11:44:14 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:44:14 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:44:14 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:44:44 | INFO | Status: cash=$100.00, positions=0, loop=25, active_series=[]
+2026-04-04 11:44:44 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:44:44 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:44:44 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:45:14 | INFO | Status: cash=$100.00, positions=0, loop=26, active_series=[]
+2026-04-04 11:45:14 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:45:14 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:45:14 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:45:44 | INFO | Status: cash=$100.00, positions=0, loop=27, active_series=[]
+2026-04-04 11:45:44 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:45:44 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:45:44 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:46:14 | INFO | Status: cash=$100.00, positions=0, loop=28, active_series=[]
+2026-04-04 11:46:14 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:46:14 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:46:14 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:46:45 | INFO | Status: cash=$100.00, positions=0, loop=29, active_series=[]
+2026-04-04 11:46:45 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:46:45 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:46:45 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:47:15 | INFO | Status: cash=$100.00, positions=0, loop=30, active_series=[]
+2026-04-04 11:47:15 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:47:15 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:47:15 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:47:15 | INFO | 😴 IDLE: checked KXHYPE15M (poll #31) | Day P&L: $0.00 (0.0%)
+2026-04-04 11:47:45 | INFO | Status: cash=$100.00, positions=0, loop=31, active_series=[]
+2026-04-04 11:47:45 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:47:45 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:47:45 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:48:15 | INFO | Status: cash=$100.00, positions=0, loop=32, active_series=[]
+2026-04-04 11:48:15 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:48:15 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:48:15 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:48:45 | INFO | Status: cash=$100.00, positions=0, loop=33, active_series=[]
+2026-04-04 11:48:45 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:48:45 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:48:45 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:49:15 | INFO | Status: cash=$100.00, positions=0, loop=34, active_series=[]
+2026-04-04 11:49:15 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:49:15 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:49:15 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:49:45 | INFO | Status: cash=$100.00, positions=0, loop=35, active_series=[]
+2026-04-04 11:49:45 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:49:45 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:49:45 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:50:15 | INFO | Status: cash=$100.00, positions=0, loop=36, active_series=[]
+2026-04-04 11:50:15 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:50:15 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:50:15 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:50:45 | INFO | Status: cash=$100.00, positions=0, loop=37, active_series=[]
+2026-04-04 11:50:45 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:50:45 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:50:45 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:51:15 | INFO | Status: cash=$100.00, positions=0, loop=38, active_series=[]
+2026-04-04 11:51:15 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:51:15 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:51:15 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:51:45 | INFO | Status: cash=$100.00, positions=0, loop=39, active_series=[]
+2026-04-04 11:51:45 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:51:45 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:51:45 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:52:15 | INFO | Status: cash=$100.00, positions=0, loop=40, active_series=[]
+2026-04-04 11:52:15 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:52:15 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:52:15 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:52:45 | INFO | Status: cash=$100.00, positions=0, loop=41, active_series=[]
+2026-04-04 11:52:45 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:52:45 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:52:45 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:53:15 | INFO | Status: cash=$100.00, positions=0, loop=42, active_series=[]
+2026-04-04 11:53:15 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:53:15 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:53:15 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:53:45 | INFO | Status: cash=$100.00, positions=0, loop=43, active_series=[]
+2026-04-04 11:53:45 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:53:45 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:53:45 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:54:15 | INFO | Status: cash=$100.00, positions=0, loop=44, active_series=[]
+2026-04-04 11:54:15 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:54:15 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:54:15 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:54:45 | INFO | Status: cash=$100.00, positions=0, loop=45, active_series=[]
+2026-04-04 11:54:45 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:54:45 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:54:45 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:55:15 | INFO | Status: cash=$100.00, positions=0, loop=46, active_series=[]
+2026-04-04 11:55:15 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:55:15 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:55:15 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:55:46 | INFO | Status: cash=$100.00, positions=0, loop=47, active_series=[]
+2026-04-04 11:55:46 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:55:46 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:55:46 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:56:16 | INFO | Status: cash=$100.00, positions=0, loop=48, active_series=[]
+2026-04-04 11:56:16 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:56:16 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:56:16 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:56:46 | INFO | Status: cash=$100.00, positions=0, loop=49, active_series=[]
+2026-04-04 11:56:46 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:56:46 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:56:46 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:57:16 | INFO | Status: cash=$100.00, positions=0, loop=50, active_series=[]
+2026-04-04 11:57:16 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:57:16 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:57:16 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:57:46 | INFO | Status: cash=$100.00, positions=0, loop=51, active_series=[]
+2026-04-04 11:57:46 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:57:46 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:57:46 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:58:16 | INFO | Status: cash=$100.00, positions=0, loop=52, active_series=[]
+2026-04-04 11:58:16 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:58:16 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:58:16 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:58:46 | INFO | Status: cash=$100.00, positions=0, loop=53, active_series=[]
+2026-04-04 11:58:46 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:58:46 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:58:46 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:59:16 | INFO | Status: cash=$100.00, positions=0, loop=54, active_series=[]
+2026-04-04 11:59:16 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:59:16 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:59:16 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-04 11:59:46 | INFO | Status: cash=$100.00, positions=0, loop=55, active_series=[]
+2026-04-04 11:59:46 | INFO | Day P&L: $0.00 (0.0%) / $100.00 limit
+2026-04-04 11:59:46 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-04 11:59:46 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json

@@ -552,6 +552,7 @@ class ThermostatBot:
                 yes_bid = parsed.get("yes_bid", 0)
                 yes_ask = parsed.get("yes_ask", 1)
                 mid_price = (yes_bid + yes_ask) / 2
+                action = None  # Initialize to avoid UnboundLocalError
                 
                 # Calculate edge based on direction
                 if direction == "over":

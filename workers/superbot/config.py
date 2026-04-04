@@ -48,8 +48,8 @@ BALANCE_RESET_AMOUNT = 100.00
 # (2) Allowing smaller bets to capture positive variance during hot streaks
 # (3) Using 1/2 Kelly instead of 1/4 Kelly since we're in paper trading mode
 
-MAX_BET = 3.00   # Safety cap: raised slightly to allow variance during hot streaks
-MIN_BET = 0.25   # Lowered from $0.10 — we want meaningful size but not micro-bets
+MAX_BET = 2.00   # Safety cap: $2 max per trade (Nerd v2)
+MIN_BET = 0.10   # Minimum bet (Nerd v2)
 
 # Kelly Criterion — CRITICAL FIX
 # With 37.8% WR, the STRATEGY ITSELF is negative EV.
@@ -60,8 +60,7 @@ KELLY_FRACTION = 0.25  # Safety dampener (25% of whatever Kelly says)
 FIXED_KELLY_PCT = 0.04  # 4% of bankroll per trade — FIXED, not Kelly-derived
 # This gives: $15.45 * 4% = $0.62 per trade (vs the previous $2 = 13% of bankroll)
 
-MIN_KELLY_BET = 0.50   # Minimum $0.50 to have meaningful exposure
-MAX_KELLY_BET = 1.50   # Maximum $1.50 per trade (caps at ~10% of $15 bankroll)
+# Kelly sizing now uses MIN_BET and MAX_BET directly (Nerd v2 - removed override)
 KELLY_TRACKED_TRADES = 50
 KELLY_MAX_CAP = 0.20   # Never bet more than 20% of balance
 

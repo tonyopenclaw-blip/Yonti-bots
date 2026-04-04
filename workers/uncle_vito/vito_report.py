@@ -1098,6 +1098,21 @@ def main():
     report = UncleVitoReport()
     output = report.generate_report()
     print(output)
+
+    # Generate and write HTML report
+    html_output = report.format_report_html()
+    html_paths = [
+        "/home/ubuntu/.openclaw/workspace/vito.html",
+        "/var/www/html/vito.html",
+    ]
+    for path in html_paths:
+        try:
+            with open(path, "w") as f:
+                f.write(html_output)
+            print(f"🍝 HTML written to {path}")
+        except Exception as e:
+            print(f"⚠️ Failed to write HTML to {path}: {e}")
+
     return output
 
 

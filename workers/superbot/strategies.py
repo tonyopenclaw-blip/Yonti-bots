@@ -12,7 +12,7 @@ from collections import deque
 from enum import Enum
 
 from config import (
-    MAX_BET, MIN_BET, KELLY_FRACTION, MIN_KELLY_BET, MAX_KELLY_BET,
+    MAX_BET, MIN_BET, KELLY_FRACTION,
     DEEP_SHORT_ENABLED, DEEP_SHORT_MAX_PRICE, DEEP_MIN_TIME_LEFT_SEC,
     DRIFT_BUY_MIN_PRICE, DRIFT_BUY_MAX_PRICE, DRIFT_MIN_TIME_LEFT_SEC,
     DRIFT_SHORT_MIN_PRICE, DRIFT_SHORT_MAX_PRICE, DRIFT_SHORT_SL_PRICE,
@@ -47,10 +47,12 @@ def get_coinbase_bias(coin: str) -> str:
 
 
 class Strategy(Enum):
-    DEEP_SHORT = "deep_short"  # Changed: was DEEP_BUY (buying tails is wrong direction)
-    DRIFT_BUY = "drift_buy"
-    DRIFT_SHORT = "drift_short"
-    FIRST_CROSS = "first_cross"  # Tony's insight: first direction of breakout tends to hold
+    # DEPRECATED: DRIFT_BUY and DRIFT_SHORT disabled per Nerd's strategy v2
+    DEEP_SHORT = "deep_short"  # Disabled
+    DRIFT_BUY = "drift_buy"    # DISABLED - drift doesn't work
+    DRIFT_SHORT = "drift_short"  # DISABLED - drift doesn't work
+    FIRST_CROSS = "first_cross"  # PRIMARY: Only trade on first cross
+    MOMENTUM_FALLBACK = "momentum_fallback"  # FALLBACK: Only when no first cross after 3 min
     NONE = "none"
 
 
@@ -303,9 +305,10 @@ class StrategyTracker:
         # Store recent trade results per strategy: each entry is (pnl, won)
         self._history: Dict[Strategy, deque] = {
             Strategy.DEEP_SHORT: deque(maxlen=tracked_trades),
-            Strategy.DRIFT_BUY: deque(maxlen=tracked_trades),
-            Strategy.DRIFT_SHORT: deque(maxlen=tracked_trades),
+            Strategy.DRIFT_BUY: deque(maxlen=tracked_trades),  # DISABLED but track for history
+            Strategy.DRIFT_SHORT: deque(maxlen=tracked_trades),  # DISABLED but track for history
             Strategy.FIRST_CROSS: deque(maxlen=tracked_trades),
+            Strategy.MOMENTUM_FALLBACK: deque(maxlen=tracked_trades),
         }
     
     def record_trade(self, strategy: Strategy, pnl: float):
@@ -386,10 +389,11 @@ class TradeSignal:
     # First Cross specific
     trailing_stop_pct: float = 0.25       # Trailing stop percentage
     trailing_stop_trigger_pct: float = 0.30  # Profit % before trailing stop activates
-    # === CONFIDENCE SCHEMA ===
+    # === NEW TRAILING STOP v2 (Nerd's strategy) ===
     confidence: int = 50                  # Signal confidence 0-100
-    trailing_stop_buffer: float = 0.25    # Wider buffer for high-confidence trades
-    max_hold_minutes: int = 15            # Max hold time based on confidence
+    trailing_stop_buffer: float = 0.30   # Default 30% buffer
+    trailing_stop_trigger_pct: float = 0.40  # Activate after 40% profit (was 30%)
+    max_hold_minutes: int = 10           # Dynamic based on entry zone
 
 
 @dataclass 
@@ -435,35 +439,29 @@ class Position:
 
     def update_trailing_stop_confidence(self, current_price: float, confidence: int) -> bool:
         """
-        Update trailing stop with CONFIDENCE-BASED buffer.
-        High confidence = wider buffer (let winners run longer).
-        Low confidence = tighter buffer (lock in profits faster).
+        Update trailing stop with NEW NERD v2 BUFFER.
         
-        Confidence-based trailing stop buffers:
-        - 0-30 conf:  15% lock-in after 20% profit
-        - 31-60 conf: 20% lock-in after 25% profit  
-        - 61-80 conf: 25% lock-in after 30% profit
-        - 81-95 conf: 30% lock-in after 40% profit
-        - 96-100 conf: 35% lock-in after 50% profit
+        TRAILING_STOP_TRIGGER_PCT = 0.40 (activate after 40% profit)
+        Buffer by confidence:
+        - CONF 80+: 35% buffer
+        - CONF 60-79: 30% buffer
+        - CONF 40-59: 25% buffer
         
         Returns True if trailing stop is now active.
         """
-        # Determine buffers based on confidence tier
-        if confidence >= 96:
+        # Determine buffers based on NEW Nerd v2 confidence tiers
+        if confidence >= 80:
             ts_buffer = 0.35
-            ts_trigger = 0.50
-        elif confidence >= 81:
+            ts_trigger = 0.40
+        elif confidence >= 60:
             ts_buffer = 0.30
             ts_trigger = 0.40
-        elif confidence >= 61:
+        elif confidence >= 40:
             ts_buffer = 0.25
-            ts_trigger = 0.30
-        elif confidence >= 31:
-            ts_buffer = 0.20
-            ts_trigger = 0.25
+            ts_trigger = 0.40
         else:
-            ts_buffer = 0.15
-            ts_trigger = 0.20
+            # CONF <40: skip entirely (shouldn't trade)
+            return False
         
         if self.side == "yes":
             if current_price > self.peak_price:
@@ -597,24 +595,25 @@ class StrategyEngine:
     def calculate_kelly_size(self, strategy: Strategy, prob: float, confidence: int = 50) -> Tuple[float, float, int]:
         """
         Calculate Kelly Criterion bet size using historical strategy performance,
-        then adjust based on CONFIDENCE SCHEMA.
+        then adjust based on CONFIDENCE MULTIPLIER (Nerd v2).
         
         Returns (bet_size, kelly_pct, confidence) tuple.
-        - bet_size: dollar amount to bet (clamped to $2 min/$2 max)
+        - bet_size: dollar amount to bet (clamped to MIN_BET/MAX_BET)
         - kelly_pct: the Kelly % used (for logging)
         - confidence: the confidence score (0-100)
         
-        Confidence-based sizing tiers (layered on top of Kelly):
-        - 0-30 conf:   1-2% of bankroll
-        - 31-60 conf:  3-5% of bankroll
-        - 61-80 conf:  6-8% of bankroll
-        - 81-95 conf:  9-12% of bankroll
-        - 96-100 conf: 13-15% of bankroll
+        CONFIDENCE MULTIPLIER (Nerd v2):
+        - CONF 80+: Kelly * 1.0 (full signal, full bet)
+        - CONF 60-79: Kelly * 0.75 (good signal, reduce)
+        - CONF 40-59: Kelly * 0.50 (moderate signal, half bet)
+        - CONF <40: Skip (weak signal, don't trade)
         
-        Kelly is the BASE, confidence adjusts within the tier bounds.
-        High confidence with good Kelly = bet larger.
-        Low confidence with weak Kelly = bet smaller or skip.
+        Hard caps: MAX_BET = $2, MIN_BET = $0.10
         """
+        # Skip if confidence too low
+        if confidence < 40:
+            return 0.0, 0.0, confidence
+        
         if prob <= 0 or prob >= 1:
             return MIN_BET, 0.0, confidence
         
@@ -624,27 +623,17 @@ class StrategyEngine:
         # Apply Kelly fraction for additional safety
         kelly_pct = kelly_pct * KELLY_FRACTION
         
-        # === CONFIDENCE SCHEMA: Map Kelly output through confidence tiers ===
-        # Confidence tiers define the % of bankroll we bet
-        if confidence >= 96:
-            conf_pct = 0.15   # 13-15% of bankroll
-        elif confidence >= 81:
-            conf_pct = 0.11   # 9-12% of bankroll
-        elif confidence >= 61:
-            conf_pct = 0.07   # 6-8% of bankroll
-        elif confidence >= 31:
-            conf_pct = 0.04   # 3-5% of bankroll
+        # Apply confidence multiplier (Nerd v2)
+        if confidence >= 80:
+            conf_mult = 1.0   # Full Kelly
+        elif confidence >= 60:
+            conf_mult = 0.75  # Reduce by 25%
+        elif confidence >= 40:
+            conf_mult = 0.50  # Reduce by 50%
         else:
-            conf_pct = 0.015  # 1-2% of bankroll
+            conf_mult = 0.0   # Skip
         
-        # Use the LARGER of Kelly-derived pct and confidence-derived pct
-        # (but never exceed Kelly's direction - we're adjusting size, not direction)
-        effective_pct = max(kelly_pct, conf_pct)
-        
-        # Special case: if Kelly says don't bet (negative/zero) but confidence is high,
-        # still take the trade with minimum tier size
-        if kelly_pct <= 0 and confidence >= 50:
-            effective_pct = conf_pct
+        effective_pct = kelly_pct * conf_mult
         
         # Cap at KELLY_MAX_CAP (never more than 20% of balance on one trade)
         effective_pct = min(effective_pct, KELLY_MAX_CAP)
@@ -652,8 +641,8 @@ class StrategyEngine:
         # Convert to dollar amount
         bet = self.cash * effective_pct
         
-        # Clamp to hard limits ($0.50 min, $1.50 max per coin)
-        bet = max(MIN_KELLY_BET, min(MAX_KELLY_BET, bet))
+        # Clamp to hard limits ($0.10 min, $2 max per Nerd v2)
+        bet = max(MIN_BET, min(MAX_BET, bet))
         
         return bet, effective_pct, confidence
     
@@ -883,44 +872,129 @@ class StrategyEngine:
                     max_hold_minutes=15 if confidence >= 61 else 10
                 )
         
-        # === FALLBACK: Old drift strategies if no coin cross yet ===
-        # FIRST CROSS TRACKING: Update crossing state for YES midpoint
+        # === FIRST CROSS ONLY (Nerd v2) ===
+        # No drift strategies - drift was losing money
+        # Only trade on first cross of midpoint ($0.50)
+        
         cross_event = self.first_cross.update(market.ticker, mid_price)
         
-        # FIRST CROSS INSIGHT: If price is in dead zone and hasn't crossed, WAIT
+        # If price is in dead zone and hasn't crossed, WAIT
         if self.first_cross.should_wait(market.ticker, mid_price):
             logger.debug(f"FIRST_CROSS: {market.ticker} in dead zone (${mid_price:.4f}) and hasn't crossed yet - WAITING")
             return None
         
-        # Get preferred side based on first cross (for biasing entries)
+        # Check for first cross signal (this is the PRIMARY strategy)
         preferred_side = self.first_cross.get_preferred_side(market.ticker)
         if preferred_side:
-            logger.debug(f"FIRST_CROSS: {market.ticker} has crossed {preferred_side} first - biasing entries")
+            # First cross detected! Generate signal in that direction
+            # UP cross = buy YES, DOWN cross = buy NO
+            if preferred_side == 'yes':
+                side = 'yes'
+                reason_suffix = 'crossed UP first'
+            else:
+                side = 'no'
+                reason_suffix = 'crossed DOWN first'
+            
+            # Calculate confidence for First Cross
+            confidence = self.calculate_confidence(Strategy.FIRST_CROSS, market, coin, mid_price, time_left)
+            
+            prob = mid_price
+            size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.FIRST_CROSS, prob, confidence)
+            
+            # Skip if confidence too low
+            if confidence < 40:
+                logger.debug(f"FIRST_CROSS: {market.ticker} confidence {confidence} < 40 - SKIPPING")
+                return None
+            
+            # NEW trailing stop logic (Nerd v2)
+            if confidence >= 80:
+                ts_buffer = 0.35
+            elif confidence >= 60:
+                ts_buffer = 0.30
+            else:
+                ts_buffer = 0.25
+            ts_trigger = 0.40  # Activate after 40% profit
+            
+            # Dynamic max hold based on entry price (Nerd v2)
+            if 0.70 <= mid_price <= 1.00:
+                max_hold = 8   # High odds - 8 min max
+            elif 0.40 <= mid_price <= 0.60:
+                max_hold = 10  # Mid odds - 10 min max
+            else:
+                max_hold = 12  # Low odds - 12 min max
+            
+            logger.info(
+                f"FIRST_CROSS SIGNAL: {market.ticker} | "
+                f"Direction: {preferred_side} | "
+                f"Side: {side} @ ${mid_price:.4f} | "
+                f"Size: ${size:.2f} | CONF={confidence} | "
+                f"TS={ts_buffer:.0%}buffer/{ts_trigger:.0%}trigger | max_hold={max_hold}min"
+            )
+            
+            return TradeSignal(
+                strategy=Strategy.FIRST_CROSS,
+                ticker=market.ticker,
+                side=side,
+                price=mid_price,
+                size=size,
+                reason=f"FIRST_CROSS: {reason_suffix}, CONF={confidence}, Kelly={kelly_pct:.2%}",
+                take_profit=0.95 if side == "yes" else 0.05,
+                stop_loss=None,
+                trailing_stop_pct=ts_buffer,
+                trailing_stop_trigger_pct=ts_trigger,
+                confidence=confidence,
+                trailing_stop_buffer=ts_buffer,
+                max_hold_minutes=max_hold
+            )
         
-        # AI Probability Estimation: Check if we have genuine edge
-        if AI_PROBABILITY_ENABLED:
-            ai_prob = self._estimate_ai_probability(market, mid_price)
-            if ai_prob is not None:
-                edge = abs(ai_prob - mid_price)
-                if edge < AI_EDGE_THRESHOLD:
-                    logger.debug(f"AI: {market.ticker} - No edge (market={mid_price:.4f}, AI={ai_prob:.4f}, edge={edge:.4f} < {AI_EDGE_THRESHOLD})")
+        # FALLBACK: Momentum + Trailing Stop (only when no first cross after 3 min)
+        # Check time in market - if > 3 min and no first cross, check momentum
+        market_age_sec = 900 - time_left  # Approximate
+        if market_age_sec > 180:  # 3 minutes
+            # Check Coinbase momentum
+            coin = market.ticker.replace('KX', '').replace('15M', '')
+            bias = get_coinbase_bias(coin)
+            
+            # Only if momentum is strong AND price at extreme
+            if bias != 'neutral' and (mid_price < 0.35 or mid_price > 0.65):
+                # Momentum fallback - same-side bias as momentum
+                if bias == 'bullish' and mid_price < 0.35:
+                    side = 'yes'
+                    reason_suffix = 'momentum fallback: bullish at extreme'
+                elif bias == 'bearish' and mid_price > 0.65:
+                    side = 'no'
+                    reason_suffix = 'momentum fallback: bearish at extreme'
+                else:
+                    return None  # No momentum signal
+                
+                confidence = 50  # Lower confidence for fallback
+                size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.MOMENTUM_FALLBACK, mid_price, confidence)
+                
+                if confidence < 40:
                     return None
-                logger.info(f"AI: {market.ticker} - Edge found! market={mid_price:.4f}, AI={ai_prob:.4f}, edge={edge:.4f}")
-        
-        # Check DEEP SHORT first (highest priority) - fading the longshot
-        signal = self._check_deep_short(market, mid_price, time_left)
-        if signal:
-            return signal
-        
-        # Check DRIFT BUY
-        signal = self._check_drift_buy(market, mid_price, time_left)
-        if signal:
-            return signal
-        
-        # Check DRIFT SHORT
-        signal = self._check_drift_short(market, mid_price, time_left)
-        if signal:
-            return signal
+                
+                logger.info(
+                    f"MOMENTUM FALLBACK: {market.ticker} | "
+                    f"Side: {side} @ ${mid_price:.4f} | "
+                    f"Size: ${size:.2f} | CONF={confidence} | "
+                    f"Reason: {reason_suffix}"
+                )
+                
+                return TradeSignal(
+                    strategy=Strategy.MOMENTUM_FALLBACK,
+                    ticker=market.ticker,
+                    side=side,
+                    price=mid_price,
+                    size=size,
+                    reason=f"MOMENTUM_FALLBACK: {reason_suffix}",
+                    take_profit=0.95 if side == "yes" else 0.05,
+                    stop_loss=None,
+                    trailing_stop_pct=0.35,  # Wider buffer for fallback
+                    trailing_stop_trigger_pct=0.40,
+                    confidence=confidence,
+                    trailing_stop_buffer=0.35,
+                    max_hold_minutes=8  # Shorter hold for fallback
+                )
         
         return None
     
@@ -1221,15 +1295,25 @@ Your estimate:"""
             if position.side == "no" and current_price >= position.stop_loss:
                 return True, f"HARD SL hit: ${current_price:.4f} >= ${position.stop_loss:.4f}"
         
-        # === NEAR-EXPIRY EXIT (last 30 seconds - take whatever we got) ===
-        if time_left <= 30:
-            logger.info(f"{position.ticker}: Near expiry ({time_left}s) - closing position")
+        # === NEAR-EXPIRY EXIT (last 60 seconds - take whatever we got) ===
+        if time_left <= MIN_TIME_BEFORE_EXPIRY:
+            logger.info(f"{position.ticker}: Near expiry ({time_left}s <= {MIN_TIME_BEFORE_EXPIRY}s) - closing position")
             return True, f"Expiry: closing at ${current_price:.4f}"
         
-        # === MAX HOLD TIME (confidence-based) ===
-        # Get confidence from position if available, default to 50
-        confidence = getattr(position, 'confidence', 50)
-        max_hold_minutes = getattr(position, 'max_hold_minutes', 15 if confidence >= 61 else 10)
+        # === MAX HOLD TIME (dynamic based on entry price - Nerd v2) ===
+        # Entry $0.70-1.00: 8 min max
+        # Entry $0.40-0.60: 10 min max
+        # Entry $0.15-0.30: 12 min max
+        entry_price = position.entry_price
+        if 0.70 <= entry_price <= 1.00:
+            max_hold_minutes = 8
+        elif 0.40 <= entry_price <= 0.60:
+            max_hold_minutes = 10
+        else:
+            max_hold_minutes = 12
+        
+        # Force close 1 minute before expiry (Nerd v2)
+        MIN_TIME_BEFORE_EXPIRY = 60
         
         # Check if position has been open too long
         import time

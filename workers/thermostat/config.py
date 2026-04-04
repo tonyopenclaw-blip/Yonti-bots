@@ -18,7 +18,7 @@ LOG_DIR.mkdir(exist_ok=True)
 # KALSHI API CONFIG
 # =============================================================================
 KALSHI_BASE_URL = "https://api.elections.kalshi.com/trade-api/v2"
-KALSHI_ACCESS_KEY = os.getenv("KALSHI_ACCESS_KEY", "")
+KALSHI_ACCESS_KEY = os.getenv("KALSHI_ACCESS_KEY", "c5187b0e-785e-4749-b45b-70f9cd40bb0f")
 
 # =============================================================================
 # PAPER TRADING CONFIG

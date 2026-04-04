@@ -18,7 +18,7 @@ import json
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from config import (
     LOG_FILE, LOG_LEVEL, LOG_FORMAT, LOG_DATE_FORMAT,
@@ -578,6 +578,22 @@ class FlipBot:
         with open(stats_file, 'w') as f:
             json.dump(stats_data, f, indent=2)
     
+    def _get_next_game_start(self, markets: List) -> Optional[datetime]:
+        """Get the start time of the next game from a list of markets."""
+        from datetime import datetime
+        next_start = None
+        for market in markets:
+            try:
+                close_str = market.close_time
+                if close_str:
+                    # close_time is when market expires (game start for game winner)
+                    close_dt = datetime.fromisoformat(close_str.replace('Z', '+00:00'))
+                    if next_start is None or close_dt < next_start:
+                        next_start = close_dt
+            except:
+                continue
+        return next_start
+
     def run(self):
         """Main trading loop."""
         logger.info(f"Starting flip bot trading loop (poll every {POLL_INTERVAL_SEC}s)...")
@@ -585,6 +601,8 @@ class FlipBot:
         
         loop_count = 0
         last_display_time = 0
+        dormant_mode = False
+        dormant_check_interval = 60  # Check every 60s when dormant
         
         while self.running:
             loop_count += 1
@@ -605,26 +623,62 @@ class FlipBot:
                 if not game_pairs:
                     if loop_count % 20 == 1:
                         logger.info("No NBA game markets found, waiting...")
+                    dormant_mode = False  # Reset dormant when no markets
                 else:
                     # Display status every 30 seconds
                     if time.time() - last_display_time >= 30:
                         self._display_status(game_pairs)
                         last_display_time = time.time()
                     
-                    # Get trade signals
-                    signals = self.strategy.get_signals(game_pairs)
+                    # Check if we should enter dormant mode
+                    # If all positions are filled and no pending orders, check game timing
+                    pending_orders = len(self.strategy.working_orders)
+                    open_positions = len([p for p in self.strategy.positions.values() if p['status'] == 'open'])
                     
-                    if signals:
-                        logger.info(f"Generated {len(signals)} trade signals")
-                        self._execute_signals(signals)
+                    if pending_orders == 0 and open_positions > 0 and not dormant_mode:
+                        # All initial fills done, check when next game starts
+                        from datetime import datetime, timezone
+                        next_game = self._get_next_game_start([m for mp in game_pairs for m in mp.markets])
+                        if next_game:
+                            now = datetime.now(timezone.utc)
+                            if next_game.tzinfo is None:
+                                next_game = next_game.replace(tzinfo=timezone.utc)
+                            time_until_game = (next_game - now).total_seconds()
+                            
+                            if time_until_game > 1800:  # > 30 minutes
+                                dormant_mode = True
+                                logger.info(f"🎮 All fills done. Next game in {time_until_game/60:.1f} min. Entering DORMANT mode (poll every {dormant_check_interval}s)")
+                            else:
+                                logger.info(f"🎮 All fills done. Game starts in {time_until_game/60:.1f} min. Staying ACTIVE")
+                    
+                    # Get trade signals (only if not dormant or exiting dormant)
+                    if not dormant_mode:
+                        signals = self.strategy.get_signals(game_pairs)
+                        if signals:
+                            logger.info(f"Generated {len(signals)} trade signals")
+                            self._execute_signals(signals)
+                    else:
+                        # In dormant mode - check if we should wake up
+                        from datetime import datetime, timezone
+                        next_game = self._get_next_game_start([m for mp in game_pairs for m in mp.markets])
+                        if next_game:
+                            now = datetime.now(timezone.utc)
+                            if next_game.tzinfo is None:
+                                next_game = next_game.replace(tzinfo=timezone.utc)
+                            time_until_game = (next_game - now).total_seconds()
+                            
+                            if time_until_game <= 1800:  # Within 30 minutes
+                                dormant_mode = False
+                                logger.info(f"🎮 WAKING UP - Game starts in {time_until_game/60:.1f} min!")
                 
                 # Report stats every 5 minutes
                 if time.time() - self.last_stats_time >= STATS_REPORT_INTERVAL_SEC:
                     self._report_stats()
                     self.last_stats_time = time.time()
                 
-                # Sleep
-                time.sleep(POLL_INTERVAL_SEC)
+                # Sleep - longer if dormant
+                sleep_time = dormant_check_interval if dormant_mode else POLL_INTERVAL_SEC
+                time.sleep(sleep_time)
                 
             except Exception as e:
                 logger.error(f"Error in trading loop: {e}", exc_info=True)

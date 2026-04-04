@@ -13,12 +13,15 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, List, Optional
 
+import requests
+
 from config import (
     LOG_FILE, LOG_LEVEL, LOG_FORMAT, LOG_DATE_FORMAT,
     PAPER_MODE, PAPER_BALANCE, BALANCE_FLOOR, BALANCE_RESET_AMOUNT,
     IDLE_POLL_INTERVAL_SEC, ACTIVE_POLL_INTERVAL_SEC, MAX_OPEN_POSITIONS, MAX_BET,
     KALSHI_ACCESS_KEY, COINS, SERIES_TICKERS,
-    COOLDOWN_CYCLES, DAILY_STOP_LOSS_PCT
+    COOLDOWN_CYCLES, DAILY_STOP_LOSS_PCT,
+    COINBASE_API, COINBASE_PRODUCTS
 )
 from kalshi_api import KalshiAPI, Market
 from strategies import StrategyEngine, Strategy, Position, TradeSignal
@@ -44,6 +47,85 @@ def setup_logging():
     return logging.getLogger(__name__)
 
 logger = setup_logging()
+
+
+# =============================================================================
+# NERD v2 STRATEGY CONSTANTS
+# =============================================================================
+MAX_POSITIONS = 3           # Max 3 concurrent positions (was 5)
+MAX_DAILY_LOSS = 5.00      # Stop if down $5 in a day
+MAX_DAILY_TRADES = 30      # Max 30 trades per calendar day
+
+
+class CoinbasePreFilter:
+    """
+    Pre-filters signals using free Coinbase data.
+    Polls Coinbase every 10 seconds (no rate limit).
+    Only calls Kalshi when a cross is detected.
+    
+    This dramatically reduces Kalshi API calls (from 200+ to ~50 per hour).
+    """
+    
+    def __init__(self):
+        self.last_prices: Dict[str, float] = {}
+        self.midpoint = 0.50
+        self.poll_interval = 10  # seconds
+        self.last_poll = 0
+        self.cross_detected: Dict[str, Optional[str]] = {}  # coin -> 'up', 'down', or None
+        self._coinbase_products = COINBASE_PRODUCTS
+    
+    def check_cross(self, coin: str) -> Optional[str]:
+        """
+        Check if Coinbase price crossed the midpoint.
+        Returns 'up', 'down', or None.
+        """
+        if time.time() - self.last_poll < self.poll_interval:
+            return self.cross_detected.get(coin)
+        
+        product_id = self._coinbase_products.get(coin.upper())
+        if not product_id:
+            return None
+        
+        try:
+            url = f"{COINBASE_API}/products/{product_id}/ticker"
+            response = requests.get(url, timeout=5)
+            response.raise_for_status()
+            data = response.json()
+            price = float(data.get('price', 0))
+            
+            self.last_poll = time.time()
+            
+            if coin not in self.last_prices:
+                self.last_prices[coin] = price
+                self.cross_detected[coin] = None
+                return None
+            
+            prev = self.last_prices[coin]
+            self.last_prices[coin] = price
+            
+            # Detect cross
+            if prev <= self.midpoint and price > self.midpoint:
+                self.cross_detected[coin] = 'up'
+                logger.debug(f"COINBASE PRE-FILTER: {coin} crossed UP @ ${price:.2f}")
+            elif prev >= self.midpoint and price < self.midpoint:
+                self.cross_detected[coin] = 'down'
+                logger.debug(f"COINBASE PRE-FILTER: {coin} crossed DOWN @ ${price:.2f}")
+            else:
+                self.cross_detected[coin] = None
+            
+            return self.cross_detected.get(coin)
+            
+        except Exception as e:
+            logger.debug(f"COINBASE PRE-FILTER: Error fetching {coin}: {e}")
+            return None
+    
+    def get_price(self, coin: str) -> Optional[float]:
+        """Get the last known Coinbase price for a coin."""
+        return self.last_prices.get(coin)
+    
+    def reset_cross(self, coin: str):
+        """Reset the cross detection for a coin (when market expires)."""
+        self.cross_detected[coin] = None
 
 
 class CoinTrader:
@@ -410,27 +492,36 @@ class Superbot:
         self.series_cycle = 0  # Cycle counter for idle polling through all coins
         self.our_series_tickers = list(SERIES_TICKERS.values())  # [KXBTC15M, KXETH15M, ...]
         
-        # Daily stop-loss tracking
+        # Coinbase pre-filter (Nerd v2)
+        self.coinbase_filter = CoinbasePreFilter()
+        
+        # Daily stop-loss tracking (Nerd v2)
         self.day_start_balance = PAPER_BALANCE  # Balance at start of day
         self.day_start_time = datetime.now().strftime("%Y-%m-%d")  # Track day
         self.trading_stopped = False  # Flag when daily stop-loss triggered
         self.stop_loss_triggered = False  # Flag to indicate stop-loss was triggered this day
         self.sizing_reduced = False  # Flag: sizing reduced by 50% after balance drops below $80
         
+        # Daily trade counter (Nerd v2)
+        self.daily_trades = 0
+        self.daily_trade_limit = MAX_DAILY_TRADES  # 30 trades per day
+        
         # Setup signal handlers
         signal.signal(signal.SIGINT, self._signal_handler)
         signal.signal(signal.SIGTERM, self._signal_handler)
         
         logger.info("=" * 60)
-        logger.info("SUPERBOT INITIALIZED - PAPER MODE - SMART POLLING")
+        logger.info("SUPERBOT INITIALIZED - NERD v2 STRATEGY")
         logger.info(f"Coins: {COINS}")
         logger.info(f"Tickers: {list(SERIES_TICKERS.values())}")
         logger.info(f"Starting balance: ${self.cash:.2f}")
-        logger.info(f"Balance floor: ${BALANCE_FLOOR:.2f}")
-        logger.info(f"Max bet per coin: ${MAX_BET:.2f}")
-        logger.info(f"Idle poll: {IDLE_POLL_INTERVAL_SEC}s per series | Active poll: {ACTIVE_POLL_INTERVAL_SEC}s")
-        logger.info(f"Cooldown: {COOLDOWN_CYCLES} cycles after position close")
-        logger.info(f"Daily stop-loss: $50 hard floor | $80 = 50% sizing reduction")
+        logger.info(f"Max positions: {MAX_POSITIONS} (was 5)")
+        logger.info(f"Max bet per trade: ${MAX_BET:.2f}")
+        logger.info(f"Max daily loss: ${MAX_DAILY_LOSS:.2f}")
+        logger.info(f"Max daily trades: {MAX_DAILY_TRADES}")
+        logger.info(f"Coinbase pre-filter: poll every 10s (FREE)")
+        logger.info(f"Kalshi polling: every 30s (was 2s)")
+        logger.info("STRATEGY: First Cross ONLY (no drift)")
         logger.info("=" * 60)
     
     def _signal_handler(self, signum, frame):
@@ -447,25 +538,36 @@ class Superbot:
     
     def _check_daily_stop_loss(self):
         """
-        Check if daily stop-loss triggered.
+        Check if daily stop-loss triggered (Nerd v2).
         If balance drops below $80, reduce sizing by 50%.
         If balance drops below $50, stop trading for the day.
+        
+        NEW: MAX_DAILY_LOSS = $5 (stop if down $5)
+        NEW: MAX_DAILY_TRADES = 30 (stop if 30 trades)
         """
         # Check if we crossed into a new day - reset tracking
         current_day = datetime.now().strftime("%Y-%m-%d")
         if current_day != self.day_start_time:
-            logger.info(f"New day detected ({current_day}). Resetting daily stop-loss tracking.")
+            logger.info(f"New day detected ({current_day}). Resetting daily tracking.")
             self.day_start_time = current_day
             self.day_start_balance = self.cash
             self.trading_stopped = False
             self.stop_loss_triggered = False
             self.sizing_reduced = False
+            self.daily_trades = 0
         
-        # Check stop-loss thresholds
-        if self.cash < 50:
-            # Critical: stop trading
+        # Check trade limit
+        if self.daily_trades >= self.daily_trade_limit:
             if not self.trading_stopped:
-                logger.warning(f"!!! DAILY STOP-LOSS TRIGGERED !!! Cash ${self.cash:.2f} < $50 - stopping trading")
+                logger.warning(f"!!! DAILY TRADE LIMIT REACHED !!! {self.daily_trades} trades - stopping trading")
+                self.trading_stopped = True
+            return True
+        
+        # Check stop-loss thresholds (Nerd v2: $5 daily loss)
+        daily_loss = self.day_start_balance - self.cash
+        if daily_loss >= MAX_DAILY_LOSS:
+            if not self.trading_stopped:
+                logger.warning(f"!!! DAILY STOP-LOSS TRIGGERED !!! Down ${daily_loss:.2f} >= ${MAX_DAILY_LOSS:.2f} - stopping trading")
                 self.trading_stopped = True
                 self.stop_loss_triggered = True
             return True
@@ -498,8 +600,8 @@ class Superbot:
     def _check_and_trade_series(self, series_ticker: str) -> bool:
         """
         Check a single series for tradeable markets and execute trades if found.
-        Returns True if any new markets were found/tradable.
-        Uses the same get_open_markets() as Recorder.
+        Uses CoinbasePreFilter to only call Kalshi when a cross is detected.
+        Polls Kalshi every 30s (was 2s) to reduce API calls.
         """
         coin = self._get_coin_from_series(series_ticker)
         if not coin:
@@ -507,7 +609,21 @@ class Superbot:
         
         trader = self.coin_traders[coin]
         
-        # Use get_open_markets (same as Recorder) - hits /markets?status=open
+        # === NERD v2: Coinbase pre-filter ===
+        # Check Coinbase first (free, every 10s)
+        coinbase_cross = self.coinbase_filter.check_cross(coin)
+        
+        # Only call Kalshi if Coinbase detected a cross OR we have open positions
+        # This dramatically reduces API calls
+        has_positions = len(trader.positions) > 0
+        
+        if not has_positions and coinbase_cross is None:
+            # No cross detected by Coinbase, skip this Kalshi call
+            # Remove from active series if no positions
+            self.active_series.discard(series_ticker)
+            return False
+        
+        # Use get_open_markets - hits /markets?status=open
         markets = self.api.get_open_markets(series_ticker)
         
         if not markets:
@@ -524,7 +640,13 @@ class Superbot:
         # Check existing positions for exit conditions
         trader._check_existing_positions(market_dict)
         
-        # If we already have a position, skip new trades (we'll monitor it)
+        # === NERD v2: MAX_POSITIONS = 3 check ===
+        total_positions = sum(len(t.positions) for t in self.coin_traders.values())
+        if total_positions >= MAX_POSITIONS:
+            logger.debug(f"MAX POSITIONS ({MAX_POSITIONS}) reached - not scanning for new signals")
+            return True
+        
+        # If we already have a position in this coin, skip new trades (we'll monitor it)
         if trader.positions:
             return True
         
@@ -539,14 +661,6 @@ class Superbot:
             # Evaluate market for trading signal
             signal = trader.strategy_engine.evaluate_market(market, coin)
             if signal:
-                # Pixel: Kill filter - drift_short entry only if YES < $0.70
-                if signal.strategy.value == "drift_short" and market.yes_bid > 0.70:
-                    logger.info(f"[{coin}] SKIP drift_short entry @ ${market.yes_bid:.4f} - above $0.70 threshold")
-                    continue
-                # Pixel: drift_buy entry only if YES < $0.45
-                if signal.strategy.value == "drift_buy" and market.yes_bid > 0.45:
-                    logger.info(f"[{coin}] SKIP drift_buy entry @ ${market.yes_bid:.4f} - above $0.45 threshold")
-                    continue
                 # Ensure max bet per coin is respected (AND apply sizing reduction if triggered)
                 max_size = MAX_BET
                 if self.sizing_reduced:
@@ -558,7 +672,8 @@ class Superbot:
                 success, cost = trader._open_position(signal, per_coin_cash)
                 if success:
                     self.cash -= cost
-                    logger.info(f"🚀 [{coin}] TRADE EXECUTED: {signal.strategy.value} {signal.side} {signal.ticker} @ ${signal.price:.4f}, size=${signal.size:.2f}")
+                    self.daily_trades += 1
+                    logger.info(f"🚀 [{coin}] TRADE EXECUTED: {signal.strategy.value} {signal.side} {signal.ticker} @ ${signal.price:.4f}, size=${signal.size:.2f} (daily trades: {self.daily_trades}/{MAX_DAILY_TRADES})")
                     return True
         
         return True
@@ -609,11 +724,11 @@ class Superbot:
                     last_cooldown_tick = time.time()
                 
                 if self.active_series:
-                    # ACTIVE MODE: First, do a QUICK scan of ALL series to discover any new active ones
-                    # then poll all active series every 1 second
+                    # ACTIVE MODE: Poll all active series every 30s (was 3s)
+                    # Coinbase pre-filter handles fast detection
                     for series_ticker in self.our_series_tickers:
                         self._check_and_trade_series(series_ticker)
-                    time.sleep(ACTIVE_POLL_INTERVAL_SEC)
+                    time.sleep(30)  # Nerd v2: 30s Kalshi polling (was 3s)
                 else:
                     # IDLE MODE: Check ONE series per cycle, cycle through all coins
                     series_ticker = self.our_series_tickers[self.series_cycle % len(self.our_series_tickers)]
@@ -626,10 +741,10 @@ class Superbot:
                         loss_pct = loss / self.day_start_balance * 100 if self.day_start_balance > 0 else 0
                         logger.info(f"😴 IDLE: checked {series_ticker} (poll #{loop_count}) | Day P&L: ${loss:.2f} ({loss_pct:.1f}%)")
                     
-                    # If no markets found, sleep 10 seconds
+                    # If no markets found, sleep 30 seconds
                     # If markets WERE found, don't sleep - immediately go to active polling
                     if not had_markets and not self.active_series:
-                        time.sleep(IDLE_POLL_INTERVAL_SEC)
+                        time.sleep(30)  # Nerd v2: 30s idle poll (was 20s)
                 
                 # Status log every 30 seconds
                 if time.time() - last_status_log >= 30:

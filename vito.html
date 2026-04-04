@@ -7,830 +7,139 @@
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0B0F1A;
-            --card: #131929;
-            --card-hover: #1A2235;
-            --border: #1E2A3F;
-            --text: #E8ECF4;
-            --text-dim: #7A8499;
-            --gold: #F0B90B;
-            --gold-dim: rgba(240,185,11,0.15);
-            --gold-border: rgba(240,185,11,0.3);
-            --green: #00D68F;
-            --red: #EF4444;
-            --nba: #C8102E;
-            --nba-bg: rgba(200,16,46,0.12);
-            --nhl: #4F8DE8;
-            --nhl-bg: rgba(79,141,232,0.12);
-            --mlb: #5B9BD5;
-            --mlb-bg: rgba(91,155,213,0.12);
-            --win: #00E676;
-            --loss: #FF5252;
-            --pending: #90CAF9;
-            --parlay-gold: rgba(240,185,11,0.08);
+            --bg: #0B0F1A; --card: #131929; --card-hover: #1A2235; --border: #1E2A3F;
+            --text: #E8ECF4; --text-dim: #7A8499; --gold: #F0B90B; --gold-border: rgba(240,185,11,0.3);
+            --nba: #C8102E; --nhl: #003E8C;
+            --win: #00E676; --loss: #FF5252;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            line-height: 1.5;
-        }
-
-        /* TOPBAR */
-        .topbar {
-            background: rgba(11,15,26,0.95);
-            border-bottom: 1px solid var(--border);
-            padding: 0 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 56px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(8px);
-        }
-        .topbar-left { display: flex; align-items: center; gap: 20px; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+        .topbar { background: rgba(11,15,26,0.95); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 100; }
         .topbar-logo { font-size: 1rem; font-weight: 700; color: var(--gold); text-decoration: none; }
-        .topbar-logo:hover { text-decoration: underline; }
-        .topbar-nav { display: flex; gap: 4px; }
-        .nav-btn {
-            padding: 6px 14px; border-radius: 8px; border: none;
-            background: transparent; color: var(--text-dim); font-size: 0.8rem;
-            font-weight: 500; cursor: pointer; transition: all 0.15s; text-decoration: none;
-        }
-        .nav-btn:hover { color: var(--text); background: rgba(255,255,255,0.06); }
-        .nav-btn.active { color: var(--gold); background: rgba(240,185,11,0.1); border: 1px solid rgba(240,185,11,0.3); }
-        .topbar-right { display: flex; align-items: center; gap: 16px; }
-        .utc-clock { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-dim); }
-
-        /* CONTAINER */
-        .container { max-width: 900px; margin: 0 auto; padding: 0 24px 60px; }
-
-        /* BACK LINK */
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: var(--gold);
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 500;
-            padding: 24px 0 16px;
-            transition: opacity 0.15s;
-        }
-        .back-link:hover { opacity: 0.8; text-decoration: underline; }
-
-        /* REPORT HEADER */
-        .report-header {
-            background: linear-gradient(135deg, rgba(240,185,11,0.08) 0%, rgba(240,185,11,0.03) 100%);
-            border: 1px solid var(--gold-border);
-            border-radius: 16px;
-            padding: 28px 32px;
-            margin-bottom: 24px;
-            text-align: center;
-        }
+        .container { max-width: 900px; margin: 0 auto; padding: 24px; }
+        .report-header { background: linear-gradient(135deg, rgba(240,185,11,0.08) 0%, rgba(240,185,11,0.03) 100%); border: 1px solid var(--gold-border); border-radius: 16px; padding: 28px 32px; margin-bottom: 24px; text-align: center; }
         .report-icon { font-size: 48px; margin-bottom: 10px; }
-        .report-title {
-            font-family: 'Oswald', sans-serif;
-            font-size: 2.4rem;
-            font-weight: 700;
-            color: var(--gold);
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            margin-bottom: 4px;
-        }
-        .report-date {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            color: var(--text-dim);
-        }
-        .report-divider {
-            color: var(--gold);
-            font-size: 0.9rem;
-            letter-spacing: 0.1em;
-            margin-top: 12px;
-        }
-
-        /* RECORD BANNER */
-        .record-banner {
-            display: flex;
-            justify-content: center;
-            gap: 32px;
-            padding: 16px 24px;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            margin-bottom: 28px;
-        }
-        .record-item { text-align: center; }
-        .record-val {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--gold);
-            line-height: 1;
-        }
-        .record-val.positive { color: var(--win); }
-        .record-val.negative { color: var(--loss); }
-        .record-lbl {
-            font-size: 0.65rem;
-            font-weight: 600;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin-top: 4px;
-        }
-
-        /* SPORT SECTION */
+        .report-title { font-family: 'Oswald', sans-serif; font-size: 2.4rem; font-weight: 700; color: var(--gold); }
+        .report-date { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--text-dim); margin-top: 8px; }
+        .status-banner { background: rgba(240,185,11,0.1); border: 1px solid rgba(240,185,11,0.3); border-radius: 12px; padding: 16px 20px; margin-bottom: 24px; text-align: center; }
+        .status-banner p { color: var(--text-dim); font-size: 0.9rem; }
         .sport-section { margin-bottom: 32px; }
-
-        .sport-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 14px;
-        }
-        .sport-emoji { font-size: 1.8rem; }
-        .sport-name {
-            font-family: 'Oswald', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
+        .sport-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .sport-emoji { font-size: 2rem; }
+        .sport-name { font-family: 'Oswald', sans-serif; font-size: 1.6rem; font-weight: 700; text-transform: uppercase; }
         .sport-name.nba { color: var(--nba); }
         .sport-name.nhl { color: var(--nhl); }
-        .sport-name.mlb { color: var(--mlb); }
-
-        /* PICK CATEGORY ROW */
-        .pick-category {
-            margin-bottom: 14px;
-        }
-        .category-label {
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-dim);
-            margin-bottom: 8px;
-            padding-left: 4px;
-        }
-
-        /* PICK ITEMS (single line each) */
-        .pick-item {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 10px 14px;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            transition: border-color 0.15s;
-        }
-        .pick-item:hover { border-color: rgba(240,185,11,0.3); }
-        .pick-item-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
-        .pick-type-dot {
-            width: 8px; height: 8px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-        .dot-prop { background: #9C6AF5; }
-        .dot-spread { background: var(--nba); }
-        .dot-ou { background: var(--win); }
-        .dot-parlay { background: var(--gold); }
-        .pick-bet {
-            font-size: 0.88rem;
-            color: var(--text);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .pick-bet strong { color: var(--gold); font-weight: 700; }
-        .pick-line {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-        .pick-badge {
-            font-size: 0.6rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            padding: 2px 8px;
-            border-radius: 4px;
-            flex-shrink: 0;
-        }
-        .badge-prop { background: rgba(156,106,245,0.2); color: #9C6AF5; }
-        .badge-spread { background: var(--nba-bg); color: var(--nba); }
-        .badge-ou { background: rgba(0,230,118,0.15); color: var(--win); }
-        .badge-parlay { background: rgba(240,185,11,0.15); color: var(--gold); }
-
-        /* BEST PARLAY CARD */
-        .parlay-card {
-            background: var(--parlay-gold);
-            border: 1px solid var(--gold-border);
-            border-radius: 10px;
-            padding: 14px 16px;
-            margin-top: 4px;
-        }
-        .parlay-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-        .parlay-title {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-family: 'Oswald', sans-serif;
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--gold);
-        }
-        .parlay-boost {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            font-weight: 700;
-            background: var(--gold);
-            color: #000;
-            padding: 2px 8px;
-            border-radius: 4px;
-        }
-        .parlay-legs { display: flex; flex-direction: column; gap: 5px; }
-        .parlay-leg {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.82rem;
-            color: var(--text);
-        }
-        .parlay-leg-num {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            color: var(--gold);
-            font-weight: 700;
-            min-width: 18px;
-        }
-        .parlay-total {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid var(--gold-border);
-        }
-        .parlay-total-label {
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--text-dim);
-        }
-        .parlay-total-odds {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: var(--gold);
-        }
-
-        /* SECTION DIVIDER */
-        .sport-divider {
-            height: 1px;
-            background: var(--border);
-            margin: 28px 0;
-        }
-
-        /* FOOTER */
-        .footer-note {
-            text-align: center;
-            padding: 24px;
-            border-top: 1px solid var(--border);
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            line-height: 1.6;
-            margin-top: 20px;
-        }
-        .footer-note a { color: var(--gold); text-decoration: none; }
-        .footer-note a:hover { text-decoration: underline; }
-
-        @media (max-width: 600px) {
-            .topbar { padding: 0 12px; height: auto; flex-wrap: wrap; gap: 8px; }
-            .topbar-nav { flex-wrap: wrap; }
-            .nav-btn { padding: 8px 10px; font-size: 0.72rem; }
-            .container { padding: 0 12px 40px; }
-            .report-title { font-size: 1.8rem; }
-            .record-banner { gap: 20px; flex-wrap: wrap; }
-            .pick-item { flex-wrap: wrap; }
-            .pick-line { display: none; }
-        }
+        .game-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+        .game-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+        .game-teams { font-family: 'Oswald', sans-serif; font-size: 1.3rem; font-weight: 600; }
+        .game-time { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-dim); }
+        .pick-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: var(--bg); border-radius: 8px; margin-bottom: 6px; }
+        .pick-type { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-dim); letter-spacing: 0.08em; min-width: 60px; }
+        .pick-value { font-weight: 600; color: var(--gold); font-size: 0.95rem; flex: 1; text-align: center; }
+        .pick-odds { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-dim); min-width: 50px; text-align: right; }
+        .footer { text-align: center; padding: 40px 0; color: var(--text-dim); font-size: 0.8rem; }
     </style>
 </head>
 <body>
-
-<!-- TOPBAR -->
-<div class="topbar">
-    <div class="topbar-left">
-        <a href="/" class="topbar-logo">YONTI</a>
-        <nav class="topbar-nav">
-            <a href="/" class="nav-btn">← Back to Main</a>
-            <a href="/paperdashboard/" class="nav-btn">📊 Paper Dashboard</a>
-            <a href="/vito.html" class="nav-btn active">🍝 Vito's Picks</a>
-        </nav>
+    <div class="topbar">
+        <a href="/" class="topbar-logo">← Yonti</a>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-dim);">04/04/2026</span>
     </div>
-    <div class="topbar-right">
-        <span class="utc-clock" id="clock">--:--:-- UTC</span>
-    </div>
-</div>
-
-<div class="container">
-    <!-- BACK LINK -->
-    <a href="/" class="back-link">← Back to Main</a>
-
-    <!-- REPORT HEADER -->
-    <div class="report-header">
-        <div class="report-icon">🍝</div>
-        <div class="report-title">Uncle Vito's Picks</div>
-        <div class="report-date" id="reportDate">April 3, 2026</div>
-        <div class="report-divider">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
-    </div>
-
-    <!-- RECORD BANNER -->
-    <div class="record-banner">
-        <div class="record-item">
-            <div class="record-val">12-8</div>
-            <div class="record-lbl">Overall Record</div>
+    <div class="container">
+        <div class="report-header">
+            <div class="report-icon">🍝</div>
+            <div class="report-title">UNCLE VITO'S PICKS</div>
+            <div class="report-date">⚠️ DK API Issue — Manual Picks Today</div>
         </div>
-        <div class="record-item">
-            <div class="record-val positive">+3.2u</div>
-            <div class="record-lbl">Units</div>
-        </div>
-        <div class="record-item">
-            <div class="record-val">60%</div>
-            <div class="record-lbl">Win Rate</div>
-        </div>
-    </div>
-
-    <!-- ═══════════════ NBA ═══════════════ -->
-    <div class="sport-section">
-        <div class="sport-header">
-            <span class="sport-emoji">🏀</span>
-            <span class="sport-name nba">NBA</span>
+        <div class="status-banner">
+            <p>DraftKings API blocked. ESPN showing wrong data. Manual picks for 04/04/2026.</p>
         </div>
 
-        <!-- Props -->
-        <div class="pick-category">
-            <div class="category-label">Props (3)</div>
-
-            <div class="pick-item">
-                <div class="pick-item-left">
-                    <span class="pick-type-dot dot-prop"></span>
-                    <span class="pick-bet"><strong>Shai Gilgeous-Alexander</strong> — OVER 30.5 Points</span>
-                </div>
-                <span class="pick-badge badge-prop">Prop</span>
+        <div class="sport-section">
+            <div class="sport-header">
+                <div class="sport-emoji">🏀</div>
+                <div class="sport-name nba">NBA — 3 Games</div>
             </div>
-
-            <div class="pick-item">
-                <div class="pick-item-left">
-                    <span class="pick-type-dot dot-prop"></span>
-                    <span class="pick-bet"><strong>Jayson Tatum</strong> — OVER 27.5 Points</span>
+            <div class="game-card">
+                <div class="game-header">
+                    <div class="game-teams">WAS Wizards @ MIA Heat</div>
+                    <div class="game-time">3:10 PM ET</div>
                 </div>
-                <span class="pick-badge badge-prop">Prop</span>
+                <div class="pick-row"><span class="pick-type">Spread</span><span class="pick-value">Heat -17.5</span><span class="pick-odds">-108</span></div>
+                <div class="pick-row"><span class="pick-type">ML</span><span class="pick-value">Heat</span><span class="pick-odds">-2500</span></div>
+                <div class="pick-row"><span class="pick-type">O/U</span><span class="pick-value">Under 247.5</span><span class="pick-odds">-108</span></div>
             </div>
-
-            <div class="pick-item">
-                <div class="pick-item-left">
-                    <span class="pick-type-dot dot-prop"></span>
-                    <span class="pick-bet"><strong>Donovan Mitchell</strong> — OVER 24.5 Points</span>
+            <div class="game-card">
+                <div class="game-header">
+                    <div class="game-teams">SA Spurs @ DEN Nuggets</div>
+                    <div class="game-time">3:10 PM ET</div>
                 </div>
-                <span class="pick-badge badge-prop">Prop</span>
+                <div class="pick-row"><span class="pick-type">Spread</span><span class="pick-value">Spurs -2</span><span class="pick-odds">-110</span></div>
+                <div class="pick-row"><span class="pick-type">ML</span><span class="pick-value">Spurs</span><span class="pick-odds">-132</span></div>
+                <div class="pick-row"><span class="pick-type">O/U</span><span class="pick-value">Over 242.5</span><span class="pick-odds">-112</span></div>
+            </div>
+            <div class="game-card">
+                <div class="game-header">
+                    <div class="game-teams">DET Pistons @ PHI 76ers</div>
+                    <div class="game-time">7:10 PM ET</div>
+                </div>
+                <div class="pick-row"><span class="pick-type">Spread</span><span class="pick-value">Pistons -2</span><span class="pick-odds">-114</span></div>
+                <div class="pick-row"><span class="pick-type">ML</span><span class="pick-value">Pistons</span><span class="pick-odds">-138</span></div>
+                <div class="pick-row"><span class="pick-type">O/U</span><span class="pick-value">Over 227.5</span><span class="pick-odds">-110</span></div>
             </div>
         </div>
 
-        <!-- Spread/ML -->
-        <div class="pick-category">
-            <div class="category-label">Spread / ML (3)</div>
-
-            <div class="pick-item">
-                <div class="pick-item-left">
-                    <span class="pick-type-dot dot-spread"></span>
-                    <span class="pick-bet">OKC Thunder <strong>(-4.5)</strong> vs Lakers</span>
-                </div>
-                <span class="pick-line">-110</span>
-                <span class="pick-badge badge-spread">Spread</span>
+        <div class="sport-section">
+            <div class="sport-header">
+                <div class="sport-emoji">🧊</div>
+                <div class="sport-name nhl">NHL — 5 Games</div>
             </div>
-
-            <div class="pick-item">
-                <div class="pick-item-left">
-                    <span class="pick-type-dot dot-spread"></span>
-                    <span class="pick-bet"><strong>Celtics ML</strong> vs Nuggets</span>
+            <div class="game-card">
+                <div class="game-header">
+                    <div class="game-teams">MIN Wild @ OTT Senators</div>
+                    <div class="game-time">12:40 PM ET</div>
                 </div>
-                <span class="pick-line">-135</span>
-                <span class="pick-badge badge-spread">ML</span>
+                <div class="pick-row"><span class="pick-type">ML</span><span class="pick-value">Senators</span><span class="pick-odds">-125</span></div>
+                <div class="pick-row"><span class="pick-type">O/U</span><span class="pick-value">Under 5.5</span><span class="pick-odds">+114</span></div>
             </div>
-
-            <div class="pick-item">
-                <div class="pick-item-left">
-                    <span class="pick-type-dot dot-spread"></span>
-                    <span class="pick-bet">Warriors <strong>(+3.5)</strong> vs Suns</span>
+            <div class="game-card">
+                <div class="game-header">
+                    <div class="game-teams">COL Avalanche @ DAL Stars</div>
+                    <div class="game-time">1:10 PM ET</div>
                 </div>
-                <span class="pick-line">-108</span>
-                <span class="pick-badge badge-spread">Spread</span>
+                <div class="pick-row"><span class="pick-type">ML</span><span class="pick-value">Stars</span><span class="pick-odds">-110</span></div>
+                <div class="pick-row"><span class="pick-type">O/U</span><span class="pick-value">Under 5.5</span><span class="pick-odds">+112</span></div>
             </div>
-        </div>
-
-        <!-- O/U -->
-        <div class="pick-category">
-            <div class="category-label">O/U (3)</div>
-
-            <div class="pick-item">
-                <div class="pick-item-left">
-                    <span class="pick-type-dot dot-ou"></span>
-                    <span class="pick-bet">OKC vs LAL — <strong>OVER 226.5</strong></span>
+            <div class="game-card">
+                <div class="game-header">
+                    <div class="game-teams">FLA Panthers @ PIT Penguins</div>
+                    <div class="game-time">3:10 PM ET</div>
                 </div>
-                <span class="pick-line">-110</span>
-                <span class="pick-badge badge-ou">O/U</span>
+                <div class="pick-row"><span class="pick-type">ML</span><span class="pick-value">Penguins</span><span class="pick-odds">-220</span></div>
+                <div class="pick-row"><span class="pick-type">O/U</span><span class="pick-value">Under 6.5</span><span class="pick-odds">-114</span></div>
             </div>
-
-            <div class="pick-item">
-                <div class="pick-item-left">
-                    <span class="pick-type-dot dot-ou"></span>
-                    <span class="pick-bet">DEN vs BOS — <strong>UNDER 228.5</strong></span>
+            <div class="game-card">
+                <div class="game-header">
+                    <div class="game-teams">BOS Bruins @ TB Lightning</div>
+                    <div class="game-time">5:10 PM ET</div>
                 </div>
-                <span class="pick-line">-108</span>
-                <span class="pick-badge badge-ou">O/U</span>
+                <div class="pick-row"><span class="pick-type">ML</span><span class="pick-value">Lightning</span><span class="pick-odds">-182</span></div>
+                <div class="pick-row"><span class="pick-type">O/U</span><span class="pick-value">Under 6.5</span><span class="pick-odds">-124</span></div>
             </div>
-
-            <div class="pick-item">
-                <div class="pick-item-left">
-                    <span class="pick-type-dot dot-ou"></span>
-                    <span class="pick-bet">PHX vs GSW — <strong>OVER 232.5</strong></span>
+            <div class="game-card">
+                <div class="game-header">
+                    <div class="game-teams">UTA Hockey Club @ VAN Canucks</div>
+                    <div class="game-time">5:10 PM ET</div>
                 </div>
-                <span class="pick-line">-112</span>
-                <span class="pick-badge badge-ou">O/U</span>
+                <div class="pick-row"><span class="pick-type">ML</span><span class="pick-value">Utah HC</span><span class="pick-odds">-210</span></div>
+                <div class="pick-row"><span class="pick-type">O/U</span><span class="pick-value">Under 6.5</span><span class="pick-odds">-124</span></div>
             </div>
         </div>
 
-        <!-- Best Parlay -->
-        <div class="pick-category">
-            <div class="category-label">Best Bets Parlay</div>
-            <div class="parlay-card">
-                <div class="parlay-header">
-                    <span class="parlay-title">🎯 4-Leg NBA Parlay</span>
-                    <span class="parlay-boost">+485</span>
-                </div>
-                <div class="parlay-legs">
-                    <div class="parlay-leg">
-                        <span class="parlay-leg-num">1.</span>
-                        <span>OKC Thunder <strong>(-4.5)</strong></span>
-                    </div>
-                    <div class="parlay-leg">
-                        <span class="parlay-leg-num">2.</span>
-                        <span>Celtics ML <strong>(-135)</strong></span>
-                    </div>
-                    <div class="parlay-leg">
-                        <span class="parlay-leg-num">3.</span>
-                        <span>SGA OVER 30.5 Points</span>
-                    </div>
-                    <div class="parlay-leg">
-                        <span class="parlay-leg-num">4.</span>
-                        <span>OKC vs LAL OVER 226.5</span>
-                    </div>
-                </div>
-                <div class="parlay-total">
-                    <span class="parlay-total-label">Parlay Odds</span>
-                    <span class="parlay-total-odds">+485 (5.85x)</span>
-                </div>
-            </div>
+        <div class="footer">
+            🍝 Uncle Vito's Picks — Yonti Trading Operation<br>
+            <span style="color: var(--loss);">⚠️ Do your own homework. Uncle Vito don't miss.</span>
         </div>
     </div>
-
-    <div class="sport-divider"></div>
-
-    <!-- ═══════════════ NHL ═══════════════ -->
-    <div class="sport-section">
-        <div class="sport-header">
-            <span class="sport-emoji">🏒</span>
-            <span class="sport-name nhl">NHL</span>
-        </div>
-
-        <!-- Props -->
-        <div class="pick-category">
-            <div class="category-label">Props (3)</div>
-
-            <div class="pick-item">
-                <div class="pick-item-left">
-                    <span class="pick-type-dot dot-prop"></span>
-                    <span class="pick-bet"><strong>Connor McDavid</strong> — OVER 1.5 Points</span>
-                </div>
-                <span class="pick-badge badge-prop">Prop</span>
-            </div>
-
-            <div class="pick-item">
-                <div class="pick-item-left">
-                    <span class="pick-type-dot dot-prop"></span>
-                    <span class="pick-bet"><strong>Auston Matthews</strong> — OVER 0.5 Goals</span>
-                </div>
-                <span class="pick-badge badge-prop">Prop</span>
-            </div>
-
-            <div class="pick-item">
-                <div class="pick-item-left">
-                    <span class="pick-type-dot dot-prop"></span>
-                    <span class="pick-bet"><strong>Nikita Kucherov</strong> — OVER 0.5 Goals</span>
-                </div>
-                <span class="pick-badge badge-prop">Prop</span>
-            </div>
-        </div>
-
-        <!-- Spread/ML -->
-        <div class="pick-category">
-            <div class="category-label">Spread / ML (3)</div>
-
-            <div class="pick-item">
-                <div class="pick-item-left">
-                    <span class="pick-type-dot dot-spread"></span>
-                    <span class="pick-bet">Edmonton Oilers <strong>(-1.5)</strong> vs Stars</span>
-                </div>
-                <span class="pick-line">+145</span>
-                <span class="pick-badge badge-spread">Spread</span>
-            </div>
-
-            <div class="pick-item">
-                <div class="pick-item-left">
-                    <span class="pick-type-dot dot-spread"></span>
-                    <span class="pick-bet"><strong>Florida Panthers ML</strong> vs Leafs</span>
-                </div>
-                <span class="pick-line">-120</span>
-                <span class="pick-badge badge-spread">ML</span>
-            </div>
-
-            <div class="pick-item">
-                <div class="pick-item-left">
-                    <span class="pick-type-dot dot-spread"></span>
-                    <span class="pick-bet">Bruins <strong>(+1.5)</strong> vs Hurricanes</span>
-                </div>
-                <span class="pick-line">-105</span>
-                <span class="pick-badge badge-spread">Spread</span>
-            </div>
-        </div>
-
-        <!-- O/U -->
-        <div class="pick-category">
-            <div class="category-label">O/U (3)</div>
-
-            <div class="pick-item">
-                <div class="pick-item-left">
-                    <span class="pick-type-dot dot-ou"></span>
-                    <span class="pick-bet">EDM vs DAL — <strong>OVER 6.5</strong></span>
-                </div>
-                <span class="pick-line">-105</span>
-                <span class="pick-badge badge-ou">O/U</span>
-            </div>
-
-            <div class="pick-item">
-                <div class="pick-item-left">
-                    <span class="pick-type-dot dot-ou"></span>
-                    <span class="pick-bet">BOS vs CAR — <strong>UNDER 5.5</strong></span>
-                </div>
-                <span class="pick-line">-110</span>
-                <span class="pick-badge badge-ou">O/U</span>
-            </div>
-
-            <div class="pick-item">
-                <div class="pick-item-left">
-                    <span class="pick-type-dot dot-ou"></span>
-                    <span class="pick-bet">FLA vs TOR — <strong>OVER 6.5</strong></span>
-                </div>
-                <span class="pick-line">-115</span>
-                <span class="pick-badge badge-ou">O/U</span>
-            </div>
-        </div>
-
-        <!-- Best Parlay -->
-        <div class="pick-category">
-            <div class="category-label">Best Bets Parlay</div>
-            <div class="parlay-card">
-                <div class="parlay-header">
-                    <span class="parlay-title">🎯 4-Leg NHL Parlay</span>
-                    <span class="parlay-boost">+612</span>
-                </div>
-                <div class="parlay-legs">
-                    <div class="parlay-leg">
-                        <span class="parlay-leg-num">1.</span>
-                        <span>Oilets <strong>(-1.5)</strong> vs Stars</span>
-                    </div>
-                    <div class="parlay-leg">
-                        <span class="parlay-leg-num">2.</span>
-                        <span>Panthers ML <strong>(-120)</strong></span>
-                    </div>
-                    <div class="parlay-leg">
-                        <span class="parlay-leg-num">3.</span>
-                        <span>McDavid OVER 1.5 Points</span>
-                    </div>
-                    <div class="parlay-leg">
-                        <span class="parlay-leg-num">4.</span>
-                        <span>EDM vs DAL OVER 6.5</span>
-                    </div>
-                </div>
-                <div class="parlay-total">
-                    <span class="parlay-total-label">Parlay Odds</span>
-                    <span class="parlay-total-odds">+612 (7.12x)</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="sport-divider"></div>
-
-    <!-- ═══════════════ MLB ═══════════════ -->
-    <div class="sport-section">
-        <div class="sport-header">
-            <span class="sport-emoji">⚾</span>
-            <span class="sport-name mlb">MLB</span>
-        </div>
-
-        <!-- Props -->
-        <div class="pick-category">
-            <div class="category-label">Props (3)</div>
-
-            <div class="pick-item">
-                <div class="pick-item-left">
-                    <span class="pick-type-dot dot-prop"></span>
-                    <span class="pick-bet"><strong>Shohei Ohtani</strong> — OVER 1.5 Total Bases</span>
-                </div>
-                <span class="pick-badge badge-prop">Prop</span>
-            </div>
-
-            <div class="pick-item">
-                <div class="pick-item-left">
-                    <span class="pick-type-dot dot-prop"></span>
-                    <span class="pick-bet"><strong>Aaron Judge</strong> — OVER 0.5 Home Runs</span>
-                </div>
-                <span class="pick-badge badge-prop">Prop</span>
-            </div>
-
-            <div class="pick-item">
-                <div class="pick-item-left">
-                    <span class="pick-type-dot dot-prop"></span>
-                    <span class="pick-bet"><strong>Mike Trout</strong> — OVER 1.5 Hits+Runs+RBI</span>
-                </div>
-                <span class="pick-badge badge-prop">Prop</span>
-            </div>
-        </div>
-
-        <!-- Spread/ML -->
-        <div class="pick-category">
-            <div class="category-label">Spread / ML (3)</div>
-
-            <div class="pick-item">
-                <div class="pick-item-left">
-                    <span class="pick-type-dot dot-spread"></span>
-                    <span class="pick-bet"><strong>Dodgers ML</strong> vs Giants</span>
-                </div>
-                <span class="pick-line">-155</span>
-                <span class="pick-badge badge-spread">ML</span>
-            </div>
-
-            <div class="pick-item">
-                <div class="pick-item-left">
-                    <span class="pick-type-dot dot-spread"></span>
-                    <span class="pick-bet">Yankees <strong>(-1.5)</strong> vs Red Sox</span>
-                </div>
-                <span class="pick-line">+120</span>
-                <span class="pick-badge badge-spread">Spread</span>
-            </div>
-
-            <div class="pick-item">
-                <div class="pick-item-left">
-                    <span class="pick-type-dot dot-spread"></span>
-                    <span class="pick-bet"><strong>Phillies ML</strong> vs Braves</span>
-                </div>
-                <span class="pick-line">-130</span>
-                <span class="pick-badge badge-spread">ML</span>
-            </div>
-        </div>
-
-        <!-- O/U -->
-        <div class="pick-category">
-            <div class="category-label">O/U (3)</div>
-
-            <div class="pick-item">
-                <div class="pick-item-left">
-                    <span class="pick-type-dot dot-ou"></span>
-                    <span class="pick-bet">LAD vs SF — <strong>OVER 8.5</strong></span>
-                </div>
-                <span class="pick-line">-110</span>
-                <span class="pick-badge badge-ou">O/U</span>
-            </div>
-
-            <div class="pick-item">
-                <div class="pick-item-left">
-                    <span class="pick-type-dot dot-ou"></span>
-                    <span class="pick-bet">NYY vs BOS — <strong>OVER 9.5</strong></span>
-                </div>
-                <span class="pick-line">-105</span>
-                <span class="pick-badge badge-ou">O/U</span>
-            </div>
-
-            <div class="pick-item">
-                <div class="pick-item-left">
-                    <span class="pick-type-dot dot-ou"></span>
-                    <span class="pick-bet">PHI vs ATL — <strong>UNDER 7.5</strong></span>
-                </div>
-                <span class="pick-line">-115</span>
-                <span class="pick-badge badge-ou">O/U</span>
-            </div>
-        </div>
-
-        <!-- Best Parlay -->
-        <div class="pick-category">
-            <div class="category-label">Best Bets Parlay</div>
-            <div class="parlay-card">
-                <div class="parlay-header">
-                    <span class="parlay-title">🎯 4-Leg MLB Parlay</span>
-                    <span class="parlay-boost">+558</span>
-                </div>
-                <div class="parlay-legs">
-                    <div class="parlay-leg">
-                        <span class="parlay-leg-num">1.</span>
-                        <span>Dodgers ML <strong>(-155)</strong></span>
-                    </div>
-                    <div class="parlay-leg">
-                        <span class="parlay-leg-num">2.</span>
-                        <span>Yankees <strong>(-1.5)</strong> vs Red Sox</span>
-                    </div>
-                    <div class="parlay-leg">
-                        <span class="parlay-leg-num">3.</span>
-                        <span>Judge OVER 0.5 HR</span>
-                    </div>
-                    <div class="parlay-leg">
-                        <span class="parlay-leg-num">4.</span>
-                        <span>NYY vs BOS OVER 9.5</span>
-                    </div>
-                </div>
-                <div class="parlay-total">
-                    <span class="parlay-total-label">Parlay Odds</span>
-                    <span class="parlay-total-odds">+558 (6.58x)</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- RECORD SUMMARY -->
-    <div class="record-banner" style="margin-top: 12px;">
-        <div class="record-item">
-            <div class="record-val">12-8</div>
-            <div class="record-lbl">Record</div>
-        </div>
-        <div class="record-item">
-            <div class="record-val positive">+3.2u</div>
-            <div class="record-lbl">Units</div>
-        </div>
-        <div class="record-item">
-            <div class="record-val">60%</div>
-            <div class="record-lbl">Win Rate</div>
-        </div>
-        <div class="record-item">
-            <div class="record-val">3/3</div>
-            <div class="record-lbl">Parlays Hit</div>
-        </div>
-    </div>
-
-    <!-- FOOTER -->
-    <div class="footer-note">
-        🍝 Picks are generated by Uncle Vito's AI analysis engine.<br>
-        For live picks and real-time score updates —
-        <a href="http://129.80.245.91/scoreboard/" target="_blank" rel="noopener">visit the live scoreboard →</a>
-    </div>
-</div>
-
-<script>
-function updateClock() {
-    const el = document.getElementById('clock');
-    if (el) {
-        const now = new Date();
-        el.textContent = now.toUTCString().split(' ')[4] + ' UTC';
-    }
-}
-updateClock();
-setInterval(updateClock, 1000);
-
-// Set report date to today
-const dateEl = document.getElementById('reportDate');
-if (dateEl) {
-    const now = new Date();
-    dateEl.textContent = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-}
-</script>
 </body>
 </html>

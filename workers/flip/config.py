@@ -30,7 +30,7 @@ SPORTS_SERIES = {
 }
 
 # Auth - set via environment variable KALSHI_ACCESS_KEY
-KALSHI_ACCESS_KEY = os.getenv("KALSHI_ACCESS_KEY", "0ebe781e-ce07-4e19-98eb-0d2d8e0ea20b")
+KALSHI_ACCESS_KEY = os.getenv("KALSHI_ACCESS_KEY", "e42b9849-e6e3-484e-b17c-48a078f38642")
 
 # =============================================================================
 # PAPER TRADING CONFIG
@@ -59,7 +59,7 @@ MIN_POSITION_SIZE = 0.50
 MAX_POSITION_SIZE = 2.00
 
 # Poll interval - 3 seconds for sports odds
-POLL_INTERVAL_SEC = 3
+POLL_INTERVAL_SEC = 30
 
 # =============================================================================
 # NEW MARKET DETECTOR CONFIG

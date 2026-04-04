@@ -415,6 +415,7 @@ class Superbot:
         self.day_start_time = datetime.now().strftime("%Y-%m-%d")  # Track day
         self.trading_stopped = False  # Flag when daily stop-loss triggered
         self.stop_loss_triggered = False  # Flag to indicate stop-loss was triggered this day
+        self.sizing_reduced = False  # Flag: sizing reduced by 50% after balance drops below $80
         
         # Setup signal handlers
         signal.signal(signal.SIGINT, self._signal_handler)
@@ -429,7 +430,7 @@ class Superbot:
         logger.info(f"Max bet per coin: ${MAX_BET:.2f}")
         logger.info(f"Idle poll: {IDLE_POLL_INTERVAL_SEC}s per series | Active poll: {ACTIVE_POLL_INTERVAL_SEC}s")
         logger.info(f"Cooldown: {COOLDOWN_CYCLES} cycles after position close")
-        logger.info(f"Daily stop-loss: {DAILY_STOP_LOSS_PCT*100:.0f}% ({DAILY_STOP_LOSS_PCT*100:.0f}% of ${self.day_start_balance:.2f} = ${self.day_start_balance * DAILY_STOP_LOSS_PCT:.2f} max loss)")
+        logger.info(f"Daily stop-loss: $50 hard floor | $80 = 50% sizing reduction")
         logger.info("=" * 60)
     
     def _signal_handler(self, signum, frame):
@@ -445,7 +446,40 @@ class Superbot:
             self.cash = BALANCE_RESET_AMOUNT
     
     def _check_daily_stop_loss(self):
-        """DISABLED - keep trading through drawdowns"""
+        """
+        Check if daily stop-loss triggered.
+        If balance drops below $80, reduce sizing by 50%.
+        If balance drops below $50, stop trading for the day.
+        """
+        # Check if we crossed into a new day - reset tracking
+        current_day = datetime.now().strftime("%Y-%m-%d")
+        if current_day != self.day_start_time:
+            logger.info(f"New day detected ({current_day}). Resetting daily stop-loss tracking.")
+            self.day_start_time = current_day
+            self.day_start_balance = self.cash
+            self.trading_stopped = False
+            self.stop_loss_triggered = False
+            self.sizing_reduced = False
+        
+        # Check stop-loss thresholds
+        if self.cash < 50:
+            # Critical: stop trading
+            if not self.trading_stopped:
+                logger.warning(f"!!! DAILY STOP-LOSS TRIGGERED !!! Cash ${self.cash:.2f} < $50 - stopping trading")
+                self.trading_stopped = True
+                self.stop_loss_triggered = True
+            return True
+        elif self.cash < 80:
+            # Reduce sizing by 50%
+            if not self.sizing_reduced:
+                logger.warning(f"!!! SIZING REDUCED !!! Cash ${self.cash:.2f} < $80 - reducing position sizes by 50%")
+                self.sizing_reduced = True
+        else:
+            # Reset sizing reduction if balance recovers
+            if self.sizing_reduced:
+                logger.info(f"Balance recovered to ${self.cash:.2f} >= $80 - restoring normal sizing")
+                self.sizing_reduced = False
+        
         return False
     
     def _distribute_cash_to_traders(self):
@@ -513,8 +547,12 @@ class Superbot:
                 if signal.strategy.value == "drift_buy" and market.yes_bid > 0.45:
                     logger.info(f"[{coin}] SKIP drift_buy entry @ ${market.yes_bid:.4f} - above $0.45 threshold")
                     continue
-                # Ensure max bet per coin is respected
-                signal.size = min(signal.size, MAX_BET)
+                # Ensure max bet per coin is respected (AND apply sizing reduction if triggered)
+                max_size = MAX_BET
+                if self.sizing_reduced:
+                    max_size = max_size * 0.5  # 50% reduction
+                    logger.debug(f"[{coin}] Sizing reduced: max bet ${max_size:.2f}")
+                signal.size = min(signal.size, max_size)
                 
                 # Try to open position
                 success, cost = trader._open_position(signal, per_coin_cash)

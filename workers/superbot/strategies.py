@@ -1,5 +1,6 @@
 import time
 # strategies.py - Superbot Trading Strategies
+# CONFIDENCE SCHEMA v1.0 - Size trades based on signal strength, let winners run
 
 import logging
 import os
@@ -304,6 +305,7 @@ class StrategyTracker:
             Strategy.DEEP_SHORT: deque(maxlen=tracked_trades),
             Strategy.DRIFT_BUY: deque(maxlen=tracked_trades),
             Strategy.DRIFT_SHORT: deque(maxlen=tracked_trades),
+            Strategy.FIRST_CROSS: deque(maxlen=tracked_trades),
         }
     
     def record_trade(self, strategy: Strategy, pnl: float):
@@ -384,6 +386,10 @@ class TradeSignal:
     # First Cross specific
     trailing_stop_pct: float = 0.25       # Trailing stop percentage
     trailing_stop_trigger_pct: float = 0.30  # Profit % before trailing stop activates
+    # === CONFIDENCE SCHEMA ===
+    confidence: int = 50                  # Signal confidence 0-100
+    trailing_stop_buffer: float = 0.25    # Wider buffer for high-confidence trades
+    max_hold_minutes: int = 15            # Max hold time based on confidence
 
 
 @dataclass 
@@ -426,6 +432,68 @@ class Position:
         else:
             # Value = size * ((1 - current_price) - (1 - entry_price)) + size
             return self.size * (1 - current_price)
+
+    def update_trailing_stop_confidence(self, current_price: float, confidence: int) -> bool:
+        """
+        Update trailing stop with CONFIDENCE-BASED buffer.
+        High confidence = wider buffer (let winners run longer).
+        Low confidence = tighter buffer (lock in profits faster).
+        
+        Confidence-based trailing stop buffers:
+        - 0-30 conf:  15% lock-in after 20% profit
+        - 31-60 conf: 20% lock-in after 25% profit  
+        - 61-80 conf: 25% lock-in after 30% profit
+        - 81-95 conf: 30% lock-in after 40% profit
+        - 96-100 conf: 35% lock-in after 50% profit
+        
+        Returns True if trailing stop is now active.
+        """
+        # Determine buffers based on confidence tier
+        if confidence >= 96:
+            ts_buffer = 0.35
+            ts_trigger = 0.50
+        elif confidence >= 81:
+            ts_buffer = 0.30
+            ts_trigger = 0.40
+        elif confidence >= 61:
+            ts_buffer = 0.25
+            ts_trigger = 0.30
+        elif confidence >= 31:
+            ts_buffer = 0.20
+            ts_trigger = 0.25
+        else:
+            ts_buffer = 0.15
+            ts_trigger = 0.20
+        
+        if self.side == "yes":
+            if current_price > self.peak_price:
+                profit_pct = (current_price - self.entry_price) / self.entry_price
+                if profit_pct >= ts_trigger:
+                    self.trailing_stop_active = True
+                    logger.info(f"{self.ticker}: CONF={confidence} Long trailing stop ACTIVE @ ${current_price:.4f}, peak=${self.peak_price:.4f}, buffer={ts_buffer:.0%}")
+                self.peak_price = current_price
+                return self.trailing_stop_active
+            else:
+                if self.trailing_stop_active:
+                    drop_from_peak = (self.peak_price - current_price) / self.peak_price
+                    if drop_from_peak >= ts_buffer:
+                        logger.info(f"{self.ticker}: CONF={confidence} Long TRAILING STOP HIT @ ${current_price:.4f} (peak=${self.peak_price:.4f}, drop={drop_from_peak:.2%})")
+                        return True
+        else:
+            if current_price < self.peak_price or self.peak_price == 0.0:
+                self.peak_price = current_price
+                profit_pct = (self.entry_price - current_price) / self.entry_price
+                if profit_pct >= ts_trigger:
+                    self.trailing_stop_active = True
+                    logger.info(f"{self.ticker}: CONF={confidence} Short trailing stop ACTIVE @ ${current_price:.4f}, trough=${self.peak_price:.4f}, buffer={ts_buffer:.0%}")
+                return self.trailing_stop_active
+            else:
+                if self.trailing_stop_active:
+                    rise_from_trough = (current_price - self.peak_price) / self.peak_price
+                    if rise_from_trough >= ts_buffer:
+                        logger.info(f"{self.ticker}: CONF={confidence} Short TRAILING STOP HIT @ ${current_price:.4f} (trough=${self.peak_price:.4f}, rise={rise_from_trough:.2%})")
+                        return True
+        return False
     
     def update_trailing_stop(self, current_price: float) -> bool:
         """
@@ -526,16 +594,29 @@ class StrategyEngine:
         kelly_pct = self.tracker.get_kelly_pct(strategy)
         logger.info(f"Strategy {strategy.value} stats: W={W:.2%}, R={R:.2f}x, Kelly={kelly_pct:.2%}")
     
-    def calculate_kelly_size(self, strategy: Strategy, prob: float) -> Tuple[float, float]:
+    def calculate_kelly_size(self, strategy: Strategy, prob: float, confidence: int = 50) -> Tuple[float, float, int]:
         """
-        Calculate Kelly Criterion bet size using historical strategy performance.
+        Calculate Kelly Criterion bet size using historical strategy performance,
+        then adjust based on CONFIDENCE SCHEMA.
         
-        Returns (bet_size, kelly_pct) tuple.
+        Returns (bet_size, kelly_pct, confidence) tuple.
         - bet_size: dollar amount to bet (clamped to $2 min/$2 max)
         - kelly_pct: the Kelly % used (for logging)
+        - confidence: the confidence score (0-100)
+        
+        Confidence-based sizing tiers (layered on top of Kelly):
+        - 0-30 conf:   1-2% of bankroll
+        - 31-60 conf:  3-5% of bankroll
+        - 61-80 conf:  6-8% of bankroll
+        - 81-95 conf:  9-12% of bankroll
+        - 96-100 conf: 13-15% of bankroll
+        
+        Kelly is the BASE, confidence adjusts within the tier bounds.
+        High confidence with good Kelly = bet larger.
+        Low confidence with weak Kelly = bet smaller or skip.
         """
         if prob <= 0 or prob >= 1:
-            return MIN_BET, 0.0
+            return MIN_BET, 0.0, confidence
         
         # Get Kelly % from historical performance
         kelly_pct = self.tracker.get_kelly_pct(strategy)
@@ -543,13 +624,178 @@ class StrategyEngine:
         # Apply Kelly fraction for additional safety
         kelly_pct = kelly_pct * KELLY_FRACTION
         
-        # Convert to dollar amount
-        bet = self.cash * kelly_pct
+        # === CONFIDENCE SCHEMA: Map Kelly output through confidence tiers ===
+        # Confidence tiers define the % of bankroll we bet
+        if confidence >= 96:
+            conf_pct = 0.15   # 13-15% of bankroll
+        elif confidence >= 81:
+            conf_pct = 0.11   # 9-12% of bankroll
+        elif confidence >= 61:
+            conf_pct = 0.07   # 6-8% of bankroll
+        elif confidence >= 31:
+            conf_pct = 0.04   # 3-5% of bankroll
+        else:
+            conf_pct = 0.015  # 1-2% of bankroll
         
-        # Clamp to hard limits ($2 min, $2 max)
+        # Use the LARGER of Kelly-derived pct and confidence-derived pct
+        # (but never exceed Kelly's direction - we're adjusting size, not direction)
+        effective_pct = max(kelly_pct, conf_pct)
+        
+        # Special case: if Kelly says don't bet (negative/zero) but confidence is high,
+        # still take the trade with minimum tier size
+        if kelly_pct <= 0 and confidence >= 50:
+            effective_pct = conf_pct
+        
+        # Cap at KELLY_MAX_CAP (never more than 20% of balance on one trade)
+        effective_pct = min(effective_pct, KELLY_MAX_CAP)
+        
+        # Convert to dollar amount
+        bet = self.cash * effective_pct
+        
+        # Clamp to hard limits ($0.50 min, $1.50 max per coin)
         bet = max(MIN_KELLY_BET, min(MAX_KELLY_BET, bet))
         
-        return bet, kelly_pct
+        return bet, effective_pct, confidence
+    
+    def calculate_confidence(
+        self,
+        strategy: Strategy,
+        market: 'Market',
+        coin: str,
+        mid_price: float,
+        time_left: int
+    ) -> int:
+        """
+        Calculate confidence score (0-100) for a potential trade.
+        
+        Factors:
+        1. Signal strength (how many indicators agree) - up to 25 points
+        2. Trend clarity (clean drift vs choppy) - up to 20 points
+        3. Volume confirmation - up to 15 points
+        4. Distance from entry to stop-loss - up to 20 points
+        5. Time of day / market conditions - up to 10 points
+        6. Candle drift building time - up to 10 points
+        
+        Returns confidence integer 0-100.
+        """
+        score = 50  # Start at neutral
+        
+        # === Factor 1: Signal Strength (up to 25 pts) ===
+        # Check how many positive indicators we have
+        indicators = 0
+        
+        # Coinbase bias alignment
+        bias = get_coinbase_bias(coin)
+        if strategy == Strategy.DRIFT_BUY and bias == 'bullish':
+            indicators += 1
+        elif strategy == Strategy.DRIFT_SHORT and bias == 'bearish':
+            indicators += 1
+        
+        # First cross alignment
+        preferred_side = self.first_cross.get_preferred_side(market.ticker)
+        if strategy == Strategy.DRIFT_BUY and preferred_side == 'yes':
+            indicators += 1
+        elif strategy == Strategy.DRIFT_SHORT and preferred_side == 'no':
+            indicators += 1
+        elif strategy == Strategy.FIRST_CROSS and preferred_side:
+            indicators += 1
+        
+        # Kelly historical edge (if strategy has positive track record)
+        kelly_pct = self.tracker.get_kelly_pct(strategy)
+        if kelly_pct > 0.1:
+            indicators += 1
+        if kelly_pct > 0.2:
+            indicators += 1
+        
+        # Map indicators to score (0-4 indicators -> 0-25 pts)
+        signal_score = min(25, indicators * 8)
+        score += (signal_score - 12)  # +/- relative to neutral
+        
+        # === Factor 2: Trend Clarity (up to 20 pts) ===
+        # Dead zone is bad - prices in $0.45-$0.55 are choppy
+        dist_from_mid = abs(mid_price - 0.50)
+        if dist_from_mid > 0.30:  # $0.20 or $0.80 - very clear trend
+            trend_score = 20
+        elif dist_from_mid > 0.20:  # $0.30 or $0.70 - clear
+            trend_score = 15
+        elif dist_from_mid > 0.10:  # $0.40 or $0.60 - moderate
+            trend_score = 8
+        else:  # $0.45-$0.55 - choppy dead zone
+            trend_score = -5  # Penalty for being in dead zone
+        score += (trend_score - 8)
+        
+        # === Factor 3: Volume Confirmation (up to 15 pts) ===
+        # Strong Coinbase bias = volume is confirming direction
+        if bias == 'bullish' and strategy == Strategy.DRIFT_BUY:
+            volume_score = 15
+        elif bias == 'bearish' and strategy == Strategy.DRIFT_SHORT:
+            volume_score = 15
+        elif bias == 'neutral':
+            volume_score = 5
+        else:
+            volume_score = 0
+        score += (volume_score - 5)
+        
+        # === Factor 4: Distance from Entry to Stop-Loss (up to 20 pts) ===
+        # Tighter SL = higher confidence (we're wrong less often)
+        # Wider SL = lower confidence (more uncertainty)
+        if strategy == Strategy.DRIFT_BUY:
+            sl_price = DRIFT_BUY_STOP_LOSS
+            sl_distance = mid_price - sl_price
+            # $0.30 entry, $0.22 SL = $0.08 risk = 21% of entry (tight = good)
+            # $0.35 entry, $0.22 SL = $0.13 risk = 27% of entry (acceptable)
+            sl_risk_pct = sl_distance / mid_price if mid_price > 0 else 1
+        elif strategy == Strategy.DRIFT_SHORT:
+            sl_price = DRIFT_SHORT_STOP_LOSS
+            sl_distance = sl_price - mid_price
+            sl_risk_pct = sl_distance / mid_price if mid_price > 0 else 1
+        else:
+            sl_risk_pct = 0.3  # Default moderate risk
+        
+        if sl_risk_pct < 0.20:  # Very tight SL
+            sl_score = 20
+        elif sl_risk_pct < 0.30:
+            sl_score = 15
+        elif sl_risk_pct < 0.40:
+            sl_score = 8
+        else:
+            sl_score = 0
+        score += (sl_score - 10)
+        
+        # === Factor 5: Time of Day / Market Conditions (up to 10 pts) ===
+        # More time left = better confidence (trade has room to develop)
+        # Less time = rushed, lower confidence
+        if time_left >= 600:  # 10+ minutes - ideal
+            time_score = 10
+        elif time_left >= 300:  # 5-10 minutes - good
+            time_score = 7
+        elif time_left >= 180:  # 3-5 minutes - acceptable
+            time_score = 4
+        else:  # <3 minutes - risky
+            time_score = -5
+        score += (time_score - 3)
+        
+        # === Factor 6: Candle Drift Building (up to 10 pts) ===
+        # If we're in a drift strategy, check if drift has been building
+        # (price has been moving in our direction for multiple candles)
+        if strategy in (Strategy.DRIFT_BUY, Strategy.DRIFT_SHORT):
+            drift_score = 5  # Neutral - we don't have historical drift data
+            # Could enhance with actual candle history if available
+            score += (drift_score - 5)
+        else:
+            pass  # No drift adjustment for other strategies
+        
+        # === Clamp score to 0-100 ===
+        confidence = max(0, min(100, int(score)))
+        
+        logger.debug(
+            f"CONFIDENCE: {market.ticker} | score={score} | "
+            f"signal={signal_score}/25 | trend={trend_score}/20 | "
+            f"volume={volume_score}/15 | sl={sl_score}/20 | "
+            f"time={time_score}/10 | CONF={confidence}"
+        )
+        
+        return confidence
     
     def evaluate_market(self, market: Market, coin: str = None) -> Optional[TradeSignal]:
         """
@@ -596,15 +842,29 @@ class StrategyEngine:
                     side = "no"
                     reason_suffix = "coin crossed BELOW target"
                 
+                # Calculate confidence for First Cross strategy
+                confidence = self.calculate_confidence(Strategy.FIRST_CROSS, market, coin, mid_price, time_left)
+                
                 prob = mid_price
-                size, kelly_pct = self.calculate_kelly_size(Strategy.FIRST_CROSS, prob)
+                size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.FIRST_CROSS, prob, confidence)
+                
+                # Confidence-based trailing stop buffer
+                if confidence >= 81:
+                    ts_buffer = 0.30
+                    ts_trigger = 0.40
+                elif confidence >= 61:
+                    ts_buffer = 0.25
+                    ts_trigger = 0.30
+                else:
+                    ts_buffer = 0.20
+                    ts_trigger = 0.25
                 
                 logger.info(
                     f"FIRST_CROSS SIGNAL: {market.ticker} | "
                     f"Direction: {cross_direction} | "
                     f"Target: ${target_price:,.2f} | "
                     f"Side: {side} @ ${mid_price:.4f} | "
-                    f"Size: ${size:.2f}"
+                    f"Size: ${size:.2f} | CONF={confidence}"
                 )
                 
                 return TradeSignal(
@@ -613,11 +873,14 @@ class StrategyEngine:
                     side=side,
                     price=mid_price,
                     size=size,
-                    reason=f"FIRST_CROSS: {reason_suffix}, target=${target_price:,.2f}, Kelly={kelly_pct:.2%}",
+                    reason=f"FIRST_CROSS: {reason_suffix}, target=${target_price:,.2f}, Kelly={kelly_pct:.2%}, CONF={confidence}",
                     take_profit=0.95 if side == "yes" else 0.05,
-                    stop_loss=0.22 if side == "yes" else 0.75,
-                    trailing_stop_pct=0.25,
-                    trailing_stop_trigger_pct=0.30
+                    stop_loss=None,
+                    trailing_stop_pct=ts_buffer,
+                    trailing_stop_trigger_pct=ts_trigger,
+                    confidence=confidence,
+                    trailing_stop_buffer=ts_buffer,
+                    max_hold_minutes=15 if confidence >= 61 else 10
                 )
         
         # === FALLBACK: Old drift strategies if no coin cross yet ===
@@ -740,9 +1003,12 @@ Your estimate:"""
         # Calculate size using Kelly with historical strategy performance
         # For short: probability of YES going DOWN is (1 - price)
         prob = 1 - mid_price  # Probability that YES loses (we win)
-        size, kelly_pct = self.calculate_kelly_size(Strategy.DEEP_SHORT, prob)
         
-        logger.info(f"DEEP SHORT signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, time_left={time_left}s")
+        # Calculate confidence
+        confidence = self.calculate_confidence(Strategy.DEEP_SHORT, market, coin, mid_price, time_left)
+        size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.DEEP_SHORT, prob, confidence)
+        
+        logger.info(f"DEEP SHORT signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, CONF={confidence}, time_left={time_left}s")
         
         return TradeSignal(
             strategy=Strategy.DEEP_SHORT,
@@ -750,9 +1016,12 @@ Your estimate:"""
             side="no",  # We SELL YES (buy NO)
             price=mid_price,
             size=size,
-            reason=f"DEEP SHORT: Selling YES at ${mid_price:.4f} (< ${DEEP_SHORT_MAX_PRICE}), fading the longshot",
+            reason=f"DEEP SHORT: Selling YES at ${mid_price:.4f} (< ${DEEP_SHORT_MAX_PRICE}), fading the longshot, CONF={confidence}",
             take_profit=None,  # No TP - ride to expiry
-            stop_loss=None     # No SL - ride to expiry
+            stop_loss=None,     # No SL - ride to expiry
+            confidence=confidence,
+            trailing_stop_buffer=0.0,
+            max_hold_minutes=15
         )
     
     def _check_drift_buy(self, market: Market, mid_price: float, time_left: int) -> Optional[TradeSignal]:
@@ -794,7 +1063,10 @@ Your estimate:"""
         
         # Calculate size using Kelly with historical strategy performance
         prob = mid_price
-        size, kelly_pct = self.calculate_kelly_size(Strategy.DRIFT_BUY, prob)
+        
+        # Calculate confidence score
+        confidence = self.calculate_confidence(Strategy.DRIFT_BUY, market, coin, mid_price, time_left)
+        size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.DRIFT_BUY, prob, confidence)
         
         # Calculate SL only (NO tight TP anymore)
         # Let winners run to $0.95 or trailing stop
@@ -803,7 +1075,27 @@ Your estimate:"""
         # Scale-in size: 50% of original bet
         scale_in_size = size * 0.5
         
-        logger.info(f"DRIFT BUY signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, SL=${sl_price:.4f}, TRAILING STOP active, Coinbase={bias}, first_cross={preferred_side or 'none'}")
+        # Confidence-based trailing stop buffer (wider for high confidence)
+        if confidence >= 96:
+            ts_buffer = 0.35
+            ts_trigger = 0.50
+        elif confidence >= 81:
+            ts_buffer = 0.30
+            ts_trigger = 0.40
+        elif confidence >= 61:
+            ts_buffer = 0.25
+            ts_trigger = 0.30
+        elif confidence >= 31:
+            ts_buffer = 0.20
+            ts_trigger = 0.25
+        else:
+            ts_buffer = 0.15
+            ts_trigger = 0.20
+        
+        # Max hold time based on confidence
+        max_hold = 15 if confidence >= 61 else 10 if confidence >= 31 else 8
+        
+        logger.info(f"DRIFT BUY signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, CONF={confidence}, SL=${sl_price:.4f}, TS={ts_buffer:.0%}buffer/{ts_trigger:.0%}trigger, Coinbase={bias}, first_cross={preferred_side or 'none'}")
         
         return TradeSignal(
             strategy=Strategy.DRIFT_BUY,
@@ -811,11 +1103,16 @@ Your estimate:"""
             side="yes", 
             price=mid_price,
             size=size,
-            reason=f"DRIFT BUY: YES at ${mid_price:.4f} (mean reversion), NO FIXED TP - trailing stop only, SL ${sl_price:.2f}, scale_in=${scale_in_size:.2f}, Coinbase={bias}, first_cross={preferred_side}",
+            reason=f"DRIFT BUY: YES at ${mid_price:.4f} (mean reversion), CONF={confidence}, NO FIXED TP - trailing stop only, SL ${sl_price:.2f}, TS={ts_buffer:.0%}buf/{ts_trigger:.0%}trig, scale_in=${scale_in_size:.2f}, Coinbase={bias}, first_cross={preferred_side}",
             take_profit=0.95,  # Loose TP - only exit if REALLY close to max
             stop_loss=sl_price,
             tp_pct=None,  # No percentage-based TP
-            sl_pct=None
+            sl_pct=None,
+            trailing_stop_pct=ts_buffer,
+            trailing_stop_trigger_pct=ts_trigger,
+            confidence=confidence,
+            trailing_stop_buffer=ts_buffer,
+            max_hold_minutes=max_hold
         )
     
     def _check_drift_short(self, market: Market, mid_price: float, time_left: int) -> Optional[TradeSignal]:
@@ -853,7 +1150,10 @@ Your estimate:"""
         
         # For short, probability of YES going DOWN is (1 - price)
         prob = 1 - mid_price
-        size, kelly_pct = self.calculate_kelly_size(Strategy.DRIFT_SHORT, prob)
+        
+        # Calculate confidence score
+        confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
+        size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.DRIFT_SHORT, prob, confidence)
         
         # SL only - no tight TP
         sl_price = DRIFT_SHORT_STOP_LOSS  # $0.75 absolute
@@ -861,7 +1161,27 @@ Your estimate:"""
         # Scale-in size: 50% of original bet
         scale_in_size = size * 0.5
         
-        logger.info(f"DRIFT SHORT signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, SL=${sl_price:.4f}, TRAILING STOP active, first_cross={preferred_side or 'none'}")
+        # Confidence-based trailing stop buffer (wider for high confidence)
+        if confidence >= 96:
+            ts_buffer = 0.35
+            ts_trigger = 0.50
+        elif confidence >= 81:
+            ts_buffer = 0.30
+            ts_trigger = 0.40
+        elif confidence >= 61:
+            ts_buffer = 0.25
+            ts_trigger = 0.30
+        elif confidence >= 31:
+            ts_buffer = 0.20
+            ts_trigger = 0.25
+        else:
+            ts_buffer = 0.15
+            ts_trigger = 0.20
+        
+        # Max hold time based on confidence
+        max_hold = 15 if confidence >= 61 else 10 if confidence >= 31 else 8
+        
+        logger.info(f"DRIFT SHORT signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, CONF={confidence}, SL=${sl_price:.4f}, TS={ts_buffer:.0%}buffer/{ts_trigger:.0%}trigger, first_cross={preferred_side or 'none'}")
         
         return TradeSignal(
             strategy=Strategy.DRIFT_SHORT,
@@ -869,18 +1189,24 @@ Your estimate:"""
             side="no",  # We SELL YES (buy NO)
             price=mid_price,
             size=size,
-            reason=f"DRIFT SHORT: Selling YES at ${mid_price:.4f} (overpriced), NO FIXED TP - trailing stop only, SL ${sl_price:.4f}, scale_in=${scale_in_size:.2f}",
+            reason=f"DRIFT SHORT: Selling YES at ${mid_price:.4f} (overpriced), CONF={confidence}, NO FIXED TP - trailing stop only, SL ${sl_price:.4f}, TS={ts_buffer:.0%}buf/{ts_trigger:.0%}trig, scale_in=${scale_in_size:.2f}",
             take_profit=0.05,  # Loose TP - only exit if REALLY close to max ($0.05 = near zero)
             stop_loss=sl_price,
             tp_pct=None,
-            sl_pct=None
+            sl_pct=None,
+            trailing_stop_pct=ts_buffer,
+            trailing_stop_trigger_pct=ts_trigger,
+            confidence=confidence,
+            trailing_stop_buffer=ts_buffer,
+            max_hold_minutes=max_hold
         )
     
     def check_position_exit(self, position: Position, current_price: float, time_left: int) -> Tuple[bool, str]:
         """
         Check if a position should be exited.
-        Uses TRAILING STOP logic instead of fixed tight TP.
-        Let winners run! Only exit on trailing stop or hard SL.
+        Uses CONFIDENCE-BASED TRAILING STOP logic - let winners run!
+        High confidence = wider trailing stop buffer, longer hold time.
+        Low confidence = tighter trailing stop, faster exit.
         
         Returns (should_exit, reason).
         """
@@ -900,15 +1226,29 @@ Your estimate:"""
             logger.info(f"{position.ticker}: Near expiry ({time_left}s) - closing position")
             return True, f"Expiry: closing at ${current_price:.4f}"
         
-        # === TRAILING STOP EXIT (Tony's feedback: let winners run, lock in with trailing) ===
-        trailing_hit = position.update_trailing_stop(current_price)
-        if trailing_hit:
-            return True, f"TRAILING STOP: locked in profits"
+        # === MAX HOLD TIME (confidence-based) ===
+        # Get confidence from position if available, default to 50
+        confidence = getattr(position, 'confidence', 50)
+        max_hold_minutes = getattr(position, 'max_hold_minutes', 15 if confidence >= 61 else 10)
         
-        # === TIGHT TP DISABLED ===
-        # Old code snapped profits too early at fixed TP (e.g., $0.90)
-        # Now we let winners run. Only use TP if we're REALLY close to max profit.
-        # If YES >= $0.95 or NO >= $0.95 (i.e., YES <= $0.05), take profit
+        # Check if position has been open too long
+        import time
+        hold_time_sec = time.time() - position.open_time
+        hold_time_min = hold_time_sec / 60
+        
+        if hold_time_min > max_hold_minutes:
+            logger.info(f"{position.ticker}: Max hold time exceeded ({hold_time_min:.1f}min > {max_hold_minutes}min, CONF={confidence}) - closing")
+            return True, f"Max hold time: {hold_time_min:.1f}min > {max_hold_minutes}min"
+        
+        # === CONFIDENCE-BASED TRAILING STOP EXIT ===
+        # High confidence = wider buffer (let winners run longer)
+        # Low confidence = tighter buffer (lock in profits faster)
+        trailing_hit = position.update_trailing_stop_confidence(current_price, confidence)
+        if trailing_hit:
+            return True, f"CONF={confidence} TRAILING STOP: locked in profits"
+        
+        # === NEAR-MAX PROFIT EXIT ===
+        # If we're REALLY close to max profit ($0.95 for YES, $0.05 for NO), take it
         if position.take_profit is not None:
             if position.side == "yes" and current_price >= 0.95:
                 return True, f"Near-max TP: ${current_price:.4f} >= $0.95"

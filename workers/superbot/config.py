@@ -94,7 +94,7 @@ DRIFT_BUY_MAX_PRICE = 0.35   # TIGHTENED from 0.38 — only best entries ($0.30-
 # IMPORTANT: This means many setups that previously triggered (0.35-0.45) will be skipped.
 # That's correct. Only take the best entries.
 DRIFT_MIN_TIME_LEFT_SEC = 180  # 3+ minutes (tightened from 2 min)
-DRIFT_BUY_STOP_LOSS = 0.22    # Absolute $0.22 SL — tighter than old $0.25 (false break protection)
+DRIFT_BUY_STOP_LOSS = 0.20    # Absolute $0.20 SL — tightened from $0.22 (only $0.15 adverse move allowed from $0.35 entry)
 DRIFT_TP_PRICE = 0.90         # TP at $0.90 (lowered from $0.95 — lock in profits earlier)
 
 # DRIFT SHORT — FIXED ENTRY ZONES

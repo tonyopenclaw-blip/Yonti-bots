@@ -2082,3 +2082,60 @@ BNB (KXBNB15M):
 Total tradeable markets: 2
 
 Saved to /home/ubuntu/.openclaw/workspace/workers/scanner/../data/live_markets.json
+Kalshi Market Scanner starting...
+Current 15-min window: 02:00 - 02:15 UTC
+Checking tickers: ['26APR040200-00', '26APR040215-15', '26APR040230-30', '26APR040245-45']
+
+Scanning all series...
+
+No tradeable markets found.
+
+Saved to /home/ubuntu/.openclaw/workspace/workers/scanner/../data/live_markets.json
+Kalshi Market Scanner starting...
+Current 15-min window: 02:15 - 02:30 UTC
+Checking tickers: ['26APR040215-15', '26APR040230-30', '26APR040245-45', '26APR040300-00']
+
+Scanning all series...
+
+SCAN RESULTS - 2026-04-04 02:15 UTC
+============================================================
+
+BNB (KXBNB15M):
+  KXBNB15M-26APR032230-30 | active | YES: $0.78
+
+============================================================
+Total tradeable markets: 1
+
+Saved to /home/ubuntu/.openclaw/workspace/workers/scanner/../data/live_markets.json
+Kalshi Market Scanner starting...
+Current 15-min window: 02:30 - 02:45 UTC
+Checking tickers: ['26APR040230-30', '26APR040245-45', '26APR040300-00', '26APR040315-15']
+
+Scanning all series...
+
+SCAN RESULTS - 2026-04-04 02:30 UTC
+============================================================
+
+BNB (KXBNB15M):
+  KXBNB15M-26APR032245-45 | active | YES: $0.78
+
+============================================================
+Total tradeable markets: 1
+
+Saved to /home/ubuntu/.openclaw/workspace/workers/scanner/../data/live_markets.json
+Kalshi Market Scanner starting...
+Current 15-min window: 02:45 - 03:00 UTC
+Checking tickers: ['26APR040245-45', '26APR040300-00', '26APR040315-15', '26APR040330-30']
+
+Scanning all series...
+
+SCAN RESULTS - 2026-04-04 02:45 UTC
+============================================================
+
+BNB (KXBNB15M):
+  KXBNB15M-26APR032300-00 | active | YES: $0.86
+
+============================================================
+Total tradeable markets: 1
+
+Saved to /home/ubuntu/.openclaw/workspace/workers/scanner/../data/live_markets.json

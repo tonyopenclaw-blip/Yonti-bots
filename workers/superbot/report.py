@@ -74,7 +74,8 @@ class ReportGenerator:
         """Mark the end of a trading session."""
         self.stats.end_time = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
         self.stats.ending_balance = ending_balance
-        self.stats.total_pnl = ending_balance - self.stats.starting_balance
+        # total_pnl = SUM of individual trade PnLs, not cash change
+        self.stats.total_pnl = sum(trade.pnl for trade in self.stats.trades)
         logger.info(f"Report session ended: {self.stats.end_time}")
         self._generate_report()
     

@@ -588,6 +588,7 @@ class Superbot:
         """Distribute available cash to each coin's strategy engine."""
         per_coin_cash = self.cash / len(COINS)
         for trader in self.coin_traders.values():
+            trader.cash = per_coin_cash  # Initialize per-coin cash for scale-in logic
             trader.strategy_engine.update_cash(per_coin_cash)
     
     def _get_coin_from_series(self, series_ticker: str) -> Optional[str]:

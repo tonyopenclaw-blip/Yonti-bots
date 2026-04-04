@@ -443,16 +443,16 @@ class Position:
 
     def update_trailing_stop_confidence(self, current_price: float, confidence: int) -> bool:
         """
-        Update trailing stop with FLAT 20% (Tony's Momentum Strategy).
+        Update trailing stop with FLAT 30% (Tony's Momentum Strategy - was 20%).
         
-        Trigger: 20% profit
-        Buffer: 20% drop from peak before exit
+        Trigger: 30% profit
+        Buffer: 30% drop from peak before exit
         
         Returns True if trailing stop is now active.
         """
-        # Tony's Momentum Strategy: flat 20% everywhere, ignore confidence
-        ts_buffer = 0.20
-        ts_trigger = 0.20
+        # Tony's Momentum Strategy: flat 30% everywhere (wider to let winners run)
+        ts_buffer = 0.30
+        ts_trigger = 0.30
         
         if self.side == "yes":
             if current_price > self.peak_price:
@@ -845,10 +845,10 @@ class StrategyEngine:
                         reason=f"MOMENTUM: {reason_suffix}, Coinbase={bias}, CONF={confidence}",
                         take_profit=0.95 if side == "yes" else 0.05,
                         stop_loss=None,
-                        trailing_stop_pct=0.20,   # 20% buffer
-                        trailing_stop_trigger_pct=0.20,  # 20% trigger
+                        trailing_stop_pct=0.30,   # 30% buffer (was 20%)
+                        trailing_stop_trigger_pct=0.30,  # 30% trigger
                         confidence=confidence,
-                        trailing_stop_buffer=0.20,
+                        trailing_stop_buffer=0.30,
                         max_hold_minutes=10
                     )
         

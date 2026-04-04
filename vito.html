@@ -3,43 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uncle Vito's Picks - Yonti</title>
+    <title>Vito's Picks — Yonti</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #0B0F1A; --card: #131929; --border: #1E2A3F; --text: #E8ECF4; --text-dim: #7A8499; --gold: #F0B90B; --gold-border: rgba(240,185,11,0.3); --nba: #C8102E; --nhl: #003E8C; }
+        :root {
+            --bg: #0B0F1A; --card: #131929; --card-hover: #1A2235; --border: #1E2A3F;
+            --text: #E8ECF4; --text-dim: #7A8499; --gold: #F0B90B; --gold-border: rgba(240,185,11,0.3);
+            --nba: #C8102E; --nhl: #003E8C; --mlb: #002D72; --win: #00E676; --loss: #FF5252;
+            --section-bg: rgba(255,255,255,0.03);
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Inter, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-        .topbar { background: rgba(11,15,26,0.95); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 56px; }
-        .topbar-logo { font-size: 1rem; font-weight: 700; color: var(--gold); text-decoration: none; }
-        .container { max-width: 900px; margin: 0 auto; padding: 24px; }
-        .report-header { background: linear-gradient(135deg, rgba(240,185,11,0.08), rgba(240,185,11,0.03)); border: 1px solid var(--gold-border); border-radius: 16px; padding: 28px 32px; margin-bottom: 24px; text-align: center; }
-        .report-icon { font-size: 48px; margin-bottom: 10px; }
-        .report-title { font-family: Oswald, sans-serif; font-size: 2.4rem; font-weight: 700; color: var(--gold); }
-        .report-date { font-family: JetBrains Mono, monospace; font-size: 0.85rem; color: var(--text-dim); margin-top: 8px; }
-        .sport-section { margin-bottom: 32px; }
-        .sport-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-        .sport-name { font-family: Oswald, sans-serif; font-size: 1.6rem; font-weight: 700; text-transform: uppercase; }
-        .game-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; margin-bottom: 12px; }
-        .game-teams { font-family: Oswald, sans-serif; font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; }
-        .pick { padding: 6px 12px; background: var(--bg); border-radius: 6px; margin-bottom: 4px; font-size: 0.9rem; }
-        .footer { text-align: center; padding: 40px 0; color: var(--text-dim); font-size: 0.8rem; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 24px 16px 60px; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding: 0 8px; }
+        .topbar-left { display: flex; flex-direction: column; }
+        .topbar-left h1 { font-size: 1.5rem; font-weight: 700; color: var(--gold); letter-spacing: -0.02em; }
+        .topbar-left p { color: var(--text-dim); font-size: 0.8rem; margin-top: 2px; }
+        .topbar-right { display: flex; gap: 8px; }
+        .topbar-btn { display: flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.8rem; font-weight: 500; text-decoration: none; transition: all 0.2s; }
+        .topbar-btn:hover { background: var(--card-hover); border-color: var(--gold); color: var(--gold); }
+        .container { max-width: 480px; margin: 0 auto; }
+        .report-header { background: linear-gradient(135deg, rgba(240,185,11,0.08), rgba(240,185,11,0.03)); border: 1px solid var(--gold-border); border-radius: 14px; padding: 20px 24px; margin-bottom: 24px; text-align: center; }
+        .report-icon { font-size: 36px; margin-bottom: 6px; }
+        .report-title { font-family: 'Oswald', sans-serif; font-size: 1.6rem; font-weight: 700; color: var(--gold); letter-spacing: 0.03em; }
+        .report-date { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-dim); margin-top: 6px; }
+        
+        /* League Section */
+        .league-section { margin-bottom: 28px; }
+        .league-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+        .league-emoji { font-size: 1.6rem; }
+        .league-name { font-family: 'Oswald', sans-serif; font-size: 1.3rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+        .league-name.nba { color: var(--nba); }
+        .league-name.nhl { color: var(--nhl); }
+        .league-name.mlb { color: var(--mlb); }
+        
+        /* Pick Group (Prop Parlay, ML/Spread, Best Bets) */
+        .pick-group { margin-bottom: 16px; }
+        .pick-group-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+        .pick-group-icon { font-size: 0.9rem; }
+        .pick-group-title { font-family: 'Oswald', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--text); text-transform: uppercase; letter-spacing: 0.04em; }
+        .pick-group-odds { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--gold); margin-left: auto; }
+        
+        /* Pick Card */
+        .pick-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-bottom: 8px; }
+        .pick-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; background: var(--bg); border-radius: 6px; margin-bottom: 5px; font-size: 0.85rem; }
+        .pick-item:last-child { margin-bottom: 0; }
+        .pick-label { color: var(--text-dim); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; min-width: 55px; }
+        .pick-value { font-weight: 600; color: var(--text); flex: 1; text-align: center; padding: 0 8px; }
+        .pick-direction { font-weight: 700; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; }
+        .pick-direction.over { background: rgba(0,230,118,0.15); color: var(--win); }
+        .pick-direction.under { background: rgba(255,82,82,0.15); color: var(--loss); }
+        .pick-line { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--gold); }
+        
+        /* Parlay Combo (props joined with +) */
+        .parlay-combo { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+        .parlay-pick { background: var(--bg); padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; }
+        .parlay-plus { color: var(--gold); font-weight: 700; font-size: 0.9rem; }
+        
+        /* Best Bets Multi-line */
+        .best-bets-list { display: flex; flex-direction: column; gap: 6px; }
+        .best-bet-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--bg); border-radius: 6px; font-size: 0.85rem; }
+        .best-bet-sport { font-size: 0.8rem; }
+        .best-bet-text { flex: 1; color: var(--text); }
+        .best-bet-conf { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--win); }
+        
+        .footer { text-align: center; padding: 32px 0 16px; color: var(--text-dim); font-size: 0.75rem; }
+        .footer-warning { color: var(--loss); margin-top: 6px; }
+        
+        /* Mobile scroll container */
+        @media (max-width: 500px) {
+            body { padding: 16px 12px 50px; }
+            .container { max-width: 100%; }
+            .report-header { padding: 16px 20px; }
+            .report-title { font-size: 1.4rem; }
+            .league-name { font-size: 1.1rem; }
+            .pick-card { padding: 12px 14px; }
+            .pick-item { font-size: 0.8rem; padding: 5px 8px; }
+        }
     </style>
 </head>
 <body>
     <div class="topbar">
-        <a href="/" class="topbar-logo">&larr; Yonti</a>
-        <span style="font-family: JetBrains Mono, monospace; font-size: 0.8rem; color: var(--text-dim);04/04/2026</span>
+        <div class="topbar-left">
+            <h1>🍝 Vito's Picks</h1>
+            <p>04/04/2026</p>
+        </div>
+        <div class="topbar-right">
+            <a href="/" class="topbar-btn">← Yonti</a>
+        </div>
     </div>
     <div class="container">
         <div class="report-header">
-            <div class="report-icon">&#127834;</div>
+            <div class="report-icon">🍝</div>
             <div class="report-title">UNCLE VITO'S PICKS</div>
-            <div class="report-date">04/04/2026 | 34 games</div>
+            <div class="report-date">04/04/2026 — NBA, NHL, MLB</div>
         </div>
-<div class="sport-section"><div class="sport-header"><div class="sport-name" style="color: var(--nba);">🏀 NBA</div></div><div class="game-card"><div class="game-teams">WSH vs MIA</div><div class="pick">Spread -4.5 (-110)</div></div><div class="game-card"><div class="game-teams">DEN vs SA</div><div class="pick">Total 230.5 (-110)</div></div><div class="game-card"><div class="game-teams">PHI vs DET</div><div class="pick">Moneyline 0 (-150)</div></div></div><div class="sport-section"><div class="sport-header"><div class="sport-name" style="color: var(--nhl);">🧊 NHL</div></div><div class="game-card"><div class="game-teams">NYR vs DET</div><div class="pick">Spread 1.5 (-110)</div></div><div class="game-card"><div class="game-teams">MIN vs OTT</div><div class="pick">Total 7.0 (-110)</div></div><div class="game-card"><div class="game-teams">DAL vs COL</div><div class="pick">Moneyline 0 (-140)</div></div></div><div class="sport-section"><div class="sport-header"><div class="sport-name" style="color: var(--nhl);">⚾ MLB</div></div><div class="game-card"><div class="game-teams">DET vs STL</div><div class="pick">Spread 1.5 (-110)</div></div><div class="game-card"><div class="game-teams">KC vs MIL</div><div class="pick">Total 10.0 (-110)</div></div><div class="game-card"><div class="game-teams">CHW vs TOR</div><div class="pick">Moneyline 0 (-160)</div></div></div>
+<div class="league-section">
+                <div class="league-header">
+                    <span class="league-emoji">🏀</span>
+                    <span class="league-name nba">NBA</span>
+                </div>
+                <div class="pick-group">
+                    <div class="pick-group-header"><span class="pick-group-icon">🎯</span><span class="pick-group-title">3 Prop Parlay</span></div>
+                    <div class="pick-card"><div class="pick-item"><span class="pick-label">No props available</span></div></div>
+                </div>
+                <div class="pick-group">
+                    <div class="pick-group-header"><span class="pick-group-icon">📊</span><span class="pick-group-title">ML / Spread / O-U</span><span class="pick-group-odds">+507</span></div>
+                    <div class="pick-card">
+                        <div class="pick-item">
+                            <span class="pick-label">SPREAD</span>
+                            <span class="pick-value">MIA (-3.5)</span>
+                            <span class="pick-line">-110</span>
+                        </div>
+                    </div>
+                    <div class="pick-card">
+                        <div class="pick-item">
+                            <span class="pick-label">TOTAL</span>
+                            <span class="pick-value">O/U 210.5</span>
+                            <span class="pick-line">-110</span>
+                        </div>
+                    </div>
+                    <div class="pick-card">
+                        <div class="pick-item">
+                            <span class="pick-label">MONEYLINE</span>
+                            <span class="pick-value">PHI ML</span>
+                            <span class="pick-line">-150</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="pick-group">
+                    <div class="pick-group-header"><span class="pick-group-icon">🏆</span><span class="pick-group-title">Best Bets Parlay (3 picks)</span><span class="pick-group-odds">+507</span></div>
+                    <div class="pick-card">
+                        <div class="best-bets-list">
+                            <div class="best-bet-item"><span class="best-bet-sport">🏀</span><span class="best-bet-text">MIA (-3.5)</span><span class="best-bet-conf">68%</span></div>
+                            <div class="best-bet-item"><span class="best-bet-sport">🏀</span><span class="best-bet-text">O/U 210.5</span><span class="best-bet-conf">68%</span></div>
+                            <div class="best-bet-item"><span class="best-bet-sport">🏀</span><span class="best-bet-text">PHI ML</span><span class="best-bet-conf">68%</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+<div class="league-section">
+                <div class="league-header">
+                    <span class="league-emoji">🧊</span>
+                    <span class="league-name nhl">NHL</span>
+                </div>
+                <div class="pick-group">
+                    <div class="pick-group-header"><span class="pick-group-icon">🎯</span><span class="pick-group-title">3 Prop Parlay</span></div>
+                    <div class="pick-card"><div class="pick-item"><span class="pick-label">No props available</span></div></div>
+                </div>
+                <div class="pick-group">
+                    <div class="pick-group-header"><span class="pick-group-icon">📊</span><span class="pick-group-title">ML / Spread / O-U</span><span class="pick-group-odds">+701</span></div>
+                    <div class="pick-card">
+                        <div class="pick-item">
+                            <span class="pick-label">SPREAD</span>
+                            <span class="pick-value">NYR (1.5)</span>
+                            <span class="pick-line">-110</span>
+                        </div>
+                    </div>
+                    <div class="pick-card">
+                        <div class="pick-item">
+                            <span class="pick-label">TOTAL</span>
+                            <span class="pick-value">O/U 6.0</span>
+                            <span class="pick-line">-110</span>
+                        </div>
+                    </div>
+                    <div class="pick-card">
+                        <div class="pick-item">
+                            <span class="pick-label">MONEYLINE</span>
+                            <span class="pick-value">COL ML</span>
+                            <span class="pick-line">120</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="pick-group">
+                    <div class="pick-group-header"><span class="pick-group-icon">🏆</span><span class="pick-group-title">Best Bets Parlay (2 picks)</span><span class="pick-group-odds">+264</span></div>
+                    <div class="pick-card">
+                        <div class="best-bets-list">
+                            <div class="best-bet-item"><span class="best-bet-sport">🧊</span><span class="best-bet-text">NYR (1.5)</span><span class="best-bet-conf">68%</span></div>
+                            <div class="best-bet-item"><span class="best-bet-sport">🧊</span><span class="best-bet-text">O/U 6.0</span><span class="best-bet-conf">68%</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+<div class="league-section">
+                <div class="league-header">
+                    <span class="league-emoji">⚾</span>
+                    <span class="league-name mlb">MLB</span>
+                </div>
+                <div class="pick-group">
+                    <div class="pick-group-header"><span class="pick-group-icon">🎯</span><span class="pick-group-title">3 Prop Parlay</span></div>
+                    <div class="pick-card"><div class="pick-item"><span class="pick-label">No props available</span></div></div>
+                </div>
+                <div class="pick-group">
+                    <div class="pick-group-header"><span class="pick-group-icon">📊</span><span class="pick-group-title">ML / Spread / O-U</span><span class="pick-group-odds">+492</span></div>
+                    <div class="pick-card">
+                        <div class="pick-item">
+                            <span class="pick-label">SPREAD</span>
+                            <span class="pick-value">STL (-1.5)</span>
+                            <span class="pick-line">-110</span>
+                        </div>
+                    </div>
+                    <div class="pick-card">
+                        <div class="pick-item">
+                            <span class="pick-label">TOTAL</span>
+                            <span class="pick-value">O/U 9.5</span>
+                            <span class="pick-line">-110</span>
+                        </div>
+                    </div>
+                    <div class="pick-card">
+                        <div class="pick-item">
+                            <span class="pick-label">MONEYLINE</span>
+                            <span class="pick-value">CHW ML</span>
+                            <span class="pick-line">-160</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         <div class="footer">
-            &#127834; Uncle Vito's Picks - Yonti Trading Operation<br>
-            <span style="color: #FF5252;">&#9888; Do your own homework. Uncle Vito don't miss.</span>
+            🍝 Uncle Vito's Picks — Yonti Trading Operation<br>
+            <div class="footer-warning">⚠️ Do your own homework. Uncle Vito don't miss.</div>
         </div>
     </div>
 </body>

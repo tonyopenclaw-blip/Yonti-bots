@@ -1092,83 +1092,254 @@ class UncleVitoReport:
         return self.format_report()
 
 
+
     def format_report_html(self) -> str:
-        """Format the betting report as HTML."""
+        """Format the betting report as HTML with scrollable, mobile-friendly layout."""
+        import datetime
         total_games = sum(len(games) for games in self.games.values())
-        date_str = datetime.now().strftime("%m/%d/%Y")
+        date_str = datetime.datetime.now().strftime("%m/%d/%Y")
         
-        sport_emoji = {"NBA": "🏀", "NHL": "🧊", "MLB": "⚾"}
-        
-        html = '''<!DOCTYPE html>
+        html = """<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uncle Vito's Picks - Yonti</title>
+    <title>Vito's Picks — Yonti</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #0B0F1A; --card: #131929; --border: #1E2A3F; --text: #E8ECF4; --text-dim: #7A8499; --gold: #F0B90B; --gold-border: rgba(240,185,11,0.3); --nba: #C8102E; --nhl: #003E8C; }
+        :root {
+            --bg: #0B0F1A; --card: #131929; --card-hover: #1A2235; --border: #1E2A3F;
+            --text: #E8ECF4; --text-dim: #7A8499; --gold: #F0B90B; --gold-border: rgba(240,185,11,0.3);
+            --nba: #C8102E; --nhl: #003E8C; --mlb: #002D72; --win: #00E676; --loss: #FF5252;
+            --section-bg: rgba(255,255,255,0.03);
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Inter, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-        .topbar { background: rgba(11,15,26,0.95); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 56px; }
-        .topbar-logo { font-size: 1rem; font-weight: 700; color: var(--gold); text-decoration: none; }
-        .container { max-width: 900px; margin: 0 auto; padding: 24px; }
-        .report-header { background: linear-gradient(135deg, rgba(240,185,11,0.08), rgba(240,185,11,0.03)); border: 1px solid var(--gold-border); border-radius: 16px; padding: 28px 32px; margin-bottom: 24px; text-align: center; }
-        .report-icon { font-size: 48px; margin-bottom: 10px; }
-        .report-title { font-family: Oswald, sans-serif; font-size: 2.4rem; font-weight: 700; color: var(--gold); }
-        .report-date { font-family: JetBrains Mono, monospace; font-size: 0.85rem; color: var(--text-dim); margin-top: 8px; }
-        .sport-section { margin-bottom: 32px; }
-        .sport-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-        .sport-name { font-family: Oswald, sans-serif; font-size: 1.6rem; font-weight: 700; text-transform: uppercase; }
-        .game-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; margin-bottom: 12px; }
-        .game-teams { font-family: Oswald, sans-serif; font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; }
-        .pick { padding: 6px 12px; background: var(--bg); border-radius: 6px; margin-bottom: 4px; font-size: 0.9rem; }
-        .footer { text-align: center; padding: 40px 0; color: var(--text-dim); font-size: 0.8rem; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 24px 16px 60px; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding: 0 8px; }
+        .topbar-left { display: flex; flex-direction: column; }
+        .topbar-left h1 { font-size: 1.5rem; font-weight: 700; color: var(--gold); letter-spacing: -0.02em; }
+        .topbar-left p { color: var(--text-dim); font-size: 0.8rem; margin-top: 2px; }
+        .topbar-right { display: flex; gap: 8px; }
+        .topbar-btn { display: flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.8rem; font-weight: 500; text-decoration: none; transition: all 0.2s; }
+        .topbar-btn:hover { background: var(--card-hover); border-color: var(--gold); color: var(--gold); }
+        .container { max-width: 480px; margin: 0 auto; }
+        .report-header { background: linear-gradient(135deg, rgba(240,185,11,0.08), rgba(240,185,11,0.03)); border: 1px solid var(--gold-border); border-radius: 14px; padding: 20px 24px; margin-bottom: 24px; text-align: center; }
+        .report-icon { font-size: 36px; margin-bottom: 6px; }
+        .report-title { font-family: 'Oswald', sans-serif; font-size: 1.6rem; font-weight: 700; color: var(--gold); letter-spacing: 0.03em; }
+        .report-date { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-dim); margin-top: 6px; }
+        
+        /* League Section */
+        .league-section { margin-bottom: 28px; }
+        .league-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+        .league-emoji { font-size: 1.6rem; }
+        .league-name { font-family: 'Oswald', sans-serif; font-size: 1.3rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+        .league-name.nba { color: var(--nba); }
+        .league-name.nhl { color: var(--nhl); }
+        .league-name.mlb { color: var(--mlb); }
+        
+        /* Pick Group (Prop Parlay, ML/Spread, Best Bets) */
+        .pick-group { margin-bottom: 16px; }
+        .pick-group-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+        .pick-group-icon { font-size: 0.9rem; }
+        .pick-group-title { font-family: 'Oswald', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--text); text-transform: uppercase; letter-spacing: 0.04em; }
+        .pick-group-odds { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--gold); margin-left: auto; }
+        
+        /* Pick Card */
+        .pick-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-bottom: 8px; }
+        .pick-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; background: var(--bg); border-radius: 6px; margin-bottom: 5px; font-size: 0.85rem; }
+        .pick-item:last-child { margin-bottom: 0; }
+        .pick-label { color: var(--text-dim); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; min-width: 55px; }
+        .pick-value { font-weight: 600; color: var(--text); flex: 1; text-align: center; padding: 0 8px; }
+        .pick-direction { font-weight: 700; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; }
+        .pick-direction.over { background: rgba(0,230,118,0.15); color: var(--win); }
+        .pick-direction.under { background: rgba(255,82,82,0.15); color: var(--loss); }
+        .pick-line { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--gold); }
+        
+        /* Parlay Combo (props joined with +) */
+        .parlay-combo { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+        .parlay-pick { background: var(--bg); padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; }
+        .parlay-plus { color: var(--gold); font-weight: 700; font-size: 0.9rem; }
+        
+        /* Best Bets Multi-line */
+        .best-bets-list { display: flex; flex-direction: column; gap: 6px; }
+        .best-bet-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--bg); border-radius: 6px; font-size: 0.85rem; }
+        .best-bet-sport { font-size: 0.8rem; }
+        .best-bet-text { flex: 1; color: var(--text); }
+        .best-bet-conf { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--win); }
+        
+        .footer { text-align: center; padding: 32px 0 16px; color: var(--text-dim); font-size: 0.75rem; }
+        .footer-warning { color: var(--loss); margin-top: 6px; }
+        
+        /* Mobile scroll container */
+        @media (max-width: 500px) {
+            body { padding: 16px 12px 50px; }
+            .container { max-width: 100%; }
+            .report-header { padding: 16px 20px; }
+            .report-title { font-size: 1.4rem; }
+            .league-name { font-size: 1.1rem; }
+            .pick-card { padding: 12px 14px; }
+            .pick-item { font-size: 0.8rem; padding: 5px 8px; }
+        }
     </style>
 </head>
 <body>
     <div class="topbar">
-        <a href="/" class="topbar-logo">&larr; Yonti</a>
-        <span style="font-family: JetBrains Mono, monospace; font-size: 0.8rem; color: var(--text-dim);__DATE_STR__</span>
+        <div class="topbar-left">
+            <h1>🍝 Vito's Picks</h1>
+            <p>__DATE_STR__</p>
+        </div>
+        <div class="topbar-right">
+            <a href="/" class="topbar-btn">← Yonti</a>
+        </div>
     </div>
     <div class="container">
         <div class="report-header">
-            <div class="report-icon">&#127834;</div>
+            <div class="report-icon">🍝</div>
             <div class="report-title">UNCLE VITO'S PICKS</div>
-            <div class="report-date">__DATE_STR__ | __TOTAL_GAMES__ games</div>
+            <div class="report-date">__DATE_STR__ — NBA, NHL, MLB</div>
         </div>
 __LEAGUE_SECTIONS__
         <div class="footer">
-            &#127834; Uncle Vito's Picks - Yonti Trading Operation<br>
-            <span style="color: #FF5252;">&#9888; Do your own homework. Uncle Vito don't miss.</span>
+            🍝 Uncle Vito's Picks — Yonti Trading Operation<br>
+            <div class="footer-warning">⚠️ Do your own homework. Uncle Vito don't miss.</div>
         </div>
     </div>
 </body>
-</html>'''
+</html>"""
         
+        sport_emoji = {"NBA": "🏀", "NHL": "🧊", "MLB": "⚾"}
+        sport_color_class = {"NBA": "nba", "NHL": "nhl", "MLB": "mlb"}
         league_html = ""
+        
+        # Get confidence parlay for best bets
+        confidence_parlay = self.generate_confidence_parlay(min_confidence=65)
+        
         for sport in config.SPORTS:
-            if sport in self.games and self.games[sport]:
-                emoji = sport_emoji.get(sport, "&#127942;")
-                color = "var(--nba)" if sport == "NBA" else "var(--nhl)"
-                section = f'<div class="sport-section"><div class="sport-header"><div class="sport-name" style="color: {color};">{emoji} {sport}</div></div>'
-                league_parlays = self.generate_league_parlays(sport)
-                game_picks = league_parlays.get("game_picks", [])
-                if not game_picks:
-                    section += '<div class="game-card">No picks available</div>'
-                else:
-                    for pick in game_picks[:5]:
-                        teams = f"{pick.team} vs {pick.opponent}"
-                        game_line = f"{pick.pick_type.title()} {pick.line} ({pick.odds})"
-                        section += f'<div class="game-card"><div class="game-teams">{teams}</div><div class="pick">{game_line}</div></div>'
-                section += '</div>'
-                league_html += section
+            if sport not in self.games or not self.games[sport]:
+                continue
+                
+            emoji = sport_emoji.get(sport, "🏆")
+            color_class = sport_color_class.get(sport, "")
+            
+            # Get league parlays
+            league_parlays = self.generate_league_parlays(sport)
+            props = league_parlays.get("props", [])
+            game_picks = league_parlays.get("game_picks", [])
+            
+            # Build league section
+            section = f'''<div class="league-section">
+                <div class="league-header">
+                    <span class="league-emoji">{emoji}</span>
+                    <span class="league-name {color_class}">{sport}</span>
+                </div>
+'''
+            
+            # 1. 3 Prop Parlay
+            section += '                <div class="pick-group">\n'
+            section += '                    <div class="pick-group-header">'
+            section += '<span class="pick-group-icon">🎯</span>'
+            section += '<span class="pick-group-title">3 Prop Parlay</span>'
+            if props:
+                payout = self.calculate_parlay_payout(props)
+                section += f'<span class="pick-group-odds">+{payout["payout"]}</span>'
+            section += '</div>\n'
+            
+            if not props:
+                section += '                    <div class="pick-card"><div class="pick-item"><span class="pick-label">No props available</span></div></div>\n'
+            else:
+                section += '                    <div class="pick-card">\n'
+                # Show as combined parlay
+                combo_parts = []
+                for p in props[:3]:
+                    direction_tag = f'<span class="pick-direction {p.direction}">{p.direction.upper()}</span>'
+                    combo_parts.append(f'{p.player} {direction_tag} {p.stat_type} {p.line}')
+                section += '                        <div class="parlay-combo">'
+                for i, part in enumerate(combo_parts):
+                    if i > 0:
+                        section += '<span class="parlay-plus">+</span>'
+                    section += f'<span class="parlay-pick">{part}</span>'
+                section += '</div>\n'
+                section += '                    </div>\n'
+            section += '                </div>\n'
+            
+            # 2. ML/Spread/O/U
+            section += '                <div class="pick-group">\n'
+            section += '                    <div class="pick-group-header">'
+            section += '<span class="pick-group-icon">📊</span>'
+            section += '<span class="pick-group-title">ML / Spread / O-U</span>'
+            if game_picks:
+                payout = self.calculate_parlay_payout(game_picks)
+                section += f'<span class="pick-group-odds">+{payout["payout"]}</span>'
+            section += '</div>\n'
+            
+            if not game_picks:
+                section += '                    <div class="pick-card"><div class="pick-item"><span class="pick-label">No games available</span></div></div>\n'
+            else:
+                for pick in game_picks[:3]:
+                    if pick.pick_type == "spread":
+                        line_str = f"{pick.team} ({pick.line})"
+                        label = "SPREAD"
+                    elif pick.pick_type == "total":
+                        line_str = f"O/U {pick.line}"
+                        label = "TOTAL"
+                    else:
+                        line_str = f"{pick.team} ML"
+                        label = "MONEYLINE"
+                    section += f'''                    <div class="pick-card">
+                        <div class="pick-item">
+                            <span class="pick-label">{label}</span>
+                            <span class="pick-value">{line_str}</span>
+                            <span class="pick-line">{pick.odds}</span>
+                        </div>
+                    </div>
+'''
+            section += '                </div>\n'
+            
+            # 3. Best Bets Parlay (4-5 picks from confidence parlay for this sport)
+            sport_confidence_picks = [p for p in confidence_parlay if p["sport"] == sport]
+            if sport_confidence_picks:
+                section += '                <div class="pick-group">\n'
+                section += '                    <div class="pick-group-header">'
+                section += '<span class="pick-group-icon">🏆</span>'
+                section += f'<span class="pick-group-title">Best Bets Parlay ({len(sport_confidence_picks)} picks)</span>'
+                # Calculate combined odds for these picks
+                conf_picks_formatted = [{"odds": p["pick"].odds} for p in sport_confidence_picks]
+                conf_payout = self.odds.calculate_parlay_odds(conf_picks_formatted)
+                section += f'<span class="pick-group-odds">+{conf_payout["payout"]}</span>'
+                section += '</div>\n'
+                section += '                    <div class="pick-card">\n'
+                section += '                        <div class="best-bets-list">\n'
+                for p in sport_confidence_picks[:5]:
+                    pick = p["pick"]
+                    sport_icon = sport_emoji.get(sport, "🏆")
+                    if p["type"] == "prop":
+                        line_str = f"{pick.player} {pick.direction.upper()} {pick.stat_type} {pick.line}"
+                    else:
+                        if pick.pick_type == "spread":
+                            line_str = f"{pick.team} ({pick.line})"
+                        elif pick.pick_type == "total":
+                            line_str = f"O/U {pick.line}"
+                        else:
+                            line_str = f"{pick.team} ML"
+                    section += f'                            <div class="best-bet-item">'
+                    section += f'<span class="best-bet-sport">{sport_icon}</span>'
+                    section += f'<span class="best-bet-text">{line_str}</span>'
+                    section += f'<span class="best-bet-conf">{pick.confidence}%</span>'
+                    section += '</div>\n'
+                section += '                        </div>\n'
+                section += '                    </div>\n'
+                section += '                </div>\n'
+            
+            section += '            </div>\n'
+            league_html += section
         
         html = html.replace("__DATE_STR__", date_str)
-        html = html.replace("__TOTAL_GAMES__", str(total_games))
         html = html.replace("__LEAGUE_SECTIONS__", league_html)
         
         return html
+
 
 
 

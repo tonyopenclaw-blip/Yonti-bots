@@ -295,15 +295,8 @@ class CoinTrader:
         # Use avg_price for PnL calculation (accounts for scale-ins)
         calc_price = position.avg_price if position.avg_price > 0 else position.entry_price
         
-        # Tony's unified P&L formula: YES and NO use the SAME formula
-        # WIN (exit > entry): abs(exit - entry) × shares × 0.984  (fee applies)
-        # LOSE (exit < entry): abs(exit - entry) × shares  (no fee, negative result)
-        price_diff = abs(exit_price - calc_price)
-        pnl = price_diff * position.size
-        if exit_price > calc_price:
-            pnl = pnl * 0.984  # WIN: fee taken
-        else:
-            pnl = -pnl          # LOSE: no fee, result is negative
+        # Tony's P&L formula: (exit - entry) × shares (no fee multiplier)
+        pnl = (exit_price - calc_price) * position.size
         
         if pnl >= 0:
             logger.info(f"[{self.coin}] Closed {ticker}: {reason}, PnL=${pnl:.2f}")

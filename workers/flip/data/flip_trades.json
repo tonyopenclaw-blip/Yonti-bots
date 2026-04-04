@@ -2372,5 +2372,18 @@
     "reason": "yes_bid $0.06 < $0.60 \u2192 BUY",
     "order_type": "MARKET",
     "game_key": "KXNBAGAME-26APR04WASMIA-WAS|KXNBAGAME-26APR04WASMIA-MIA"
+  },
+  {
+    "timestamp": "2026-04-04T21:48:17.493258",
+    "ticker": "KXNBAGAME-26APR04WASMIA-WAS",
+    "market": "",
+    "action": "CLOSE",
+    "side": "",
+    "price": 0.0,
+    "size": 2.0,
+    "pnl": -0.12,
+    "reason": "MARKET FINALIZED NO \u2192 LOSS $-0.12",
+    "order_type": "FINALIZED",
+    "game_key": ""
   }
 ]

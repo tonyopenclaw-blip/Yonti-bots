@@ -25,6 +25,17 @@ from config import (
     AI_PROBABILITY_ENABLED,  # Enable AI probability estimation
     COINBASE_API, COINBASE_PRODUCTS  # For First Cross coin price tracking
 )
+
+# === TONY'S ENTRY PRICE FILTER: Only enter when share price is $0.20-$0.80 ===
+MIN_ENTRY_PRICE = 0.20
+MAX_ENTRY_PRICE = 0.80
+
+# === TONY'S TWO-STAGE STOP SYSTEM ===
+# Stage 1: STATIC STOP at -30% - exit immediately if price moves against us by 30%
+# Stage 2: TRAILING STOP (only after +30% profit) - trail from there
+STATIC_STOP_PCT = 0.30
+TRAILING_TRIGGER_PCT = 0.30
+TRAILING_BUFFER_PCT = 0.30
 import requests
 from kalshi_api import Market
 
@@ -445,6 +456,9 @@ class Position:
         """
         Update trailing stop using instance variables (now 30% for MOMENTUM, confidence-based for DRIFT).
         
+        TONY FIX: Only trail/exit if we're in PROFIT. If price is moving against us,
+        give it room to come back instead of locking in a loss.
+        
         Returns True if trailing stop is now active.
         """
         # Use the trailing stop values from the Position (set from TradeSignal at position creation)
@@ -456,70 +470,90 @@ class Position:
         if self.side == "yes":
             if current_price > self.peak_price:
                 profit_pct = (current_price - self.entry_price) / self.entry_price
-                if profit_pct >= ts_trigger:
+                # TONY FIX: Only activate trailing stop if we're actually in profit
+                if profit_pct >= ts_trigger and profit_pct > 0:
                     self.trailing_stop_active = True
-                    logger.info(f"{self.ticker}: CONF={confidence} Long trailing stop ACTIVE @ ${current_price:.4f}, peak=${self.peak_price:.4f}, buffer={ts_buffer:.0%}")
+                    logger.info(f"{self.ticker}: CONF={confidence} Long trailing stop ACTIVE @ ${current_price:.4f}, peak=${self.peak_price:.4f}, buffer={ts_buffer:.0%}, profit={profit_pct:.2%}")
                 self.peak_price = current_price
                 return self.trailing_stop_active
             else:
+                # TONY FIX: Only trail/exit if we're currently in profit
                 if self.trailing_stop_active:
-                    drop_from_peak = (self.peak_price - current_price) / self.peak_price
-                    if drop_from_peak >= ts_buffer:
-                        logger.info(f"{self.ticker}: CONF={confidence} Long TRAILING STOP HIT @ ${current_price:.4f} (peak=${self.peak_price:.4f}, drop={drop_from_peak:.2%})")
-                        return True
+                    current_profit_pct = (current_price - self.entry_price) / self.entry_price
+                    # Only exit if we're STILL in profit (price moved against us but not yet a loss)
+                    if current_profit_pct > 0:
+                        drop_from_peak = (self.peak_price - current_price) / self.peak_price
+                        if drop_from_peak >= ts_buffer:
+                            logger.info(f"{self.ticker}: CONF={confidence} Long TRAILING STOP HIT @ ${current_price:.4f} (peak=${self.peak_price:.4f}, drop={drop_from_peak:.2%}, profit={current_profit_pct:.2%})")
+                            return True
         else:
             if current_price < self.peak_price or self.peak_price == 0.0:
                 self.peak_price = current_price
                 profit_pct = (self.entry_price - current_price) / self.entry_price
-                if profit_pct >= ts_trigger:
+                # TONY FIX: Only activate trailing stop if we're actually in profit
+                if profit_pct >= ts_trigger and profit_pct > 0:
                     self.trailing_stop_active = True
-                    logger.info(f"{self.ticker}: CONF={confidence} Short trailing stop ACTIVE @ ${current_price:.4f}, trough=${self.peak_price:.4f}, buffer={ts_buffer:.0%}")
+                    logger.info(f"{self.ticker}: CONF={confidence} Short trailing stop ACTIVE @ ${current_price:.4f}, trough=${self.peak_price:.4f}, buffer={ts_buffer:.0%}, profit={profit_pct:.2%}")
                 return self.trailing_stop_active
             else:
+                # TONY FIX: Only trail/exit if we're currently in profit
                 if self.trailing_stop_active:
-                    rise_from_trough = (current_price - self.peak_price) / self.peak_price
-                    if rise_from_trough >= ts_buffer:
-                        logger.info(f"{self.ticker}: CONF={confidence} Short TRAILING STOP HIT @ ${current_price:.4f} (trough=${self.peak_price:.4f}, rise={rise_from_trough:.2%})")
-                        return True
+                    current_profit_pct = (self.entry_price - current_price) / self.entry_price
+                    # Only exit if we're STILL in profit (price moved against us but not yet a loss)
+                    if current_profit_pct > 0:
+                        rise_from_trough = (current_price - self.peak_price) / self.peak_price
+                        if rise_from_trough >= ts_buffer:
+                            logger.info(f"{self.ticker}: CONF={confidence} Short TRAILING STOP HIT @ ${current_price:.4f} (trough=${self.peak_price:.4f}, rise={rise_from_trough:.2%}, profit={current_profit_pct:.2%})")
+                            return True
         return False
     
     def update_trailing_stop(self, current_price: float) -> bool:
         """
         Update trailing stop based on current price.
+        TONY FIX: Only trail/exit if we're in PROFIT. If price is moving against us,
+        give it room to come back instead of locking in a loss.
         Returns True if trailing stop is now active.
         """
         if self.side == "yes":
             # For YES (long): track peak price
             if current_price > self.peak_price:
                 profit_pct = (current_price - self.entry_price) / self.entry_price
-                if profit_pct >= self.trailing_stop_trigger_pct:
+                # TONY FIX: Only activate trailing stop if we're actually in profit
+                if profit_pct >= self.trailing_stop_trigger_pct and profit_pct > 0:
                     self.trailing_stop_active = True
-                    logger.info(f"{self.ticker}: Long trailing stop ACTIVE @ ${current_price:.4f}, peak=${self.peak_price:.4f}")
+                    logger.info(f"{self.ticker}: Long trailing stop ACTIVE @ ${current_price:.4f}, peak=${self.peak_price:.4f}, profit={profit_pct:.2%}")
                 self.peak_price = current_price
                 return self.trailing_stop_active
             else:
-                # Check if trailing stop was hit (price dropped X% from peak)
+                # TONY FIX: Only trail/exit if we're currently in profit
                 if self.trailing_stop_active:
-                    drop_from_peak = (self.peak_price - current_price) / self.peak_price
-                    if drop_from_peak >= self.trailing_stop_pct:
-                        logger.info(f"{self.ticker}: Long TRAILING STOP HIT @ ${current_price:.4f} (peak=${self.peak_price:.4f}, drop={drop_from_peak:.2%})")
-                        return True
+                    current_profit_pct = (current_price - self.entry_price) / self.entry_price
+                    # Only exit if we're STILL in profit (price moved against us but not yet a loss)
+                    if current_profit_pct > 0:
+                        drop_from_peak = (self.peak_price - current_price) / self.peak_price
+                        if drop_from_peak >= self.trailing_stop_pct:
+                            logger.info(f"{self.ticker}: Long TRAILING STOP HIT @ ${current_price:.4f} (peak=${self.peak_price:.4f}, drop={drop_from_peak:.2%}, profit={current_profit_pct:.2%})")
+                            return True
         else:
             # For NO (short): track trough price
             if current_price < self.peak_price or self.peak_price == 0.0:
                 self.peak_price = current_price
                 profit_pct = (self.entry_price - current_price) / self.entry_price
-                if profit_pct >= self.trailing_stop_trigger_pct:
+                # TONY FIX: Only activate trailing stop if we're actually in profit
+                if profit_pct >= self.trailing_stop_trigger_pct and profit_pct > 0:
                     self.trailing_stop_active = True
-                    logger.info(f"{self.ticker}: Short trailing stop ACTIVE @ ${current_price:.4f}, trough=${self.peak_price:.4f}")
+                    logger.info(f"{self.ticker}: Short trailing stop ACTIVE @ ${current_price:.4f}, trough=${self.peak_price:.4f}, profit={profit_pct:.2%}")
                 return self.trailing_stop_active
             else:
-                # Check if trailing stop was hit (price rose X% from trough)
+                # TONY FIX: Only trail/exit if we're currently in profit
                 if self.trailing_stop_active:
-                    rise_from_trough = (current_price - self.peak_price) / self.peak_price
-                    if rise_from_trough >= self.trailing_stop_pct:
-                        logger.info(f"{self.ticker}: Short TRAILING STOP HIT @ ${current_price:.4f} (trough=${self.peak_price:.4f}, rise={rise_from_trough:.2%})")
-                        return True
+                    current_profit_pct = (self.entry_price - current_price) / self.entry_price
+                    # Only exit if we're STILL in profit (price moved against us but not yet a loss)
+                    if current_profit_pct > 0:
+                        rise_from_trough = (current_price - self.peak_price) / self.peak_price
+                        if rise_from_trough >= self.trailing_stop_pct:
+                            logger.info(f"{self.ticker}: Short TRAILING STOP HIT @ ${current_price:.4f} (trough=${self.peak_price:.4f}, rise={rise_from_trough:.2%}, profit={current_profit_pct:.2%})")
+                            return True
         return False
     
     def should_scale_in(self, current_price: float) -> bool:
@@ -796,6 +830,12 @@ class StrategyEngine:
         time_left = market.time_to_expiry_sec()
         
         logger.debug(f"Evaluating {market.ticker}: price=${mid_price:.4f}, time_left={time_left}s")
+        
+        # === TONY'S ENTRY PRICE FILTER: Only enter when share price is $0.20-$0.80 ===
+        # Skip any trade outside this range - penny odds ($0.03-$0.14) are too risky
+        if not (MIN_ENTRY_PRICE <= mid_price <= MAX_ENTRY_PRICE):
+            logger.debug(f"{market.ticker}: Entry price ${mid_price:.4f} outside ${MIN_ENTRY_PRICE}-${MAX_ENTRY_PRICE} range - SKIPPING")
+            return None
         
         # === Track market open time for 1-min force logic ===
         if market.ticker not in self._market_open_times:
@@ -1308,10 +1348,22 @@ Your estimate:"""
     
     def check_position_exit(self, position: Position, current_price: float, time_left: int) -> Tuple[bool, str]:
         """
-        Check if a position should be exited.
-        Uses CONFIDENCE-BASED TRAILING STOP logic - let winners run!
-        High confidence = wider trailing stop buffer, longer hold time.
-        Low confidence = tighter trailing stop, faster exit.
+        TONY'S TWO-STAGE STOP SYSTEM:
+        
+        Stage 1: STATIC STOP at -30%
+        - Exit immediately if price moves against us by 30%
+        - YES: if current_price <= entry_price * 0.70
+        - NO: if current_price >= entry_price * 1.30
+        
+        Stage 2: TRAILING STOP (only after +30% profit)
+        - After price moves WITH us by 30%, trail from there
+        - YES: if current_price >= entry_price * 1.30, activate trailing
+        - NO: if current_price <= entry_price * 0.70, activate trailing
+        
+        Example for YES @ $0.50:
+        - Static stop: $0.50 * 0.70 = $0.35 (exit if drops here)
+        - Profit target: $0.50 * 1.30 = $0.65 (trailing starts here)
+        - Once at $0.65, trail behind peak with 30% buffer
         
         Returns (should_exit, reason).
         """
@@ -1319,21 +1371,87 @@ Your estimate:"""
             # No exit for DEEP SHORT - ride to expiry (we're fading the longshot)
             return False, ""
         
+        entry_price = position.entry_price
+        
         # === NEAR-EXPIRY EXIT (last 60 seconds - take whatever we got) ===
         MIN_TIME_BEFORE_EXPIRY = 60
         if time_left <= MIN_TIME_BEFORE_EXPIRY:
             logger.info(f"{position.ticker}: Near expiry ({time_left}s <= {MIN_TIME_BEFORE_EXPIRY}s) - closing position")
             return True, f"Expiry: closing at ${current_price:.4f}"
         
-        # === HARD STOP LOSS (only exit if we're wrong) ===
-        if position.stop_loss is not None:
-            if position.side == "yes" and current_price <= position.stop_loss:
-                return True, f"HARD SL hit: ${current_price:.4f} <= ${position.stop_loss:.4f}"
-            if position.side == "no" and current_price >= position.stop_loss:
-                return True, f"HARD SL hit: ${current_price:.4f} >= ${position.stop_loss:.4f}"
+        # === TONY'S TWO-STAGE STOP SYSTEM ===
         
-        # === MAX HOLD TIME (dynamic based on entry price - Nerd v2) ===
-        entry_price = position.entry_price
+        if position.side == "yes":
+            # YES: We profit when price goes UP
+            
+            # Stage 1: STATIC STOP -30% (exit immediately if we're wrong)
+            static_stop_price = entry_price * (1 - STATIC_STOP_PCT)
+            if current_price <= static_stop_price:
+                loss_pct = (entry_price - current_price) / entry_price
+                logger.info(f"{position.ticker}: STATIC STOP HIT @ ${current_price:.4f} (entry=${entry_price:.4f}, stop=${static_stop_price:.4f}, loss={loss_pct:.1%})")
+                return True, f"STATIC STOP: -30% loss locked in"
+            
+            # Stage 2: TRAILING STOP (only after +30% profit)
+            profit_target_price = entry_price * (1 + TRAILING_TRIGGER_PCT)
+            
+            # Check if trailing should activate (only once, when we first hit +30% profit)
+            if not position.trailing_stop_active and current_price >= profit_target_price:
+                position.trailing_stop_active = True
+                position.peak_price = current_price
+                profit_pct = (current_price - entry_price) / entry_price
+                logger.info(f"{position.ticker}: TRAILING STOP ACTIVATED @ ${current_price:.4f} (entry=${entry_price:.4f}, profit={profit_pct:.1%}, trailing behind peak)")
+            
+            # Trail behind the peak (always check if trailing is active)
+            if position.trailing_stop_active:
+                if current_price > position.peak_price:
+                    position.peak_price = current_price
+                    profit_pct = (current_price - entry_price) / entry_price
+                    logger.debug(f"{position.ticker}: New peak ${current_price:.4f}, profit={profit_pct:.1%}")
+                else:
+                    # Check if we've dropped TRAILING_BUFFER_PCT from peak
+                    drop_from_peak = (position.peak_price - current_price) / position.peak_price
+                    if drop_from_peak >= TRAILING_BUFFER_PCT:
+                        current_profit_pct = (current_price - entry_price) / entry_price
+                        logger.info(f"{position.ticker}: TRAILING STOP HIT @ ${current_price:.4f} (peak=${position.peak_price:.4f}, drop={drop_from_peak:.1%}, locked_profit={current_profit_pct:.1%})")
+                        return True, f"TRAILING STOP: locked in profits"
+        
+        else:
+            # NO: We profit when price goes DOWN
+            
+            # Stage 1: STATIC STOP -30% (exit immediately if we're wrong)
+            # For NO, price going UP is bad - static stop triggers when price rises 30%
+            static_stop_price = entry_price * (1 + STATIC_STOP_PCT)
+            if current_price >= static_stop_price:
+                loss_pct = (current_price - entry_price) / entry_price
+                logger.info(f"{position.ticker}: STATIC STOP HIT @ ${current_price:.4f} (entry=${entry_price:.4f}, stop=${static_stop_price:.4f}, loss={loss_pct:.1%})")
+                return True, f"STATIC STOP: -30% loss locked in"
+            
+            # Stage 2: TRAILING STOP (only after +30% profit)
+            # For NO, profit target is when price drops 30% (to entry * 0.70)
+            profit_target_price = entry_price * (1 - TRAILING_TRIGGER_PCT)
+            
+            # Check if trailing should activate (only once, when we first hit +30% profit)
+            if not position.trailing_stop_active and current_price <= profit_target_price:
+                position.trailing_stop_active = True
+                position.peak_price = current_price  # For NO, peak_price actually tracks the TROUGH
+                profit_pct = (entry_price - current_price) / entry_price
+                logger.info(f"{position.ticker}: TRAILING STOP ACTIVATED @ ${current_price:.4f} (entry=${entry_price:.4f}, profit={profit_pct:.1%}, trailing behind trough)")
+            
+            # Trail behind the trough (always check if trailing is active)
+            if position.trailing_stop_active:
+                if current_price < position.peak_price:
+                    position.peak_price = current_price
+                    profit_pct = (entry_price - current_price) / entry_price
+                    logger.debug(f"{position.ticker}: New trough ${current_price:.4f}, profit={profit_pct:.1%}")
+                else:
+                    # Check if we've risen TRAILING_BUFFER_PCT from trough
+                    rise_from_trough = (current_price - position.peak_price) / position.peak_price
+                    if rise_from_trough >= TRAILING_BUFFER_PCT:
+                        current_profit_pct = (entry_price - current_price) / entry_price
+                        logger.info(f"{position.ticker}: TRAILING STOP HIT @ ${current_price:.4f} (trough=${position.peak_price:.4f}, rise={rise_from_trough:.1%}, locked_profit={current_profit_pct:.1%})")
+                        return True, f"TRAILING STOP: locked in profits"
+        
+        # === MAX HOLD TIME ===
         if 0.70 <= entry_price <= 1.00:
             max_hold_minutes = 8
         elif 0.40 <= entry_price <= 0.60:
@@ -1341,7 +1459,6 @@ Your estimate:"""
         else:
             max_hold_minutes = 12
         
-        # Check if position has been open too long
         import time
         hold_time_sec = time.time() - position.open_time
         hold_time_min = hold_time_sec / 60
@@ -1350,14 +1467,7 @@ Your estimate:"""
             logger.info(f"{position.ticker}: Max hold time exceeded ({hold_time_min:.1f}min > {max_hold_minutes}min) - closing")
             return True, f"Max hold time: {hold_time_min:.1f}min > {max_hold_minutes}min"
         
-        # === CONFIDENCE-BASED TRAILING STOP EXIT ===
-        # Use trailing stop from position (30% for MOMENTUM, confidence-based for DRIFT)
-        trailing_hit = position.update_trailing_stop_confidence(current_price, position.confidence)
-        if trailing_hit:
-            return True, f"TRAILING STOP: locked in profits"
-        
         # === NEAR-MAX PROFIT EXIT ===
-        # If we're REALLY close to max profit ($0.95 for YES, $0.05 for NO), take it
         if position.take_profit is not None:
             if position.side == "yes" and current_price >= 0.95:
                 return True, f"Near-max TP: ${current_price:.4f} >= $0.95"

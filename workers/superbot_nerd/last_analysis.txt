@@ -1,17 +1,17 @@
 🧠 **SUPERBOT NERD ANALYSIS** 🧠
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📉 Session P&L: $-21.47 | WR: 63.8% | Balance: $78.53
+📉 Session P&L: $-6.46 | WR: 73.1% | Balance: $93.54
 
-✅ **Correct Zone Trades:** 4W/1L (80%) | P&L: +$0.43
-✅ **drift_buy:** 21W/17L (55%) | +$0.79
-   → 33/38 entries OUTSIDE $0.35–$0.45 zone
+✅ **Correct Zone Trades:** 1W/0L (100%) | P&L: +$0.07
+❌ **drift_buy:** 2W/4L (33%) | $-0.26
+   → 5/6 entries OUTSIDE $0.35–$0.45 zone
 
 📋 **Last 5 Trades:**
-  ✅ R032230-30 | first_cross | E:$0.58 | +$0.13 | CONF=50 TRAILING STOP: locked 
-  ✅ R032245-45 | first_cross | E:$0.55 | +$0.07 | CONF=50 TRAILING STOP: locked 
-  ✅ R032245-45 | first_cross | E:$0.56 | +$0.12 | CONF=50 TRAILING STOP: locked 
-  ❌ R032245-45 | first_cross | E:$0.42 | -$0.18 | Max hold time: 10.6min > 10min
-  ❌ R032245-45 | first_cross | E:$0.53 | -$0.09 | Max hold time: 10.6min > 10min
+  ✅ R040115-15 | first_cross | E:$0.41 | +$0.08 | CONF=50 TRAILING STOP: locked 
+  ❌ R040115-15 | drift_buy | E:$0.34 | -$0.08 | HARD SL hit: $0.1800 <= $0.200
+  ✅ R040115-15 | first_cross | E:$0.67 | +$0.09 | CONF=50 TRAILING STOP: locked 
+  ✅ R040115-15 | drift_buy | E:$0.32 | +$0.09 | CONF=50 TRAILING STOP: locked 
+  ✅ R040115-15 | first_cross | E:$0.64 | +$0.13 | CONF=50 TRAILING STOP: locked 
 
 🎯 **Recommendations:**
-  → session P&L deeply negative — consider pausing
+  → drift_buy win rate low — check entries are in $0.35–$0.45 zone only

@@ -348,7 +348,7 @@ class CoinTrader:
             if market.time_to_expiry_sec() < 60:
                 continue
             
-            signal = self.strategy_engine.evaluate_market(market)
+            signal = self.strategy_engine.evaluate_market(market, self.coin)
             if signal:
                 # Ensure max bet per coin is respected
                 signal.size = min(signal.size, MAX_BET)
@@ -394,7 +394,7 @@ class Superbot:
             self.coin_traders[coin] = CoinTrader(
                 coin=coin,
                 series_ticker=SERIES_TICKERS[coin],
-                strategy_engine=StrategyEngine(PAPER_BALANCE / len(COINS)),  # Split balance per coin
+                strategy_engine=StrategyEngine(PAPER_BALANCE / len(COINS), api=self.api),  # Pass API for First Cross
                 api=self.api,
                 report=self.report
             )
@@ -503,7 +503,7 @@ class Superbot:
                 continue
             
             # Evaluate market for trading signal
-            signal = trader.strategy_engine.evaluate_market(market)
+            signal = trader.strategy_engine.evaluate_market(market, coin)
             if signal:
                 # Pixel: Kill filter - drift_short entry only if YES < $0.70
                 if signal.strategy.value == "drift_short" and market.yes_bid > 0.70:

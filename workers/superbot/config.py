@@ -219,6 +219,21 @@ LOOP_INTERVAL_SEC = 10   # Legacy fallback
 MAX_OPEN_POSITIONS = 5    # Maximum concurrent positions
 
 # =============================================================================
+# COINBASE API CONFIG
+# =============================================================================
+COINBASE_API = "https://api.exchange.coinbase.com"
+COINBASE_PRODUCTS = {
+    "BTC": "BTC-USD",
+    "ETH": "ETH-USD",
+    "SOL": "SOL-USD",
+    "BNB": "BNB-USD",
+    "DOGE": "DOGE-USD",
+    "XRP": "XRP-USD",
+    "HYPE": "HYPE-USD",
+    "ADA": "ADA-USD",
+}
+
+# =============================================================================
 # REPORTING
 # =============================================================================
 REPORT_TITLE = "Superbot Paper Trading Report — REEVAL v1"

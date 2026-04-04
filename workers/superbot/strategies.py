@@ -1,3 +1,4 @@
+import time
 # strategies.py - Superbot Trading Strategies
 
 import logging
@@ -19,8 +20,10 @@ from config import (
     DEAD_ZONE_MIN, DEAD_ZONE_MAX,  # Dead zone - no trade
     DRIFT_BUY_STOP_LOSS, DRIFT_SHORT_STOP_LOSS,  # Absolute stop loss prices
     AI_EDGE_THRESHOLD,  # Minimum edge required (5%)
-    AI_PROBABILITY_ENABLED  # Enable AI probability estimation
+    AI_PROBABILITY_ENABLED,  # Enable AI probability estimation
+    COINBASE_API, COINBASE_PRODUCTS  # For First Cross coin price tracking
 )
+import requests
 from kalshi_api import Market
 
 logger = logging.getLogger(__name__)
@@ -48,6 +51,138 @@ class Strategy(Enum):
     DRIFT_SHORT = "drift_short"
     FIRST_CROSS = "first_cross"  # Tony's insight: first direction of breakout tends to hold
     NONE = "none"
+
+
+class FirstCrossCoinTracker:
+    """
+    Tracks when the coin price crosses the Kalshi floor_strike (target price).
+    
+    Tony's First Cross Strategy (from target_cross_tracker.py):
+    1. At market open: get floor_strike (target price) from Kalshi
+    2. Every 5s: track coin price via Coinbase WebSocket
+    3. When coin price crosses the target price in either direction → trade in that direction (UP=YES, DOWN=NO)
+    4. Use trailing stop as configured (same for both YES and NO)
+    
+    The key insight is that when BTC/ETH/SOL price crosses the Kalshi target price,
+    the market tends to follow in that direction.
+    """
+    
+    def __init__(self):
+        # Per-ticker coin crossing state
+        self._crossings: Dict[str, Dict] = {}
+        self._coin_prices: Dict[str, float] = {}  # Current coin prices
+    
+    def get_coin_price(self, coin: str) -> Optional[float]:
+        """Fetch current coin price from Coinbase API."""
+        product_id = COINBASE_PRODUCTS.get(coin.upper())
+        if not product_id:
+            return None
+        
+        try:
+            url = f"{COINBASE_API}/products/{product_id}/ticker"
+            response = requests.get(url, timeout=5)
+            response.raise_for_status()
+            data = response.json()
+            price = float(data.get('price', 0))
+            self._coin_prices[coin] = price
+            return price
+        except Exception as e:
+            logger.debug(f"Coinbase price fetch failed for {coin}: {e}")
+            return self._coin_prices.get(coin)
+    
+    def get_floor_strike(self, ticker: str, api) -> Optional[float]:
+        """Fetch floor_strike (target price) for a market from Kalshi."""
+        result = api._get(f"/markets/{ticker}")
+        if "error" in result:
+            logger.warning(f"Failed to get floor_strike for {ticker}: {result['error']}")
+            return None
+        
+        market_data = result.get("market", {})
+        floor_strike = market_data.get("floor_strike")
+        if floor_strike is not None:
+            return float(floor_strike)
+        
+        # Fallback: parse from yes_sub_title
+        import re
+        yes_sub_title = market_data.get("yes_sub_title", "")
+        if "Target Price:" in yes_sub_title:
+            match = re.search(r'\$?([\d,]+\.?\d*)', yes_sub_title)
+            if match:
+                return float(match.group(1).replace(',', ''))
+        
+        return None
+    
+    def check_cross(self, ticker: str, coin: str, target_price: float, api) -> Optional[str]:
+        """
+        Check if coin price has crossed the target price.
+        Returns "up" if coin crossed above target, "down" if below, None if no cross yet.
+        """
+        if ticker not in self._crossings:
+            self._crossings[ticker] = {
+                'crossed': False,
+                'direction': None,
+                'cross_price': None,
+                'target_price': target_price,
+                'prev_coin_price': None,
+                'samples_above': [],
+                'samples_below': []
+            }
+            return None
+        
+        state = self._crossings[ticker]
+        if state['crossed']:
+            return None
+        
+        # Get current coin price
+        coin_price = self.get_coin_price(coin)
+        if coin_price is None:
+            return None
+        
+        prev_coin_price = state['prev_coin_price']
+        state['prev_coin_price'] = coin_price
+        
+        # Track samples above/below target
+        if coin_price > target_price:
+            state['samples_above'].append((time.time(), coin_price))
+        else:
+            state['samples_below'].append((time.time(), coin_price))
+        
+        # Detect first cross: check if we have samples on both sides
+        if len(state['samples_above']) > 0 and len(state['samples_below']) > 0:
+            first_above = min(ts for ts, _ in state['samples_above'])
+            first_below = min(ts for ts, _ in state['samples_below'])
+            
+            if first_below < first_above:
+                direction = "up"
+            else:
+                direction = "down"
+            
+            state['crossed'] = True
+            state['direction'] = direction
+            state['cross_price'] = coin_price
+            
+            logger.info(
+                f"FIRST_CROSS: {ticker} | "
+                f"Direction: {direction} | "
+                f"Target: ${target_price:,.2f} | "
+                f"Coin Price: ${coin_price:,.2f}"
+            )
+            return direction
+        
+        return None
+    
+    def get_direction(self, ticker: str) -> Optional[str]:
+        """Get the first coin cross direction for a ticker."""
+        return self._crossings.get(ticker, {}).get('direction')
+    
+    def has_crossed(self, ticker: str) -> bool:
+        """Check if ticker has crossed the target price."""
+        return self._crossings.get(ticker, {}).get('crossed', False)
+    
+    def reset(self, ticker: str):
+        """Reset crossing state for a ticker (e.g., when market expires)."""
+        if ticker in self._crossings:
+            del self._crossings[ticker]
 
 
 class FirstCrossTracker:
@@ -246,6 +381,9 @@ class TradeSignal:
     tp_pct: Optional[float] = None       # TP percentage (deprecated - use trailing stop)
     sl_pct: Optional[float] = None        # SL percentage (deprecated - use absolute)
     scale_in_size: float = 0.0           # Additional size for scaling in (50% of initial)
+    # First Cross specific
+    trailing_stop_pct: float = 0.25       # Trailing stop percentage
+    trailing_stop_trigger_pct: float = 0.30  # Profit % before trailing stop activates
 
 
 @dataclass 
@@ -365,10 +503,13 @@ class Position:
 class StrategyEngine:
     """Evaluates markets and generates trading signals."""
     
-    def __init__(self, cash_available: float):
+    def __init__(self, cash_available: float, api=None):
         self.cash = cash_available
+        self.api = api  # Optional KalshiAPI for First Cross floor_strike fetching
         self.tracker = StrategyTracker(KELLY_TRACKED_TRADES)
-        self.first_cross = FirstCrossTracker()  # Tony's first crossing insight
+        self.first_cross = FirstCrossTracker()  # YES price midpoint crossing (existing)
+        self.coin_first_cross = FirstCrossCoinTracker()  # Coin price vs target crossing (new)
+        self._floor_strikes: Dict[str, float] = {}  # Cache floor_strike per ticker
     
     def reset_cross_tracker(self, ticker: str):
         """Reset the first cross tracker for a ticker (when market expires/closes)."""
@@ -410,8 +551,20 @@ class StrategyEngine:
         
         return bet, kelly_pct
     
-    def evaluate_market(self, market: Market) -> Optional[TradeSignal]:
-        """Evaluate a market and return a trading signal if conditions are met."""
+    def evaluate_market(self, market: Market, coin: str = None) -> Optional[TradeSignal]:
+        """
+        Evaluate a market and return a trading signal if conditions are met.
+        
+        FIRST CROSS STRATEGY (from target_cross_tracker.py):
+        1. At market open: get floor_strike (target price) from Kalshi
+        2. Every 5s: track coin price via Coinbase
+        3. When coin price crosses the target price in either direction → trade in that direction
+        4. Use trailing stop as configured (same for both YES and NO)
+        
+        Entry logic:
+        - up cross (coin crosses ABOVE target) → buy YES
+        - down cross (coin crosses BELOW target) → buy NO
+        """
         
         # Use mid price for decision
         mid_price = (market.yes_bid + market.yes_ask) / 2
@@ -419,7 +572,56 @@ class StrategyEngine:
         
         logger.debug(f"Evaluating {market.ticker}: price=${mid_price:.4f}, time_left={time_left}s")
         
-        # FIRST CROSS TRACKING: Update crossing state
+        # === FIRST CROSS STRATEGY: Coin price vs target price ===
+        # First, ensure we have the floor_strike for this ticker
+        if market.ticker not in self._floor_strikes:
+            if self.api is not None:
+                floor_strike = self.coin_first_cross.get_floor_strike(market.ticker, self.api)
+                if floor_strike is not None:
+                    self._floor_strikes[market.ticker] = floor_strike
+                    logger.info(f"FIRST_CROSS: {market.ticker} target price set to ${floor_strike:,.2f}")
+        
+        # Check for coin price crossing the target
+        if market.ticker in self._floor_strikes and coin:
+            target_price = self._floor_strikes[market.ticker]
+            cross_direction = self.coin_first_cross.check_cross(market.ticker, coin, target_price, self.api)
+            
+            if cross_direction:
+                # Coin crossed the target! Generate signal in that direction
+                # up cross = buy YES, down cross = buy NO
+                if cross_direction == "up":
+                    side = "yes"
+                    reason_suffix = "coin crossed ABOVE target"
+                else:
+                    side = "no"
+                    reason_suffix = "coin crossed BELOW target"
+                
+                prob = mid_price
+                size, kelly_pct = self.calculate_kelly_size(Strategy.FIRST_CROSS, prob)
+                
+                logger.info(
+                    f"FIRST_CROSS SIGNAL: {market.ticker} | "
+                    f"Direction: {cross_direction} | "
+                    f"Target: ${target_price:,.2f} | "
+                    f"Side: {side} @ ${mid_price:.4f} | "
+                    f"Size: ${size:.2f}"
+                )
+                
+                return TradeSignal(
+                    strategy=Strategy.FIRST_CROSS,
+                    ticker=market.ticker,
+                    side=side,
+                    price=mid_price,
+                    size=size,
+                    reason=f"FIRST_CROSS: {reason_suffix}, target=${target_price:,.2f}, Kelly={kelly_pct:.2%}",
+                    take_profit=0.95 if side == "yes" else 0.05,
+                    stop_loss=0.22 if side == "yes" else 0.75,
+                    trailing_stop_pct=0.25,
+                    trailing_stop_trigger_pct=0.30
+                )
+        
+        # === FALLBACK: Old drift strategies if no coin cross yet ===
+        # FIRST CROSS TRACKING: Update crossing state for YES midpoint
         cross_event = self.first_cross.update(market.ticker, mid_price)
         
         # FIRST CROSS INSIGHT: If price is in dead zone and hasn't crossed, WAIT

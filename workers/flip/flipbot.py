@@ -632,13 +632,13 @@ class FlipBot:
                     
                     # Check if we should enter dormant mode
                     # If all positions are filled and no pending orders, check game timing
-                    pending_orders = len(self.strategy.working_orders)
-                    open_positions = len([p for p in self.strategy.positions.values() if p['status'] == 'open'])
+                    pending_orders = len(self.working_orders)
+                    open_positions = len([p for p in self.strategy.positions.values() if p.has_position()])
                     
                     if pending_orders == 0 and open_positions > 0 and not dormant_mode:
                         # All initial fills done, check when next game starts
                         from datetime import datetime, timezone
-                        next_game = self._get_next_game_start([m for mp in game_pairs for m in mp.markets])
+                        next_game = self._get_next_game_start([m for mp in game_pairs for m in [mp.team_a_market, mp.team_b_market] if m])
                         if next_game:
                             now = datetime.now(timezone.utc)
                             if next_game.tzinfo is None:
@@ -660,7 +660,7 @@ class FlipBot:
                     else:
                         # In dormant mode - check if we should wake up
                         from datetime import datetime, timezone
-                        next_game = self._get_next_game_start([m for mp in game_pairs for m in mp.markets])
+                        next_game = self._get_next_game_start([m for mp in game_pairs for m in [mp.team_a_market, mp.team_b_market] if m])
                         if next_game:
                             now = datetime.now(timezone.utc)
                             if next_game.tzinfo is None:

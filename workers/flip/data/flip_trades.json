@@ -2385,5 +2385,31 @@
     "reason": "MARKET FINALIZED NO \u2192 LOSS $-0.12",
     "order_type": "FINALIZED",
     "game_key": ""
+  },
+  {
+    "timestamp": "2026-04-04T22:20:34.678860",
+    "ticker": "KXNBAGAME-26APR04SASDEN-SAS",
+    "market": "",
+    "action": "CLOSE",
+    "side": "",
+    "price": 0.0,
+    "size": 2.0,
+    "pnl": -1.12,
+    "reason": "MARKET FINALIZED NO \u2192 LOSS $-1.12",
+    "order_type": "FINALIZED",
+    "game_key": ""
+  },
+  {
+    "timestamp": "2026-04-04T22:20:34.708036",
+    "ticker": "KXNBAGAME-26APR04SASDEN-DEN",
+    "market": "",
+    "action": "CLOSE",
+    "side": "",
+    "price": 0.85,
+    "size": 2.0,
+    "pnl": 0.8068799999999999,
+    "reason": "MARKET FINALIZED YES @ $0.85 sell \u2192 WIN $0.81 (gross $0.82, fee $0.013)",
+    "order_type": "FINALIZED",
+    "game_key": ""
   }
 ]

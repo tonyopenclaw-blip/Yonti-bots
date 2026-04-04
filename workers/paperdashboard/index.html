@@ -423,7 +423,9 @@
                             <th data-sort="side">Side</th>
                             <th data-sort="entry">Entry</th>
                             <th data-sort="exit">Exit</th>
-                            <th data-sort="pnl">P&L</th>
+                            <th data-sort="shares">Shares</th>
+                            <th data-sort="cost">Cost</th>
+                            <th data-sort="pnl">P&L $</th>
                             <th data-sort="time">Time</th>
                         </tr>
                     </thead>
@@ -958,6 +960,8 @@ function renderTradeTable() {
             case 'side': av=a.side; bv=b.side; break;
             case 'entry': av=a.entry; bv=b.entry; break;
             case 'exit': av=a.exit; bv=b.exit; break;
+            case 'shares': av=a.size; bv=b.size; break;
+            case 'cost': av=a.entry*a.size; bv=b.entry*b.size; break;
             case 'pnl': av=a.pnl; bv=b.pnl; break;
             case 'time': av=a.closeTime||a.openTime; bv=b.closeTime||b.openTime; break;
             default: av=a.closeTime||a.openTime; bv=b.closeTime||b.openTime;
@@ -967,7 +971,7 @@ function renderTradeTable() {
 
     const tbody = document.getElementById('tradeTbody');
     if (trades.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--dim);">No trades match filters</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;padding:24px;color:var(--dim);">No trades match filters</td></tr>';
         document.getElementById('tradeCount').textContent = '';
         return;
     }
@@ -987,6 +991,8 @@ function renderTradeTable() {
             <td><span class="t-side ${t.side}">${t.team || t.side.toUpperCase()}</span></td>
             <td><span class="t-price">$${t.entry.toFixed(4)}</span></td>
             <td><span class="t-price">${t.exit>0?'$'+t.exit.toFixed(4):'--'}</span></td>
+            <td><span class="t-price">${t.size.toFixed(4)}</span></td>
+            <td><span class="t-price">$${(t.entry * t.size).toFixed(2)}</span></td>
             <td><span class="t-pnl ${pnlCls}">${t.pnl>=0?'+':'--'}${Math.abs(t.pnl).toFixed(2)}</span></td>
             <td><span class="t-time">${time}</span></td>
         </tr>`;

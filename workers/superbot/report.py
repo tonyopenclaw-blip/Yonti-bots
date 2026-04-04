@@ -342,11 +342,15 @@ class ReportGenerator:
         last_10_open = []
         for p in self.stats.open_trades[-10:]:
             try:
+                entry_price = getattr(p, 'entry_price', 0.0)
+                size = getattr(p, 'size', 0.0)
                 last_10_open.append({
                     "ticker": getattr(p, 'ticker', 'UNKNOWN'),
                     "side": getattr(p, 'side', '?'),
-                    "entry_price": getattr(p, 'entry_price', 0.0),
-                    "size": getattr(p, 'size', 0.0),
+                    "entry_price": entry_price,
+                    "shares": size,
+                    "cost": entry_price * size,
+                    "pnl": 0.0,
                     "strategy": getattr(p, 'strategy', '?'),
                     "open_time": self._format_timestamp(getattr(p, 'open_time', None)),
                     "current_price": getattr(p, 'current_price', 0.0)
@@ -359,13 +363,17 @@ class ReportGenerator:
         last_10_closed = []
         for t in self.stats.last_10_closed[-10:]:
             try:
+                entry_price = t.get('entry_price', 0.0)
+                size = t.get('size', 0.0)
+                pnl = t.get('pnl', 0.0)
                 last_10_closed.append({
                     "ticker": t.get('ticker', 'UNKNOWN'),
                     "side": t.get('side', '?'),
-                    "entry_price": t.get('entry_price', 0.0),
+                    "entry_price": entry_price,
                     "exit_price": t.get('exit_price', 0.0),
-                    "size": t.get('size', 0.0),
-                    "pnl": t.get('pnl', 0.0),
+                    "shares": size,
+                    "cost": entry_price * size,
+                    "pnl": pnl,
                     "strategy": t.get('strategy', '?'),
                     "open_time": self._format_timestamp(t.get('open_time', None)),
                     "close_time": t.get('close_time', ''),
@@ -394,7 +402,8 @@ class ReportGenerator:
                     "side": getattr(t, 'side', '?'),
                     "entry_price": getattr(t, 'entry_price', 0.0),
                     "exit_price": getattr(t, 'exit_price', 0.0),
-                    "size": getattr(t, 'size', 0.0),
+                    "shares": getattr(t, 'size', 0.0),
+                    "cost": getattr(t, 'entry_price', 0.0) * getattr(t, 'size', 0.0),
                     "pnl": getattr(t, 'pnl', 0.0),
                     "strategy": getattr(t, 'strategy', '?'),
                     "open_time": self._format_timestamp(getattr(t, 'open_time', None)),

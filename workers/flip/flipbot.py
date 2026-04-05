@@ -188,16 +188,19 @@ class FlipBot:
                    (f" | {reason}" if reason else ""))
     
     def _scan_markets(self) -> List[GamePair]:
-        """Scan all NBA game markets."""
-        markets = self.api.get_markets("KXNBAGAME", limit=100)
+        """Scan all configured game markets."""
+        all_game_pairs = []
+        for sport_key, series_ticker in SPORTS_SERIES.items():
+            markets = self.api.get_markets(series_ticker, limit=100)
+            
+            # Filter for tradeable markets
+            live_markets = [m for m in markets if m.is_tradeable()]
+            
+            # Pair markets by game
+            game_pairs = self.strategy.pair_markets_by_game(live_markets)
+            all_game_pairs.extend(game_pairs)
         
-        # Filter for tradeable markets
-        live_markets = [m for m in markets if m.is_tradeable()]
-        
-        # Pair markets by game
-        game_pairs = self.strategy.pair_markets_by_game(live_markets)
-        
-        return game_pairs
+        return all_game_pairs
     
     def _detect_and_execute_new_markets(self) -> int:
         """
@@ -211,7 +214,10 @@ class FlipBot:
         
         Returns the number of new market trades executed.
         """
-        markets = self.api.get_markets("KXNBAGAME", limit=100)
+        markets = []
+        for sport_key, series_ticker in SPORTS_SERIES.items():
+            sport_markets = self.api.get_markets(series_ticker, limit=100)
+            markets.extend(sport_markets)
         
         new_market_signals = []
         

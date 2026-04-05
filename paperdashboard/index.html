@@ -212,6 +212,8 @@
         .bc-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 0.76rem; }
         .bc-label { color: var(--dim); }
         .bc-val { font-family: 'JetBrains Mono', monospace; font-weight: 500; }
+        .bc-params { margin-top: 4px; padding-top: 4px; border-top: 1px solid var(--border); }
+        .bc-params .bc-val { color: var(--cyan); font-size: 0.72rem; }
         .bc-val.pos { color: var(--green); }
         .bc-val.neg { color: var(--red); }
 
@@ -479,6 +481,8 @@
                     <div class="bc-row"><span class="bc-label">P&L</span><span class="bc-val" id="sb-pnl">$0.00</span></div>
                     <div class="bc-row"><span class="bc-label">Win Rate</span><span class="bc-val" id="sb-wr">--%</span></div>
                     <div class="bc-row"><span class="bc-label">Trades</span><span class="bc-val" id="sb-trades">0</span></div>
+                    <div class="bc-row bc-params"><span class="bc-label">Stop</span><span class="bc-val">80%→20%</span></div>
+                    <div class="bc-row bc-params"><span class="bc-label">Trail</span><span class="bc-val">30% trig / 40% buf</span></div>
                 </div>
             </div>
 
@@ -488,7 +492,7 @@
                     <div class="bot-card-icon" style="background:rgba(236,72,153,0.15);">🏀</div>
                     <div>
                         <div class="bot-card-name">Flip Bot</div>
-                        <div class="bot-card-sub">NBA game winners</div>
+                        <div class="bot-card-sub">NBA + NCAAB</div>
                     </div>
                 </div>
                 <div class="bot-card-body">

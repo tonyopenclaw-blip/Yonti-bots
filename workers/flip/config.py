@@ -24,6 +24,7 @@ MARKETS_LIMIT = 100
 # Format: KXNBAGAME-26APR01INDCHI-IND and KXNBAGAME-26APR01INDCHI-CHI
 SPORTS_SERIES = {
     'NBA_GAME': 'KXNBAGAME',      # NBA game winners
+    'NCAAB_GAME': 'KXNCBAGAME',   # NCAAB game winners
     # Add more as needed:
     # 'NHL_GAME': 'KXNHIGAME',
     # 'MLB_GAME': 'KXMLBGAME',

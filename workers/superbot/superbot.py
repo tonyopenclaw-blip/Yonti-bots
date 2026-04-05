@@ -295,7 +295,7 @@ class CoinTrader:
         # Use avg_price for PnL calculation (accounts for scale-ins)
         calc_price = position.avg_price if position.avg_price > 0 else position.entry_price
         
-        # Tony's P&L formula: (exit - entry) × shares (no fee multiplier)
+        # Tony's P&L formula: (exit - entry) × contracts (no fee multiplier)
         pnl = (exit_price - calc_price) * position.size
         
         if pnl >= 0:
@@ -351,18 +351,18 @@ class CoinTrader:
         if len(self.positions) >= 1:  # One position per coin at a time
             return False, 0.0
         
-        # Check if we have enough cash
-        if signal.size > available_cash:
-            logger.warning(f"[{self.coin}] Insufficient cash: ${available_cash:.2f} < ${signal.size:.2f}")
-            return False, 0.0
-        
-        # Calculate cost
+        # Calculate cost (signal.size is now contracts, not dollars)
         if signal.side == "yes":
             cost = signal.price * signal.size
         else:
             cost = (1 - signal.price) * signal.size
         
-        logger.info(f"[{self.coin}] Opened {signal.strategy.value}: {signal.side} {ticker} @ ${signal.price:.4f}, size=${signal.size:.2f}, cost=${cost:.2f}")
+        # Check if we have enough cash (cost is in dollars)
+        if cost > available_cash:
+            logger.warning(f"[{self.coin}] Insufficient cash: ${available_cash:.2f} < ${cost:.2f} (contracts={int(signal.size):d}, price={signal.price:.4f})")
+            return False, 0.0
+        
+        logger.info(f"[{self.coin}] Opened {signal.strategy.value}: {signal.side} {ticker} @ ${signal.price:.4f}, contracts={int(signal.size):d}, cost=${cost:.2f}")
         
         # Get first cross direction for this ticker from strategy engine
         first_cross_dir = self.strategy_engine.first_cross.get_direction(ticker) or ""
@@ -428,8 +428,7 @@ class CoinTrader:
             
             signal = self.strategy_engine.evaluate_market(market, self.coin)
             if signal:
-                # Ensure max bet per coin is respected
-                signal.size = min(signal.size, MAX_BET)
+                # signal.size is already in contracts (capped at MAX_BET/entry_price in calculate_kelly_size)
                 signals.append(signal)
         
         return signals, total_cost
@@ -664,18 +663,21 @@ class Superbot:
             signal = trader.strategy_engine.evaluate_market(market, coin)
             if signal:
                 # Ensure max bet per coin is respected (AND apply sizing reduction if triggered)
-                max_size = MAX_BET
+                # signal.size is contracts; max_size is dollars → convert to contracts first
+                max_dollar = MAX_BET
                 if self.sizing_reduced:
-                    max_size = max_size * 0.5  # 50% reduction
-                    logger.debug(f"[{coin}] Sizing reduced: max bet ${max_size:.2f}")
-                signal.size = min(signal.size, max_size)
+                    max_dollar = max_dollar * 0.5  # 50% reduction
+                    logger.debug(f"[{coin}] Sizing reduced: max ${max_dollar:.2f}")
+                if signal.price > 0:
+                    max_contracts = max_dollar / signal.price
+                    signal.size = min(signal.size, max_contracts)
                 
                 # Try to open position
                 success, cost = trader._open_position(signal, per_coin_cash)
                 if success:
                     self.cash -= cost
                     self.daily_trades += 1
-                    logger.info(f"🚀 [{coin}] TRADE EXECUTED: {signal.strategy.value} {signal.side} {signal.ticker} @ ${signal.price:.4f}, size=${signal.size:.2f} (daily trades: {self.daily_trades}/{MAX_DAILY_TRADES})")
+                    logger.info(f"🚀 [{coin}] TRADE EXECUTED: {signal.strategy.value} {signal.side} {signal.ticker} @ ${signal.price:.4f}, contracts={int(signal.size):d} (daily trades: {self.daily_trades}/{MAX_DAILY_TRADES})")
                     return True
         
         return True

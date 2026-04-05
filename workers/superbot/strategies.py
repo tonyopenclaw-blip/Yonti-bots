@@ -395,7 +395,7 @@ class TradeSignal:
     ticker: str
     side: str  # 'yes' or 'no'
     price: float  # Entry price
-    size: float  # Bet size in dollars
+    size: float  # Number of contracts to buy (Tony's Fix: was dollars, now contracts)
     reason: str  # Human readable reason
     take_profit: Optional[float] = None  # For DRIFT strategies
     stop_loss: Optional[float] = None    # For DRIFT strategies
@@ -621,13 +621,13 @@ class StrategyEngine:
         kelly_pct = self.tracker.get_kelly_pct(strategy)
         logger.info(f"Strategy {strategy.value} stats: W={W:.2%}, R={R:.2f}x, Kelly={kelly_pct:.2%}")
     
-    def calculate_kelly_size(self, strategy: Strategy, prob: float, confidence: int = 50) -> Tuple[float, float, int]:
+    def calculate_kelly_size(self, strategy: Strategy, prob: float, confidence: int = 50, entry_price: float = 0.50) -> Tuple[float, float, int]:
         """
         Calculate Kelly Criterion bet size using historical strategy performance,
         then adjust based on CONFIDENCE MULTIPLIER (Nerd v2).
         
-        Returns (bet_size, kelly_pct, confidence) tuple.
-        - bet_size: dollar amount to bet (clamped to MIN_BET/MAX_BET)
+        Returns (contracts, kelly_pct, confidence) tuple.
+        - contracts: number of contracts to buy (whole, capped)
         - kelly_pct: the Kelly % used (for logging)
         - confidence: the confidence score (0-100)
         
@@ -638,13 +638,18 @@ class StrategyEngine:
         - CONF <40: Skip (weak signal, don't trade)
         
         Hard caps: MAX_BET = $2, MIN_BET = $0.10
+        
+        Tony's Fix: Kelly outputs fraction of bankroll to risk (e.g., 0.05 = 5%).
+        We convert to contracts: dollar_amount / entry_price, rounded DOWN.
         """
+        import math
+        
         # Skip if confidence too low
         if confidence < 40:
             return 0.0, 0.0, confidence
         
         if prob <= 0 or prob >= 1:
-            return MIN_BET, 0.0, confidence
+            return 0.0, 0.0, confidence
         
         # Get Kelly % from historical performance
         kelly_pct = self.tracker.get_kelly_pct(strategy)
@@ -667,13 +672,32 @@ class StrategyEngine:
         # Cap at KELLY_MAX_CAP (never more than 20% of balance on one trade)
         effective_pct = min(effective_pct, KELLY_MAX_CAP)
         
-        # Convert to dollar amount
-        bet = self.cash * effective_pct
+        # Convert to dollar amount to risk
+        dollar_amount = self.cash * effective_pct
         
-        # Clamp to hard limits ($0.10 min, $2 max per Nerd v2)
-        bet = max(MIN_BET, min(MAX_BET, bet))
+        # Clamp dollar amount to hard limits
+        dollar_amount = max(MIN_BET, min(MAX_BET, dollar_amount))
         
-        return bet, effective_pct, confidence
+        # Convert dollar amount to contracts (Tony's Fix)
+        # contracts = dollar_amount / entry_price
+        if entry_price > 0:
+            contracts = dollar_amount / entry_price
+        else:
+            contracts = 0.0
+        
+        # Round DOWN to whole contracts (Tony: "only whole shares")
+        contracts = math.floor(contracts)
+        
+        # Cap at max_bet / entry_price
+        if entry_price > 0:
+            max_contracts = MAX_BET / entry_price
+            contracts = min(contracts, max_contracts)
+        
+        # Minimum 0 contracts (skip if too small)
+        if contracts <= 0:
+            return 0.0, effective_pct, confidence
+        
+        return float(contracts), effective_pct, confidence
     
     def calculate_confidence(
         self,
@@ -866,12 +890,12 @@ class StrategyEngine:
             
             if bias is not None:
                 confidence = 60  # Momentum signal gets decent confidence
-                size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.MOMENTUM, mid_price, confidence)
+                size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.MOMENTUM, mid_price, confidence, mid_price)
                 
                 if confidence >= 40:
                     logger.info(
                         f"MOMENTUM SIGNAL: {market.ticker} | "
-                        f"Side: {side} @ ${mid_price:.4f} | Size: ${size:.2f} | "
+                        f"Side: {side} @ ${mid_price:.4f} | contracts={int(size):d} | "
                         f"CONF={confidence} | TS=20%/20% | Coinbase={bias}"
                     )
                     
@@ -905,12 +929,12 @@ class StrategyEngine:
             
             if bias is not None:
                 confidence = 50  # Lower confidence for forced entries
-                size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.MOMENTUM_FORCE, mid_price, confidence)
+                size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.MOMENTUM_FORCE, mid_price, confidence, mid_price)
                 
                 if confidence >= 40:
                     logger.info(
                         f"MOMENTUM_FORCE SIGNAL: {market.ticker} | "
-                        f"Side: {side} @ ${mid_price:.4f} | Size: ${size:.2f} | "
+                        f"Side: {side} @ ${mid_price:.4f} | contracts={int(size):d} | "
                         f"CONF={confidence} | TS=30%/30% | Coinbase={bias} | age={market_age_sec:.0f}s"
                     )
                     
@@ -953,13 +977,13 @@ class StrategyEngine:
                 
                 confidence = self.calculate_confidence(Strategy.FIRST_CROSS, market, coin, mid_price, time_left)
                 prob = mid_price
-                size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.FIRST_CROSS, prob, confidence)
+                size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.FIRST_CROSS, prob, confidence, prob)
                 
                 if confidence >= 40:
                     logger.info(
                         f"FIRST_CROSS SIGNAL (coin): {market.ticker} | "
                         f"Direction: {cross_direction} | Target: ${target_price:,.2f} | "
-                        f"Side: {side} @ ${mid_price:.4f} | Size: ${size:.2f} | CONF={confidence}"
+                        f"Side: {side} @ ${mid_price:.4f} | contracts={int(size):d} | CONF={confidence}"
                     )
                     
                     return TradeSignal(
@@ -991,7 +1015,7 @@ class StrategyEngine:
                 
                 confidence = self.calculate_confidence(Strategy.FIRST_CROSS, market, coin, mid_price, time_left)
                 prob = mid_price
-                size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.FIRST_CROSS, prob, confidence)
+                size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.FIRST_CROSS, prob, confidence, prob)
                 
                 if confidence >= 40:
                     max_hold = 10  # Standard hold time
@@ -999,7 +1023,7 @@ class StrategyEngine:
                     logger.info(
                         f"FIRST_CROSS SIGNAL (midpoint): {market.ticker} | "
                         f"Direction: {preferred_side} | Side: {side} @ ${mid_price:.4f} | "
-                        f"Size: ${size:.2f} | CONF={confidence} | TS=20%/20% | max_hold={max_hold}min"
+                        f"contracts={int(size):d} | CONF={confidence} | TS=20%/20% | max_hold={max_hold}min"
                     )
                     
                     return TradeSignal(
@@ -1102,9 +1126,9 @@ Your estimate:"""
         
         # Calculate confidence
         confidence = self.calculate_confidence(Strategy.DEEP_SHORT, market, coin, mid_price, time_left)
-        size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.DEEP_SHORT, prob, confidence)
+        size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.DEEP_SHORT, prob, confidence, mid_price)
         
-        logger.info(f"DEEP SHORT signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, CONF={confidence}, time_left={time_left}s")
+        logger.info(f"DEEP SHORT signal: {market.ticker} @ ${mid_price:.4f}, contracts={int(size):d}, Kelly={kelly_pct:.2%}, CONF={confidence}, time_left={time_left}s")
         
         return TradeSignal(
             strategy=Strategy.DEEP_SHORT,
@@ -1148,9 +1172,9 @@ Your estimate:"""
         
         # Calculate confidence
         confidence = self.calculate_confidence(Strategy.DEEP_BUY, market, None, mid_price, time_left)
-        size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.DEEP_BUY, prob, confidence)
+        size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.DEEP_BUY, prob, confidence, mid_price)
         
-        logger.info(f"DEEP BUY signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, CONF={confidence}, time_left={time_left}s")
+        logger.info(f"DEEP BUY signal: {market.ticker} @ ${mid_price:.4f}, contracts={int(size):d}, Kelly={kelly_pct:.2%}, CONF={confidence}, time_left={time_left}s")
         
         return TradeSignal(
             strategy=Strategy.DEEP_BUY,
@@ -1208,13 +1232,13 @@ Your estimate:"""
         
         # Calculate confidence score
         confidence = self.calculate_confidence(Strategy.DRIFT_BUY, market, coin, mid_price, time_left)
-        size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.DRIFT_BUY, prob, confidence)
+        size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.DRIFT_BUY, prob, confidence, mid_price)
         
         # Calculate SL only (NO tight TP anymore)
         # Let winners run to $0.95 or trailing stop
         sl_price = DRIFT_BUY_STOP_LOSS  # $0.22 absolute
         
-        # Scale-in size: 50% of original bet
+        # Scale-in size: 50% of original contracts
         scale_in_size = size * 0.5
         
         # Confidence-based trailing stop buffer (wider for high confidence - Tony: let winners run!)
@@ -1237,7 +1261,7 @@ Your estimate:"""
         # Max hold time based on confidence
         max_hold = 15 if confidence >= 61 else 10 if confidence >= 31 else 8
         
-        logger.info(f"DRIFT BUY signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, CONF={confidence}, SL=${sl_price:.4f}, TS={ts_buffer:.0%}buffer/{ts_trigger:.0%}trigger, Coinbase={bias}, first_cross={preferred_side or 'none'}")
+        logger.info(f"DRIFT BUY signal: {market.ticker} @ ${mid_price:.4f}, contracts={int(size):d}, Kelly={kelly_pct:.2%}, CONF={confidence}, SL=${sl_price:.4f}, TS={ts_buffer:.0%}buffer/{ts_trigger:.0%}trigger, Coinbase={bias}, first_cross={preferred_side or 'none'}")
         
         return TradeSignal(
             strategy=Strategy.DRIFT_BUY,
@@ -1245,7 +1269,7 @@ Your estimate:"""
             side="yes", 
             price=mid_price,
             size=size,
-            reason=f"DRIFT BUY: YES at ${mid_price:.4f} (mean reversion), CONF={confidence}, NO FIXED TP - trailing stop only, SL ${sl_price:.2f}, TS={ts_buffer:.0%}buf/{ts_trigger:.0%}trig, scale_in=${scale_in_size:.2f}, Coinbase={bias}, first_cross={preferred_side}",
+            reason=f"DRIFT BUY: YES at ${mid_price:.4f} (mean reversion), CONF={confidence}, NO FIXED TP - trailing stop only, SL ${sl_price:.2f}, TS={ts_buffer:.0%}buf/{ts_trigger:.0%}trig, scale_in={int(scale_in_size):d}ct, Coinbase={bias}, first_cross={preferred_side}",
             take_profit=0.95,  # Loose TP - only exit if REALLY close to max
             stop_loss=sl_price,
             tp_pct=None,  # No percentage-based TP
@@ -1298,12 +1322,12 @@ Your estimate:"""
         
         # Calculate confidence score
         confidence = self.calculate_confidence(Strategy.DRIFT_SHORT, market, coin, mid_price, time_left)
-        size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.DRIFT_SHORT, prob, confidence)
+        size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.DRIFT_SHORT, prob, confidence, mid_price)
         
         # SL only - no tight TP
         sl_price = DRIFT_SHORT_STOP_LOSS  # $0.75 absolute
         
-        # Scale-in size: 50% of original bet
+        # Scale-in size: 50% of original contracts
         scale_in_size = size * 0.5
         
         # Confidence-based trailing stop buffer (wider for high confidence - Tony: let winners run!)
@@ -1326,7 +1350,7 @@ Your estimate:"""
         # Max hold time based on confidence
         max_hold = 15 if confidence >= 61 else 10 if confidence >= 31 else 8
         
-        logger.info(f"DRIFT SHORT signal: {market.ticker} @ ${mid_price:.4f}, size=${size:.2f}, Kelly={kelly_pct:.2%}, CONF={confidence}, SL=${sl_price:.4f}, TS={ts_buffer:.0%}buffer/{ts_trigger:.0%}trigger, first_cross={preferred_side or 'none'}")
+        logger.info(f"DRIFT SHORT signal: {market.ticker} @ ${mid_price:.4f}, contracts={int(size):d}, Kelly={kelly_pct:.2%}, CONF={confidence}, SL=${sl_price:.4f}, TS={ts_buffer:.0%}buffer/{ts_trigger:.0%}trigger, first_cross={preferred_side or 'none'}")
         
         return TradeSignal(
             strategy=Strategy.DRIFT_SHORT,
@@ -1334,7 +1358,7 @@ Your estimate:"""
             side="no",  # We SELL YES (buy NO)
             price=mid_price,
             size=size,
-            reason=f"DRIFT SHORT: Selling YES at ${mid_price:.4f} (overpriced), CONF={confidence}, NO FIXED TP - trailing stop only, SL ${sl_price:.4f}, TS={ts_buffer:.0%}buf/{ts_trigger:.0%}trig, scale_in=${scale_in_size:.2f}",
+            reason=f"DRIFT SHORT: Selling YES at ${mid_price:.4f} (overpriced), CONF={confidence}, NO FIXED TP - trailing stop only, SL ${sl_price:.4f}, TS={ts_buffer:.0%}buf/{ts_trigger:.0%}trig, scale_in={int(scale_in_size):d}ct",
             take_profit=0.05,  # Loose TP - only exit if REALLY close to max ($0.05 = near zero)
             stop_loss=sl_price,
             tp_pct=None,

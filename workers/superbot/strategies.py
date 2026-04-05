@@ -12,7 +12,7 @@ from collections import deque
 from enum import Enum
 
 from config import (
-    MAX_BET, MIN_BET, KELLY_FRACTION,
+    MAX_BET, MIN_BET,
     DEEP_SHORT_ENABLED, DEEP_SHORT_MAX_PRICE, DEEP_MIN_TIME_LEFT_SEC,
     DEEP_BUY_ENABLED, DEEP_BUY_MAX_PRICE, DEEP_BUY_MIN_PRICE, DEEP_BUY_TP_PRICE,
     DRIFT_BUY_MIN_PRICE, DRIFT_BUY_MAX_PRICE, DRIFT_MIN_TIME_LEFT_SEC,
@@ -23,7 +23,8 @@ from config import (
     DRIFT_BUY_STOP_LOSS, DRIFT_SHORT_STOP_LOSS,  # Absolute stop loss prices
     AI_EDGE_THRESHOLD,  # Minimum edge required (5%)
     AI_PROBABILITY_ENABLED,  # Enable AI probability estimation
-    COINBASE_API, COINBASE_PRODUCTS  # For First Cross coin price tracking
+    COINBASE_API, COINBASE_PRODUCTS,  # For First Cross coin price tracking
+    FIXED_KELLY_PCT,
 )
 
 # === TONY'S ENTRY PRICE FILTER: Only enter when share price is $0.20-$0.80 ===
@@ -372,8 +373,8 @@ class StrategyTracker:
         """
         W, R = self.get_stats(strategy)
         
-        # If no history, use FIXED_KELLY_PCT as baseline (4% of bankroll per Tony's config)
-        if len(history) == 0:
+        # If no history (W=0 and R=0), use FIXED_KELLY_PCT as baseline (4% of bankroll per Tony's config)
+        if W == 0 and R == 0:
             return FIXED_KELLY_PCT
         
         if R <= 0:
@@ -385,9 +386,10 @@ class StrategyTracker:
         # Cap at maximum (never bet more than 50% of balance)
         kelly_pct = min(kelly_pct, KELLY_MAX_CAP)
         
-        # Don't bet if Kelly is negative or zero
+        # If Kelly is negative or zero (e.g. W=0.5, R=1.0 → edge case no edge),
+        # fall back to FIXED_KELLY_PCT instead of betting nothing
         if kelly_pct <= 0:
-            return 0.0
+            kelly_pct = FIXED_KELLY_PCT
         
         return kelly_pct
 
@@ -657,9 +659,6 @@ class StrategyEngine:
         
         # Get Kelly % from historical performance
         kelly_pct = self.tracker.get_kelly_pct(strategy)
-        
-        # Apply Kelly fraction for additional safety
-        kelly_pct = kelly_pct * KELLY_FRACTION
         
         # Apply confidence multiplier (Nerd v2)
         if confidence >= 80:

@@ -1,5 +1,5 @@
 {
-  "start_time": "2026-04-05 00:55:27 UTC",
+  "start_time": "2026-04-05 01:57:35 UTC",
   "end_time": "",
   "starting_balance": 100.0,
   "ending_balance": 100.0,
@@ -10,9 +10,21 @@
   "win_rate": 0,
   "largest_win": 0.0,
   "largest_loss": 0.0,
-  "open_positions": 0,
-  "thermostat": 0,
+  "open_positions": 1,
+  "thermostat": 12,
   "trades": [],
-  "last_10_open_trades": [],
+  "last_10_open_trades": [
+    {
+      "ticker": "KXBTC15M-26APR042200-00",
+      "side": "no",
+      "entry_price": 0.315,
+      "shares": 0.0,
+      "cost": 0.0,
+      "pnl": 0.0,
+      "strategy": "momentum_force",
+      "open_time": "2026-04-05 01:58:36 UTC",
+      "current_price": 0.9195
+    }
+  ],
   "last_10_closed_trades": []
 }

@@ -56,13 +56,10 @@ MIN_BET = 0.10   # Minimum bet (Nerd v2)
 # Full Kelly = (2 * 0.378 - 0.622) / 2 = -0.243 (negative = don't trade)
 # We override this by using a conservative FIXED fraction of bankroll
 # rather than dynamic Kelly, since dynamic Kelly would say "bet 0%"
-KELLY_FRACTION = 0.25  # Safety dampener (25% of whatever Kelly says)
-FIXED_KELLY_PCT = 0.04  # 4% of bankroll per trade — FIXED, not Kelly-derived
-# This gives: $15.45 * 4% = $0.62 per trade (vs the previous $2 = 13% of bankroll)
 
-# Kelly sizing now uses MIN_BET and MAX_BET directly (Nerd v2 - removed override)
 KELLY_TRACKED_TRADES = 50
 KELLY_MAX_CAP = 0.20   # Never bet more than 20% of balance
+FIXED_KELLY_PCT = 0.04  # 4% of bankroll per trade — fallback when Kelly <= 0
 
 # =============================================================================
 # STRATEGY THRESHOLDS — MAJOR FIXES

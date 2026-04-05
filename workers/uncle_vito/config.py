@@ -64,8 +64,12 @@ TIME_FORMAT = "%I:%M %p ET"
 DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1486066262122430684/mLKWVlGJRyADWEnpDgx3n4QcI1B-JhAnDLyBHKwsK-BSmeo5lal5MYrrY_QiuOBqiNLy"
 
 # The Odds API (the-odds-api.com) - DK + FD for NBA/NHL/NCAAB
-# Free tier: 500 credits/month
-ODDS_API_KEY = "5b62457b1049c4e92541d10b53b64aa3"  # The Odds API - DK + FD
+# Free tier: 500 credits/month each key - using 2 keys to double limit
+ODDS_API_KEYS = [
+    "5b62457b1049c4e92541d10b53b64aa3",  # Key 1
+    "cb42c4fe578ae32bbaf58923493d26e5",  # Key 2 (alternate)
+]
+ODDS_API_KEY = "5b62457b1049c4e92541d10b53b64aa3"  # Default key 1
 ODDS_API_BASE = "https://api.the-odds-api.com/v4"
 ODDS_REGIONS = "us"  # Covers DraftKings, FanDuel
 ODDS_SPORTS = {

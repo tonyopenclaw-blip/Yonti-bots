@@ -1049,16 +1049,48 @@ class UncleVitoReport:
     def generate_winners_parlay(self, sport: str, num_legs: int = 3) -> List[WinnerPick]:
         """
         Generate a game winners parlay for a specific sport (spread/total/ML mix).
-        Uses source signals to pick winners.
+        Uses real game odds from The Odds API where available.
         """
         picks = []
         teams_used = set()
 
         all_games = [(g, sport) for g in self.games.get(sport, []) if g.status == "scheduled"]
 
+        # Fetch real game odds from API (h2h, spreads, totals)
+        game_odds = self._fetch_game_odds_api(sport)
+        
+        # Build a lookup: (home_abbrev, away_abbrev) -> odds data
+        # Also index by full name parts for fuzzy matching
+        odds_lookup = {}
+        odds_by_name = []  # list of (odds_game, home_abbr, away_abbr)
+        for odds_game in game_odds:
+            home_full = odds_game.get("home_team", "")
+            away_full = odds_game.get("away_team", "")
+            # Try to find matching ESPN game
+            for g, _ in all_games:
+                home_match = (
+                    g.home_team.abbreviation.lower() in home_full.lower() or
+                    home_full.lower() in g.home_team.name.lower() or
+                    g.home_team.name.lower() in home_full.lower()
+                )
+                away_match = (
+                    g.away_team.abbreviation.lower() in away_full.lower() or
+                    away_full.lower() in g.away_team.name.lower() or
+                    g.away_team.name.lower() in away_full.lower()
+                )
+                if home_match and away_match:
+                    key = (g.home_team.abbreviation, g.away_team.abbreviation)
+                    odds_lookup[key] = odds_game
+                    break
+            # Also store for total picks
+            odds_by_name.append((odds_game, home_full, away_full))
+
         # For the mix: 1 spread + 1 total + 1 ML when possible
         pick_types_needed = ["spread", "total", "moneyline"]
         pick_types_used = []
+        
+        # Track which games we've used for totals (to avoid duplicates)
+        total_games_used = set()
 
         for game, sport in all_games:
             if len(picks) >= num_legs:
@@ -1088,20 +1120,60 @@ class UncleVitoReport:
 
             teams_used.add(pick_team.abbreviation)
 
-            # Determine pick type - mix spread, total, and moneyline
-            spread_available = sport in ["NBA", "NHL", "MLB"]
-            total_available = sport in ["NBA", "NHL", "MLB"]
-
             # Cycle through pick types
             pick_type = pick_types_needed[len(pick_types_used) % len(pick_types_needed)]
 
+            # Get real odds from API if available
+            game_key = (game.home_team.abbreviation, game.away_team.abbreviation)
+            g_odds = odds_lookup.get(game_key, {})
+            bookmakers = g_odds.get("bookmakers", []) if g_odds else []
+            
+            # Try to get real line from any bookmaker
+            def get_real_line(market_key: str) -> tuple:
+                for bm in bookmakers:
+                    for mkt in bm.get("markets", []):
+                        if mkt.get("key") == market_key:
+                            outcomes = mkt.get("outcomes", [])
+                            if outcomes:
+                                for o in outcomes:
+                                    if o.get("name") == "Over" and o.get("point"):
+                                        return o.get("point", 0), o.get("price", -110)
+                                return outcomes[0].get("point", 0), outcomes[0].get("price", -110)
+                return None, None
+
+            # For totals: find any game with a total line (even if not matched to this specific game)
+            def get_any_total() -> tuple:
+                # First try exact game match
+                line, odds = get_real_line("totals")
+                if line is not None:
+                    return line, odds
+                # Fall back: find any unmatched game with totals
+                for odds_game, home_full, away_full in odds_by_name:
+                    key = tuple([home_full, away_full])
+                    if key not in total_games_used:
+                        for bm in odds_game.get("bookmakers", []):
+                            for mkt in bm.get("markets", []):
+                                if mkt.get("key") == "totals":
+                                    outcomes = mkt.get("outcomes", [])
+                                    if outcomes:
+                                        for o in outcomes:
+                                            if o.get("name") == "Over" and o.get("point"):
+                                                total_games_used.add(key)
+                                                return o.get("point", 0), o.get("price", -110)
+                                        return outcomes[0].get("point", 0), outcomes[0].get("price", -110)
+                return None, None
+
             # Generate line and odds
             if pick_type == "spread":
-                line = self._generate_spread(sport)
-                odds = config.DEFAULT_PROP_ODDS
+                line, odds = get_real_line("spreads")
+                if line is None:
+                    line = self._generate_spread(sport)
+                    odds = config.DEFAULT_PROP_ODDS
             elif pick_type == "total":
-                line = self._generate_total(sport)
-                odds = config.DEFAULT_PROP_ODDS
+                line, odds = get_any_total()
+                if line is None:
+                    line = self._generate_total(sport)
+                    odds = config.DEFAULT_PROP_ODDS
             else:  # moneyline
                 line = 0
                 favorite = home_favored
@@ -1520,13 +1592,19 @@ class UncleVitoReport:
                 for i, pick in enumerate(game_picks, 1):
                     if pick.pick_type == "spread":
                         line_str = f"({pick.line})"
+                        report.append(
+                            f"  {i}. {pick.team} vs {pick.opponent} - **{pick.team}** {line_str}"
+                        )
                     elif pick.pick_type == "total":
                         line_str = f"O/U {pick.line}"
+                        report.append(
+                            f"  {i}. {pick.team} vs {pick.opponent} - {line_str}"
+                        )
                     else:
                         line_str = "ML"
-                    report.append(
-                        f"  {i}. {pick.team} vs {pick.opponent} - **{pick.team}** {line_str}"
-                    )
+                        report.append(
+                            f"  {i}. {pick.team} vs {pick.opponent} - **{pick.team}** {line_str}"
+                        )
                 winners_payout = self.calculate_parlay_payout(game_picks)
                 avg_conf = sum(p.confidence for p in game_picks) // max(len(game_picks), 1)
                 report.append(f"  📈 Odds: **+{winners_payout['payout']}** | 🎯 {avg_conf}%")

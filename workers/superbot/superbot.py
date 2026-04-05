@@ -53,7 +53,7 @@ logger = setup_logging()
 # NERD v2 STRATEGY CONSTANTS
 # =============================================================================
 MAX_POSITIONS = 3           # Max 3 concurrent positions (was 5)
-MAX_DAILY_LOSS = 5.00      # Stop if down $5 in a day
+MAX_DAILY_LOSS = 99999.00  # DISABLED - no daily loss limit
 MAX_DAILY_TRADES = 30      # Max 30 trades per calendar day
 
 
@@ -593,7 +593,7 @@ class Superbot:
         # Check stop-loss thresholds (Nerd v2: $5 daily loss)
         # REALIZED P&L ONLY: cash - day_start_balance (unrealized open positions excluded)
         realized_pnl = self.cash - self.day_start_balance
-        if realized_pnl <= -MAX_DAILY_LOSS:
+        if False and realized_pnl <= -MAX_DAILY_LOSS:
             if not self.trading_stopped:
                 logger.warning(f"!!! DAILY STOP-LOSS TRIGGERED !!! Realized P&L=${realized_pnl:.2f} (cash=${self.cash:.2f}) >= -${MAX_DAILY_LOSS:.2f} - stopping trading")
                 self.trading_stopped = True

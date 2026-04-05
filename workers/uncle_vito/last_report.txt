@@ -1,373 +1,404 @@
-2026-04-05 07:00:01,600 - INFO - Odds API usage: 1 requests remaining
-2026-04-05 07:00:01,600 - INFO - Fetched 14 events for NBA
-2026-04-05 07:00:01,666 - INFO - Odds API usage: 1 requests remaining
-2026-04-05 07:00:01,667 - WARNING - Odds API returned status 401
-2026-04-05 07:00:01,732 - INFO - Odds API usage: 1 requests remaining
-2026-04-05 07:00:01,732 - WARNING - Odds API returned status 401
-2026-04-05 07:00:01,866 - INFO - Odds API usage: 1 requests remaining
-2026-04-05 07:00:01,866 - WARNING - Odds API returned status 401
-2026-04-05 07:00:01,893 - INFO - Odds API usage: 1 requests remaining
-2026-04-05 07:00:01,893 - WARNING - Odds API returned status 401
-2026-04-05 07:00:01,922 - INFO - Odds API usage: 1 requests remaining
-2026-04-05 07:00:01,922 - WARNING - Odds API returned status 401
-2026-04-05 07:00:01,991 - INFO - Odds API usage: 1 requests remaining
-2026-04-05 07:00:01,991 - WARNING - Odds API returned status 401
-2026-04-05 07:00:02,141 - INFO - Odds API usage: 1 requests remaining
-2026-04-05 07:00:02,141 - WARNING - Odds API returned status 401
-2026-04-05 07:00:02,209 - INFO - Odds API usage: 1 requests remaining
-2026-04-05 07:00:02,209 - WARNING - Odds API returned status 401
-2026-04-05 07:00:02,257 - INFO - Odds API usage: 1 requests remaining
-2026-04-05 07:00:02,257 - WARNING - Odds API returned status 401
-2026-04-05 07:00:02,322 - INFO - Odds API usage: 1 requests remaining
-2026-04-05 07:00:02,322 - WARNING - Odds API returned status 401
-2026-04-05 07:00:02,438 - INFO - Odds API usage: 1 requests remaining
-2026-04-05 07:00:02,438 - WARNING - Odds API returned status 401
-2026-04-05 07:00:02,569 - INFO - Odds API usage: 1 requests remaining
-2026-04-05 07:00:02,569 - WARNING - Odds API returned status 401
-2026-04-05 07:00:05,931 - INFO - Odds API usage: 1 requests remaining
-2026-04-05 07:00:05,931 - WARNING - Odds API returned status 401
-2026-04-05 07:00:06,241 - INFO - Odds API usage: 1 requests remaining
-2026-04-05 07:00:06,241 - WARNING - Odds API returned status 401
-2026-04-05 07:00:06,242 - INFO - Fetched 0 props for NBA
-2026-04-05 07:00:06,242 - INFO - Odds API: 0 props fetched for NBA. 1 requests remaining.
-2026-04-05 07:00:06,242 - INFO - Odds API returned no props, falling back to simulation
-2026-04-05 07:00:06,305 - WARNING - DK API access denied (403) - server-side calls blocked by Akamai
-2026-04-05 07:00:06,305 - WARNING - ⚠️ Rafael Devers (BOS) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ Vladimir Guerrero Jr. (TOR) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ Cameron Thomas (BKN) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ James Wood (WSH) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ Zach LaVine (CHI) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ Nikola Vucevic (CHI) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ Kevin Durant (PHX) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ Devin Booker (PHX) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ Christian Yelich (MIL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ Jaren Jackson Jr. (MEM) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ Desmond Bane (MEM) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ Jose Ramirez (CLE) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ Tyrese Haliburton (IND) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ Pascal Siakam (IND) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ Carlos Correa (MIN) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ LaMelo Ball (CHA) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ Miles Bridges (CHA) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ Paolo Banchero (ORL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ Franz Wagner (ORL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ Shai Gilgeous-Alexander (OKC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ Jalen Williams (OKC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ Lauri Markkanen (UTAH) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ Kyrie Irving (DAL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ Dereck Lively (DAL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ LeBron James (LAL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ Luka Doncic (LAL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ De'Aaron Fox (SAC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ Domantas Sabonis (SAC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ Kawhi Leonard (LAC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ James Harden (LAC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,305 - WARNING - ⚠️ Jose Altuve (HOU) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:06,641 - INFO - Odds API usage: 1 requests remaining
-2026-04-05 07:00:06,641 - INFO - Fetched 7 events for NHL
-2026-04-05 07:00:06,763 - INFO - Odds API usage: 1 requests remaining
-2026-04-05 07:00:06,763 - WARNING - Odds API returned status 401
-2026-04-05 07:00:07,255 - INFO - Odds API usage: 1 requests remaining
-2026-04-05 07:00:07,255 - WARNING - Odds API returned status 401
-2026-04-05 07:00:07,988 - INFO - Odds API usage: 1 requests remaining
-2026-04-05 07:00:07,988 - WARNING - Odds API returned status 401
-2026-04-05 07:00:08,010 - INFO - Odds API usage: 1 requests remaining
-2026-04-05 07:00:08,010 - WARNING - Odds API returned status 401
-2026-04-05 07:00:08,122 - INFO - Odds API usage: 1 requests remaining
-2026-04-05 07:00:08,122 - WARNING - Odds API returned status 401
-2026-04-05 07:00:08,232 - INFO - Odds API usage: 1 requests remaining
-2026-04-05 07:00:08,232 - WARNING - Odds API returned status 401
-2026-04-05 07:00:08,267 - INFO - Odds API usage: 1 requests remaining
-2026-04-05 07:00:08,267 - WARNING - Odds API returned status 401
-2026-04-05 07:00:08,267 - INFO - Fetched 0 props for NHL
-2026-04-05 07:00:08,267 - INFO - Odds API: 0 props fetched for NHL. 1 requests remaining.
-2026-04-05 07:00:08,267 - INFO - Odds API returned no props, falling back to simulation
-2026-04-05 07:00:08,267 - WARNING - ⚠️ Lucas Raymond (DET) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,267 - WARNING - ⚠️ Kirill Kaprizov (MIN) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,267 - WARNING - ⚠️ Sidney Crosby (PIT) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,267 - WARNING - ⚠️ Matthew Tkachuk (FLA) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,267 - WARNING - ⚠️ Travis Konecny (PHI) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,267 - WARNING - ⚠️ David Pastrnak (BOS) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,267 - WARNING - ⚠️ Brady Tkachuk (OTT) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,267 - WARNING - ⚠️ Sebastian Aho (CAR) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,267 - WARNING - ⚠️ Cole Caufield (MTL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,267 - WARNING - ⚠️ Artemi Panarin (NYR) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,267 - WARNING - ⚠️ Alex Ovechkin (WSH) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,267 - WARNING - ⚠️ Nathan MacKinnon (COL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,267 - WARNING - ⚠️ Robert Thomas (STL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,300 - WARNING - Odds API rate limited
-2026-04-05 07:00:08,300 - WARNING - No events found for MLB
-2026-04-05 07:00:08,300 - INFO - Odds API: 0 props fetched for MLB. 1 requests remaining.
-2026-04-05 07:00:08,300 - INFO - Odds API returned no props, falling back to simulation
-2026-04-05 07:00:08,300 - WARNING - ⚠️ Jose Ramirez (CLE) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,300 - WARNING - ⚠️ Christopher Morel (CHC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,300 - WARNING - ⚠️ Oneil Cruz (PIT) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,300 - WARNING - ⚠️ Gunnar Henderson (BAL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,300 - WARNING - ⚠️ James Wood (WSH) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,300 - WARNING - ⚠️ Mookie Betts (LAD) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,300 - WARNING - ⚠️ Shohei Ohtani (LAD) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,300 - WARNING - ⚠️ Aaron Judge (NYY) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,300 - WARNING - ⚠️ Juan Soto (NYY) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,300 - WARNING - ⚠️ Jazz Chisholm (MIA) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,300 - WARNING - ⚠️ Rafael Devers (BOS) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,300 - WARNING - ⚠️ Manny Machado (SD) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,300 - WARNING - ⚠️ Bobby Witt Jr. (KC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Christian Yelich (MIL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Carlos Correa (MIN) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Isaac Paredes (TB) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Vladimir Guerrero Jr. (TOR) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Corey Seager (TEX) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Elly De La Cruz (CIN) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Ryan McMahon (COL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Kyle Schwarber (PHI) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Jose Altuve (HOU) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Logan Webb (SF) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Francisco Lindor (NYM) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Mike Trout (LAA) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Julio Rodriguez (SEA) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Ronald Acuna Jr. (ATL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Jose Ramirez (CLE) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Christopher Morel (CHC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Cade Cunningham (DET) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Jaden Ivey (DET) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Nolan Arenado (STL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - INFO - Odds API returned no props, falling back to simulation
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Rafael Devers (BOS) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Vladimir Guerrero Jr. (TOR) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Cameron Thomas (BKN) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ James Wood (WSH) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Zach LaVine (CHI) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Nikola Vucevic (CHI) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Kevin Durant (PHX) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Devin Booker (PHX) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Christian Yelich (MIL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Jaren Jackson Jr. (MEM) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Desmond Bane (MEM) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Jose Ramirez (CLE) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Tyrese Haliburton (IND) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Pascal Siakam (IND) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Carlos Correa (MIN) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ LaMelo Ball (CHA) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Miles Bridges (CHA) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Paolo Banchero (ORL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Franz Wagner (ORL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Shai Gilgeous-Alexander (OKC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Jalen Williams (OKC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Lauri Markkanen (UTAH) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Kyrie Irving (DAL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Dereck Lively (DAL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ LeBron James (LAL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Luka Doncic (LAL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ De'Aaron Fox (SAC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Domantas Sabonis (SAC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Kawhi Leonard (LAC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ James Harden (LAC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,301 - WARNING - ⚠️ Jose Altuve (HOU) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - INFO - Odds API returned no props, falling back to simulation
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Lucas Raymond (DET) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Kirill Kaprizov (MIN) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Sidney Crosby (PIT) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Matthew Tkachuk (FLA) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Travis Konecny (PHI) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ David Pastrnak (BOS) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Brady Tkachuk (OTT) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Sebastian Aho (CAR) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Cole Caufield (MTL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Artemi Panarin (NYR) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Alex Ovechkin (WSH) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Nathan MacKinnon (COL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Robert Thomas (STL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - INFO - Odds API returned no props, falling back to simulation
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Jose Ramirez (CLE) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Christopher Morel (CHC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Oneil Cruz (PIT) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Gunnar Henderson (BAL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ James Wood (WSH) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Mookie Betts (LAD) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Shohei Ohtani (LAD) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Aaron Judge (NYY) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Juan Soto (NYY) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Jazz Chisholm (MIA) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Rafael Devers (BOS) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Manny Machado (SD) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Bobby Witt Jr. (KC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Christian Yelich (MIL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Carlos Correa (MIN) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Isaac Paredes (TB) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Vladimir Guerrero Jr. (TOR) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Corey Seager (TEX) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Elly De La Cruz (CIN) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Ryan McMahon (COL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Kyle Schwarber (PHI) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Jose Altuve (HOU) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Logan Webb (SF) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Francisco Lindor (NYM) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Mike Trout (LAA) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Julio Rodriguez (SEA) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Ronald Acuna Jr. (ATL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Jose Ramirez (CLE) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Christopher Morel (CHC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Cade Cunningham (DET) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Jaden Ivey (DET) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,302 - WARNING - ⚠️ Nolan Arenado (STL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - INFO - Odds API returned no props, falling back to simulation
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Rafael Devers (BOS) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Vladimir Guerrero Jr. (TOR) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Cameron Thomas (BKN) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ James Wood (WSH) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Zach LaVine (CHI) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Nikola Vucevic (CHI) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Kevin Durant (PHX) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Devin Booker (PHX) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Christian Yelich (MIL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Jaren Jackson Jr. (MEM) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Desmond Bane (MEM) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Jose Ramirez (CLE) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Tyrese Haliburton (IND) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Pascal Siakam (IND) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Carlos Correa (MIN) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ LaMelo Ball (CHA) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Miles Bridges (CHA) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Paolo Banchero (ORL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Franz Wagner (ORL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Shai Gilgeous-Alexander (OKC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Jalen Williams (OKC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Lauri Markkanen (UTAH) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Kyrie Irving (DAL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Dereck Lively (DAL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ LeBron James (LAL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Luka Doncic (LAL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ De'Aaron Fox (SAC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Domantas Sabonis (SAC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Kawhi Leonard (LAC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ James Harden (LAC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Jose Altuve (HOU) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - INFO - Odds API returned no props, falling back to simulation
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Lucas Raymond (DET) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Kirill Kaprizov (MIN) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Sidney Crosby (PIT) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Matthew Tkachuk (FLA) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Travis Konecny (PHI) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ David Pastrnak (BOS) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Brady Tkachuk (OTT) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Sebastian Aho (CAR) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Cole Caufield (MTL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Artemi Panarin (NYR) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Alex Ovechkin (WSH) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Nathan MacKinnon (COL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Robert Thomas (STL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - INFO - Odds API returned no props, falling back to simulation
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Jose Ramirez (CLE) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Christopher Morel (CHC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,303 - WARNING - ⚠️ Oneil Cruz (PIT) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Gunnar Henderson (BAL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ James Wood (WSH) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Mookie Betts (LAD) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Shohei Ohtani (LAD) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Aaron Judge (NYY) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Juan Soto (NYY) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Jazz Chisholm (MIA) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Rafael Devers (BOS) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Manny Machado (SD) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Bobby Witt Jr. (KC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Christian Yelich (MIL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Carlos Correa (MIN) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Isaac Paredes (TB) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Vladimir Guerrero Jr. (TOR) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Corey Seager (TEX) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Elly De La Cruz (CIN) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Ryan McMahon (COL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Kyle Schwarber (PHI) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Jose Altuve (HOU) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Logan Webb (SF) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Francisco Lindor (NYM) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Mike Trout (LAA) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Julio Rodriguez (SEA) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Ronald Acuna Jr. (ATL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Jose Ramirez (CLE) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Christopher Morel (CHC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Cade Cunningham (DET) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Jaden Ivey (DET) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Nolan Arenado (STL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - INFO - Odds API returned no props, falling back to simulation
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Rafael Devers (BOS) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Vladimir Guerrero Jr. (TOR) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Cameron Thomas (BKN) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ James Wood (WSH) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Zach LaVine (CHI) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Nikola Vucevic (CHI) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Kevin Durant (PHX) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Devin Booker (PHX) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Christian Yelich (MIL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Jaren Jackson Jr. (MEM) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Desmond Bane (MEM) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Jose Ramirez (CLE) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Tyrese Haliburton (IND) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Pascal Siakam (IND) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Carlos Correa (MIN) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ LaMelo Ball (CHA) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Miles Bridges (CHA) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Paolo Banchero (ORL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Franz Wagner (ORL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Shai Gilgeous-Alexander (OKC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Jalen Williams (OKC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Lauri Markkanen (UTAH) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Kyrie Irving (DAL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Dereck Lively (DAL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ LeBron James (LAL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Luka Doncic (LAL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ De'Aaron Fox (SAC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Domantas Sabonis (SAC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Kawhi Leonard (LAC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ James Harden (LAC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,304 - WARNING - ⚠️ Jose Altuve (HOU) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - INFO - Odds API returned no props, falling back to simulation
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Lucas Raymond (DET) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Kirill Kaprizov (MIN) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Sidney Crosby (PIT) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Matthew Tkachuk (FLA) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Travis Konecny (PHI) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ David Pastrnak (BOS) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Brady Tkachuk (OTT) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Sebastian Aho (CAR) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Cole Caufield (MTL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Artemi Panarin (NYR) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Alex Ovechkin (WSH) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Nathan MacKinnon (COL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Robert Thomas (STL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - INFO - Odds API returned no props, falling back to simulation
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Jose Ramirez (CLE) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Christopher Morel (CHC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Oneil Cruz (PIT) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Gunnar Henderson (BAL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ James Wood (WSH) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Mookie Betts (LAD) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Shohei Ohtani (LAD) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Aaron Judge (NYY) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Juan Soto (NYY) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Jazz Chisholm (MIA) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Rafael Devers (BOS) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Manny Machado (SD) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Bobby Witt Jr. (KC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Christian Yelich (MIL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Carlos Correa (MIN) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Isaac Paredes (TB) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Vladimir Guerrero Jr. (TOR) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Corey Seager (TEX) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Elly De La Cruz (CIN) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Ryan McMahon (COL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Kyle Schwarber (PHI) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Jose Altuve (HOU) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Logan Webb (SF) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Francisco Lindor (NYM) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Mike Trout (LAA) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Julio Rodriguez (SEA) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Ronald Acuna Jr. (ATL) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Jose Ramirez (CLE) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Christopher Morel (CHC) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Cade Cunningham (DET) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Jaden Ivey (DET) - likely REST DAY or INJURED (not in DK slate)
-2026-04-05 07:00:08,305 - WARNING - ⚠️ Nolan Arenado (STL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:01,978 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:01,979 - INFO - Fetched 14 events for NBA
+2026-04-05 08:00:02,080 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:02,080 - WARNING - Odds API returned status 401
+2026-04-05 08:00:02,317 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:02,317 - WARNING - Odds API returned status 401
+2026-04-05 08:00:02,564 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:02,564 - WARNING - Odds API returned status 401
+2026-04-05 08:00:02,657 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:02,657 - WARNING - Odds API returned status 401
+2026-04-05 08:00:02,799 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:02,799 - WARNING - Odds API returned status 401
+2026-04-05 08:00:02,908 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:02,908 - WARNING - Odds API returned status 401
+2026-04-05 08:00:03,038 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:03,038 - WARNING - Odds API returned status 401
+2026-04-05 08:00:03,285 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:03,285 - WARNING - Odds API returned status 401
+2026-04-05 08:00:03,818 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:03,818 - WARNING - Odds API returned status 401
+2026-04-05 08:00:04,005 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:04,006 - WARNING - Odds API returned status 401
+2026-04-05 08:00:14,018 - WARNING - Odds API returned status 503
+2026-04-05 08:00:14,059 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:14,059 - WARNING - Odds API returned status 401
+2026-04-05 08:00:14,265 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:14,265 - WARNING - Odds API returned status 401
+2026-04-05 08:00:14,423 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:14,423 - WARNING - Odds API returned status 401
+2026-04-05 08:00:14,423 - INFO - Fetched 0 props for NBA
+2026-04-05 08:00:14,423 - INFO - Odds API: 0 props fetched for NBA. 1 requests remaining.
+2026-04-05 08:00:14,423 - INFO - Odds API returned no props, falling back to simulation
+2026-04-05 08:00:14,529 - WARNING - DK API access denied (403) - server-side calls blocked by Akamai
+2026-04-05 08:00:14,529 - WARNING - ⚠️ Rafael Devers (BOS) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ Vladimir Guerrero Jr. (TOR) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ Cameron Thomas (BKN) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ James Wood (WSH) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ Zach LaVine (CHI) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ Nikola Vucevic (CHI) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ Kevin Durant (PHX) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ Devin Booker (PHX) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ Christian Yelich (MIL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ Jaren Jackson Jr. (MEM) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ Desmond Bane (MEM) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ Jose Ramirez (CLE) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ Tyrese Haliburton (IND) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ Pascal Siakam (IND) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ Carlos Correa (MIN) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ LaMelo Ball (CHA) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ Miles Bridges (CHA) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ Paolo Banchero (ORL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ Franz Wagner (ORL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ Shai Gilgeous-Alexander (OKC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ Jalen Williams (OKC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ Lauri Markkanen (UTAH) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ Kyrie Irving (DAL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ Dereck Lively (DAL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ LeBron James (LAL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ Luka Doncic (LAL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ De'Aaron Fox (SAC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ Domantas Sabonis (SAC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ Kawhi Leonard (LAC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ James Harden (LAC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,529 - WARNING - ⚠️ Jose Altuve (HOU) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:14,966 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:14,966 - INFO - Fetched 7 events for NHL
+2026-04-05 08:00:24,976 - WARNING - Odds API returned status 503
+2026-04-05 08:00:25,028 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:25,028 - WARNING - Odds API returned status 401
+2026-04-05 08:00:25,089 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:25,089 - WARNING - Odds API returned status 401
+2026-04-05 08:00:25,173 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:25,173 - WARNING - Odds API returned status 401
+2026-04-05 08:00:25,251 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:25,251 - WARNING - Odds API returned status 401
+2026-04-05 08:00:25,282 - WARNING - Odds API rate limited
+2026-04-05 08:00:25,370 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:25,370 - WARNING - Odds API returned status 401
+2026-04-05 08:00:25,370 - INFO - Fetched 0 props for NHL
+2026-04-05 08:00:25,370 - INFO - Odds API: 0 props fetched for NHL. 1 requests remaining.
+2026-04-05 08:00:25,370 - INFO - Odds API returned no props, falling back to simulation
+2026-04-05 08:00:25,370 - WARNING - ⚠️ Lucas Raymond (DET) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:25,370 - WARNING - ⚠️ Kirill Kaprizov (MIN) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:25,370 - WARNING - ⚠️ Sidney Crosby (PIT) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:25,370 - WARNING - ⚠️ Matthew Tkachuk (FLA) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:25,371 - WARNING - ⚠️ Travis Konecny (PHI) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:25,371 - WARNING - ⚠️ David Pastrnak (BOS) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:25,371 - WARNING - ⚠️ Brady Tkachuk (OTT) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:25,371 - WARNING - ⚠️ Sebastian Aho (CAR) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:25,371 - WARNING - ⚠️ Cole Caufield (MTL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:25,371 - WARNING - ⚠️ Artemi Panarin (NYR) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:25,371 - WARNING - ⚠️ Alex Ovechkin (WSH) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:25,371 - WARNING - ⚠️ Nathan MacKinnon (COL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:25,371 - WARNING - ⚠️ Robert Thomas (STL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:25,751 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:25,752 - INFO - Fetched 17 events for MLB
+2026-04-05 08:00:25,802 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:25,802 - WARNING - Odds API returned status 422
+2026-04-05 08:00:25,835 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:25,835 - WARNING - Odds API returned status 422
+2026-04-05 08:00:25,955 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:25,955 - WARNING - Odds API returned status 422
+2026-04-05 08:00:25,989 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:25,989 - WARNING - Odds API returned status 422
+2026-04-05 08:00:26,021 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:26,021 - WARNING - Odds API returned status 422
+2026-04-05 08:00:26,063 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:26,063 - WARNING - Odds API returned status 422
+2026-04-05 08:00:26,118 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:26,118 - WARNING - Odds API returned status 422
+2026-04-05 08:00:31,929 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:31,929 - WARNING - Odds API returned status 422
+2026-04-05 08:00:31,967 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:31,967 - WARNING - Odds API returned status 422
+2026-04-05 08:00:31,994 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:31,994 - WARNING - Odds API returned status 422
+2026-04-05 08:00:32,026 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:32,026 - WARNING - Odds API returned status 422
+2026-04-05 08:00:32,350 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:32,350 - WARNING - Odds API returned status 422
+2026-04-05 08:00:32,386 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:32,386 - WARNING - Odds API returned status 422
+2026-04-05 08:00:32,417 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:32,417 - WARNING - Odds API returned status 422
+2026-04-05 08:00:32,442 - WARNING - Odds API rate limited
+2026-04-05 08:00:32,504 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:32,504 - WARNING - Odds API returned status 422
+2026-04-05 08:00:32,603 - INFO - Odds API usage: 1 requests remaining
+2026-04-05 08:00:32,603 - WARNING - Odds API returned status 422
+2026-04-05 08:00:32,603 - INFO - Fetched 0 props for MLB
+2026-04-05 08:00:32,603 - INFO - Odds API: 0 props fetched for MLB. 1 requests remaining.
+2026-04-05 08:00:32,603 - INFO - Odds API returned no props, falling back to simulation
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Jose Ramirez (CLE) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Christopher Morel (CHC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Oneil Cruz (PIT) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Gunnar Henderson (BAL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ James Wood (WSH) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Mookie Betts (LAD) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Shohei Ohtani (LAD) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Aaron Judge (NYY) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Juan Soto (NYY) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Jazz Chisholm (MIA) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Rafael Devers (BOS) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Manny Machado (SD) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Bobby Witt Jr. (KC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Christian Yelich (MIL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Carlos Correa (MIN) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Isaac Paredes (TB) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Vladimir Guerrero Jr. (TOR) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Corey Seager (TEX) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Elly De La Cruz (CIN) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Ryan McMahon (COL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Kyle Schwarber (PHI) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Jose Altuve (HOU) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Logan Webb (SF) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Francisco Lindor (NYM) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Mike Trout (LAA) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Julio Rodriguez (SEA) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Ronald Acuna Jr. (ATL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Jose Ramirez (CLE) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Christopher Morel (CHC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,603 - WARNING - ⚠️ Cade Cunningham (DET) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Jaden Ivey (DET) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Nolan Arenado (STL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - INFO - Odds API returned no props, falling back to simulation
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Rafael Devers (BOS) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Vladimir Guerrero Jr. (TOR) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Cameron Thomas (BKN) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ James Wood (WSH) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Zach LaVine (CHI) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Nikola Vucevic (CHI) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Kevin Durant (PHX) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Devin Booker (PHX) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Christian Yelich (MIL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Jaren Jackson Jr. (MEM) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Desmond Bane (MEM) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Jose Ramirez (CLE) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Tyrese Haliburton (IND) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Pascal Siakam (IND) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Carlos Correa (MIN) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ LaMelo Ball (CHA) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Miles Bridges (CHA) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Paolo Banchero (ORL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Franz Wagner (ORL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Shai Gilgeous-Alexander (OKC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Jalen Williams (OKC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Lauri Markkanen (UTAH) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Kyrie Irving (DAL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Dereck Lively (DAL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ LeBron James (LAL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Luka Doncic (LAL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ De'Aaron Fox (SAC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Domantas Sabonis (SAC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Kawhi Leonard (LAC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ James Harden (LAC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Jose Altuve (HOU) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - INFO - Odds API returned no props, falling back to simulation
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Lucas Raymond (DET) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Kirill Kaprizov (MIN) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Sidney Crosby (PIT) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Matthew Tkachuk (FLA) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Travis Konecny (PHI) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ David Pastrnak (BOS) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Brady Tkachuk (OTT) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,604 - WARNING - ⚠️ Sebastian Aho (CAR) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Cole Caufield (MTL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Artemi Panarin (NYR) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Alex Ovechkin (WSH) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Nathan MacKinnon (COL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Robert Thomas (STL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - INFO - Odds API returned no props, falling back to simulation
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Jose Ramirez (CLE) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Christopher Morel (CHC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Oneil Cruz (PIT) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Gunnar Henderson (BAL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ James Wood (WSH) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Mookie Betts (LAD) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Shohei Ohtani (LAD) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Aaron Judge (NYY) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Juan Soto (NYY) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Jazz Chisholm (MIA) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Rafael Devers (BOS) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Manny Machado (SD) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Bobby Witt Jr. (KC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Christian Yelich (MIL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Carlos Correa (MIN) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Isaac Paredes (TB) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Vladimir Guerrero Jr. (TOR) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Corey Seager (TEX) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Elly De La Cruz (CIN) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Ryan McMahon (COL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Kyle Schwarber (PHI) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Jose Altuve (HOU) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Logan Webb (SF) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Francisco Lindor (NYM) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Mike Trout (LAA) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Julio Rodriguez (SEA) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Ronald Acuna Jr. (ATL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Jose Ramirez (CLE) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Christopher Morel (CHC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Cade Cunningham (DET) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Jaden Ivey (DET) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Nolan Arenado (STL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - INFO - Odds API returned no props, falling back to simulation
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Rafael Devers (BOS) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Vladimir Guerrero Jr. (TOR) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Cameron Thomas (BKN) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ James Wood (WSH) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Zach LaVine (CHI) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Nikola Vucevic (CHI) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Kevin Durant (PHX) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Devin Booker (PHX) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,605 - WARNING - ⚠️ Christian Yelich (MIL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Jaren Jackson Jr. (MEM) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Desmond Bane (MEM) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Jose Ramirez (CLE) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Tyrese Haliburton (IND) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Pascal Siakam (IND) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Carlos Correa (MIN) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ LaMelo Ball (CHA) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Miles Bridges (CHA) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Paolo Banchero (ORL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Franz Wagner (ORL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Shai Gilgeous-Alexander (OKC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Jalen Williams (OKC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Lauri Markkanen (UTAH) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Kyrie Irving (DAL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Dereck Lively (DAL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ LeBron James (LAL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Luka Doncic (LAL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ De'Aaron Fox (SAC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Domantas Sabonis (SAC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Kawhi Leonard (LAC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ James Harden (LAC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Jose Altuve (HOU) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - INFO - Odds API returned no props, falling back to simulation
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Lucas Raymond (DET) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Kirill Kaprizov (MIN) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Sidney Crosby (PIT) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Matthew Tkachuk (FLA) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Travis Konecny (PHI) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ David Pastrnak (BOS) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Brady Tkachuk (OTT) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Sebastian Aho (CAR) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Cole Caufield (MTL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Artemi Panarin (NYR) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Alex Ovechkin (WSH) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Nathan MacKinnon (COL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Robert Thomas (STL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - INFO - Odds API returned no props, falling back to simulation
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Jose Ramirez (CLE) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Christopher Morel (CHC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Oneil Cruz (PIT) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Gunnar Henderson (BAL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ James Wood (WSH) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Mookie Betts (LAD) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Shohei Ohtani (LAD) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Aaron Judge (NYY) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Juan Soto (NYY) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Jazz Chisholm (MIA) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Rafael Devers (BOS) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Manny Machado (SD) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Bobby Witt Jr. (KC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Christian Yelich (MIL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Carlos Correa (MIN) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Isaac Paredes (TB) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Vladimir Guerrero Jr. (TOR) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Corey Seager (TEX) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,606 - WARNING - ⚠️ Elly De La Cruz (CIN) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Ryan McMahon (COL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Kyle Schwarber (PHI) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Jose Altuve (HOU) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Logan Webb (SF) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Francisco Lindor (NYM) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Mike Trout (LAA) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Julio Rodriguez (SEA) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Ronald Acuna Jr. (ATL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Jose Ramirez (CLE) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Christopher Morel (CHC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Cade Cunningham (DET) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Jaden Ivey (DET) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Nolan Arenado (STL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - INFO - Odds API returned no props, falling back to simulation
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Rafael Devers (BOS) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Vladimir Guerrero Jr. (TOR) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Cameron Thomas (BKN) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ James Wood (WSH) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Zach LaVine (CHI) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Nikola Vucevic (CHI) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Kevin Durant (PHX) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Devin Booker (PHX) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Christian Yelich (MIL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Jaren Jackson Jr. (MEM) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Desmond Bane (MEM) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Jose Ramirez (CLE) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Tyrese Haliburton (IND) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Pascal Siakam (IND) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Carlos Correa (MIN) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ LaMelo Ball (CHA) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Miles Bridges (CHA) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Paolo Banchero (ORL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Franz Wagner (ORL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Shai Gilgeous-Alexander (OKC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Jalen Williams (OKC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Lauri Markkanen (UTAH) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Kyrie Irving (DAL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Dereck Lively (DAL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ LeBron James (LAL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Luka Doncic (LAL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ De'Aaron Fox (SAC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Domantas Sabonis (SAC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Kawhi Leonard (LAC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ James Harden (LAC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Jose Altuve (HOU) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - INFO - Odds API returned no props, falling back to simulation
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Lucas Raymond (DET) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Kirill Kaprizov (MIN) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Sidney Crosby (PIT) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Matthew Tkachuk (FLA) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Travis Konecny (PHI) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ David Pastrnak (BOS) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Brady Tkachuk (OTT) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,607 - WARNING - ⚠️ Sebastian Aho (CAR) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Cole Caufield (MTL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Artemi Panarin (NYR) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Alex Ovechkin (WSH) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Nathan MacKinnon (COL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Robert Thomas (STL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - INFO - Odds API returned no props, falling back to simulation
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Jose Ramirez (CLE) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Christopher Morel (CHC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Oneil Cruz (PIT) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Gunnar Henderson (BAL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ James Wood (WSH) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Mookie Betts (LAD) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Shohei Ohtani (LAD) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Aaron Judge (NYY) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Juan Soto (NYY) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Jazz Chisholm (MIA) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Rafael Devers (BOS) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Manny Machado (SD) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Bobby Witt Jr. (KC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Christian Yelich (MIL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Carlos Correa (MIN) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Isaac Paredes (TB) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Vladimir Guerrero Jr. (TOR) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Corey Seager (TEX) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Elly De La Cruz (CIN) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Ryan McMahon (COL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Kyle Schwarber (PHI) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Jose Altuve (HOU) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Logan Webb (SF) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Francisco Lindor (NYM) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Mike Trout (LAA) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Julio Rodriguez (SEA) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Ronald Acuna Jr. (ATL) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Jose Ramirez (CLE) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Christopher Morel (CHC) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Cade Cunningham (DET) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Jaden Ivey (DET) - likely REST DAY or INJURED (not in DK slate)
+2026-04-05 08:00:32,608 - WARNING - ⚠️ Nolan Arenado (STL) - likely REST DAY or INJURED (not in DK slate)
 📡 Fetching game data from ESPN...
 
 🍝 **UNCLE VITO'S BETTING REPORT** 🍝
@@ -380,8 +411,8 @@
   _No props available_
 
   Spread/Total/ML (3-Leg):
-  1. BOS vs TOR - **BOS** (-4.5)
-  2. WSH vs BKN - **WSH** O/U 220.5
+  1. BOS vs TOR - **BOS** (-2.5)
+  2. BKN vs WSH - **BKN** O/U 235.5
   3. CHI vs PHX - **CHI** ML
   📈 Odds: **+507** | 🎯 68%
 
@@ -392,9 +423,9 @@
 
   Spread/Total/ML (3-Leg):
   1. DET vs MIN - **DET** (-1.5)
-  2. PIT vs FLA - **PIT** O/U 6.5
-  3. PHI vs BOS - **PHI** ML
-  📈 Odds: **+524** | 🎯 68%
+  2. FLA vs PIT - **FLA** O/U 7.0
+  3. BOS vs PHI - **BOS** ML
+  📈 Odds: **+701** | 🎯 68%
 
 ⚾ **MLB**
 
@@ -402,18 +433,18 @@
   _No props available_
 
   Spread/Total/ML (3-Leg):
-  1. CHC vs CLE - **CHC** (-1.5)
-  2. BAL vs PIT - **BAL** O/U 9.5
-  3. LAD vs WSH - **LAD** ML
-  📈 Odds: **+774** | 🎯 68%
+  1. CHC vs CLE - **CHC** (1.5)
+  2. PIT vs BAL - **PIT** O/U 8.5
+  3. WSH vs LAD - **WSH** ML
+  📈 Odds: **+492** | 🎯 68%
 
 🌐 **CONFIDENCE PARLAY** (all leagues)
 
-1. 🏀 BOS - **BOS** (-4.5) (68%)
-2. 🏀 WSH - **WSH** O/U 220.5 (68%)
+1. 🏀 BOS - **BOS** (-2.5) (68%)
+2. 🏀 BKN - **BKN** O/U 235.5 (68%)
 3. 🏀 CHI - **CHI** ML (68%)
 4. 🧊 DET - **DET** (-1.5) (68%)
-5. 🧊 PIT - **PIT** O/U 6.5 (68%)
+5. 🧊 FLA - **FLA** O/U 7.0 (68%)
 
 🌐 Odds: **+2113** | 🎯 **68%** confidence | 5 legs
 

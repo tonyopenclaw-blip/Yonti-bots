@@ -1,80 +1,52 @@
 {
-  "start_time": "2026-04-05 07:46:09 UTC",
+  "start_time": "2026-04-05 08:48:42 UTC",
   "end_time": "",
   "starting_balance": 100.0,
-  "ending_balance": 91.69500000000001,
-  "total_pnl": -8.304999999999993,
-  "total_trades": 1,
-  "winning_trades": 1,
+  "ending_balance": 93.615,
+  "total_pnl": -6.385000000000005,
+  "total_trades": 0,
+  "winning_trades": 0,
   "losing_trades": 0,
-  "win_rate": 100.0,
-  "largest_win": 1.12,
+  "win_rate": 0,
+  "largest_win": 0.0,
   "largest_loss": 0.0,
   "open_positions": 3,
   "thermostat": 37,
-  "trades": [
-    {
-      "ticker": "KXBTC15M-26APR050400-00",
-      "side": "no",
-      "entry_price": 0.475,
-      "exit_price": 0.755,
-      "shares": 4.0,
-      "cost": 1.9,
-      "pnl": 1.12,
-      "strategy": "momentum_force",
-      "open_time": "2026-04-05 07:47:11 UTC",
-      "close_time": "2026-04-05 07:50:08 UTC",
-      "exit_reason": "STATIC STOP: -30% loss locked in"
-    }
-  ],
+  "trades": [],
   "last_10_open_trades": [
     {
-      "ticker": "KXBTC15M-26APR050400-00",
+      "ticker": "KXBNB15M-26APR050500-00",
       "side": "yes",
-      "entry_price": 0.755,
-      "shares": 2.0,
-      "cost": 1.51,
-      "pnl": 0.0,
-      "strategy": "first_cross",
-      "open_time": "2026-04-05 07:50:08 UTC",
-      "current_price": 0.325
-    },
-    {
-      "ticker": "KXETH15M-26APR050400-00",
-      "side": "no",
-      "entry_price": 0.355,
-      "shares": 5.0,
-      "cost": 1.775,
-      "pnl": 0.0,
-      "strategy": "first_cross",
-      "open_time": "2026-04-05 07:46:41 UTC",
-      "current_price": 0.44
-    },
-    {
-      "ticker": "KXDOGE15M-26APR050400-00",
-      "side": "no",
-      "entry_price": 0.51,
-      "shares": 3.0,
-      "cost": 1.53,
+      "entry_price": 0.43000000000000005,
+      "shares": 4.0,
+      "cost": 1.7200000000000002,
       "pnl": 0.0,
       "strategy": "momentum_force",
-      "open_time": "2026-04-05 07:47:11 UTC",
-      "current_price": 0.245
+      "open_time": "2026-04-05 08:49:44 UTC",
+      "current_price": 0.41000000000000003
+    },
+    {
+      "ticker": "KXSOL15M-26APR050500-00",
+      "side": "yes",
+      "entry_price": 0.5549999999999999,
+      "shares": 3.0,
+      "cost": 1.6649999999999998,
+      "pnl": 0.0,
+      "strategy": "momentum_force",
+      "open_time": "2026-04-05 08:49:44 UTC",
+      "current_price": 0.47
+    },
+    {
+      "ticker": "KXDOGE15M-26APR050500-00",
+      "side": "no",
+      "entry_price": 0.4,
+      "shares": 5.0,
+      "cost": 2.0,
+      "pnl": 0.0,
+      "strategy": "momentum_force",
+      "open_time": "2026-04-05 08:49:44 UTC",
+      "current_price": 0.39
     }
   ],
-  "last_10_closed_trades": [
-    {
-      "ticker": "KXBTC15M-26APR050400-00",
-      "side": "no",
-      "entry_price": 0.475,
-      "exit_price": 0.755,
-      "shares": 4.0,
-      "cost": 1.9,
-      "pnl": 1.12,
-      "strategy": "momentum_force",
-      "open_time": "2026-04-05 07:47:11 UTC",
-      "close_time": "2026-04-05 07:50:08 UTC",
-      "exit_reason": "STATIC STOP: -30% loss locked in"
-    }
-  ]
+  "last_10_closed_trades": []
 }

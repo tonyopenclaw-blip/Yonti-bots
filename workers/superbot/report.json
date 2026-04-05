@@ -1,46 +1,18 @@
 {
-  "start_time": "2026-04-05 20:50:39 UTC",
+  "start_time": "2026-04-05 21:56:54 UTC",
   "end_time": "",
   "starting_balance": 100.0,
-  "ending_balance": 99.41,
-  "total_pnl": -0.5900000000000034,
-  "total_trades": 1,
+  "ending_balance": 100.0,
+  "total_pnl": 0.0,
+  "total_trades": 0,
   "winning_trades": 0,
-  "losing_trades": 1,
-  "win_rate": 0.0,
+  "losing_trades": 0,
+  "win_rate": 0,
   "largest_win": 0.0,
-  "largest_loss": -2.205,
+  "largest_loss": 0.0,
   "open_positions": 0,
   "thermostat": 0,
-  "trades": [
-    {
-      "ticker": "KXHYPE15M-26APR051700-00",
-      "side": "no",
-      "entry_price": 0.7050000000000001,
-      "exit_price": 0.07,
-      "shares": 4,
-      "cost": 2.8200000000000003,
-      "pnl": -2.205,
-      "strategy": "first_cross",
-      "open_time": "2026-04-05 20:57:43 UTC",
-      "close_time": "2026-04-05 20:59:14 UTC",
-      "exit_reason": "Expiry: closing at $0.0700"
-    }
-  ],
+  "trades": [],
   "last_10_open_trades": [],
-  "last_10_closed_trades": [
-    {
-      "ticker": "KXHYPE15M-26APR051700-00",
-      "side": "no",
-      "entry_price": 0.7050000000000001,
-      "exit_price": 0.07,
-      "shares": 4,
-      "cost": 2.8200000000000003,
-      "pnl": -2.205,
-      "strategy": "first_cross",
-      "open_time": "2026-04-05 20:57:43 UTC",
-      "close_time": "2026-04-05 20:59:14 UTC",
-      "exit_reason": "Expiry: closing at $0.0700"
-    }
-  ]
+  "last_10_closed_trades": []
 }

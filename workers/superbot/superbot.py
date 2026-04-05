@@ -387,7 +387,8 @@ class CoinTrader:
             max_scale_ins=2,
             scale_in_size=signal.scale_in_size,
             unrealized_pnl=0.0,
-            avg_price=signal.price
+            avg_price=signal.price,
+            use_time_scaling=getattr(signal, 'use_time_scaling', False)
         )
         self.positions[ticker] = position
 
@@ -703,7 +704,7 @@ class Superbot:
                     logger.debug(f"[{coin}] Sizing reduced: max ${max_dollar:.2f}")
                 if signal.price > 0:
                     max_contracts = max_dollar / signal.price
-                    signal.size = min(signal.size, max_contracts)
+                    signal.size = math.ceil(min(signal.size, max_contracts))
 
                 # Try to open position
                 success, cost = trader._open_position(signal, per_coin_cash)

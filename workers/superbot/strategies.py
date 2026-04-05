@@ -70,6 +70,7 @@ class Strategy(Enum):
     DRIFT_SHORT = "drift_short"  # DISABLED - drift doesn't work
     MOMENTUM = "momentum"        # PRIMARY: Momentum + extreme = buy
     FIRST_CROSS = "first_cross"  # PRIMARY: Real cross through floor strike
+    MOMENTUM_FORCE = "momentum_force"  # FALLBACK: Wait 60s, no cross, force entry
     NONE = "none"
 
 
@@ -327,6 +328,7 @@ class StrategyTracker:
             Strategy.DRIFT_SHORT: deque(maxlen=tracked_trades),  # DISABLED but track for history
             Strategy.MOMENTUM: deque(maxlen=tracked_trades),
             Strategy.FIRST_CROSS: deque(maxlen=tracked_trades),
+            Strategy.MOMENTUM_FORCE: deque(maxlen=tracked_trades),
         }
 
     def record_trade(self, strategy: Strategy, pnl: float):
@@ -411,10 +413,11 @@ class TradeSignal:
     scale_in_size: float = 0.0           # Additional size for scaling in (50% of initial)
     # === TONYS MOMENTUM STRATEGY: Flat 30% trailing stop everywhere (was 20%) ===
     trailing_stop_pct: float = 0.40       # 40% buffer (drop/rise from peak before exit)
-    trailing_stop_trigger_pct: float = 0.50  # 50% profit before trailing stop activates
+    trailing_stop_trigger_pct: float = 0.30  # 30% profit before trailing stop activates
     confidence: int = 50                  # Signal confidence 0-100
     trailing_stop_buffer: float = 0.40    # 40% buffer (alias for clarity)
     max_hold_minutes: int = 10           # Dynamic based on entry zone
+    use_time_scaling: bool = False        # If True, use 80%->20% time-scaled stop
 
 
 @dataclass
@@ -441,6 +444,7 @@ class Position:
     unrealized_pnl: float = 0.0          # Running unrealized PnL
     avg_price: float = 0.0               # Weighted average entry price
     confidence: int = 50                 # Signal confidence 0-100 (for trailing stop logging)
+    use_time_scaling: bool = False        # If True, use 80%->20% time-scaled stop
 
     def __post_init__(self):
         """Initialize computed fields after dataclass init."""
@@ -929,10 +933,11 @@ class StrategyEngine:
                             take_profit=0.95 if side == "yes" else 0.05,
                             stop_loss=None,
                             trailing_stop_pct=0.40,
-                            trailing_stop_trigger_pct=0.50,
+                            trailing_stop_trigger_pct=0.30,
                             confidence=confidence,
                             trailing_stop_buffer=0.40,
-                            max_hold_minutes=10
+                            max_hold_minutes=10,
+                            use_time_scaling=True  # TIME SCALING: 80%->20%
                         )
 
         # === FIRST CROSS: Real cross through floor strike (not market open) ===
@@ -982,10 +987,11 @@ class StrategyEngine:
                         take_profit=0.95 if side == "yes" else 0.05,
                         stop_loss=None,
                         trailing_stop_pct=0.40,
-                        trailing_stop_trigger_pct=0.50,
+                        trailing_stop_trigger_pct=0.30,
                         confidence=confidence,
                         trailing_stop_buffer=0.40,
-                        max_hold_minutes=10
+                        max_hold_minutes=10,
+                        use_time_scaling=False  # NO TIME SCALING for FIRST_CROSS
                     )
 
         # --- First Cross: Midpoint crossing ---
@@ -1029,13 +1035,54 @@ class StrategyEngine:
                         take_profit=0.95 if side == "yes" else 0.05,
                         stop_loss=None,
                         trailing_stop_pct=0.40,
-                        trailing_stop_trigger_pct=0.50,
+                        trailing_stop_trigger_pct=0.30,
                         confidence=confidence,
                         trailing_stop_buffer=0.40,
-                        max_hold_minutes=max_hold
+                        max_hold_minutes=max_hold,
+                        use_time_scaling=False  # NO TIME SCALING for FIRST_CROSS
                     )
         
-        # NO MOMENTUM_FORCE anymore - removed entirely
+        # === MOMENTUM_FORCE: Last resort - wait 60s, no cross, force entry ===
+        no_cross_yet = not has_coin_cross and not has_midpoint_cross
+        if no_cross_yet and market_age_sec >= 60 and bias != 'neutral' and (mid_price < 0.10 or mid_price > 0.90):
+            if bias == 'bullish' and mid_price < 0.10:
+                side = 'yes'
+                reason_suffix = 'bullish + extreme low'
+            elif bias == 'bearish' and mid_price > 0.90:
+                side = 'no'
+                reason_suffix = 'bearish + extreme high'
+            else:
+                bias = None
+            
+            if bias is not None:
+                confidence = 50
+                size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.MOMENTUM_FORCE, mid_price, confidence, mid_price)
+
+                if confidence >= 40:
+                    logger.info(
+                        f"MOMENTUM_FORCE SIGNAL: {market.ticker} | "
+                        f"Side: {side} @ ${mid_price:.4f} | contracts={int(size):d} | "
+                        f"CONF={confidence} | TS=30%/40% | Coinbase={bias} | age={market_age_sec:.0f}s"
+                    )
+
+                    return TradeSignal(
+                        strategy=Strategy.MOMENTUM_FORCE,
+                        ticker=market.ticker,
+                        side=side,
+                        price=mid_price,
+                        size=size,
+                        scale_in_size=int(size * 0.5),  # Scale in: add 50% more when winning
+                        reason=f"MOMENTUM_FORCE: {reason_suffix}, Coinbase={bias}, CONF={confidence}, age={market_age_sec:.0f}s",
+                        take_profit=0.95 if side == "yes" else 0.05,
+                        stop_loss=None,
+                        trailing_stop_pct=0.40,
+                        trailing_stop_trigger_pct=0.30,
+                        confidence=confidence,
+                        trailing_stop_buffer=0.40,
+                        max_hold_minutes=8,
+                        use_time_scaling=True  # TIME SCALING: 80%->20%
+                    )
+
         return None
 
     def _estimate_ai_probability(self, market: Market, mid_price: float) -> Optional[float]:
@@ -1385,17 +1432,23 @@ Your estimate:"""
 
         entry_price = position.entry_price
         
-        # === TIME-SCALED STOP CALCULATION ===
+        # === TIME-SCALED STOP CALCULATION (only for MOMENTUM/MOMENTUM_FORCE) ===
         time_elapsed_sec = time.time() - position.open_time
         time_elapsed_min = time_elapsed_sec / 60.0
         
-        # Linear interpolation: 80% at open → 20% at close (15 min)
-        stop_pct = INITIAL_STOP_PCT - (time_elapsed_sec / MARKET_DURATION_SEC) * (INITIAL_STOP_PCT - FINAL_STOP_PCT)
-        stop_pct = max(stop_pct, FINAL_STOP_PCT)  # Never tighter than final
+        # Check if this strategy uses time scaling
+        use_time_scale = getattr(position, 'use_time_scaling', False)
         
-        # In final 3 min, enforce minimum 30% stop (prevent choppage)
-        if time_left <= 180:
-            stop_pct = max(stop_pct, MIN_STOP_PCT)
+        if use_time_scale:
+            # Linear interpolation: 80% at open → 20% at close (15 min)
+            stop_pct = INITIAL_STOP_PCT - (time_elapsed_sec / MARKET_DURATION_SEC) * (INITIAL_STOP_PCT - FINAL_STOP_PCT)
+            stop_pct = max(stop_pct, FINAL_STOP_PCT)  # Never tighter than final
+            # In final 3 min, enforce minimum 30% stop (prevent choppage)
+            if time_left <= 180:
+                stop_pct = max(stop_pct, MIN_STOP_PCT)
+        else:
+            # Static -30% stop for FIRST_CROSS
+            stop_pct = 0.30
 
         # === NEAR-EXPIRY EXIT (last 60 seconds) ===
         if time_left <= 60:
@@ -1407,12 +1460,13 @@ Your estimate:"""
         if position.side == "yes":
             # YES: We profit when price goes UP
 
-            # Stage 1: TIME-SCALED STATIC STOP
+            # Stage 1: STATIC STOP
             static_stop_price = entry_price * (1 - stop_pct)
             if current_price <= static_stop_price:
                 loss_pct = (entry_price - current_price) / entry_price
-                logger.info(f"{position.ticker}: TIME-SCALED STOP HIT @ ${current_price:.4f} (entry=${entry_price:.4f}, stop={stop_pct:.0%}, loss={loss_pct:.1%}, age={time_elapsed_min:.1f}min)")
-                return True, f"TIME-SCALED STOP: -{stop_pct:.0%} loss locked in"
+                stop_label = "TIME-SCALED STOP" if use_time_scale else "STATIC STOP"
+                logger.info(f"{position.ticker}: {stop_label} HIT @ ${current_price:.4f} (entry=${entry_price:.4f}, stop={stop_pct:.0%}, loss={loss_pct:.1%}, age={time_elapsed_min:.1f}min)")
+                return True, f"{stop_label}: -{stop_pct:.0%} loss locked in"
 
             # Stage 2: TRAILING STOP (after +30% profit)
             profit_target_price = entry_price * (1 + TRAILING_TRIGGER_PCT)
@@ -1436,12 +1490,13 @@ Your estimate:"""
         else:
             # NO: We profit when price goes DOWN
 
-            # Stage 1: TIME-SCALED STATIC STOP
+            # Stage 1: STATIC STOP
             static_stop_price = entry_price * (1 + stop_pct)
             if current_price >= static_stop_price:
                 loss_pct = (current_price - entry_price) / entry_price
-                logger.info(f"{position.ticker}: TIME-SCALED STOP HIT @ ${current_price:.4f} (entry=${entry_price:.4f}, stop={stop_pct:.0%}, loss={loss_pct:.1%}, age={time_elapsed_min:.1f}min)")
-                return True, f"TIME-SCALED STOP: -{stop_pct:.0%} loss locked in"
+                stop_label = "TIME-SCALED STOP" if use_time_scale else "STATIC STOP"
+                logger.info(f"{position.ticker}: {stop_label} HIT @ ${current_price:.4f} (entry=${entry_price:.4f}, stop={stop_pct:.0%}, loss={loss_pct:.1%}, age={time_elapsed_min:.1f}min)")
+                return True, f"{stop_label}: -{stop_pct:.0%} loss locked in"
 
             # Stage 2: TRAILING STOP (after +30% profit)
             profit_target_price = entry_price * (1 - TRAILING_TRIGGER_PCT)

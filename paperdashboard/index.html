@@ -481,8 +481,8 @@
                     <div class="bc-row"><span class="bc-label">P&L</span><span class="bc-val" id="sb-pnl">$0.00</span></div>
                     <div class="bc-row"><span class="bc-label">Win Rate</span><span class="bc-val" id="sb-wr">--%</span></div>
                     <div class="bc-row"><span class="bc-label">Trades</span><span class="bc-val" id="sb-trades">0</span></div>
-                    <div class="bc-row bc-params"><span class="bc-label">Stop</span><span class="bc-val">80%→20%</span></div>
-                    <div class="bc-row bc-params"><span class="bc-label">Trail</span><span class="bc-val">30% trig / 40% buf</span></div>
+                    <div class="bc-row bc-params"><span class="bc-label">FC Stop</span><span class="bc-val">30% static</span></div>
+                    <div class="bc-row bc-params"><span class="bc-label">Mom Stop</span><span class="bc-val">80%→20%</span></div>
                 </div>
             </div>
 
@@ -500,6 +500,8 @@
                     <div class="bc-row"><span class="bc-label">P&L</span><span class="bc-val" id="fb-pnl">$0.00</span></div>
                     <div class="bc-row"><span class="bc-label">Win Rate</span><span class="bc-val" id="fb-wr">--%</span></div>
                     <div class="bc-row"><span class="bc-label">Trades</span><span class="bc-val" id="fb-trades">0</span></div>
+                    <div class="bc-row bc-params"><span class="bc-label">Buy Zone</span><span class="bc-val">$0.40-$0.60</span></div>
+                    <div class="bc-row bc-params"><span class="bc-label">Sell</span><span class="bc-val">$0.85 target</span></div>
                 </div>
             </div>
 
@@ -664,6 +666,9 @@ async function loadFlipData() {
             } else {
                 team = isYes ? mkt.substring(0, 3) : mkt.substring(0, 3);
             }
+            const size = parseFloat(t.size || 0);
+            const price = parseFloat(t.price || 0);
+            const contracts = price > 0 ? Math.ceil(size / price) : 0;
             return {
                 id: t.ticker + '_' + t.timestamp,
                 bot: 'flip',
@@ -672,9 +677,10 @@ async function loadFlipData() {
                 strategy: 'flip',
                 side: isYes ? 'yes' : 'no',
                 team: team.toUpperCase(),
-                entry: parseFloat(t.price || 0),
+                entry: price,
                 exit: 0,
-                size: parseFloat(t.size || 0),
+                size: size,
+                contracts: contracts,
                 pnl: parseFloat(t.pnl || 0),
                 openTime: t.timestamp || '',
                 closeTime: t.timestamp || '',
@@ -1007,7 +1013,7 @@ function renderTradeTable() {
             <td><span class="t-side ${t.side}">${t.team || t.side.toUpperCase()}</span></td>
             <td><span class="t-price">$${t.entry.toFixed(4)}</span></td>
             <td><span class="t-price">${t.exit>0?'$'+t.exit.toFixed(4):'--'}</span></td>
-            <td><span class="t-price">${t.contracts.toFixed(4)}</span></td>
+            <td><span class="t-price">${Math.ceil(t.contracts)}</span></td>
             <td><span class="t-price">$${(t.entry * t.size).toFixed(2)}</span></td>
             <td><span class="t-pnl ${pnlCls}">${t.pnl>=0?'+':'--'}${Math.abs(t.pnl).toFixed(2)}</span></td>
             <td><span class="t-time">${time}</span></td>

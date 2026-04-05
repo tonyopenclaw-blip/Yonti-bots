@@ -688,8 +688,8 @@ class StrategyEngine:
         else:
             contracts = 0.0
         
-        # Round DOWN to whole contracts (Tony: "only whole shares")
-        contracts = math.floor(contracts)
+        # Round UP to whole contracts (Tony: "only whole shares")
+        contracts = math.ceil(contracts)
         
         # Cap at max_bet / entry_price
         if entry_price > 0:

@@ -1,30 +1,98 @@
 {
-  "start_time": "2026-04-05 01:57:35 UTC",
+  "start_time": "2026-04-05 02:49:31 UTC",
   "end_time": "",
   "starting_balance": 100.0,
-  "ending_balance": 100.0,
-  "total_pnl": 0.0,
-  "total_trades": 0,
-  "winning_trades": 0,
+  "ending_balance": 94.87,
+  "total_pnl": -5.1299999999999955,
+  "total_trades": 3,
+  "winning_trades": 3,
   "losing_trades": 0,
-  "win_rate": 0,
-  "largest_win": 0.0,
+  "win_rate": 100.0,
+  "largest_win": 4.725,
   "largest_loss": 0.0,
-  "open_positions": 1,
-  "thermostat": 12,
-  "trades": [],
-  "last_10_open_trades": [
+  "open_positions": 0,
+  "thermostat": 0,
+  "trades": [
     {
-      "ticker": "KXBTC15M-26APR042200-00",
-      "side": "no",
-      "entry_price": 0.315,
-      "shares": 0.0,
-      "cost": 0.0,
-      "pnl": 0.0,
+      "ticker": "KXBTC15M-26APR042300-00",
+      "side": "yes",
+      "entry_price": 0.615,
+      "exit_price": 0.9724999999999999,
+      "shares": 3.0,
+      "cost": 1.845,
+      "pnl": 1.0724999999999998,
+      "strategy": "first_cross",
+      "open_time": "2026-04-05 02:50:34 UTC",
+      "close_time": "2026-04-05 02:56:52 UTC",
+      "exit_reason": "Near-max TP: $0.9725 >= $0.95"
+    },
+    {
+      "ticker": "KXSOL15M-26APR042300-00",
+      "side": "yes",
+      "entry_price": 0.275,
+      "exit_price": 0.95,
+      "shares": 7.0,
+      "cost": 1.9250000000000003,
+      "pnl": 4.725,
       "strategy": "momentum_force",
-      "open_time": "2026-04-05 01:58:36 UTC",
-      "current_price": 0.9195
+      "open_time": "2026-04-05 02:50:34 UTC",
+      "close_time": "2026-04-05 02:58:56 UTC",
+      "exit_reason": "Near-max TP: $0.9500 >= $0.95"
+    },
+    {
+      "ticker": "KXHYPE15M-26APR042300-00",
+      "side": "yes",
+      "entry_price": 0.6799999999999999,
+      "exit_price": 0.965,
+      "shares": 2.0,
+      "cost": 1.3599999999999999,
+      "pnl": 0.5700000000000001,
+      "strategy": "momentum_force",
+      "open_time": "2026-04-05 02:50:34 UTC",
+      "close_time": "2026-04-05 02:58:56 UTC",
+      "exit_reason": "Near-max TP: $0.9650 >= $0.95"
     }
   ],
-  "last_10_closed_trades": []
+  "last_10_open_trades": [],
+  "last_10_closed_trades": [
+    {
+      "ticker": "KXHYPE15M-26APR042300-00",
+      "side": "yes",
+      "entry_price": 0.6799999999999999,
+      "exit_price": 0.965,
+      "shares": 2.0,
+      "cost": 1.3599999999999999,
+      "pnl": 0.5700000000000001,
+      "strategy": "momentum_force",
+      "open_time": "2026-04-05 02:50:34 UTC",
+      "close_time": "2026-04-05 02:58:56 UTC",
+      "exit_reason": "Near-max TP: $0.9650 >= $0.95"
+    },
+    {
+      "ticker": "KXSOL15M-26APR042300-00",
+      "side": "yes",
+      "entry_price": 0.275,
+      "exit_price": 0.95,
+      "shares": 7.0,
+      "cost": 1.9250000000000003,
+      "pnl": 4.725,
+      "strategy": "momentum_force",
+      "open_time": "2026-04-05 02:50:34 UTC",
+      "close_time": "2026-04-05 02:58:56 UTC",
+      "exit_reason": "Near-max TP: $0.9500 >= $0.95"
+    },
+    {
+      "ticker": "KXBTC15M-26APR042300-00",
+      "side": "yes",
+      "entry_price": 0.615,
+      "exit_price": 0.9724999999999999,
+      "shares": 3.0,
+      "cost": 1.845,
+      "pnl": 1.0724999999999998,
+      "strategy": "first_cross",
+      "open_time": "2026-04-05 02:50:34 UTC",
+      "close_time": "2026-04-05 02:56:52 UTC",
+      "exit_reason": "Near-max TP: $0.9725 >= $0.95"
+    }
+  ]
 }

@@ -531,6 +531,38 @@ class Superbot:
             logger.warning(f"Resetting balance to ${BALANCE_RESET_AMOUNT:.2f}")
             self.cash = BALANCE_RESET_AMOUNT
     
+    def _calculate_unrealized_pnl(self) -> float:
+        """
+        Calculate total unrealized PnL from all open positions.
+        
+        For YES positions: size * (current_price - entry_price)
+        For NO positions: size * (entry_price - current_price)
+        
+        Returns total unrealized PnL (positive = profit, negative = loss).
+        """
+        unrealized_pnl = 0.0
+        
+        for trader in self.coin_traders.values():
+            for ticker, position in trader.positions.items():
+                # Get current price from market
+                mkt = self.api.get_market_by_ticker(ticker)
+                if mkt and mkt.yes_bid and mkt.yes_ask:
+                    current_price = (mkt.yes_bid + mkt.yes_ask) / 2
+                elif mkt:
+                    current_price = mkt.yes_bid or mkt.yes_ask or position.entry_price
+                else:
+                    current_price = position.entry_price
+                
+                # Calculate unrealized PnL for this position
+                if position.side == "yes":
+                    pos_pnl = position.size * (current_price - position.avg_price)
+                else:  # no
+                    pos_pnl = position.size * (position.avg_price - current_price)
+                
+                unrealized_pnl += pos_pnl
+        
+        return unrealized_pnl
+    
     def _check_daily_stop_loss(self):
         """
         Check if daily stop-loss triggered (Nerd v2).
@@ -559,10 +591,13 @@ class Superbot:
             return True
         
         # Check stop-loss thresholds (Nerd v2: $5 daily loss)
-        daily_loss = self.day_start_balance - self.cash
-        if daily_loss >= MAX_DAILY_LOSS:
+        # Fix: Account for unrealized PnL from open positions
+        # P&L = cash + unrealized_pnl - day_start_balance
+        unrealized_pnl = self._calculate_unrealized_pnl()
+        daily_pnl = self.cash + unrealized_pnl - self.day_start_balance
+        if daily_pnl <= -MAX_DAILY_LOSS:
             if not self.trading_stopped:
-                logger.warning(f"!!! DAILY STOP-LOSS TRIGGERED !!! Down ${daily_loss:.2f} >= ${MAX_DAILY_LOSS:.2f} - stopping trading")
+                logger.warning(f"!!! DAILY STOP-LOSS TRIGGERED !!! P&L=${daily_pnl:.2f} (cash=${self.cash:.2f}, unrealized=${unrealized_pnl:.2f}) >= -${MAX_DAILY_LOSS:.2f} - stopping trading")
                 self.trading_stopped = True
                 self.stop_loss_triggered = True
             return True
@@ -584,7 +619,7 @@ class Superbot:
         per_coin_cash = self.cash / len(COINS)
         for trader in self.coin_traders.values():
             trader.cash = per_coin_cash  # Initialize per-coin cash for scale-in logic
-            trader.strategy_engine.update_cash(per_coin_cash)
+            trader.strategy_engine.update_cash(self.cash)
     
     def _get_coin_from_series(self, series_ticker: str) -> Optional[str]:
         """Extract coin from series_ticker (e.g., KXBTC15M -> BTC)."""
@@ -741,9 +776,11 @@ class Superbot:
                     had_markets = self._check_and_trade_series(series_ticker)
                     
                     if loop_count % 30 == 1:
-                        loss = self.day_start_balance - self.cash
-                        loss_pct = loss / self.day_start_balance * 100 if self.day_start_balance > 0 else 0
-                        logger.info(f"😴 IDLE: checked {series_ticker} (poll #{loop_count}) | Day P&L: ${loss:.2f} ({loss_pct:.1f}%)")
+                        # Fix: Account for unrealized PnL from open positions
+                        unrealized_pnl = self._calculate_unrealized_pnl()
+                        daily_pnl = self.cash + unrealized_pnl - self.day_start_balance
+                        loss_pct = daily_pnl / self.day_start_balance * 100 if self.day_start_balance > 0 else 0
+                        logger.info(f"😴 IDLE: checked {series_ticker} (poll #{loop_count}) | Day P&L: ${daily_pnl:.2f} ({loss_pct:.1f}%)")
                     
                     # If no markets found, sleep 30 seconds
                     # If markets WERE found, don't sleep - immediately go to active polling
@@ -755,15 +792,10 @@ class Superbot:
                     total_positions = sum(len(t.positions) for t in self.coin_traders.values())
                     status_parts = [t.get_status() for t in self.coin_traders.values()]
                     
-                    loss = self.day_start_balance - self.cash
-                    loss_pct = loss / self.day_start_balance * 100 if self.day_start_balance > 0 else 0
-                    
-                    logger.info(f"Status: cash=${self.cash:.2f}, positions={total_positions}, loop={loop_count}, active_series={list(self.active_series)}")
-                    logger.info(f"Day P&L: ${loss:.2f} ({loss_pct:.1f}%) / ${self.day_start_balance * DAILY_STOP_LOSS_PCT:.2f} limit")
-                    logger.info(f"Coins: {' | '.join(status_parts)}")
-                    
                     # Build position details for the report (with live prices)
+                    # Also calculate unrealized PnL to get accurate daily P&L
                     positions_details = []
+                    unrealized_pnl = 0.0
                     for trader in self.coin_traders.values():
                         for ticker, pos in trader.positions.items():
                             # Fetch current price from Kalshi API
@@ -774,6 +806,14 @@ class Superbot:
                                 cur = mkt.yes_bid or mkt.yes_ask or pos.entry_price
                             else:
                                 cur = pos.entry_price
+                            
+                            # Calculate unrealized PnL for this position
+                            if pos.side == "yes":
+                                pos_pnl = pos.size * (cur - pos.avg_price)
+                            else:  # no
+                                pos_pnl = pos.size * (pos.avg_price - cur)
+                            unrealized_pnl += pos_pnl
+                            
                             positions_details.append({
                                 "ticker": pos.ticker,
                                 "side": pos.side,
@@ -783,6 +823,14 @@ class Superbot:
                                 "open_time": datetime.fromtimestamp(pos.open_time).strftime("%Y-%m-%d %H:%M:%S UTC") if isinstance(pos.open_time, (int, float)) else str(pos.open_time),
                                 "current_price": cur
                             })
+                    
+                    # Fix: Account for unrealized PnL from open positions
+                    daily_pnl = self.cash + unrealized_pnl - self.day_start_balance
+                    loss_pct = daily_pnl / self.day_start_balance * 100 if self.day_start_balance > 0 else 0
+                    
+                    logger.info(f"Status: cash=${self.cash:.2f}, positions={total_positions}, loop={loop_count}, active_series={list(self.active_series)}")
+                    logger.info(f"Day P&L: ${daily_pnl:.2f} ({loss_pct:.1f}%) / ${self.day_start_balance * DAILY_STOP_LOSS_PCT:.2f} limit (unrealized=${unrealized_pnl:.2f})")
+                    logger.info(f"Coins: {' | '.join(status_parts)}")
                     
                     self.report.update_session_stats(self.cash, total_positions, positions_details)
                     last_status_log = time.time()

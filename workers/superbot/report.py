@@ -81,6 +81,10 @@ class ReportGenerator:
     
     def record_trade(self, trade: Trade, open_position: OpenPosition = None):
         """Record a completed trade. Optionally pass the OpenPosition to remove from open_trades."""
+        # DEFENSIVE: Log warning if size is 0 (should never happen)
+        if trade.size <= 0:
+            logger.warning(f"record_trade: trade.size={trade.size} is suspicious! ticker={trade.ticker}, pnl={trade.pnl}")
+        
         self.stats.trades.append(trade)
         self.stats.total_trades += 1
         

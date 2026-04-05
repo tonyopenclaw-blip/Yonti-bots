@@ -6865,3 +6865,233 @@ UnboundLocalError: local variable 'action' referenced before assignment
 2026-04-05 17:30:46 [INFO] __main__: Market KXHIGHTATL-26APR06-B69.5 not found in API - may be settled
 2026-04-05 17:30:46 [INFO] __main__: Status: Balance $91.90 | Trades: 19 (19 open) | Win Rate: 0.0% | PnL: $0.00
 2026-04-05 17:30:46 [INFO] __main__: Sleeping 1800s until next scan...
+2026-04-05 18:00:43 [INFO] __main__: [18:00:43 UTC] Climate scan (normal poll)...
+2026-04-05 18:00:43 [INFO] __main__: Fetching NOAA forecasts...
+2026-04-05 18:00:43 [INFO] __main__: NOAA forecast for New York City: Today High 57°F, Tomorrow High 55°F
+2026-04-05 18:00:43 [INFO] __main__: NOAA forecast for Phoenix: Today High 95°F, Tomorrow High 89°F
+2026-04-05 18:00:43 [INFO] __main__: NOAA forecast for Chicago: Today High 51°F, Tomorrow High 48°F
+2026-04-05 18:00:43 [INFO] __main__: NOAA forecast for Houston: Today High 69°F, Tomorrow High 73°F
+2026-04-05 18:00:43 [INFO] __main__: NOAA forecast for Atlanta: Today High 71°F, Tomorrow High 70°F
+2026-04-05 18:00:44 [INFO] __main__: NOAA forecast for Los Angeles: Today High 82°F, Tomorrow High 77°F
+2026-04-05 18:00:44 [INFO] __main__: NOAA forecast for Denver: Today High 67°F, Tomorrow High 67°F
+2026-04-05 18:00:44 [INFO] __main__: NOAA forecast for Philadelphia: Today High 69°F, Tomorrow High 58°F
+2026-04-05 18:00:44 [INFO] __main__: NOAA forecast for San Antonio: Today High 68°F, Tomorrow High 72°F
+2026-04-05 18:00:44 [INFO] __main__: NOAA forecast for San Diego: Today High 76°F, Tomorrow High 73°F
+2026-04-05 18:00:44 [INFO] __main__: OPP: RANGE KXHIGHNY-26APR06-B54.5 | City: NYC | Forecast: 55°F | Range: [54, 56]°F | Edge: +5.0°F | Price: $0.27
+2026-04-05 18:00:44 [INFO] __main__: OPP: UNDER KXHIGHNY-26APR05-T60 | City: NYC | Forecast: 55°F | Range: [-999, 59]°F | Edge: +4.0°F | Price: $0.73
+2026-04-05 18:00:44 [INFO] __main__: OPP: RANGE KXHIGHTPHX-26APR06-B88.5 | City: PHX | Forecast: 89°F | Range: [88, 90]°F | Edge: +5.0°F | Price: $0.41
+2026-04-05 18:00:44 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHCHI&status=open&limit=10
+2026-04-05 18:00:44 [WARNING] kalshi_api: Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHCHI&status=open&limit=10
+2026-04-05 18:00:44 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTHOU&status=open&limit=10
+2026-04-05 18:00:44 [WARNING] kalshi_api: Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTHOU&status=open&limit=10
+2026-04-05 18:00:44 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTATL&status=open&limit=10
+2026-04-05 18:00:44 [WARNING] kalshi_api: Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTATL&status=open&limit=10
+2026-04-05 18:00:44 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHLAX&status=open&limit=10
+2026-04-05 18:00:44 [WARNING] kalshi_api: Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHLAX&status=open&limit=10
+2026-04-05 18:00:44 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTDEN&status=open&limit=10
+2026-04-05 18:00:44 [WARNING] kalshi_api: Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTDEN&status=open&limit=10
+2026-04-05 18:00:44 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTPHL&status=open&limit=10
+2026-04-05 18:00:44 [WARNING] kalshi_api: Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTPHL&status=open&limit=10
+2026-04-05 18:00:44 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTSATX-26APR06-T77 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTSATX-26APR06-T77
+2026-04-05 18:00:44 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTSATX-26APR06-T70 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTSATX-26APR06-T70
+2026-04-05 18:00:44 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTSATX-26APR06-B74.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTSATX-26APR06-B74.5
+2026-04-05 18:00:44 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTSATX-26APR06-B70.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTSATX-26APR06-B70.5
+2026-04-05 18:00:44 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTSATX-26APR05-T69 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTSATX-26APR05-T69
+2026-04-05 18:00:44 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTSATX-26APR05-B66.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTSATX-26APR05-B66.5
+2026-04-05 18:00:44 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTSD&status=open&limit=10
+2026-04-05 18:00:44 [WARNING] kalshi_api: Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTSD&status=open&limit=10
+2026-04-05 18:00:44 [INFO] __main__: Found 3 trading opportunities
+2026-04-05 18:00:44 [INFO] __main__: Market KXHIGHNY-26APR04-T68 has closed, would need settlement resolution
+2026-04-05 18:00:44 [INFO] __main__: Market KXHIGHTPHX-26APR04-B94.5 has closed, would need settlement resolution
+2026-04-05 18:00:44 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHCHI-26APR04-T55 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHCHI-26APR04-T55
+2026-04-05 18:00:44 [INFO] __main__: Market KXHIGHCHI-26APR04-T55 not found in API - may be settled
+2026-04-05 18:00:44 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTSATX-26APR04-T75 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTSATX-26APR04-T75
+2026-04-05 18:00:44 [INFO] __main__: Market KXHIGHTSATX-26APR04-T75 not found in API - may be settled
+2026-04-05 18:00:44 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHCHI-26APR05-B50.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHCHI-26APR05-B50.5
+2026-04-05 18:00:44 [INFO] __main__: Market KXHIGHCHI-26APR05-B50.5 not found in API - may be settled
+2026-04-05 18:00:45 [INFO] __main__: Market KXHIGHTHOU-26APR04-T81 has closed, would need settlement resolution
+2026-04-05 18:00:45 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTSATX-26APR05-B66.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTSATX-26APR05-B66.5
+2026-04-05 18:00:45 [INFO] __main__: Market KXHIGHTSATX-26APR05-B66.5 not found in API - may be settled
+2026-04-05 18:00:45 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTHOU-26APR05-B71.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTHOU-26APR05-B71.5
+2026-04-05 18:00:45 [INFO] __main__: Market KXHIGHTHOU-26APR05-B71.5 not found in API - may be settled
+2026-04-05 18:00:45 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTATL-26APR05-B69.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTATL-26APR05-B69.5
+2026-04-05 18:00:45 [INFO] __main__: Market KXHIGHTATL-26APR05-B69.5 not found in API - may be settled
+2026-04-05 18:00:45 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHNY-26APR06-B54.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHNY-26APR06-B54.5
+2026-04-05 18:00:45 [INFO] __main__: Market KXHIGHNY-26APR06-B54.5 not found in API - may be settled
+2026-04-05 18:00:45 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTPHX-26APR06-B88.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTPHX-26APR06-B88.5
+2026-04-05 18:00:45 [INFO] __main__: Market KXHIGHTPHX-26APR06-B88.5 not found in API - may be settled
+2026-04-05 18:00:45 [INFO] __main__: Status: Balance $92.50 | Trades: 17 (17 open) | Win Rate: 0.0% | PnL: $0.00
+2026-04-05 18:00:45 [INFO] __main__: Sleeping 1800s until next scan...
+2026-04-05 18:00:48 [INFO] __main__: [18:00:48 UTC] Climate scan (normal poll)...
+2026-04-05 18:00:48 [INFO] __main__: Fetching NOAA forecasts...
+2026-04-05 18:00:48 [INFO] __main__: NOAA forecast for New York City: Today High 57°F, Tomorrow High 55°F
+2026-04-05 18:00:48 [INFO] __main__: NOAA forecast for Phoenix: Today High 95°F, Tomorrow High 89°F
+2026-04-05 18:00:48 [INFO] __main__: NOAA forecast for Chicago: Today High 51°F, Tomorrow High 48°F
+2026-04-05 18:00:48 [INFO] __main__: NOAA forecast for Houston: Today High 69°F, Tomorrow High 73°F
+2026-04-05 18:00:48 [INFO] __main__: NOAA forecast for Atlanta: Today High 71°F, Tomorrow High 70°F
+2026-04-05 18:00:48 [INFO] __main__: NOAA forecast for Los Angeles: Today High 82°F, Tomorrow High 77°F
+2026-04-05 18:00:48 [INFO] __main__: NOAA forecast for Denver: Today High 67°F, Tomorrow High 67°F
+2026-04-05 18:00:48 [INFO] __main__: NOAA forecast for Philadelphia: Today High 69°F, Tomorrow High 58°F
+2026-04-05 18:00:48 [INFO] __main__: NOAA forecast for San Antonio: Today High 68°F, Tomorrow High 72°F
+2026-04-05 18:00:48 [INFO] __main__: NOAA forecast for San Diego: Today High 76°F, Tomorrow High 73°F
+2026-04-05 18:00:48 [INFO] __main__: OPP: RANGE KXHIGHNY-26APR06-B54.5 | City: NYC | Forecast: 55°F | Range: [54, 56]°F | Edge: +5.0°F | Price: $0.27
+2026-04-05 18:00:48 [INFO] __main__: OPP: UNDER KXHIGHNY-26APR05-T60 | City: NYC | Forecast: 55°F | Range: [-999, 59]°F | Edge: +4.0°F | Price: $0.73
+2026-04-05 18:00:48 [INFO] __main__: OPP: RANGE KXHIGHTPHX-26APR06-B88.5 | City: PHX | Forecast: 89°F | Range: [88, 90]°F | Edge: +5.0°F | Price: $0.41
+2026-04-05 18:00:49 [INFO] __main__: OPP: RANGE KXHIGHCHI-26APR06-B47.5 | City: CHI | Forecast: 48°F | Range: [48, 48]°F | Edge: +5.0°F | Price: $0.24
+2026-04-05 18:00:49 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTHOU&status=open&limit=10
+2026-04-05 18:00:49 [WARNING] kalshi_api: Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTHOU&status=open&limit=10
+2026-04-05 18:00:49 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTATL&status=open&limit=10
+2026-04-05 18:00:49 [WARNING] kalshi_api: Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTATL&status=open&limit=10
+2026-04-05 18:00:49 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHLAX&status=open&limit=10
+2026-04-05 18:00:49 [WARNING] kalshi_api: Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHLAX&status=open&limit=10
+2026-04-05 18:00:49 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTDEN&status=open&limit=10
+2026-04-05 18:00:49 [WARNING] kalshi_api: Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTDEN&status=open&limit=10
+2026-04-05 18:00:49 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTPHL&status=open&limit=10
+2026-04-05 18:00:49 [WARNING] kalshi_api: Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTPHL&status=open&limit=10
+2026-04-05 18:00:49 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTSATX-26APR05-T69 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTSATX-26APR05-T69
+2026-04-05 18:00:49 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTSATX-26APR05-B68.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTSATX-26APR05-B68.5
+2026-04-05 18:00:49 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTSD&status=open&limit=10
+2026-04-05 18:00:49 [WARNING] kalshi_api: Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTSD&status=open&limit=10
+2026-04-05 18:00:49 [INFO] __main__: Found 4 trading opportunities
+2026-04-05 18:00:49 [INFO] __main__: Market KXHIGHNY-26APR04-T68 has closed, would need settlement resolution
+2026-04-05 18:00:49 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTPHX-26APR04-B94.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTPHX-26APR04-B94.5
+2026-04-05 18:00:49 [INFO] __main__: Market KXHIGHTPHX-26APR04-B94.5 not found in API - may be settled
+2026-04-05 18:00:49 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHCHI-26APR04-T55 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHCHI-26APR04-T55
+2026-04-05 18:00:49 [INFO] __main__: Market KXHIGHCHI-26APR04-T55 not found in API - may be settled
+2026-04-05 18:00:49 [INFO] __main__: Market KXHIGHTSATX-26APR04-T75 has closed, would need settlement resolution
+2026-04-05 18:00:49 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTPHX-26APR05-B94.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTPHX-26APR05-B94.5
+2026-04-05 18:00:49 [INFO] __main__: Market KXHIGHTPHX-26APR05-B94.5 not found in API - may be settled
+2026-04-05 18:00:49 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHCHI-26APR05-B50.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHCHI-26APR05-B50.5
+2026-04-05 18:00:49 [INFO] __main__: Market KXHIGHCHI-26APR05-B50.5 not found in API - may be settled
+2026-04-05 18:00:49 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTHOU-26APR04-T81 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTHOU-26APR04-T81
+2026-04-05 18:00:49 [INFO] __main__: Market KXHIGHTHOU-26APR04-T81 not found in API - may be settled
+2026-04-05 18:00:49 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTSATX-26APR05-B66.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTSATX-26APR05-B66.5
+2026-04-05 18:00:49 [INFO] __main__: Market KXHIGHTSATX-26APR05-B66.5 not found in API - may be settled
+2026-04-05 18:00:49 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTHOU-26APR05-B71.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTHOU-26APR05-B71.5
+2026-04-05 18:00:49 [INFO] __main__: Market KXHIGHTHOU-26APR05-B71.5 not found in API - may be settled
+2026-04-05 18:00:49 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHLAX-26APR05-B76.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHLAX-26APR05-B76.5
+2026-04-05 18:00:49 [INFO] __main__: Market KXHIGHLAX-26APR05-B76.5 not found in API - may be settled
+2026-04-05 18:00:49 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTPHX-26APR06-B88.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTPHX-26APR06-B88.5
+2026-04-05 18:00:49 [INFO] __main__: Market KXHIGHTPHX-26APR06-B88.5 not found in API - may be settled
+2026-04-05 18:00:49 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHCHI-26APR06-B47.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHCHI-26APR06-B47.5
+2026-04-05 18:00:49 [INFO] __main__: Market KXHIGHCHI-26APR06-B47.5 not found in API - may be settled
+2026-04-05 18:00:49 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHLAX-26APR06-B76.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHLAX-26APR06-B76.5
+2026-04-05 18:00:49 [INFO] __main__: Market KXHIGHLAX-26APR06-B76.5 not found in API - may be settled
+2026-04-05 18:00:49 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTATL-26APR06-B69.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTATL-26APR06-B69.5
+2026-04-05 18:00:49 [INFO] __main__: Market KXHIGHTATL-26APR06-B69.5 not found in API - may be settled
+2026-04-05 18:00:49 [INFO] __main__: Status: Balance $91.90 | Trades: 19 (19 open) | Win Rate: 0.0% | PnL: $0.00
+2026-04-05 18:00:49 [INFO] __main__: Sleeping 1800s until next scan...
+2026-04-05 18:30:47 [INFO] __main__: [18:30:47 UTC] Climate scan (normal poll)...
+2026-04-05 18:30:47 [INFO] __main__: Fetching NOAA forecasts...
+2026-04-05 18:30:47 [INFO] __main__: NOAA forecast for New York City: Today High 57°F, Tomorrow High 55°F
+2026-04-05 18:30:47 [INFO] __main__: NOAA forecast for Phoenix: Today High 95°F, Tomorrow High 89°F
+2026-04-05 18:30:47 [INFO] __main__: NOAA forecast for Chicago: Today High 52°F, Tomorrow High 49°F
+2026-04-05 18:30:47 [INFO] __main__: NOAA forecast for Houston: Today High 69°F, Tomorrow High 73°F
+2026-04-05 18:30:47 [INFO] __main__: NOAA forecast for Atlanta: Today High 71°F, Tomorrow High 70°F
+2026-04-05 18:30:47 [INFO] __main__: NOAA forecast for Los Angeles: Today High 82°F, Tomorrow High 77°F
+2026-04-05 18:30:47 [INFO] __main__: NOAA forecast for Denver: Today High 67°F, Tomorrow High 67°F
+2026-04-05 18:30:47 [INFO] __main__: NOAA forecast for Philadelphia: Today High 69°F, Tomorrow High 58°F
+2026-04-05 18:30:47 [INFO] __main__: NOAA forecast for San Antonio: Today High 67°F, Tomorrow High 73°F
+2026-04-05 18:30:47 [INFO] __main__: NOAA forecast for San Diego: Today High 76°F, Tomorrow High 73°F
+2026-04-05 18:30:47 [INFO] __main__: OPP: RANGE KXHIGHNY-26APR06-B54.5 | City: NYC | Forecast: 55°F | Range: [54, 56]°F | Edge: +5.0°F | Price: $0.27
+2026-04-05 18:30:47 [INFO] __main__: OPP: UNDER KXHIGHNY-26APR05-T60 | City: NYC | Forecast: 55°F | Range: [-999, 59]°F | Edge: +4.0°F | Price: $0.73
+2026-04-05 18:30:47 [INFO] __main__: OPP: RANGE KXHIGHTPHX-26APR06-B88.5 | City: PHX | Forecast: 89°F | Range: [88, 90]°F | Edge: +5.0°F | Price: $0.43
+2026-04-05 18:30:48 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHCHI&status=open&limit=10
+2026-04-05 18:30:48 [WARNING] kalshi_api: Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHCHI&status=open&limit=10
+2026-04-05 18:30:48 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTHOU&status=open&limit=10
+2026-04-05 18:30:48 [WARNING] kalshi_api: Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTHOU&status=open&limit=10
+2026-04-05 18:30:48 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTATL&status=open&limit=10
+2026-04-05 18:30:48 [WARNING] kalshi_api: Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTATL&status=open&limit=10
+2026-04-05 18:30:48 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHLAX-26APR06-T77 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHLAX-26APR06-T77
+2026-04-05 18:30:48 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHLAX-26APR06-B76.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHLAX-26APR06-B76.5
+2026-04-05 18:30:48 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHLAX-26APR06-B74.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHLAX-26APR06-B74.5
+2026-04-05 18:30:48 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHLAX-26APR05-B78.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHLAX-26APR05-B78.5
+2026-04-05 18:30:48 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTDEN&status=open&limit=10
+2026-04-05 18:30:48 [WARNING] kalshi_api: Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTDEN&status=open&limit=10
+2026-04-05 18:30:48 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTPHL&status=open&limit=10
+2026-04-05 18:30:48 [WARNING] kalshi_api: Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTPHL&status=open&limit=10
+2026-04-05 18:30:48 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTSATX&status=open&limit=10
+2026-04-05 18:30:48 [WARNING] kalshi_api: Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTSATX&status=open&limit=10
+2026-04-05 18:30:48 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTSD&status=open&limit=10
+2026-04-05 18:30:48 [WARNING] kalshi_api: Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTSD&status=open&limit=10
+2026-04-05 18:30:48 [INFO] __main__: Found 3 trading opportunities
+2026-04-05 18:30:48 [INFO] __main__: Market KXHIGHNY-26APR04-T68 has closed, would need settlement resolution
+2026-04-05 18:30:48 [INFO] __main__: Market KXHIGHTPHX-26APR04-B94.5 has closed, would need settlement resolution
+2026-04-05 18:30:48 [INFO] __main__: Market KXHIGHCHI-26APR04-T55 has closed, would need settlement resolution
+2026-04-05 18:30:48 [INFO] __main__: Market KXHIGHTSATX-26APR04-T75 has closed, would need settlement resolution
+2026-04-05 18:30:48 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTPHX-26APR05-B94.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTPHX-26APR05-B94.5
+2026-04-05 18:30:48 [INFO] __main__: Market KXHIGHTPHX-26APR05-B94.5 not found in API - may be settled
+2026-04-05 18:30:48 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTHOU-26APR05-B69.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTHOU-26APR05-B69.5
+2026-04-05 18:30:48 [INFO] __main__: Market KXHIGHTHOU-26APR05-B69.5 not found in API - may be settled
+2026-04-05 18:30:48 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTHOU-26APR04-T81 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTHOU-26APR04-T81
+2026-04-05 18:30:48 [INFO] __main__: Market KXHIGHTHOU-26APR04-T81 not found in API - may be settled
+2026-04-05 18:30:48 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTSATX-26APR05-B66.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTSATX-26APR05-B66.5
+2026-04-05 18:30:48 [INFO] __main__: Market KXHIGHTSATX-26APR05-B66.5 not found in API - may be settled
+2026-04-05 18:30:48 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTHOU-26APR05-B71.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTHOU-26APR05-B71.5
+2026-04-05 18:30:48 [INFO] __main__: Market KXHIGHTHOU-26APR05-B71.5 not found in API - may be settled
+2026-04-05 18:30:48 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTATL-26APR05-B69.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTATL-26APR05-B69.5
+2026-04-05 18:30:48 [INFO] __main__: Market KXHIGHTATL-26APR05-B69.5 not found in API - may be settled
+2026-04-05 18:30:48 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHCHI-26APR06-B47.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHCHI-26APR06-B47.5
+2026-04-05 18:30:48 [INFO] __main__: Market KXHIGHCHI-26APR06-B47.5 not found in API - may be settled
+2026-04-05 18:30:48 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTPHX-26APR06-B88.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTPHX-26APR06-B88.5
+2026-04-05 18:30:48 [INFO] __main__: Market KXHIGHTPHX-26APR06-B88.5 not found in API - may be settled
+2026-04-05 18:30:48 [INFO] __main__: Status: Balance $92.50 | Trades: 17 (17 open) | Win Rate: 0.0% | PnL: $0.00
+2026-04-05 18:30:48 [INFO] __main__: Sleeping 1800s until next scan...
+2026-04-05 18:30:51 [INFO] __main__: [18:30:51 UTC] Climate scan (normal poll)...
+2026-04-05 18:30:51 [INFO] __main__: Fetching NOAA forecasts...
+2026-04-05 18:30:51 [INFO] __main__: NOAA forecast for New York City: Today High 57°F, Tomorrow High 55°F
+2026-04-05 18:30:51 [INFO] __main__: NOAA forecast for Phoenix: Today High 95°F, Tomorrow High 89°F
+2026-04-05 18:30:51 [INFO] __main__: NOAA forecast for Chicago: Today High 52°F, Tomorrow High 49°F
+2026-04-05 18:30:51 [INFO] __main__: NOAA forecast for Houston: Today High 69°F, Tomorrow High 73°F
+2026-04-05 18:30:51 [INFO] __main__: NOAA forecast for Atlanta: Today High 71°F, Tomorrow High 70°F
+2026-04-05 18:30:51 [INFO] __main__: NOAA forecast for Los Angeles: Today High 82°F, Tomorrow High 77°F
+2026-04-05 18:30:51 [INFO] __main__: NOAA forecast for Denver: Today High 67°F, Tomorrow High 67°F
+2026-04-05 18:30:51 [INFO] __main__: NOAA forecast for Philadelphia: Today High 69°F, Tomorrow High 58°F
+2026-04-05 18:30:51 [INFO] __main__: NOAA forecast for San Antonio: Today High 67°F, Tomorrow High 73°F
+2026-04-05 18:30:51 [INFO] __main__: NOAA forecast for San Diego: Today High 76°F, Tomorrow High 73°F
+2026-04-05 18:30:52 [INFO] __main__: OPP: RANGE KXHIGHNY-26APR06-B54.5 | City: NYC | Forecast: 55°F | Range: [54, 56]°F | Edge: +5.0°F | Price: $0.27
+2026-04-05 18:30:52 [INFO] __main__: OPP: UNDER KXHIGHNY-26APR05-T60 | City: NYC | Forecast: 55°F | Range: [-999, 59]°F | Edge: +4.0°F | Price: $0.73
+2026-04-05 18:30:52 [INFO] __main__: OPP: RANGE KXHIGHTPHX-26APR06-B88.5 | City: PHX | Forecast: 89°F | Range: [88, 90]°F | Edge: +5.0°F | Price: $0.43
+2026-04-05 18:30:52 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTHOU&status=open&limit=10
+2026-04-05 18:30:52 [WARNING] kalshi_api: Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTHOU&status=open&limit=10
+2026-04-05 18:30:52 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTATL&status=open&limit=10
+2026-04-05 18:30:52 [WARNING] kalshi_api: Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTATL&status=open&limit=10
+2026-04-05 18:30:52 [INFO] __main__: OPP: RANGE KXHIGHLAX-26APR06-B76.5 | City: LAX | Forecast: 77°F | Range: [76, 78]°F | Edge: +5.0°F | Price: $0.11
+2026-04-05 18:30:52 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHLAX-26APR06-B70.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHLAX-26APR06-B70.5
+2026-04-05 18:30:52 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHLAX-26APR05-T81 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHLAX-26APR05-T81
+2026-04-05 18:30:52 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHLAX-26APR05-B78.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHLAX-26APR05-B78.5
+2026-04-05 18:30:52 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTDEN&status=open&limit=10
+2026-04-05 18:30:52 [WARNING] kalshi_api: Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTDEN&status=open&limit=10
+2026-04-05 18:30:52 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTPHL&status=open&limit=10
+2026-04-05 18:30:52 [WARNING] kalshi_api: Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTPHL&status=open&limit=10
+2026-04-05 18:30:52 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTSATX&status=open&limit=10
+2026-04-05 18:30:52 [WARNING] kalshi_api: Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTSATX&status=open&limit=10
+2026-04-05 18:30:52 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTSD&status=open&limit=10
+2026-04-05 18:30:52 [WARNING] kalshi_api: Failed to fetch markets: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXHIGHTSD&status=open&limit=10
+2026-04-05 18:30:52 [INFO] __main__: Found 4 trading opportunities
+2026-04-05 18:30:52 [INFO] __main__: Market KXHIGHNY-26APR04-T68 has closed, would need settlement resolution
+2026-04-05 18:30:52 [INFO] __main__: Market KXHIGHTPHX-26APR04-B94.5 has closed, would need settlement resolution
+2026-04-05 18:30:52 [INFO] __main__: Market KXHIGHCHI-26APR04-T55 has closed, would need settlement resolution
+2026-04-05 18:30:52 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTSATX-26APR04-T75 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTSATX-26APR04-T75
+2026-04-05 18:30:52 [INFO] __main__: Market KXHIGHTSATX-26APR04-T75 not found in API - may be settled
+2026-04-05 18:30:52 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHCHI-26APR05-B50.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHCHI-26APR05-B50.5
+2026-04-05 18:30:52 [INFO] __main__: Market KXHIGHCHI-26APR05-B50.5 not found in API - may be settled
+2026-04-05 18:30:52 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTHOU-26APR05-B69.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTHOU-26APR05-B69.5
+2026-04-05 18:30:52 [INFO] __main__: Market KXHIGHTHOU-26APR05-B69.5 not found in API - may be settled
+2026-04-05 18:30:52 [INFO] __main__: Market KXHIGHTHOU-26APR04-T81 has closed, would need settlement resolution
+2026-04-05 18:30:53 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHNY-26APR05-B62.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHNY-26APR05-B62.5
+2026-04-05 18:30:53 [INFO] __main__: Market KXHIGHNY-26APR05-B62.5 not found in API - may be settled
+2026-04-05 18:30:53 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHNY-26APR05-T60 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHNY-26APR05-T60
+2026-04-05 18:30:53 [INFO] __main__: Market KXHIGHNY-26APR05-T60 not found in API - may be settled
+2026-04-05 18:30:53 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTHOU-26APR05-B71.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTHOU-26APR05-B71.5
+2026-04-05 18:30:53 [INFO] __main__: Market KXHIGHTHOU-26APR05-B71.5 not found in API - may be settled
+2026-04-05 18:30:53 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHNY-26APR06-B54.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHNY-26APR06-B54.5
+2026-04-05 18:30:53 [INFO] __main__: Market KXHIGHNY-26APR06-B54.5 not found in API - may be settled
+2026-04-05 18:30:53 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHCHI-26APR06-B47.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHCHI-26APR06-B47.5
+2026-04-05 18:30:53 [INFO] __main__: Market KXHIGHCHI-26APR06-B47.5 not found in API - may be settled
+2026-04-05 18:30:53 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTHOU-26APR06-B71.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTHOU-26APR06-B71.5
+2026-04-05 18:30:53 [INFO] __main__: Market KXHIGHTHOU-26APR06-B71.5 not found in API - may be settled
+2026-04-05 18:30:53 [ERROR] kalshi_api: API GET failed: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTATL-26APR06-B69.5 | Error: 429 Client Error: Too Many Requests for url: https://api.elections.kalshi.com/trade-api/v2/markets/KXHIGHTATL-26APR06-B69.5
+2026-04-05 18:30:53 [INFO] __main__: Market KXHIGHTATL-26APR06-B69.5 not found in API - may be settled
+2026-04-05 18:30:53 [INFO] __main__: Status: Balance $91.90 | Trades: 19 (19 open) | Win Rate: 0.0% | PnL: $0.00
+2026-04-05 18:30:53 [INFO] __main__: Sleeping 1800s until next scan...

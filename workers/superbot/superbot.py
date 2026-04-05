@@ -516,7 +516,7 @@ class Superbot:
         logger.info(f"Max daily trades: {MAX_DAILY_TRADES}")
         logger.info(f"Coinbase pre-filter: poll every 10s (FREE)")
         logger.info(f"Kalshi polling: every 30s (was 2s)")
-        logger.info("STRATEGY: First Cross ONLY (no drift)")
+        logger.info("STRATEGY: First Cross + Momentum BOTH (let them compete)")
         logger.info("=" * 60)
 
     def _signal_handler(self, signum, frame):

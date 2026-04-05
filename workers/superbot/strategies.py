@@ -33,10 +33,10 @@ MAX_ENTRY_PRICE = 0.80
 
 # === TONY'S TWO-STAGE STOP SYSTEM ===
 # Stage 1: STATIC STOP at -30% - exit immediately if price moves against us by 30%
-# Stage 2: TRAILING STOP (only after +30% profit) - trail from there
+# Stage 2: TRAILING STOP (only after +50% profit) - trail from there
 STATIC_STOP_PCT = 0.30
-TRAILING_TRIGGER_PCT = 0.30
-TRAILING_BUFFER_PCT = 0.30
+TRAILING_TRIGGER_PCT = 0.50   # 50% profit before trailing stop activates (was 30%)
+TRAILING_BUFFER_PCT = 0.40    # 40% buffer (was 30%)
 import requests
 from kalshi_api import Market
 
@@ -409,10 +409,10 @@ class TradeSignal:
     sl_pct: Optional[float] = None        # SL percentage (deprecated - use absolute)
     scale_in_size: float = 0.0           # Additional size for scaling in (50% of initial)
     # === TONYS MOMENTUM STRATEGY: Flat 30% trailing stop everywhere (was 20%) ===
-    trailing_stop_pct: float = 0.30       # 30% buffer (drop/rise from peak before exit)
-    trailing_stop_trigger_pct: float = 0.30  # 30% profit before trailing stop activates
+    trailing_stop_pct: float = 0.40       # 40% buffer (drop/rise from peak before exit)
+    trailing_stop_trigger_pct: float = 0.50  # 50% profit before trailing stop activates
     confidence: int = 50                  # Signal confidence 0-100
-    trailing_stop_buffer: float = 0.30   # 30% buffer (alias for clarity)
+    trailing_stop_buffer: float = 0.40    # 40% buffer (alias for clarity)
     max_hold_minutes: int = 10           # Dynamic based on entry zone
 
 
@@ -430,9 +430,9 @@ class Position:
     first_cross_direction: str = ""  # Tony's first crossing insight: 'up', 'down', or ''
     
     # === TONYS MOMENTUM STRATEGY: Flat 30% trailing stop everywhere (was 20%) ===
-    trailing_stop_pct: float = 0.30       # 30% buffer (drop/rise from peak before exit)
-    trailing_stop_active: bool = False   # Trailing stop activates after 30% profit
-    trailing_stop_trigger_pct: float = 0.30  # 30% profit before trailing stop activates
+    trailing_stop_pct: float = 0.40       # 40% buffer (drop/rise from peak before exit)
+    trailing_stop_active: bool = False   # Trailing stop activates after 50% profit
+    trailing_stop_trigger_pct: float = 0.50  # 50% profit before trailing stop activates
     peak_price: float = 0.0              # Track peak price for longs, trough for shorts
     scale_in_count: int = 0              # Number of times we've scaled in
     max_scale_ins: int = 2               # Max 2 scale-ins per position
@@ -700,7 +700,7 @@ class StrategyEngine:
         if contracts <= 0:
             return 0.0, effective_pct, confidence
         
-        return float(contracts), effective_pct, confidence
+        return int(contracts), effective_pct, confidence
     
     def calculate_confidence(
         self,
@@ -846,10 +846,10 @@ class StrategyEngine:
         """
         TONY'S MOMENTUM STRATEGY - Priority Order:
         1. MOMENTUM (PRIMARY) - momentum signal AND price at extreme → BUY immediately
-        2. NO CROSS AFTER 1 MIN - start buying on momentum side anyway (force it)
-        3. FIRST CROSS (BACKUP) - only if no momentum signal
+        2. FIRST CROSS (PRIMARY) - coin or midpoint cross through target
+        3. MOMENTUM_FORCE (FALLBACK) - no cross after 1 min + momentum
         
-        Trailing Stop: FLAT 20% everywhere (trigger=20%, buffer=20%)
+        Trailing Stop: Trigger 50%, Buffer 40%
         """
         
         # Use mid price for decision
@@ -875,10 +875,50 @@ class StrategyEngine:
         if deep_buy_signal:
             return deep_buy_signal
         
-        # === Get Coinbase bias ===
+        # === Get Coinbase bias for momentum and first_cross checks ===
         bias = get_coinbase_bias(coin) if coin else 'neutral'
         
-        # === PRIORITY 1: FIRST CROSS (PRIMARY - checked FIRST) ===
+        # === PRIORITY 1: NEW MOMENTUM (immediate, no 60s wait, at extremes) ===
+        # Fire IMMEDIATELY when at extreme price AND has Coinbase bias
+        # This is checked BEFORE first_cross to prioritize momentum signals at extremes
+        if bias != 'neutral' and (mid_price < 0.10 or mid_price > 0.90):
+            if bias == 'bullish' and mid_price < 0.10:
+                side = 'yes'
+                reason_suffix = 'momentum: bullish + extreme low'
+            elif bias == 'bearish' and mid_price > 0.90:
+                side = 'no'
+                reason_suffix = 'momentum: bearish + extreme high'
+            else:
+                bias = None
+            
+            if bias is not None:
+                confidence = 60  # Momentum gets slightly higher confidence when at extremes
+                size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.MOMENTUM, mid_price, confidence, mid_price)
+                
+                if confidence >= 40:
+                    logger.info(
+                        f"MOMENTUM SIGNAL: {market.ticker} | "
+                        f"Side: {side} @ ${mid_price:.4f} | contracts={int(size):d} | "
+                        f"CONF={confidence} | TS=50%/40% | Coinbase={bias}"
+                    )
+                    
+                    return TradeSignal(
+                        strategy=Strategy.MOMENTUM,
+                        ticker=market.ticker,
+                        side=side,
+                        price=mid_price,
+                        size=size,
+                        reason=f"MOMENTUM: {reason_suffix}, Coinbase={bias}, CONF={confidence}",
+                        take_profit=0.95 if side == "yes" else 0.05,
+                        stop_loss=None,
+                        trailing_stop_pct=0.40,
+                        trailing_stop_trigger_pct=0.50,
+                        confidence=confidence,
+                        trailing_stop_buffer=0.40,
+                        max_hold_minutes=10
+                    )
+        
+        # === PRIORITY 2: FIRST CROSS (coin + midpoint) - fires if no momentum ===
         # --- First Cross: Coin price vs target price ---
         if market.ticker not in self._floor_strikes:
             if self.api is not None:
@@ -921,10 +961,10 @@ class StrategyEngine:
                         reason=f"FIRST_CROSS: {reason_suffix}, target=${target_price:,.2f}, Kelly={kelly_pct:.2%}, CONF={confidence}",
                         take_profit=0.95 if side == "yes" else 0.05,
                         stop_loss=None,
-                        trailing_stop_pct=0.30,
-                        trailing_stop_trigger_pct=0.30,
+                        trailing_stop_pct=0.40,
+                        trailing_stop_trigger_pct=0.50,
                         confidence=confidence,
-                        trailing_stop_buffer=0.30,
+                        trailing_stop_buffer=0.40,
                         max_hold_minutes=10
                     )
         
@@ -953,7 +993,7 @@ class StrategyEngine:
                     logger.info(
                         f"FIRST_CROSS SIGNAL (midpoint): {market.ticker} | "
                         f"Direction: {preferred_side} | Side: {side} @ ${mid_price:.4f} | "
-                        f"contracts={int(size):d} | CONF={confidence} | TS=20%/20% | max_hold={max_hold}min"
+                        f"contracts={int(size):d} | CONF={confidence} | TS=50%/40% | max_hold={max_hold}min"
                     )
                     
                     return TradeSignal(
@@ -965,55 +1005,16 @@ class StrategyEngine:
                         reason=f"FIRST_CROSS: {reason_suffix}, CONF={confidence}, Kelly={kelly_pct:.2%}",
                         take_profit=0.95 if side == "yes" else 0.05,
                         stop_loss=None,
-                        trailing_stop_pct=0.30,
-                        trailing_stop_trigger_pct=0.30,
+                        trailing_stop_pct=0.40,
+                        trailing_stop_trigger_pct=0.50,
                         confidence=confidence,
-                        trailing_stop_buffer=0.30,
+                        trailing_stop_buffer=0.40,
                         max_hold_minutes=max_hold
                     )
         
-        # === PRIORITY 2: MOMENTUM (only if no cross after 1 min) ===
-        # Only use momentum if no first cross has occurred yet
-        no_cross_yet = not has_coin_cross and not has_midpoint_cross
-        if no_cross_yet and market_age_sec >= 60 and bias != 'neutral' and (mid_price < 0.10 or mid_price > 0.90):
-            if bias == 'bullish' and mid_price < 0.10:
-                side = 'yes'
-                reason_suffix = 'momentum: bullish + extreme low, no cross in 60s'
-            elif bias == 'bearish' and mid_price > 0.90:
-                side = 'no'
-                reason_suffix = 'momentum: bearish + extreme high, no cross in 60s'
-            else:
-                bias = None
-            
-            if bias is not None:
-                confidence = 55  # Momentum signal gets slightly lower confidence than first_cross
-                size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.MOMENTUM, mid_price, confidence, mid_price)
-                
-                if confidence >= 40:
-                    logger.info(
-                        f"MOMENTUM SIGNAL: {market.ticker} | "
-                        f"Side: {side} @ ${mid_price:.4f} | contracts={int(size):d} | "
-                        f"CONF={confidence} | TS=20%/20% | Coinbase={bias} | age={market_age_sec:.0f}s"
-                    )
-                    
-                    return TradeSignal(
-                        strategy=Strategy.MOMENTUM,
-                        ticker=market.ticker,
-                        side=side,
-                        price=mid_price,
-                        size=size,
-                        reason=f"MOMENTUM: {reason_suffix}, Coinbase={bias}, CONF={confidence}",
-                        take_profit=0.95 if side == "yes" else 0.05,
-                        stop_loss=None,
-                        trailing_stop_pct=0.30,
-                        trailing_stop_trigger_pct=0.30,
-                        confidence=confidence,
-                        trailing_stop_buffer=0.30,
-                        max_hold_minutes=10
-                    )
-        
-        # === PRIORITY 3: MOMENTUM_FORCE (no cross AND no momentum after 1 min) ===
+        # === PRIORITY 3: MOMENTUM_FORCE (60s fallback - only if nothing else fired) ===
         # Force entry on momentum side ONLY if no first cross AND no momentum signal after 60s
+        no_cross_yet = not has_coin_cross and not has_midpoint_cross
         if no_cross_yet and market_age_sec >= 60 and bias != 'neutral':
             if bias == 'bullish':
                 side = 'yes'
@@ -1032,7 +1033,7 @@ class StrategyEngine:
                     logger.info(
                         f"MOMENTUM_FORCE SIGNAL: {market.ticker} | "
                         f"Side: {side} @ ${mid_price:.4f} | contracts={int(size):d} | "
-                        f"CONF={confidence} | TS=30%/30% | Coinbase={bias} | age={market_age_sec:.0f}s"
+                        f"CONF={confidence} | TS=50%/40% | Coinbase={bias} | age={market_age_sec:.0f}s"
                     )
                     
                     return TradeSignal(
@@ -1044,10 +1045,10 @@ class StrategyEngine:
                         reason=f"MOMENTUM_FORCE: {reason_suffix}, Coinbase={bias}, CONF={confidence}",
                         take_profit=0.95 if side == "yes" else 0.05,
                         stop_loss=None,
-                        trailing_stop_pct=0.30,
-                        trailing_stop_trigger_pct=0.30,
+                        trailing_stop_pct=0.40,
+                        trailing_stop_trigger_pct=0.50,
                         confidence=confidence,
-                        trailing_stop_buffer=0.30,
+                        trailing_stop_buffer=0.40,
                         max_hold_minutes=8
                     )
         
@@ -1247,8 +1248,8 @@ Your estimate:"""
         # Let winners run to $0.95 or trailing stop
         sl_price = DRIFT_BUY_STOP_LOSS  # $0.22 absolute
         
-        # Scale-in size: 50% of original contracts
-        scale_in_size = size * 0.5
+        # Scale-in size: 50% of original contracts (whole contracts only)
+        scale_in_size = int(size * 0.5)
         
         # Confidence-based trailing stop buffer (wider for high confidence - Tony: let winners run!)
         if confidence >= 96:
@@ -1336,8 +1337,8 @@ Your estimate:"""
         # SL only - no tight TP
         sl_price = DRIFT_SHORT_STOP_LOSS  # $0.75 absolute
         
-        # Scale-in size: 50% of original contracts
-        scale_in_size = size * 0.5
+        # Scale-in size: 50% of original contracts (whole contracts only)
+        scale_in_size = int(size * 0.5)
         
         # Confidence-based trailing stop buffer (wider for high confidence - Tony: let winners run!)
         if confidence >= 96:

@@ -1,18 +1,132 @@
 {
-  "start_time": "2026-04-05 14:55:28 UTC",
+  "start_time": "2026-04-05 15:09:16 UTC",
   "end_time": "",
   "starting_balance": 100.0,
-  "ending_balance": 100.0,
-  "total_pnl": 0.0,
-  "total_trades": 0,
-  "winning_trades": 0,
+  "ending_balance": 91.285,
+  "total_pnl": -8.715000000000003,
+  "total_trades": 3,
+  "winning_trades": 3,
   "losing_trades": 0,
-  "win_rate": 0,
-  "largest_win": 0.0,
+  "win_rate": 100.0,
+  "largest_win": 0.9014999999999996,
   "largest_loss": 0.0,
-  "open_positions": 0,
-  "thermostat": 0,
-  "trades": [],
-  "last_10_open_trades": [],
-  "last_10_closed_trades": []
+  "open_positions": 3,
+  "thermostat": 37,
+  "trades": [
+    {
+      "ticker": "KXBNB15M-26APR051115-15",
+      "side": "yes",
+      "entry_price": 0.6699999999999999,
+      "exit_price": 0.9544999999999999,
+      "shares": 2.0,
+      "cost": 1.3399999999999999,
+      "pnl": 0.569,
+      "strategy": "first_cross",
+      "open_time": "2026-04-05 15:10:49 UTC",
+      "close_time": "2026-04-05 15:12:23 UTC",
+      "exit_reason": "Near-max TP: $0.9545 >= $0.95"
+    },
+    {
+      "ticker": "KXHYPE15M-26APR051115-15",
+      "side": "no",
+      "entry_price": 0.795,
+      "exit_price": 0.975,
+      "shares": 2.0,
+      "cost": 1.59,
+      "pnl": 0.3599999999999999,
+      "strategy": "momentum_force",
+      "open_time": "2026-04-05 15:10:18 UTC",
+      "close_time": "2026-04-05 15:12:23 UTC",
+      "exit_reason": "TRAILING STOP: locked in profits"
+    },
+    {
+      "ticker": "KXETH15M-26APR051115-15",
+      "side": "yes",
+      "entry_price": 0.66,
+      "exit_price": 0.9604999999999999,
+      "shares": 3.0,
+      "cost": 1.98,
+      "pnl": 0.9014999999999996,
+      "strategy": "first_cross",
+      "open_time": "2026-04-05 15:10:49 UTC",
+      "close_time": "2026-04-05 15:12:54 UTC",
+      "exit_reason": "Near-max TP: $0.9605 >= $0.95"
+    }
+  ],
+  "last_10_open_trades": [
+    {
+      "ticker": "KXBTC15M-26APR051130-30",
+      "side": "yes",
+      "entry_price": 0.745,
+      "shares": 2.0,
+      "cost": 1.49,
+      "pnl": 0.0,
+      "strategy": "first_cross",
+      "open_time": "2026-04-05 15:17:17 UTC",
+      "current_price": 0.675
+    },
+    {
+      "ticker": "KXETH15M-26APR051130-30",
+      "side": "yes",
+      "entry_price": 0.625,
+      "shares": 3.0,
+      "cost": 1.875,
+      "pnl": 0.0,
+      "strategy": "first_cross",
+      "open_time": "2026-04-05 15:17:17 UTC",
+      "current_price": 0.52
+    },
+    {
+      "ticker": "KXBNB15M-26APR051130-30",
+      "side": "yes",
+      "entry_price": 0.54,
+      "shares": 3.0,
+      "cost": 1.62,
+      "pnl": 0.0,
+      "strategy": "first_cross",
+      "open_time": "2026-04-05 15:16:26 UTC",
+      "current_price": 0.69
+    }
+  ],
+  "last_10_closed_trades": [
+    {
+      "ticker": "KXETH15M-26APR051115-15",
+      "side": "yes",
+      "entry_price": 0.66,
+      "exit_price": 0.9604999999999999,
+      "shares": 3.0,
+      "cost": 1.98,
+      "pnl": 0.9014999999999996,
+      "strategy": "first_cross",
+      "open_time": "2026-04-05 15:10:49 UTC",
+      "close_time": "2026-04-05 15:12:54 UTC",
+      "exit_reason": "Near-max TP: $0.9605 >= $0.95"
+    },
+    {
+      "ticker": "KXHYPE15M-26APR051115-15",
+      "side": "no",
+      "entry_price": 0.795,
+      "exit_price": 0.975,
+      "shares": 2.0,
+      "cost": 1.59,
+      "pnl": 0.3599999999999999,
+      "strategy": "momentum_force",
+      "open_time": "2026-04-05 15:10:18 UTC",
+      "close_time": "2026-04-05 15:12:23 UTC",
+      "exit_reason": "TRAILING STOP: locked in profits"
+    },
+    {
+      "ticker": "KXBNB15M-26APR051115-15",
+      "side": "yes",
+      "entry_price": 0.6699999999999999,
+      "exit_price": 0.9544999999999999,
+      "shares": 2.0,
+      "cost": 1.3399999999999999,
+      "pnl": 0.569,
+      "strategy": "first_cross",
+      "open_time": "2026-04-05 15:10:49 UTC",
+      "close_time": "2026-04-05 15:12:23 UTC",
+      "exit_reason": "Near-max TP: $0.9545 >= $0.95"
+    }
+  ]
 }

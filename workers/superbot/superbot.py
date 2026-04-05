@@ -34,7 +34,7 @@ from report import ReportGenerator, Trade
 def setup_logging():
     """Configure logging to file and console."""
     LOG_FILE.parent.mkdir(exist_ok=True)
-    
+
     logging.basicConfig(
         level=getattr(logging, LOG_LEVEL),
         format=LOG_FORMAT,
@@ -62,10 +62,10 @@ class CoinbasePreFilter:
     Pre-filters signals using free Coinbase data.
     Polls Coinbase every 10 seconds (no rate limit).
     Only calls Kalshi when a cross is detected.
-    
+
     This dramatically reduces Kalshi API calls (from 200+ to ~50 per hour).
     """
-    
+
     def __init__(self):
         self.last_prices: Dict[str, float] = {}
         self.midpoint = 0.50
@@ -73,7 +73,7 @@ class CoinbasePreFilter:
         self.last_poll = 0
         self.cross_detected: Dict[str, Optional[str]] = {}  # coin -> 'up', 'down', or None
         self._coinbase_products = COINBASE_PRODUCTS
-    
+
     def check_cross(self, coin: str) -> Optional[str]:
         """
         Check if Coinbase price crossed the midpoint.
@@ -81,28 +81,28 @@ class CoinbasePreFilter:
         """
         if time.time() - self.last_poll < self.poll_interval:
             return self.cross_detected.get(coin)
-        
+
         product_id = self._coinbase_products.get(coin.upper())
         if not product_id:
             return None
-        
+
         try:
             url = f"{COINBASE_API}/products/{product_id}/ticker"
             response = requests.get(url, timeout=5)
             response.raise_for_status()
             data = response.json()
             price = float(data.get('price', 0))
-            
+
             self.last_poll = time.time()
-            
+
             if coin not in self.last_prices:
                 self.last_prices[coin] = price
                 self.cross_detected[coin] = None
                 return None
-            
+
             prev = self.last_prices[coin]
             self.last_prices[coin] = price
-            
+
             # Detect cross
             if prev <= self.midpoint and price > self.midpoint:
                 self.cross_detected[coin] = 'up'
@@ -112,17 +112,17 @@ class CoinbasePreFilter:
                 logger.debug(f"COINBASE PRE-FILTER: {coin} crossed DOWN @ ${price:.2f}")
             else:
                 self.cross_detected[coin] = None
-            
+
             return self.cross_detected.get(coin)
-            
+
         except Exception as e:
             logger.debug(f"COINBASE PRE-FILTER: Error fetching {coin}: {e}")
             return None
-    
+
     def get_price(self, coin: str) -> Optional[float]:
         """Get the last known Coinbase price for a coin."""
         return self.last_prices.get(coin)
-    
+
     def reset_cross(self, coin: str):
         """Reset the cross detection for a coin (when market expires)."""
         self.cross_detected[coin] = None
@@ -130,24 +130,24 @@ class CoinbasePreFilter:
 
 class CoinTrader:
     """Manages trading for a single coin with independent position tracking."""
-    
+
     def __init__(self, coin: str, series_ticker: str, strategy_engine: StrategyEngine, api: KalshiAPI, report: ReportGenerator):
         self.coin = coin
         self.series_ticker = series_ticker
         self.strategy_engine = strategy_engine
         self.api = api
         self.report = report
-        
+
         # Per-coin position tracking
         self.positions: Dict[str, Position] = {}  # ticker -> Position
         self.cash = 0.0  # Per-coin cash tracking (managed by SuperBot)
-        
+
         # Cooldown tracking: cycles since last position closed
         # After closing a position, wait COOLDOWN_CYCLES before re-entering
         self.cycles_since_close = COOLDOWN_CYCLES * 2  # Start ready to trade (multiply by 2 to be safe)
-        
+
         logger.info(f"CoinTrader initialized for {coin} ({series_ticker})")
-    
+
     def get_scanner_markets(self) -> List[dict]:
         """
         Read markets from Searcher/Scanner output file.
@@ -157,11 +157,11 @@ class CoinTrader:
         scanner_file = Path(__file__).parent.parent.parent / "data" / "live_markets.json"
         if not scanner_file.exists():
             return []
-        
+
         try:
             with open(scanner_file, 'r') as f:
                 data = json.load(f)
-            
+
             # Check if scanner data is fresh (within 5 minutes)
             updated_at = data.get('updated_at', '')
             if updated_at:
@@ -173,19 +173,19 @@ class CoinTrader:
                         return []
                 except Exception:
                     pass
-            
+
             # Get markets for this coin's series
             markets_by_series = data.get('markets', {})
             scanner_markets = markets_by_series.get(self.coin, [])
-            
+
             if scanner_markets:
                 logger.debug(f"[{self.coin}] Found {len(scanner_markets)} markets from Scanner")
-            
+
             return scanner_markets
         except Exception as e:
             logger.debug(f"[{self.coin}] Error reading scanner file: {e}")
             return []
-    
+
     def get_markets(self) -> List[Market]:
         """
         Fetch markets for this coin's series.
@@ -194,7 +194,7 @@ class CoinTrader:
         """
         # First, try Searcher/Scanner - it filters for tradeable markets only
         scanner_markets = self.get_scanner_markets()
-        
+
         if scanner_markets:
             # Convert scanner market dicts to Market objects
             markets = []
@@ -211,20 +211,20 @@ class CoinTrader:
                     markets.append(market)
                 except Exception as e:
                     logger.debug(f"[{self.coin}] Error converting scanner market: {e}")
-            
+
             if markets:
                 logger.info(f"[{self.coin}] Using {len(markets)} markets from Searcher/Scanner")
                 return markets
-        
+
         # Fall back to direct API call
         return self.api.get_markets(series_ticker=self.series_ticker)
-    
+
     def _check_existing_positions(self, markets: Dict[str, Market]) -> bool:
         """Check open positions for exit conditions. Returns True if positions changed."""
         positions_changed = False
         for ticker, position in list(self.positions.items()):
             market = markets.get(ticker)
-            
+
             # Market not in current series - check if it expired
             if market is None:
                 # Try to fetch the market directly to check its status
@@ -235,7 +235,7 @@ class CoinTrader:
                     self._close_position(ticker, "expired", 0.5)
                     positions_changed = True
                     continue
-                
+
                 # Check if market has expired (status=closed/settled or time_left <= 0)
                 if market.status in ("closed", "settled") or market.time_to_expiry_sec() <= 0:
                     mid_price = (market.yes_bid + market.yes_ask) / 2 if market.yes_bid > 0 else 0.5
@@ -246,24 +246,24 @@ class CoinTrader:
                 else:
                     # Market still open but not in our markets dict - skip for now
                     continue
-            
+
             mid_price = (market.yes_bid + market.yes_ask) / 2
             time_left = market.time_to_expiry_sec()
-            
+
             # Check if expired
             if time_left <= 0:
                 settlement = mid_price
                 self._close_position(ticker, "expired", settlement)
                 positions_changed = True
                 continue
-            
+
             # Check TP/SL for DRIFT strategies (now includes trailing stop logic)
             should_exit, reason = self.strategy_engine.check_position_exit(position, mid_price, time_left)
             if should_exit:
                 self._close_position(ticker, reason, mid_price)
                 positions_changed = True
                 continue
-            
+
             # === SCALE-IN LOGIC: Add to winning positions ===
             # Check if we should scale in (add more to position)
             if position.should_scale_in(mid_price):
@@ -276,44 +276,44 @@ class CoinTrader:
                         cost = mid_price * scale_size
                     else:
                         cost = (1 - mid_price) * scale_size
-                    
+
                     position.record_scale_in(mid_price, scale_size)
                     self.cash -= cost
                     logger.info(f"[{self.coin}] SCALED IN {ticker}: +${scale_size:.2f} @ ${mid_price:.4f}, new_size=${position.size:.2f}")
                 else:
                     logger.debug(f"[{self.coin}] Insufficient cash for scale-in: ${self.cash:.2f} < ${scale_size:.2f}")
-        
+
         return positions_changed
-    
+
     def _close_position(self, ticker: str, reason: str, exit_price: float):
         """Close a position and return PnL."""
         if ticker not in self.positions:
             return 0.0, None
-        
+
         position = self.positions[ticker]
-        
+
         # Use avg_price for PnL calculation (accounts for scale-ins)
         calc_price = position.avg_price if position.avg_price > 0 else position.entry_price
-        
+
         # Tony's P&L formula: (exit - entry) × contracts (no fee multiplier)
         pnl = (exit_price - calc_price) * position.size
-        
+
         if pnl >= 0:
             logger.info(f"[{self.coin}] Closed {ticker}: {reason}, PnL=${pnl:.2f}")
         else:
             logger.info(f"[{self.coin}] Closed {ticker}: {reason}, PnL=${pnl:.2f}")
-        
+
         # Apply net PnL to paper balance
         self.cash += pnl
-        
+
         # Record trade result for Kelly tracking
         self.strategy_engine.record_trade_result(position.strategy, pnl)
-        
+
         # Record trade in report
         close_time = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
         open_time_str = datetime.fromtimestamp(position.open_time).strftime("%Y-%m-%d %H:%M:%S UTC") if isinstance(position.open_time, (int, float)) else str(position.open_time)
         strategy_name = position.strategy.value if hasattr(position.strategy, 'value') else str(position.strategy)
-        
+
         trade = Trade(
             ticker=position.ticker,
             side=position.side,
@@ -328,45 +328,45 @@ class CoinTrader:
             first_cross_direction=position.first_cross_direction  # Tony's first crossing insight
         )
         self.report.record_trade(trade, position)
-        
+
         # Start cooldown: wait 2 full market cycles before re-entering
         self.cycles_since_close = 0
         logger.info(f"[{self.coin}] Position closed. Cooldown started: must wait {COOLDOWN_CYCLES} cycles before re-entering")
-        
+
         del self.positions[ticker]
         return pnl, position.strategy
-    
+
     def _open_position(self, signal: TradeSignal, available_cash: float) -> tuple[bool, float]:
         """
         Open a new position based on trading signal.
         Returns (success, cost).
         """
         ticker = signal.ticker
-        
+
         # Check if we already have a position in this ticker
         if ticker in self.positions:
             return False, 0.0
-        
+
         # Check max positions per coin
         if len(self.positions) >= 1:  # One position per coin at a time
             return False, 0.0
-        
+
         # Calculate cost (signal.size is now contracts, not dollars)
         if signal.side == "yes":
             cost = signal.price * signal.size
         else:
             cost = (1 - signal.price) * signal.size
-        
+
         # Check if we have enough cash (cost is in dollars)
         if cost > available_cash:
             logger.warning(f"[{self.coin}] Insufficient cash: ${available_cash:.2f} < ${cost:.2f} (contracts={int(signal.size):d}, price={signal.price:.4f})")
             return False, 0.0
-        
+
         logger.info(f"[{self.coin}] Opened {signal.strategy.value}: {signal.side} {ticker} @ ${signal.price:.4f}, contracts={int(signal.size):d}, cost=${cost:.2f}")
-        
+
         # Get first cross direction for this ticker from strategy engine
         first_cross_dir = self.strategy_engine.first_cross.get_direction(ticker) or ""
-        
+
         # Record position
         position = Position(
             ticker=ticker,
@@ -390,9 +390,9 @@ class CoinTrader:
             avg_price=signal.price
         )
         self.positions[ticker] = position
-        
+
         return True, cost
-    
+
     def scan_for_signals(self, markets: List[Market], available_cash: float) -> tuple[List[TradeSignal], float]:
         """
         Scan markets and generate trading signals.
@@ -400,46 +400,46 @@ class CoinTrader:
         """
         signals = []
         total_cost = 0.0
-        
+
         # Index markets by ticker
         market_dict = {m.ticker: m for m in markets}
-        
+
         # Check existing positions
         self._check_existing_positions(market_dict)
-        
+
         # Skip if we already have a position in this coin
         if self.positions:
             return [], 0.0
-        
+
         # Check cooldown: wait COOLDOWN_CYCLES after closing a position
         if self.cycles_since_close < COOLDOWN_CYCLES:
             logger.debug(f"[{self.coin}] Cooldown: {self.cycles_since_close}/{COOLDOWN_CYCLES} cycles - skipping")
             return [], 0.0
-        
+
         # Scan for new signals
         for market in markets:
             # Skip if we already have a position
             if market.ticker in self.positions:
                 continue
-            
+
             # Skip if market is about to expire
             if market.time_to_expiry_sec() < 60:
                 continue
-            
+
             signal = self.strategy_engine.evaluate_market(market, self.coin)
             if signal:
                 # signal.size is already in contracts (capped at MAX_BET/entry_price in calculate_kelly_size)
                 signals.append(signal)
-        
+
         return signals, total_cost
-    
+
     def increment_cooldown(self):
         """Increment cooldown counter for this coin after each market cycle."""
         if self.cycles_since_close < COOLDOWN_CYCLES:
             self.cycles_since_close += 1
             if self.cycles_since_close >= COOLDOWN_CYCLES:
                 logger.info(f"[{self.coin}] Cooldown complete - can trade again")
-    
+
     def get_status(self) -> str:
         """Get status string for this coin."""
         pos_count = len(self.positions)
@@ -453,19 +453,19 @@ class CoinTrader:
 class Superbot:
     """
     Main trading engine for Superbot - Multi-coin version.
-    
+
     Smart Polling (Recorder's Approach):
     - When NO active markets: poll ONE series per 10 seconds, cycle through all 8 coins
     - When a market IS active: poll that series every 1 second AND execute trades
     - Uses get_open_markets() which hits /markets?status=open (same as Recorder)
     """
-    
+
     def __init__(self):
         self.api = KalshiAPI(KALSHI_ACCESS_KEY)
-        
+
         # Create a strategy engine per coin (each with its own cash tracking)
         self.report = ReportGenerator()
-        
+
         self.coin_traders: Dict[str, CoinTrader] = {}
         for coin in COINS:
             self.coin_traders[coin] = CoinTrader(
@@ -475,36 +475,36 @@ class Superbot:
                 api=self.api,
                 report=self.report
             )
-        
+
         # Paper trading state - shared cash pool but $2 max per coin
         self.cash = PAPER_BALANCE
-        
+
         # Shutdown flag
         self.running = True
-        
+
         # Smart polling state (Recorder's approach)
         self.active_series: set = set()  # Track which series have active markets
         self.series_cycle = 0  # Cycle counter for idle polling through all coins
         self.our_series_tickers = list(SERIES_TICKERS.values())  # [KXBTC15M, KXETH15M, ...]
-        
+
         # Coinbase pre-filter (Nerd v2)
         self.coinbase_filter = CoinbasePreFilter()
-        
+
         # Daily stop-loss tracking (Nerd v2)
         self.day_start_balance = PAPER_BALANCE  # Balance at start of day
         self.day_start_time = datetime.now().strftime("%Y-%m-%d")  # Track day
         self.trading_stopped = False  # Flag when daily stop-loss triggered
         self.stop_loss_triggered = False  # Flag to indicate stop-loss was triggered this day
         self.sizing_reduced = False  # Flag: sizing reduced by 50% after balance drops below $80
-        
+
         # Daily trade counter (Nerd v2)
         self.daily_trades = 0
         self.daily_trade_limit = MAX_DAILY_TRADES  # 30 trades per day
-        
+
         # Setup signal handlers
         signal.signal(signal.SIGINT, self._signal_handler)
         signal.signal(signal.SIGTERM, self._signal_handler)
-        
+
         logger.info("=" * 60)
         logger.info("SUPERBOT INITIALIZED - NERD v2 STRATEGY")
         logger.info(f"Coins: {COINS}")
@@ -518,30 +518,30 @@ class Superbot:
         logger.info(f"Kalshi polling: every 30s (was 2s)")
         logger.info("STRATEGY: First Cross ONLY (no drift)")
         logger.info("=" * 60)
-    
+
     def _signal_handler(self, signum, frame):
         """Handle shutdown signals gracefully."""
         logger.info(f"Received signal {signum}, shutting down...")
         self.running = False
-    
+
     def _check_balance_reset(self):
         """Check if balance fell below floor and reset if needed."""
         if self.cash < BALANCE_FLOOR:
             logger.warning(f"Balance ${self.cash:.2f} below floor ${BALANCE_FLOOR:.2f}!")
             logger.warning(f"Resetting balance to ${BALANCE_RESET_AMOUNT:.2f}")
             self.cash = BALANCE_RESET_AMOUNT
-    
+
     def _calculate_unrealized_pnl(self) -> float:
         """
         Calculate total unrealized PnL from all open positions.
-        
+
         For YES positions: size * (current_price - entry_price)
         For NO positions: size * (entry_price - current_price)
-        
+
         Returns total unrealized PnL (positive = profit, negative = loss).
         """
         unrealized_pnl = 0.0
-        
+
         for trader in self.coin_traders.values():
             for ticker, position in trader.positions.items():
                 # Get current price from market
@@ -552,23 +552,23 @@ class Superbot:
                     current_price = mkt.yes_bid or mkt.yes_ask or position.entry_price
                 else:
                     current_price = position.entry_price
-                
+
                 # Calculate unrealized PnL for this position
                 if position.side == "yes":
                     pos_pnl = position.size * (current_price - position.avg_price)
                 else:  # no
                     pos_pnl = position.size * (position.avg_price - current_price)
-                
+
                 unrealized_pnl += pos_pnl
-        
+
         return unrealized_pnl
-    
+
     def _check_daily_stop_loss(self):
         """
         Check if daily stop-loss triggered (Nerd v2).
         If balance drops below $80, reduce sizing by 50%.
         If balance drops below $50, stop trading for the day.
-        
+
         NEW: MAX_DAILY_LOSS = $5 (stop if down $5)
         NEW: MAX_DAILY_TRADES = 30 (stop if 30 trades)
         """
@@ -582,22 +582,20 @@ class Superbot:
             self.stop_loss_triggered = False
             self.sizing_reduced = False
             self.daily_trades = 0
-        
+
         # Check trade limit
         if self.daily_trades >= self.daily_trade_limit:
             if not self.trading_stopped:
                 logger.warning(f"!!! DAILY TRADE LIMIT REACHED !!! {self.daily_trades} trades - stopping trading")
                 self.trading_stopped = True
             return True
-        
+
         # Check stop-loss thresholds (Nerd v2: $5 daily loss)
-        # Fix: Account for unrealized PnL from open positions
-        # P&L = cash + unrealized_pnl - day_start_balance
-        unrealized_pnl = self._calculate_unrealized_pnl()
-        daily_pnl = self.cash + unrealized_pnl - self.day_start_balance
-        if daily_pnl <= -MAX_DAILY_LOSS:
+        # REALIZED P&L ONLY: cash - day_start_balance (unrealized open positions excluded)
+        realized_pnl = self.cash - self.day_start_balance
+        if realized_pnl <= -MAX_DAILY_LOSS:
             if not self.trading_stopped:
-                logger.warning(f"!!! DAILY STOP-LOSS TRIGGERED !!! P&L=${daily_pnl:.2f} (cash=${self.cash:.2f}, unrealized=${unrealized_pnl:.2f}) >= -${MAX_DAILY_LOSS:.2f} - stopping trading")
+                logger.warning(f"!!! DAILY STOP-LOSS TRIGGERED !!! Realized P&L=${realized_pnl:.2f} (cash=${self.cash:.2f}) >= -${MAX_DAILY_LOSS:.2f} - stopping trading")
                 self.trading_stopped = True
                 self.stop_loss_triggered = True
             return True
@@ -611,23 +609,23 @@ class Superbot:
             if self.sizing_reduced:
                 logger.info(f"Balance recovered to ${self.cash:.2f} >= $80 - restoring normal sizing")
                 self.sizing_reduced = False
-        
+
         return False
-    
+
     def _distribute_cash_to_traders(self):
         """Distribute available cash to each coin's strategy engine."""
         per_coin_cash = self.cash / len(COINS)
         for trader in self.coin_traders.values():
             trader.cash = per_coin_cash  # Initialize per-coin cash for scale-in logic
             trader.strategy_engine.update_cash(self.cash)
-    
+
     def _get_coin_from_series(self, series_ticker: str) -> Optional[str]:
         """Extract coin from series_ticker (e.g., KXBTC15M -> BTC)."""
         for coin, ticker in SERIES_TICKERS.items():
             if ticker == series_ticker:
                 return coin
         return None
-    
+
     def _check_and_trade_series(self, series_ticker: str) -> bool:
         """
         Check a single series for tradeable markets and execute trades if found.
@@ -637,18 +635,18 @@ class Superbot:
         coin = self._get_coin_from_series(series_ticker)
         if not coin:
             return False
-        
+
         trader = self.coin_traders[coin]
-        
+
         # === NERD v2: Coinbase pre-filter ===
         # Check Coinbase first (free, every 10s)
         # NOTE: Pre-filter is a signal boost, NOT a gate.
         # In IDLE mode, we ALWAYS call Kalshi to discover markets.
         # Pre-filter cross detection is used for trade signals, not discovery.
         coinbase_cross = self.coinbase_filter.check_cross(coin)
-        
+
         has_positions = len(trader.positions) > 0
-        
+
         # In IDLE mode (no active series), ALWAYS call Kalshi to discover markets
         # Don't let pre-filter block market discovery
         if not has_positions and not self.active_series:
@@ -658,42 +656,42 @@ class Superbot:
             # ACTIVE mode but no positions and no Coinbase signal - still check for markets
             pass  # Continue to Kalshi call
         # else: has positions or Coinbase signal - proceed with Kalshi call
-        
+
         # Use get_open_markets - hits /markets?status=open
         markets = self.api.get_open_markets(series_ticker)
-        
+
         if not markets:
             # No markets found - remove from active_series
             self.active_series.discard(series_ticker)
             return False
-        
+
         # Found markets! Mark this series as active
         self.active_series.add(series_ticker)
-        
+
         # Index markets by ticker
         market_dict = {m.ticker: m for m in markets}
-        
+
         # Check existing positions for exit conditions
         trader._check_existing_positions(market_dict)
-        
+
         # === NERD v2: MAX_POSITIONS = 3 check ===
         total_positions = sum(len(t.positions) for t in self.coin_traders.values())
         if total_positions >= MAX_POSITIONS:
             logger.debug(f"MAX POSITIONS ({MAX_POSITIONS}) reached - not scanning for new signals")
             return True
-        
+
         # If we already have a position in this coin, skip new trades (we'll monitor it)
         if trader.positions:
             return True
-        
+
         # Scan for NEW trading signals
         per_coin_cash = self.cash / len(COINS)
-        
+
         for market in markets:
             # Skip if market is about to expire
             if market.time_to_expiry_sec() < 60:
                 continue
-            
+
             # Evaluate market for trading signal
             signal = trader.strategy_engine.evaluate_market(market, coin)
             if signal:
@@ -706,7 +704,7 @@ class Superbot:
                 if signal.price > 0:
                     max_contracts = max_dollar / signal.price
                     signal.size = min(signal.size, max_contracts)
-                
+
                 # Try to open position
                 success, cost = trader._open_position(signal, per_coin_cash)
                 if success:
@@ -714,9 +712,9 @@ class Superbot:
                     self.daily_trades += 1
                     logger.info(f"🚀 [{coin}] TRADE EXECUTED: {signal.strategy.value} {signal.side} {signal.ticker} @ ${signal.price:.4f}, contracts={int(signal.size):d} (daily trades: {self.daily_trades}/{MAX_DAILY_TRADES})")
                     return True
-        
+
         return True
-    
+
     def _poll_active_markets_fast(self):
         """
         Poll active series every 1 second - monitor positions and look for new trades.
@@ -724,11 +722,11 @@ class Superbot:
         """
         for series_ticker in list(self.active_series):
             self._check_and_trade_series(series_ticker)
-    
+
     def run(self):
         """
         Main trading loop with smart polling (Recorder's approach).
-        
+
         - When NO active markets: poll ONE series per 10 seconds, cycle through all 8 coins
         - When markets ARE active: poll that series every 1 second (fast polling)
         - Cooldown: 2 full market cycles after closing any position
@@ -736,32 +734,32 @@ class Superbot:
         """
         logger.info("Starting SMART POLLING trading loop (Recorder's approach)...")
         self.report.start_session()
-        
+
         loop_count = 0
         last_status_log = time.time()
         last_cooldown_tick = time.time()
-        
+
         while self.running:
             loop_count += 1
             try:
                 # Distribute cash to each coin's strategy engine
                 self._distribute_cash_to_traders()
-                
+
                 # Check daily stop-loss FIRST (before any trading)
                 if self._check_daily_stop_loss():
                     # If stop-loss triggered, wait and continue monitoring but don't trade
                     time.sleep(IDLE_POLL_INTERVAL_SEC)
                     continue
-                
+
                 # Check balance floor
                 self._check_balance_reset()
-                
+
                 # Increment cooldowns every ~15 seconds (market cycle time)
                 if time.time() - last_cooldown_tick >= 15:
                     for trader in self.coin_traders.values():
                         trader.increment_cooldown()
                     last_cooldown_tick = time.time()
-                
+
                 if self.active_series:
                     # ACTIVE MODE: Poll all active series every 30s (was 3s)
                     # Coinbase pre-filter handles fast detection
@@ -772,30 +770,27 @@ class Superbot:
                     # IDLE MODE: Check ONE series per cycle, cycle through all coins
                     series_ticker = self.our_series_tickers[self.series_cycle % len(self.our_series_tickers)]
                     self.series_cycle += 1
-                    
+
                     had_markets = self._check_and_trade_series(series_ticker)
-                    
+
                     if loop_count % 30 == 1:
-                        # Fix: Account for unrealized PnL from open positions
-                        unrealized_pnl = self._calculate_unrealized_pnl()
-                        daily_pnl = self.cash + unrealized_pnl - self.day_start_balance
-                        loss_pct = daily_pnl / self.day_start_balance * 100 if self.day_start_balance > 0 else 0
-                        logger.info(f"😴 IDLE: checked {series_ticker} (poll #{loop_count}) | Day P&L: ${daily_pnl:.2f} ({loss_pct:.1f}%)")
-                    
+                        # REALIZED P&L ONLY (unrealized excluded from stop-loss decisions)
+                        realized_pnl = self.cash - self.day_start_balance
+                        loss_pct = realized_pnl / self.day_start_balance * 100 if self.day_start_balance > 0 else 0
+                        logger.info(f"😴 IDLE: checked {series_ticker} (poll #{loop_count}) | Day Realized P&L: ${realized_pnl:.2f} ({loss_pct:.1}%)")
+
                     # If no markets found, sleep 30 seconds
                     # If markets WERE found, don't sleep - immediately go to active polling
                     if not had_markets and not self.active_series:
                         time.sleep(30)  # Nerd v2: 30s idle poll (was 20s)
-                
+
                 # Status log every 30 seconds
                 if time.time() - last_status_log >= 30:
                     total_positions = sum(len(t.positions) for t in self.coin_traders.values())
                     status_parts = [t.get_status() for t in self.coin_traders.values()]
-                    
+
                     # Build position details for the report (with live prices)
-                    # Also calculate unrealized PnL to get accurate daily P&L
                     positions_details = []
-                    unrealized_pnl = 0.0
                     for trader in self.coin_traders.values():
                         for ticker, pos in trader.positions.items():
                             # Fetch current price from Kalshi API
@@ -806,14 +801,7 @@ class Superbot:
                                 cur = mkt.yes_bid or mkt.yes_ask or pos.entry_price
                             else:
                                 cur = pos.entry_price
-                            
-                            # Calculate unrealized PnL for this position
-                            if pos.side == "yes":
-                                pos_pnl = pos.size * (cur - pos.avg_price)
-                            else:  # no
-                                pos_pnl = pos.size * (pos.avg_price - cur)
-                            unrealized_pnl += pos_pnl
-                            
+
                             positions_details.append({
                                 "ticker": pos.ticker,
                                 "side": pos.side,
@@ -823,38 +811,38 @@ class Superbot:
                                 "open_time": datetime.fromtimestamp(pos.open_time).strftime("%Y-%m-%d %H:%M:%S UTC") if isinstance(pos.open_time, (int, float)) else str(pos.open_time),
                                 "current_price": cur
                             })
-                    
-                    # Fix: Account for unrealized PnL from open positions
-                    daily_pnl = self.cash + unrealized_pnl - self.day_start_balance
-                    loss_pct = daily_pnl / self.day_start_balance * 100 if self.day_start_balance > 0 else 0
-                    
+
+                    # REALIZED P&L ONLY (unrealized excluded from stop-loss decisions)
+                    realized_pnl = self.cash - self.day_start_balance
+                    loss_pct = realized_pnl / self.day_start_balance * 100 if self.day_start_balance > 0 else 0
+
                     logger.info(f"Status: cash=${self.cash:.2f}, positions={total_positions}, loop={loop_count}, active_series={list(self.active_series)}")
-                    logger.info(f"Day P&L: ${daily_pnl:.2f} ({loss_pct:.1f}%) / ${self.day_start_balance * DAILY_STOP_LOSS_PCT:.2f} limit (unrealized=${unrealized_pnl:.2f})")
+                    logger.info(f"Day Realized P&L: ${realized_pnl:.2f} ({loss_pct:.1f}%) / -${MAX_DAILY_LOSS:.2f} daily stop-loss limit")
                     logger.info(f"Coins: {' | '.join(status_parts)}")
-                    
+
                     self.report.update_session_stats(self.cash, total_positions, positions_details)
                     last_status_log = time.time()
-                
+
             except Exception as e:
                 logger.error(f"Error in trading loop: {e}", exc_info=True)
                 time.sleep(5)
-        
+
         # Cleanup
         self._shutdown()
-    
+
     def _shutdown(self):
         """Clean shutdown - close all positions and save report."""
         logger.info("Shutting down superbot...")
-        
+
         # Close all open positions at current prices
         for coin, trader in self.coin_traders.items():
             for ticker in list(trader.positions.keys()):
                 logger.info(f"[{coin}] Closing position {ticker} on shutdown")
                 trader._close_position(ticker, "shutdown", 0.5)
-        
+
         # Save final report
         self.report.end_session(self.cash)
-        
+
         logger.info("=" * 60)
         logger.info(f"FINAL BALANCE: ${self.cash:.2f}")
         logger.info(f"Total trades: {self.report.stats.total_trades}")

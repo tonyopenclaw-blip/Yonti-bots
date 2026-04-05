@@ -205,33 +205,86 @@ class OddsAPIClient:
         
         return events
     
-    def fetch_player_props(self, sport: str) -> List[Dict[str, Any]]:
+    def fetch_game_odds(self, sport: str) -> List[Dict[str, Any]]:
         """
-        Fetch all player props for a sport from The Odds API.
-        Returns list of prop dicts with player, team, stat_type, line, over_odds, under_odds.
+        Fetch game-level odds (h2h, spreads, totals) for a sport using the bulk endpoint.
+        
+        Uses GET /sports/{sport}/odds with markets=h2h,spreads,totals.
+        This is a SINGLE API call per sport and returns odds for ALL events.
+        
+        Returns list of game dicts with h2h/spread/total odds.
         """
-        events = self._fetch_events(sport)
-        if not events:
-            logger.warning(f"No events found for {sport}")
+        api_sport_key = self.SPORT_KEYS.get(sport)
+        if not api_sport_key:
+            logger.warning(f"Unknown sport: {sport}")
             return []
         
-        api_sport_key = self.SPORT_KEYS.get(sport)
-        markets = ",".join(self.MARKETS.get(sport, []))
-        all_props = []
+        # Bulk endpoint ONLY works for game-level markets
+        url = f"{self.ODDS_API_BASE}/sports/{api_sport_key}/odds"
+        params = {
+            "regions": "us",
+            "markets": "h2h,spreads,totals",
+            "oddsFormat": "american",
+        }
         
-        for event in events:
-            event_id = event["id"]
-            
-            # Check props cache
-            if event_id in self._props_cache:
-                all_props.extend(self._props_cache[event_id])
-                continue
-            
-            # Fetch props for this event
+        logger.info(f"Fetching bulk game odds for {sport}")
+        data = self._fetch_json(url, params)
+        
+        if not data:
+            logger.warning(f"No game odds returned from Odds API for {sport}")
+            return []
+        
+        games_outcomes = []
+        for event_data in data:
+            games_outcomes.append({
+                "id": event_data.get("id", ""),
+                "home_team": event_data.get("home_team", ""),
+                "away_team": event_data.get("away_team", ""),
+                "bookmakers": event_data.get("bookmakers", []),
+            })
+        
+        logger.info(f"Fetched game odds for {len(games_outcomes)} events for {sport}")
+        return games_outcomes
+    
+    def fetch_player_props(self, sport: str, event_ids: List[str] = None, max_events: int = 5) -> List[Dict[str, Any]]:
+        """
+        Fetch player props for a sport using PER-EVENT calls.
+        
+        IMPORTANT: The bulk /sports/{sport}/odds endpoint does NOT support player props (returns 422).
+        Player props MUST be fetched via per-event calls:
+            GET /sports/{sport}/events/{eventId}/odds?markets=player_points,...
+        
+        Args:
+            sport: Sport key (NBA, NHL, MLB)
+            event_ids: Specific event IDs to fetch. If None, fetches top events.
+            max_events: Maximum number of events to fetch props for (default 5).
+                       This saves API calls since player props are expensive.
+        
+        Returns list of prop dicts with player, team, stat_type, line, direction, odds.
+        """
+        api_sport_key = self.SPORT_KEYS.get(sport)
+        if not api_sport_key:
+            logger.warning(f"Unknown sport: {sport}")
+            return []
+        
+        # Get events to fetch props for
+        if not event_ids:
+            events = self._fetch_events(sport)
+            event_ids = [e["id"] for e in events[:max_events]]
+        else:
+            event_ids = event_ids[:max_events]
+        
+        all_props = []
+        markets_list = self.MARKETS.get(sport, [])
+        markets_param = ",".join(markets_list)
+        
+        logger.info(f"Fetching player props for {len(event_ids)} events in {sport}")
+        
+        for event_id in event_ids:
             url = f"{self.ODDS_API_BASE}/sports/{api_sport_key}/events/{event_id}/odds"
             params = {
                 "regions": "us",
-                "markets": markets,
+                "markets": markets_param,
                 "oddsFormat": "american",
             }
             
@@ -242,12 +295,8 @@ class OddsAPIClient:
             event_props = self._parse_props_response(data, sport)
             self._props_cache[event_id] = event_props
             all_props.extend(event_props)
-            
-            # Be respectful of rate limits - small delay
-            import time
-            time.sleep(0.1)
         
-        logger.info(f"Fetched {len(all_props)} props for {sport}")
+        logger.info(f"Fetched {len(all_props)} player props for {sport} ({len(event_ids)} events via per-event calls)")
         return all_props
     
     def _parse_props_response(self, data: Dict, sport: str) -> List[Dict[str, Any]]:
@@ -936,7 +985,9 @@ class UncleVitoReport:
         self.winner_picks: List[WinnerPick] = []
         self._rest_day_warnings: Dict[str, List[str]] = {}  # sport -> list of warning messages
         self._odds_api_props: Dict[str, List[Dict]] = {}  # sport -> list of props from Odds API
-        self._odds_api_fetched: Dict[str, bool] = {}  # sport -> whether we've fetched today
+        self._odds_api_fetched: Dict[str, bool] = {}  # sport -> whether we've fetched player props today
+        self._odds_api_game_odds: Dict[str, List[Dict]] = {}  # sport -> game-level odds (h2h/spreads/totals)
+        self._odds_api_game_fetched: Dict[str, bool] = {}  # sport -> whether we've fetched game odds today
 
     def fetch_todays_games(self) -> Dict[str, List[Game]]:
         """Fetch today's games across all configured sports."""
@@ -1123,9 +1174,29 @@ class UncleVitoReport:
         all_picks.sort(key=lambda x: x["confidence"], reverse=True)
         return all_picks[:5]
 
+    def _fetch_game_odds_api(self, sport: str) -> List[Dict]:
+        """
+        Fetch real game-level odds (h2h, spreads, totals) from The Odds API.
+        Uses bulk endpoint - single call per sport.
+        """
+        if self._odds_api_game_fetched.get(sport):
+            return self._odds_api_game_odds.get(sport, [])
+        
+        try:
+            odds = self.odds_api.fetch_game_odds(sport)
+            self._odds_api_game_odds[sport] = odds
+            self._odds_api_game_fetched[sport] = True
+            logger.info(f"Game odds API: {len(odds)} games fetched for {sport}")
+            return odds
+        except Exception as e:
+            logger.warning(f"Failed to fetch game odds for {sport}: {e}")
+            self._odds_api_game_fetched[sport] = True
+            return []
+    
     def _fetch_odds_api_props(self, sport: str) -> List[Dict]:
         """
         Fetch player props from The Odds API for a sport.
+        Uses per-event calls, limited to top 3 events per sport to save API calls.
         Returns list of prop dicts with real odds data.
         """
         # Check if we already fetched today
@@ -1133,13 +1204,14 @@ class UncleVitoReport:
             return self._odds_api_props.get(sport, [])
         
         try:
-            props = self.odds_api.fetch_player_props(sport)
+            # Fetch player props for top 3 events only (per-event calls are expensive)
+            props = self.odds_api.fetch_player_props(sport, max_events=3)
             self._odds_api_props[sport] = props
             self._odds_api_fetched[sport] = True
             
             # Log API usage
             remaining = self.odds_api.get_api_usage()
-            logger.info(f"Odds API: {len(props)} props fetched for {sport}. {remaining} requests remaining.")
+            logger.info(f"Odds API: {len(props)} player props fetched for {sport}. {remaining} requests remaining.")
             
             return props
         except Exception as e:
@@ -1526,6 +1598,8 @@ class UncleVitoReport:
         # Clear Odds API cache for fresh data
         self._odds_api_fetched = {}
         self._odds_api_props = {}
+        self._odds_api_game_fetched = {}
+        self._odds_api_game_odds = {}
         
         # Fetch games
         self.fetch_todays_games()

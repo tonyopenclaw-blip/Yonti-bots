@@ -1,9 +1,9 @@
 {
-  "start_time": "2026-04-05 09:50:16 UTC",
+  "start_time": "2026-04-05 10:50:56 UTC",
   "end_time": "",
   "starting_balance": 100.0,
-  "ending_balance": 94.645,
-  "total_pnl": -5.355000000000004,
+  "ending_balance": 92.335,
+  "total_pnl": -7.665000000000006,
   "total_trades": 0,
   "winning_trades": 0,
   "losing_trades": 0,
@@ -15,37 +15,37 @@
   "trades": [],
   "last_10_open_trades": [
     {
-      "ticker": "KXBTC15M-26APR050600-00",
+      "ticker": "KXBTC15M-26APR050700-00",
       "side": "yes",
-      "entry_price": 0.765,
-      "shares": 2.0,
-      "cost": 1.53,
+      "entry_price": 0.215,
+      "shares": 9.0,
+      "cost": 1.935,
       "pnl": 0.0,
-      "strategy": "first_cross",
-      "open_time": "2026-04-05 09:50:48 UTC",
-      "current_price": 0.635
+      "strategy": "momentum_force",
+      "open_time": "2026-04-05 10:51:57 UTC",
+      "current_price": 0.235
     },
     {
-      "ticker": "KXETH15M-26APR050600-00",
+      "ticker": "KXBNB15M-26APR050700-00",
       "side": "yes",
-      "entry_price": 0.665,
-      "shares": 3.0,
-      "cost": 1.995,
+      "entry_price": 0.40499999999999997,
+      "shares": 4.0,
+      "cost": 1.6199999999999999,
       "pnl": 0.0,
-      "strategy": "first_cross",
-      "open_time": "2026-04-05 09:50:48 UTC",
-      "current_price": 0.5
+      "strategy": "momentum_force",
+      "open_time": "2026-04-05 10:51:57 UTC",
+      "current_price": 0.385
     },
     {
-      "ticker": "KXBNB15M-26APR050600-00",
-      "side": "yes",
-      "entry_price": 0.61,
-      "shares": 3.0,
-      "cost": 1.83,
+      "ticker": "KXHYPE15M-26APR050700-00",
+      "side": "no",
+      "entry_price": 0.315,
+      "shares": 6.0,
+      "cost": 1.8900000000000001,
       "pnl": 0.0,
-      "strategy": "first_cross",
-      "open_time": "2026-04-05 09:50:48 UTC",
-      "current_price": 0.64
+      "strategy": "momentum_force",
+      "open_time": "2026-04-05 10:51:57 UTC",
+      "current_price": 0.245
     }
   ],
   "last_10_closed_trades": []

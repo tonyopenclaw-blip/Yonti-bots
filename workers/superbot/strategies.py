@@ -895,31 +895,32 @@ class StrategyEngine:
         # === Get Coinbase bias ===
         bias = get_coinbase_bias(coin)
 
-        # === MOMENTUM: Only fire when price at extreme AND Coinbase bias AND AFTER grace period ===
-        # Price at extreme: $0.10 or $0.90
+        # === MOMENTUM: Fire when Coinbase has strong bias AND price trending, AFTER grace period ===
         # Coinbase bias: must be bullish or bearish (not neutral)
+        # Price: trending in bias direction (not at extreme required)
         # MUST be at least 2 minutes into the series (grace period)
-        if bias != 'neutral' and (mid_price <= 0.10 or mid_price >= 0.90):
-            if bias == 'bullish' and mid_price <= 0.10:
+        if bias != 'neutral' and (mid_price >= 0.20 and mid_price <= 0.80):
+            # Check if price is moving in the bias direction (above midpoint for bullish, below for bearish)
+            if bias == 'bullish' and mid_price >= 0.50:
                 side = 'yes'
-                reason_suffix = 'momentum: bullish + extreme low'
-            elif bias == 'bearish' and mid_price >= 0.90:
+                reason_suffix = 'momentum: bullish bias + price above midpoint'
+            elif bias == 'bearish' and mid_price <= 0.50:
                 side = 'no'
-                reason_suffix = 'momentum: bearish + extreme high'
+                reason_suffix = 'momentum: bearish bias + price below midpoint'
             else:
                 bias = None
-
+            
             if bias is not None:
                 # GRACE PERIOD: Skip MOMENTUM in first 2 minutes
                 if market_age_sec >= self.GRACE_PERIOD_SEC:
-                    confidence = 65  # Higher confidence for strict momentum criteria
+                    confidence = 60  # Momentum confidence
                     size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.MOMENTUM, mid_price, confidence, mid_price)
 
                     if confidence >= 40:
                         logger.info(
                             f"MOMENTUM SIGNAL: {market.ticker} | "
                             f"Side: {side} @ ${mid_price:.4f} | contracts={int(size):d} | "
-                            f"CONF={confidence} | TS=50%/40% | Coinbase={bias} | age={market_age_sec:.0f}s"
+                            f"CONF={confidence} | TS=30%/40% | Coinbase={bias} | age={market_age_sec:.0f}s"
                         )
 
                         return TradeSignal(
@@ -1041,19 +1042,19 @@ class StrategyEngine:
                         max_hold_minutes=max_hold,
                         use_time_scaling=False  # NO TIME SCALING for FIRST_CROSS
                     )
-        
+
         # === MOMENTUM_FORCE: Last resort - wait 60s, no cross, force entry ===
         no_cross_yet = not has_coin_cross and not has_midpoint_cross
         if no_cross_yet and market_age_sec >= 60 and bias != 'neutral' and (mid_price < 0.10 or mid_price > 0.90):
             if bias == 'bullish' and mid_price < 0.10:
                 side = 'yes'
-                reason_suffix = 'bullish + extreme low'
-            elif bias == 'bearish' and mid_price > 0.90:
+                reason_suffix = 'bullish + price above midpoint'
+            elif bias == 'bearish' and mid_price <= 0.50:
                 side = 'no'
-                reason_suffix = 'bearish + extreme high'
+                reason_suffix = 'bearish + price below midpoint'
             else:
                 bias = None
-            
+
             if bias is not None:
                 confidence = 50
                 size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.MOMENTUM_FORCE, mid_price, confidence, mid_price)
@@ -1431,14 +1432,14 @@ Your estimate:"""
             return False, ""
 
         entry_price = position.entry_price
-        
+
         # === TIME-SCALED STOP CALCULATION (only for MOMENTUM/MOMENTUM_FORCE) ===
         time_elapsed_sec = time.time() - position.open_time
         time_elapsed_min = time_elapsed_sec / 60.0
-        
+
         # Check if this strategy uses time scaling
         use_time_scale = getattr(position, 'use_time_scaling', False)
-        
+
         if use_time_scale:
             # Linear interpolation: 80% at open → 20% at close (15 min)
             stop_pct = INITIAL_STOP_PCT - (time_elapsed_sec / MARKET_DURATION_SEC) * (INITIAL_STOP_PCT - FINAL_STOP_PCT)

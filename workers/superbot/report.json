@@ -1,18 +1,98 @@
 {
-  "start_time": "2026-04-05 21:56:54 UTC",
+  "start_time": "2026-04-05 22:39:57 UTC",
   "end_time": "",
   "starting_balance": 100.0,
-  "ending_balance": 100.0,
-  "total_pnl": 0.0,
-  "total_trades": 0,
-  "winning_trades": 0,
+  "ending_balance": 95.71,
+  "total_pnl": -4.290000000000006,
+  "total_trades": 3,
+  "winning_trades": 3,
   "losing_trades": 0,
-  "win_rate": 0,
-  "largest_win": 0.0,
+  "win_rate": 100.0,
+  "largest_win": 0.948,
   "largest_loss": 0.0,
   "open_positions": 0,
   "thermostat": 0,
-  "trades": [],
+  "trades": [
+    {
+      "ticker": "KXBTC15M-26APR051900-00",
+      "side": "yes",
+      "entry_price": 0.715,
+      "exit_price": 0.9995,
+      "shares": 4,
+      "cost": 2.86,
+      "pnl": 0.948,
+      "strategy": "first_cross",
+      "open_time": "2026-04-05 22:46:00 UTC",
+      "close_time": "2026-04-05 22:58:19 UTC",
+      "exit_reason": "Max hold: 12min"
+    },
+    {
+      "ticker": "KXETH15M-26APR051900-00",
+      "side": "yes",
+      "entry_price": 0.725,
+      "exit_price": 0.9984999999999999,
+      "shares": 4,
+      "cost": 2.9,
+      "pnl": 0.8039999999999998,
+      "strategy": "first_cross",
+      "open_time": "2026-04-05 22:46:00 UTC",
+      "close_time": "2026-04-05 22:58:19 UTC",
+      "exit_reason": "Max hold: 12min"
+    },
+    {
+      "ticker": "KXSOL15M-26APR051900-00",
+      "side": "yes",
+      "entry_price": 0.7050000000000001,
+      "exit_price": 0.9944999999999999,
+      "shares": 4,
+      "cost": 2.8200000000000003,
+      "pnl": 0.9029999999999996,
+      "strategy": "first_cross",
+      "open_time": "2026-04-05 22:46:00 UTC",
+      "close_time": "2026-04-05 22:58:19 UTC",
+      "exit_reason": "Max hold: 12min"
+    }
+  ],
   "last_10_open_trades": [],
-  "last_10_closed_trades": []
+  "last_10_closed_trades": [
+    {
+      "ticker": "KXSOL15M-26APR051900-00",
+      "side": "yes",
+      "entry_price": 0.7050000000000001,
+      "exit_price": 0.9944999999999999,
+      "shares": 4,
+      "cost": 2.8200000000000003,
+      "pnl": 0.9029999999999996,
+      "strategy": "first_cross",
+      "open_time": "2026-04-05 22:46:00 UTC",
+      "close_time": "2026-04-05 22:58:19 UTC",
+      "exit_reason": "Max hold: 12min"
+    },
+    {
+      "ticker": "KXETH15M-26APR051900-00",
+      "side": "yes",
+      "entry_price": 0.725,
+      "exit_price": 0.9984999999999999,
+      "shares": 4,
+      "cost": 2.9,
+      "pnl": 0.8039999999999998,
+      "strategy": "first_cross",
+      "open_time": "2026-04-05 22:46:00 UTC",
+      "close_time": "2026-04-05 22:58:19 UTC",
+      "exit_reason": "Max hold: 12min"
+    },
+    {
+      "ticker": "KXBTC15M-26APR051900-00",
+      "side": "yes",
+      "entry_price": 0.715,
+      "exit_price": 0.9995,
+      "shares": 4,
+      "cost": 2.86,
+      "pnl": 0.948,
+      "strategy": "first_cross",
+      "open_time": "2026-04-05 22:46:00 UTC",
+      "close_time": "2026-04-05 22:58:19 UTC",
+      "exit_reason": "Max hold: 12min"
+    }
+  ]
 }

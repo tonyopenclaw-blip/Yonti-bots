@@ -55597,3 +55597,1607 @@ NameError: name 'history' is not defined
 2026-04-05 21:59:55 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
 2026-04-05 21:59:55 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
 2026-04-05 21:59:55 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:00:25 | INFO | Status: cash=$100.00, positions=0, loop=8, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M', 'KXXRP15M', 'KXDOGE15M', 'KXBTC15M']
+2026-04-05 22:00:25 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:00:25 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:00:25 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:00:26 | INFO | FIRST_CROSS: KXBTC15M-26APR051815-15 target price set to $67,525.46
+2026-04-05 22:00:26 | INFO | FIRST_CROSS: KXBNB15M-26APR051815-15 target price set to $590.98
+2026-04-05 22:00:26 | INFO | FIRST_CROSS: KXDOGE15M-26APR051815-15 target price set to $0.09
+2026-04-05 22:00:26 | INFO | FIRST_CROSS: KXXRP15M-26APR051815-15 target price set to $1.30
+2026-04-05 22:00:26 | INFO | FIRST_CROSS: KXHYPE15M-26APR051815-15 target price set to $35.88
+2026-04-05 22:00:57 | INFO | Status: cash=$100.00, positions=0, loop=9, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M', 'KXXRP15M', 'KXDOGE15M', 'KXBTC15M']
+2026-04-05 22:00:57 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:00:57 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:00:57 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:00:57 | INFO | FIRST_CROSS: KXBTC15M-26APR051815-15 crossed DOWN through $0.50 (was $0.6050, now $0.4550)
+2026-04-05 22:00:57 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.4550 | contracts=4 | CONF=43 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:00:57 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:01:02 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.4550 | contracts=4 | CONF=43 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:01:02 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:01:07 | INFO | FIRST_CROSS: KXBTC15M-26APR051815-15 | Direction: up | Target: $67,525.46 | Coin Price: $67,562.01
+2026-04-05 22:01:07 | INFO | FIRST_CROSS SIGNAL (coin): KXBTC15M-26APR051815-15 | Direction: up | Target: $67,525.46 | Side: yes @ $0.4550 | contracts=4 | CONF=43 | Coinbase=bullish
+2026-04-05 22:01:07 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:01:12 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.4550 | contracts=4 | CONF=43 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:01:12 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:01:17 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.4550 | contracts=4 | CONF=43 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:01:17 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:01:22 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.6050 | contracts=3 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:01:22 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:01:27 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.6050 | contracts=3 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:01:27 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:01:32 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.6050 | contracts=3 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:01:32 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:01:37 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.6050 | contracts=3 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:01:37 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:01:42 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.6050 | contracts=3 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:01:42 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:01:47 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.6050 | contracts=3 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:01:47 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:01:52 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.7400 | contracts=2 | CONF=63 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:01:52 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:01:57 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.7400 | contracts=2 | CONF=63 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:01:57 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:02:02 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.7400 | contracts=2 | CONF=63 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:02:02 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:02:07 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.7400 | contracts=2 | CONF=63 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:02:07 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:02:12 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.7400 | contracts=2 | CONF=63 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:02:12 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:02:17 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.7400 | contracts=2 | CONF=63 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:02:17 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:02:22 | INFO | FIRST_CROSS: KXETH15M-26APR051815-15 target price set to $2,059.77
+2026-04-05 22:02:22 | INFO | FIRST_CROSS: KXSOL15M-26APR051815-15 target price set to $79.72
+2026-04-05 22:02:53 | INFO | Status: cash=$100.00, positions=0, loop=27, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M', 'KXXRP15M', 'KXDOGE15M', 'KXBTC15M']
+2026-04-05 22:02:53 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:02:53 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:02:53 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:03:23 | INFO | Status: cash=$100.00, positions=0, loop=28, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M', 'KXXRP15M', 'KXDOGE15M', 'KXBTC15M']
+2026-04-05 22:03:23 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:03:23 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:03:23 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:03:53 | INFO | Status: cash=$100.00, positions=0, loop=29, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M', 'KXXRP15M', 'KXDOGE15M', 'KXBTC15M']
+2026-04-05 22:03:53 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:03:53 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:03:53 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:04:23 | INFO | Status: cash=$100.00, positions=0, loop=30, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M', 'KXXRP15M', 'KXDOGE15M', 'KXBTC15M']
+2026-04-05 22:04:23 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:04:23 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:04:23 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:04:53 | INFO | Status: cash=$100.00, positions=0, loop=31, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M', 'KXXRP15M', 'KXDOGE15M', 'KXBTC15M']
+2026-04-05 22:04:53 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:04:53 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:04:53 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:05:23 | INFO | Status: cash=$100.00, positions=0, loop=32, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M', 'KXXRP15M', 'KXDOGE15M', 'KXBTC15M']
+2026-04-05 22:05:23 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:05:23 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:05:23 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:05:54 | INFO | Status: cash=$100.00, positions=0, loop=33, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M', 'KXXRP15M', 'KXDOGE15M', 'KXBTC15M']
+2026-04-05 22:05:54 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:05:54 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:05:54 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:06:24 | INFO | Status: cash=$100.00, positions=0, loop=34, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M', 'KXXRP15M', 'KXDOGE15M', 'KXBTC15M']
+2026-04-05 22:06:24 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:06:24 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:06:24 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:06:54 | INFO | Status: cash=$100.00, positions=0, loop=35, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M', 'KXXRP15M', 'KXDOGE15M', 'KXBTC15M']
+2026-04-05 22:06:54 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:06:54 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:06:54 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:07:24 | INFO | Status: cash=$100.00, positions=0, loop=36, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M', 'KXXRP15M', 'KXDOGE15M', 'KXBTC15M']
+2026-04-05 22:07:24 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:07:24 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:07:24 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:07:24 | INFO | FIRST_CROSS: KXHYPE15M-26APR051815-15 | Direction: down | Target: $35.88 | Coin Price: $35.88
+2026-04-05 22:07:24 | INFO | FIRST_CROSS SIGNAL (coin): KXHYPE15M-26APR051815-15 | Direction: down | Target: $35.88 | Side: no @ $0.6350 | contracts=3 | CONF=45 | Coinbase=bearish
+2026-04-05 22:07:24 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:08:00 | INFO | Status: cash=$100.00, positions=0, loop=38, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M', 'KXXRP15M', 'KXDOGE15M', 'KXBTC15M']
+2026-04-05 22:08:00 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:08:00 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:08:00 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:08:30 | INFO | Status: cash=$100.00, positions=0, loop=39, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M', 'KXXRP15M', 'KXDOGE15M', 'KXBTC15M']
+2026-04-05 22:08:30 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:08:30 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:08:30 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:09:00 | INFO | Status: cash=$100.00, positions=0, loop=40, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M', 'KXXRP15M', 'KXDOGE15M', 'KXBTC15M']
+2026-04-05 22:09:00 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:09:00 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:09:00 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:09:30 | INFO | Status: cash=$100.00, positions=0, loop=41, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M', 'KXXRP15M', 'KXDOGE15M', 'KXBTC15M']
+2026-04-05 22:09:30 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:09:30 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:09:30 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:10:00 | INFO | Status: cash=$100.00, positions=0, loop=42, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M', 'KXXRP15M', 'KXDOGE15M', 'KXBTC15M']
+2026-04-05 22:10:00 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:10:00 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:10:00 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:10:31 | INFO | Status: cash=$100.00, positions=0, loop=43, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M', 'KXXRP15M', 'KXDOGE15M', 'KXBTC15M']
+2026-04-05 22:10:31 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:10:31 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:10:31 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:10:31 | INFO | FIRST_CROSS: KXETH15M-26APR051815-15 | Direction: down | Target: $2,059.77 | Coin Price: $2,059.40
+2026-04-05 22:10:31 | INFO | FIRST_CROSS SIGNAL (coin): KXETH15M-26APR051815-15 | Direction: down | Target: $2,059.77 | Side: no @ $0.7850 | contracts=2 | CONF=44 | Coinbase=neutral
+2026-04-05 22:10:31 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:10:36 | INFO | FIRST_CROSS: KXSOL15M-26APR051815-15 | Direction: down | Target: $79.72 | Coin Price: $79.53
+2026-04-05 22:11:06 | INFO | Status: cash=$100.00, positions=0, loop=45, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M', 'KXXRP15M', 'KXDOGE15M', 'KXBTC15M']
+2026-04-05 22:11:06 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:11:06 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:11:06 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:11:06 | INFO | FIRST_CROSS: KXSOL15M-26APR051815-15 crossed DOWN through $0.50 (was $0.6100, now $0.2400)
+2026-04-05 22:11:06 | INFO | FIRST_CROSS SIGNAL (midpoint): KXSOL15M-26APR051815-15 | Direction: no | Side: no @ $0.2400 | contracts=8 | CONF=57 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:11:06 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:11:11 | INFO | FIRST_CROSS SIGNAL (midpoint): KXSOL15M-26APR051815-15 | Direction: no | Side: no @ $0.2400 | contracts=8 | CONF=57 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:11:11 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:11:16 | INFO | FIRST_CROSS: KXDOGE15M-26APR051815-15 | Direction: down | Target: $0.09 | Coin Price: $0.09
+2026-04-05 22:11:16 | INFO | FIRST_CROSS: KXXRP15M-26APR051815-15 | Direction: down | Target: $1.30 | Coin Price: $1.30
+2026-04-05 22:11:16 | INFO | FIRST_CROSS: KXHYPE15M-26APR051815-15 crossed DOWN through $0.50 (was $0.5600, now $0.4650)
+2026-04-05 22:11:46 | INFO | Status: cash=$100.00, positions=0, loop=48, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M', 'KXXRP15M', 'KXDOGE15M', 'KXBTC15M']
+2026-04-05 22:11:46 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:11:46 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:11:46 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:11:46 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.6750 | contracts=2 | CONF=50 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:11:46 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:11:51 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.6750 | contracts=2 | CONF=50 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:11:51 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:11:56 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.3350 | contracts=5 | CONF=50 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:11:56 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:12:01 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.3350 | contracts=5 | CONF=41 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:12:01 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:12:06 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.3350 | contracts=5 | CONF=41 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:12:06 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:12:11 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.3350 | contracts=5 | CONF=41 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:12:11 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:12:16 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.3350 | contracts=5 | CONF=41 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:12:16 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:12:21 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.3350 | contracts=5 | CONF=41 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:12:21 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:12:26 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.3350 | contracts=5 | CONF=41 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:12:26 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:12:31 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.2900 | contracts=6 | CONF=48 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:12:31 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:12:36 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.2900 | contracts=6 | CONF=48 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:12:36 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:12:41 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.2900 | contracts=6 | CONF=48 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:12:41 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:12:46 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.2900 | contracts=6 | CONF=48 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:12:46 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:12:51 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.2900 | contracts=6 | CONF=48 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:12:51 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:12:56 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.2600 | contracts=7 | CONF=48 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:12:56 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:13:01 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.2600 | contracts=7 | CONF=48 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:13:01 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:13:06 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.2600 | contracts=7 | CONF=48 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:13:06 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:13:11 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.2600 | contracts=7 | CONF=48 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:13:11 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:13:16 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.2600 | contracts=7 | CONF=48 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:13:16 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:13:21 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051815-15 | Direction: no | Side: no @ $0.2600 | contracts=7 | CONF=48 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:13:21 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:13:57 | INFO | Status: cash=$100.00, positions=0, loop=69, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M', 'KXXRP15M', 'KXDOGE15M', 'KXBTC15M']
+2026-04-05 22:13:57 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:13:57 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:13:57 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:14:27 | INFO | Status: cash=$100.00, positions=0, loop=70, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXXRP15M', 'KXDOGE15M', 'KXBTC15M']
+2026-04-05 22:14:27 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:14:27 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:14:27 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:14:27 | WARNING | Rate limited (429) on https://api.elections.kalshi.com/trade-api/v2/markets, attempt 1/3, waiting 1s
+2026-04-05 22:14:58 | INFO | Status: cash=$100.00, positions=0, loop=71, active_series=['KXBNB15M', 'KXHYPE15M', 'KXXRP15M', 'KXDOGE15M', 'KXBTC15M']
+2026-04-05 22:14:58 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:14:58 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:14:58 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:15:28 | INFO | Status: cash=$100.00, positions=0, loop=72, active_series=['KXBNB15M', 'KXHYPE15M', 'KXXRP15M', 'KXBTC15M']
+2026-04-05 22:15:28 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:15:28 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:15:28 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:15:29 | INFO | FIRST_CROSS: KXBTC15M-26APR051830-30 target price set to $67,514.02
+2026-04-05 22:15:29 | INFO | FIRST_CROSS: KXETH15M-26APR051830-30 target price set to $2,054.32
+2026-04-05 22:15:29 | INFO | FIRST_CROSS: KXBNB15M-26APR051830-30 target price set to $591.50
+2026-04-05 22:15:29 | INFO | FIRST_CROSS: KXSOL15M-26APR051830-30 target price set to $79.48
+2026-04-05 22:15:29 | INFO | FIRST_CROSS: KXDOGE15M-26APR051830-30 target price set to $0.09
+2026-04-05 22:15:30 | INFO | FIRST_CROSS: KXXRP15M-26APR051830-30 target price set to $1.30
+2026-04-05 22:16:00 | INFO | Status: cash=$100.00, positions=0, loop=73, active_series=['KXSOL15M', 'KXBNB15M', 'KXHYPE15M', 'KXETH15M', 'KXXRP15M', 'KXDOGE15M', 'KXBTC15M']
+2026-04-05 22:16:00 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:16:00 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:16:00 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:16:00 | INFO | FIRST_CROSS: KXBNB15M-26APR051830-30 crossed UP through $0.50 (was $0.4900, now $0.5250)
+2026-04-05 22:16:00 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.5250 | contracts=3 | CONF=43 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:16:00 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:16:05 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.5250 | contracts=3 | CONF=43 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:16:05 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:16:10 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.5250 | contracts=3 | CONF=43 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:16:10 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:16:15 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.5250 | contracts=3 | CONF=43 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:16:15 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:16:20 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.5250 | contracts=3 | CONF=43 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:16:20 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:16:25 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.5250 | contracts=3 | CONF=43 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:16:25 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:16:30 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.5450 | contracts=3 | CONF=43 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:16:30 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:16:35 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.5450 | contracts=3 | CONF=43 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:16:35 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:16:41 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.5450 | contracts=3 | CONF=43 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:16:41 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:16:46 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.5450 | contracts=3 | CONF=43 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:16:46 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:16:51 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.5450 | contracts=3 | CONF=43 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:16:51 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:16:56 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.5450 | contracts=3 | CONF=43 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:16:56 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:17:01 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.6450 | contracts=3 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:17:01 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:17:06 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.6450 | contracts=3 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:17:06 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:17:11 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.6450 | contracts=3 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:17:11 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:17:16 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.6450 | contracts=3 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:17:16 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:17:21 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.6450 | contracts=3 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:17:21 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:17:26 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.6450 | contracts=3 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:17:26 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:17:32 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.6850 | contracts=2 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:17:32 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:17:37 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.6850 | contracts=2 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:17:37 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:17:42 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.6850 | contracts=2 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:17:42 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:17:47 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.6850 | contracts=2 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:17:47 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:17:52 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.6850 | contracts=2 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:17:52 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:17:57 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.6850 | contracts=2 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:17:57 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:18:02 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.6650 | contracts=3 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:18:02 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:18:07 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.6650 | contracts=3 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:18:07 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:18:12 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.6650 | contracts=3 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:18:12 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:18:17 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.6650 | contracts=3 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:18:17 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:18:23 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.6650 | contracts=3 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:18:23 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:18:28 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.6650 | contracts=3 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:18:28 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:18:33 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.6300 | contracts=3 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:18:33 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:18:38 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.6300 | contracts=3 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:18:38 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:18:43 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.6300 | contracts=3 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:18:43 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:18:48 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.6300 | contracts=3 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:18:48 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:18:53 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.6300 | contracts=3 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:18:53 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:18:58 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.6300 | contracts=3 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:18:58 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:19:03 | INFO | FIRST_CROSS: KXETH15M-26APR051830-30 | Direction: down | Target: $2,054.32 | Coin Price: $2,054.20
+2026-04-05 22:19:03 | INFO | FIRST_CROSS SIGNAL (coin): KXETH15M-26APR051830-30 | Direction: down | Target: $2,054.32 | Side: no @ $0.6700 | contracts=2 | CONF=48 | Coinbase=bearish
+2026-04-05 22:19:03 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:19:08 | INFO | FIRST_CROSS: KXBTC15M-26APR051830-30 | Direction: down | Target: $67,514.02 | Coin Price: $67,503.25
+2026-04-05 22:19:08 | INFO | FIRST_CROSS SIGNAL (coin): KXBTC15M-26APR051830-30 | Direction: down | Target: $67,514.02 | Side: no @ $0.6250 | contracts=3 | CONF=43 | Coinbase=neutral
+2026-04-05 22:19:08 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:19:13 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.6100 | contracts=3 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:19:13 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:19:18 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.6100 | contracts=3 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:19:18 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:19:23 | INFO | FIRST_CROSS: KXBTC15M-26APR051830-30 crossed DOWN through $0.50 (was $0.6250, now $0.4650)
+2026-04-05 22:19:23 | INFO | FIRST_CROSS: KXETH15M-26APR051830-30 crossed DOWN through $0.50 (was $0.6700, now $0.4750)
+2026-04-05 22:19:23 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.4750 | contracts=4 | CONF=43 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:19:23 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:19:28 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.4750 | contracts=4 | CONF=43 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:19:28 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:19:33 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.4750 | contracts=4 | CONF=43 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:19:33 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:19:38 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.4750 | contracts=4 | CONF=43 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:19:38 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:19:43 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.4750 | contracts=4 | CONF=43 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:19:43 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:19:49 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.4750 | contracts=4 | CONF=43 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:19:49 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:19:54 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.5400 | contracts=3 | CONF=43 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:19:54 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:19:59 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.5400 | contracts=3 | CONF=43 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:19:59 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:20:04 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.5400 | contracts=3 | CONF=40 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:20:04 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:20:09 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.5400 | contracts=3 | CONF=40 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:20:09 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:20:14 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.5400 | contracts=3 | CONF=40 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:20:14 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:20:19 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.5400 | contracts=3 | CONF=40 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:20:19 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:20:24 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.4300 | contracts=4 | CONF=40 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:20:24 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:20:29 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.4300 | contracts=4 | CONF=40 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:20:29 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:20:34 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.4300 | contracts=4 | CONF=40 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:20:34 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:20:39 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.4300 | contracts=4 | CONF=40 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:20:39 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:20:44 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.4300 | contracts=4 | CONF=40 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:20:44 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:20:49 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.4300 | contracts=4 | CONF=40 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:20:49 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:20:54 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051830-30 | Direction: no | Side: no @ $0.2150 | contracts=9 | CONF=55 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-05 22:20:54 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:20:59 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051830-30 | Direction: no | Side: no @ $0.2150 | contracts=9 | CONF=55 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-05 22:20:59 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:21:04 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051830-30 | Direction: no | Side: no @ $0.2150 | contracts=9 | CONF=55 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-05 22:21:04 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:21:09 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051830-30 | Direction: no | Side: no @ $0.2150 | contracts=9 | CONF=55 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-05 22:21:09 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:21:14 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051830-30 | Direction: no | Side: no @ $0.2150 | contracts=9 | CONF=55 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-05 22:21:14 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:21:19 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051830-30 | Direction: no | Side: no @ $0.2150 | contracts=9 | CONF=55 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-05 22:21:19 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:21:24 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.4050 | contracts=4 | CONF=40 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:21:24 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:21:29 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.4050 | contracts=4 | CONF=40 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:21:29 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:21:34 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.4050 | contracts=4 | CONF=40 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:21:34 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:21:39 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.4050 | contracts=4 | CONF=40 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:21:39 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:21:44 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.4050 | contracts=4 | CONF=40 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:21:44 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:21:49 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.4050 | contracts=4 | CONF=40 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:21:49 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:21:54 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.2000 | contracts=10 | CONF=60 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:21:54 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:21:59 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.2000 | contracts=10 | CONF=60 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:21:59 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:22:04 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.2000 | contracts=10 | CONF=60 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:22:04 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:22:09 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.2000 | contracts=10 | CONF=60 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:22:09 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:22:14 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.2000 | contracts=10 | CONF=60 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:22:14 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:22:19 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.2000 | contracts=10 | CONF=60 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:22:19 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:22:24 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.2000 | contracts=10 | CONF=60 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:22:24 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:22:29 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.2000 | contracts=10 | CONF=60 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:22:29 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:22:34 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.2000 | contracts=10 | CONF=60 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:22:34 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:22:39 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.2000 | contracts=10 | CONF=60 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:22:39 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:22:44 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.2000 | contracts=10 | CONF=60 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:22:44 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:22:49 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051830-30 | Direction: no | Side: no @ $0.2000 | contracts=10 | CONF=60 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:22:49 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:22:54 | INFO | FIRST_CROSS: KXBNB15M-26APR051830-30 | Direction: down | Target: $591.50 | Coin Price: $590.85
+2026-04-05 22:22:54 | INFO | FIRST_CROSS SIGNAL (coin): KXBNB15M-26APR051830-30 | Direction: down | Target: $591.50 | Side: no @ $0.2200 | contracts=9 | CONF=60 | Coinbase=bullish
+2026-04-05 22:22:54 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:22:59 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR051830-30 | Direction: yes | Side: yes @ $0.2200 | contracts=9 | CONF=60 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:22:59 | ERROR | Error in trading loop: name 'math' is not defined
+Traceback (most recent call last):
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 768, in run
+    self._check_and_trade_series(series_ticker)
+  File "/home/ubuntu/.openclaw/workspace/workers/superbot/superbot.py", line 707, in _check_and_trade_series
+    signal.size = math.ceil(min(signal.size, max_contracts))
+NameError: name 'math' is not defined
+2026-04-05 22:23:05 | INFO | FIRST_CROSS: KXHYPE15M-26APR051830-30 target price set to $35.77
+2026-04-05 22:23:28 | INFO | CoinTrader initialized for BTC (KXBTC15M)
+2026-04-05 22:23:28 | INFO | CoinTrader initialized for ETH (KXETH15M)
+2026-04-05 22:23:28 | INFO | CoinTrader initialized for BNB (KXBNB15M)
+2026-04-05 22:23:28 | INFO | CoinTrader initialized for SOL (KXSOL15M)
+2026-04-05 22:23:28 | INFO | CoinTrader initialized for DOGE (KXDOGE15M)
+2026-04-05 22:23:28 | INFO | CoinTrader initialized for XRP (KXXRP15M)
+2026-04-05 22:23:28 | INFO | CoinTrader initialized for HYPE (KXHYPE15M)
+2026-04-05 22:23:28 | INFO | CoinTrader initialized for ADA (KXADA15M)
+2026-04-05 22:23:28 | INFO | ============================================================
+2026-04-05 22:23:28 | INFO | SUPERBOT INITIALIZED - NERD v2 STRATEGY
+2026-04-05 22:23:28 | INFO | Coins: ['BTC', 'ETH', 'BNB', 'SOL', 'DOGE', 'XRP', 'HYPE', 'ADA']
+2026-04-05 22:23:28 | INFO | Tickers: ['KXBTC15M', 'KXETH15M', 'KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXXRP15M', 'KXHYPE15M', 'KXADA15M']
+2026-04-05 22:23:28 | INFO | Starting balance: $100.00
+2026-04-05 22:23:28 | INFO | Max positions: 3 (was 5)
+2026-04-05 22:23:28 | INFO | Max bet per trade: $2.00
+2026-04-05 22:23:28 | INFO | Max daily loss: $99999.00
+2026-04-05 22:23:28 | INFO | Max daily trades: 30
+2026-04-05 22:23:28 | INFO | Coinbase pre-filter: poll every 10s (FREE)
+2026-04-05 22:23:28 | INFO | Kalshi polling: every 30s (was 2s)
+2026-04-05 22:23:28 | INFO | STRATEGY: First Cross + Momentum BOTH (let them compete)
+2026-04-05 22:23:28 | INFO | ============================================================
+2026-04-05 22:23:28 | INFO | Starting SMART POLLING trading loop (Recorder's approach)...
+2026-04-05 22:23:28 | INFO | Report session started: 2026-04-05 22:23:28 UTC
+2026-04-05 22:23:28 | INFO | 😴 IDLE: checked KXBTC15M (poll #1) | Day Realized P&L: $0.00 (0e+00%)
+2026-04-05 22:23:28 | INFO | FIRST_CROSS: KXHYPE15M-26APR051830-30 target price set to $35.77
+2026-04-05 22:23:58 | INFO | Status: cash=$100.00, positions=0, loop=2, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:23:58 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:23:58 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:23:58 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:23:58 | INFO | FIRST_CROSS: KXHYPE15M-26APR051830-30 crossed UP through $0.50 (was $0.3050, now $0.5200)
+2026-04-05 22:23:58 | INFO | FIRST_CROSS SIGNAL (midpoint): KXHYPE15M-26APR051830-30 | Direction: yes | Side: yes @ $0.5200 | contracts=3 | CONF=40 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:23:58 | INFO | [HYPE] Opened first_cross: yes KXHYPE15M-26APR051830-30 @ $0.5200, contracts=3, cost=$1.56
+2026-04-05 22:23:58 | INFO | 🚀 [HYPE] TRADE EXECUTED: first_cross yes KXHYPE15M-26APR051830-30 @ $0.5200, contracts=3 (daily trades: 1/30)
+2026-04-05 22:24:29 | INFO | Status: cash=$98.44, positions=1, loop=3, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:24:29 | INFO | Day Realized P&L: $-1.56 (-1.6%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:24:29 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: first_cross yes@0.52 | ADA: idle
+2026-04-05 22:24:29 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:24:29 | INFO | FIRST_CROSS: KXETH15M-26APR051830-30 target price set to $2,054.32
+2026-04-05 22:24:29 | INFO | FIRST_CROSS: KXBNB15M-26APR051830-30 target price set to $591.50
+2026-04-05 22:24:29 | INFO | KXHYPE15M-26APR051830-30: SCALED IN @ $0.6350 (+$1.00), new size=$4.00, avg_price=$0.5488, scale_ins=1
+2026-04-05 22:24:29 | INFO | [HYPE] SCALED IN KXHYPE15M-26APR051830-30: +$1.00 @ $0.6350, new_size=$4.00
+2026-04-05 22:25:00 | INFO | Status: cash=$98.44, positions=1, loop=4, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:25:00 | INFO | Day Realized P&L: $-1.56 (-1.6%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:25:00 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: first_cross yes@0.52 | ADA: idle
+2026-04-05 22:25:00 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:25:00 | INFO | KXHYPE15M-26APR051830-30: SCALED IN @ $0.5800 (+$1.00), new size=$5.00, avg_price=$0.5550, scale_ins=2
+2026-04-05 22:25:00 | INFO | [HYPE] SCALED IN KXHYPE15M-26APR051830-30: +$1.00 @ $0.5800, new_size=$5.00
+2026-04-05 22:25:30 | INFO | Status: cash=$98.44, positions=1, loop=5, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:25:30 | INFO | Day Realized P&L: $-1.56 (-1.6%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:25:30 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: first_cross yes@0.52 | ADA: idle
+2026-04-05 22:25:30 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:25:30 | INFO | KXHYPE15M-26APR051830-30: STATIC STOP HIT @ $0.3400 (entry=$0.5200, stop=30%, loss=34.6%, age=1.5min)
+2026-04-05 22:25:30 | INFO | [HYPE] Closed KXHYPE15M-26APR051830-30: STATIC STOP: -30% loss locked in, PnL=$-1.08
+2026-04-05 22:25:30 | INFO | Strategy first_cross stats: W=0.00%, R=0.93x, Kelly=4.00%
+2026-04-05 22:25:30 | INFO | Trade recorded: KXHYPE15M-26APR051830-30 yes first_cross PnL=$-1.08
+2026-04-05 22:25:30 | INFO | [HYPE] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-05 22:25:30 | INFO | FIRST_CROSS SIGNAL (midpoint): KXHYPE15M-26APR051830-30 | Direction: yes | Side: yes @ $0.3400 | contracts=5 | CONF=50 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:25:30 | INFO | [HYPE] Opened first_cross: yes KXHYPE15M-26APR051830-30 @ $0.3400, contracts=5, cost=$1.70
+2026-04-05 22:25:30 | INFO | 🚀 [HYPE] TRADE EXECUTED: first_cross yes KXHYPE15M-26APR051830-30 @ $0.3400, contracts=5 (daily trades: 2/30)
+2026-04-05 22:26:00 | INFO | Status: cash=$96.74, positions=1, loop=6, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:26:00 | INFO | Day Realized P&L: $-3.26 (-3.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:26:00 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: first_cross yes@0.34 | ADA: idle
+2026-04-05 22:26:00 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:26:31 | INFO | Status: cash=$96.74, positions=1, loop=7, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:26:31 | INFO | Day Realized P&L: $-3.26 (-3.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:26:31 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: first_cross yes@0.34 | ADA: idle
+2026-04-05 22:26:31 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:26:31 | INFO | KXHYPE15M-26APR051830-30: TRAILING STOP ACTIVATED @ $0.5300 (entry=$0.3400, profit=55.9%)
+2026-04-05 22:26:31 | INFO | KXHYPE15M-26APR051830-30: SCALED IN @ $0.5300 (+$2.00), new size=$7.00, avg_price=$0.3943, scale_ins=1
+2026-04-05 22:26:31 | INFO | [HYPE] SCALED IN KXHYPE15M-26APR051830-30: +$2.00 @ $0.5300, new_size=$7.00
+2026-04-05 22:27:01 | INFO | Status: cash=$96.74, positions=1, loop=8, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:27:01 | INFO | Day Realized P&L: $-3.26 (-3.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:27:01 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: first_cross yes@0.34 | ADA: idle
+2026-04-05 22:27:01 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:27:01 | INFO | KXHYPE15M-26APR051830-30: STATIC STOP HIT @ $0.2250 (entry=$0.3400, stop=30%, loss=33.8%, age=1.5min)
+2026-04-05 22:27:01 | INFO | [HYPE] Closed KXHYPE15M-26APR051830-30: STATIC STOP: -30% loss locked in, PnL=$-1.18
+2026-04-05 22:27:01 | INFO | Strategy first_cross stats: W=0.00%, R=0.88x, Kelly=4.00%
+2026-04-05 22:27:01 | INFO | Trade recorded: KXHYPE15M-26APR051830-30 yes first_cross PnL=$-1.18
+2026-04-05 22:27:01 | INFO | [HYPE] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-05 22:27:01 | INFO | FIRST_CROSS: KXHYPE15M-26APR051830-30 | Direction: down | Target: $35.77 | Coin Price: $35.75
+2026-04-05 22:27:01 | INFO | FIRST_CROSS SIGNAL (coin): KXHYPE15M-26APR051830-30 | Direction: down | Target: $35.77 | Side: no @ $0.2250 | contracts=8 | CONF=48 | Coinbase=bearish
+2026-04-05 22:27:01 | INFO | [HYPE] Opened first_cross: no KXHYPE15M-26APR051830-30 @ $0.2250, contracts=8, cost=$6.20
+2026-04-05 22:27:01 | INFO | 🚀 [HYPE] TRADE EXECUTED: first_cross no KXHYPE15M-26APR051830-30 @ $0.2250, contracts=8 (daily trades: 3/30)
+2026-04-05 22:27:32 | INFO | Status: cash=$90.54, positions=1, loop=9, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:27:32 | INFO | Day Realized P&L: $-9.46 (-9.5%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:27:32 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: first_cross no@0.23 | ADA: idle
+2026-04-05 22:27:32 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:27:32 | INFO | KXHYPE15M-26APR051830-30: SCALED IN @ $0.1400 (+$4.00), new size=$12.00, avg_price=$0.1967, scale_ins=1
+2026-04-05 22:27:32 | INFO | [HYPE] SCALED IN KXHYPE15M-26APR051830-30: +$4.00 @ $0.1400, new_size=$12.00
+2026-04-05 22:28:02 | INFO | Status: cash=$90.54, positions=1, loop=10, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:28:02 | INFO | Day Realized P&L: $-9.46 (-9.5%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:28:02 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: first_cross no@0.23 | ADA: idle
+2026-04-05 22:28:02 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:28:02 | INFO | KXHYPE15M-26APR051830-30: SCALED IN @ $0.0855 (+$4.00), new size=$16.00, avg_price=$0.1689, scale_ins=2
+2026-04-05 22:28:02 | INFO | [HYPE] SCALED IN KXHYPE15M-26APR051830-30: +$4.00 @ $0.0855, new_size=$16.00
+2026-04-05 22:28:32 | INFO | Status: cash=$90.54, positions=1, loop=11, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:28:32 | INFO | Day Realized P&L: $-9.46 (-9.5%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:28:32 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: first_cross no@0.23 | ADA: idle
+2026-04-05 22:28:32 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:29:03 | INFO | Status: cash=$90.54, positions=1, loop=12, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:29:03 | INFO | Day Realized P&L: $-9.46 (-9.5%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:29:03 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: first_cross no@0.23 | ADA: idle
+2026-04-05 22:29:03 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:29:03 | INFO | KXHYPE15M-26APR051830-30: Near expiry (56s) - closing position
+2026-04-05 22:29:03 | INFO | [HYPE] Closed KXHYPE15M-26APR051830-30: Expiry: closing at $0.0255, PnL=$-2.29
+2026-04-05 22:29:03 | INFO | Strategy first_cross stats: W=0.00%, R=0.66x, Kelly=4.00%
+2026-04-05 22:29:03 | INFO | Trade recorded: KXHYPE15M-26APR051830-30 no first_cross PnL=$-2.29
+2026-04-05 22:29:03 | INFO | [HYPE] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-05 22:29:33 | INFO | Status: cash=$90.54, positions=0, loop=13, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:29:33 | INFO | Day Realized P&L: $-9.46 (-9.5%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:29:33 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:29:33 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:30:03 | INFO | Status: cash=$90.54, positions=0, loop=14, active_series=['KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:30:03 | INFO | Day Realized P&L: $-9.46 (-9.5%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:30:03 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:30:03 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:30:33 | INFO | Status: cash=$90.54, positions=0, loop=15, active_series=['KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:30:33 | INFO | Day Realized P&L: $-9.46 (-9.5%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:30:33 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:30:33 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:30:33 | INFO | FIRST_CROSS: KXSOL15M-26APR051845-45 target price set to $79.46
+2026-04-05 22:30:33 | INFO | FIRST_CROSS: KXHYPE15M-26APR051845-45 target price set to $35.73
+2026-04-05 22:31:03 | INFO | Status: cash=$90.54, positions=0, loop=16, active_series=['KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:31:03 | INFO | Day Realized P&L: $-9.46 (-9.5%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:31:03 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:31:03 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:31:04 | INFO | FIRST_CROSS: KXBTC15M-26APR051845-45 target price set to $67,406.89
+2026-04-05 22:31:04 | INFO | FIRST_CROSS: KXETH15M-26APR051845-45 target price set to $2,053.07
+2026-04-05 22:31:04 | INFO | FIRST_CROSS: KXBNB15M-26APR051845-45 target price set to $591.59
+2026-04-05 22:31:04 | INFO | FIRST_CROSS: KXDOGE15M-26APR051845-45 target price set to $0.09
+2026-04-05 22:31:05 | INFO | FIRST_CROSS: KXXRP15M-26APR051845-45 target price set to $1.30
+2026-04-05 22:31:05 | INFO | FIRST_CROSS: KXHYPE15M-26APR051845-45 crossed DOWN through $0.50 (was $0.5100, now $0.4550)
+2026-04-05 22:31:05 | INFO | FIRST_CROSS SIGNAL (midpoint): KXHYPE15M-26APR051845-45 | Direction: no | Side: no @ $0.4550 | contracts=4 | CONF=43 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:31:05 | INFO | [HYPE] Opened first_cross: no KXHYPE15M-26APR051845-45 @ $0.4550, contracts=4, cost=$2.18
+2026-04-05 22:31:05 | INFO | 🚀 [HYPE] TRADE EXECUTED: first_cross no KXHYPE15M-26APR051845-45 @ $0.4550, contracts=4 (daily trades: 4/30)
+2026-04-05 22:31:35 | INFO | Status: cash=$88.36, positions=1, loop=17, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:31:35 | INFO | Day Realized P&L: $-11.64 (-11.6%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:31:35 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: first_cross no@0.45 | ADA: idle
+2026-04-05 22:31:35 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:31:35 | INFO | FIRST_CROSS: KXBTC15M-26APR051845-45 crossed DOWN through $0.50 (was $0.5350, now $0.4750)
+2026-04-05 22:31:35 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051845-45 | Direction: no | Side: no @ $0.4750 | contracts=4 | CONF=43 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:31:35 | INFO | [BTC] Opened first_cross: no KXBTC15M-26APR051845-45 @ $0.4750, contracts=4, cost=$2.10
+2026-04-05 22:31:35 | INFO | 🚀 [BTC] TRADE EXECUTED: first_cross no KXBTC15M-26APR051845-45 @ $0.4750, contracts=4 (daily trades: 5/30)
+2026-04-05 22:31:35 | INFO | FIRST_CROSS: KXETH15M-26APR051845-45 crossed DOWN through $0.50 (was $0.5300, now $0.4650)
+2026-04-05 22:31:35 | INFO | FIRST_CROSS: KXXRP15M-26APR051845-45 crossed UP through $0.50 (was $0.4850, now $0.6950)
+2026-04-05 22:31:35 | INFO | FIRST_CROSS SIGNAL (midpoint): KXXRP15M-26APR051845-45 | Direction: yes | Side: yes @ $0.6950 | contracts=2 | CONF=56 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:31:35 | INFO | [XRP] Opened first_cross: yes KXXRP15M-26APR051845-45 @ $0.6950, contracts=2, cost=$1.39
+2026-04-05 22:31:35 | INFO | 🚀 [XRP] TRADE EXECUTED: first_cross yes KXXRP15M-26APR051845-45 @ $0.6950, contracts=2 (daily trades: 6/30)
+2026-04-05 22:32:06 | INFO | Status: cash=$84.87, positions=3, loop=18, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:32:06 | INFO | Day Realized P&L: $-15.13 (-15.1%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:32:06 | INFO | Coins: BTC: first_cross no@0.47 | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: first_cross yes@0.70 | HYPE: first_cross no@0.45 | ADA: idle
+2026-04-05 22:32:06 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:32:06 | INFO | KXBTC15M-26APR051845-45: STATIC STOP HIT @ $0.7200 (entry=$0.4750, stop=30%, loss=51.6%, age=0.5min)
+2026-04-05 22:32:06 | INFO | [BTC] Closed KXBTC15M-26APR051845-45: STATIC STOP: -30% loss locked in, PnL=$0.98
+2026-04-05 22:32:06 | INFO | Strategy first_cross stats: W=100.00%, R=0.98x, Kelly=20.00%
+2026-04-05 22:32:06 | INFO | Trade recorded: KXBTC15M-26APR051845-45 no first_cross PnL=$0.98
+2026-04-05 22:32:06 | INFO | [BTC] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-05 22:32:06 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051845-45 | Direction: no | Side: no @ $0.7200 | contracts=2 | CONF=71 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:32:06 | INFO | [BTC] Opened first_cross: no KXBTC15M-26APR051845-45 @ $0.7200, contracts=2, cost=$0.56
+2026-04-05 22:32:06 | INFO | 🚀 [BTC] TRADE EXECUTED: first_cross no KXBTC15M-26APR051845-45 @ $0.7200, contracts=2 (daily trades: 7/30)
+2026-04-05 22:32:06 | INFO | KXXRP15M-26APR051845-45: SCALED IN @ $0.8100 (+$1.00), new size=$3.00, avg_price=$0.7333, scale_ins=1
+2026-04-05 22:32:06 | INFO | [XRP] SCALED IN KXXRP15M-26APR051845-45: +$1.00 @ $0.8100, new_size=$3.00
+2026-04-05 22:32:06 | INFO | KXHYPE15M-26APR051845-45: STATIC STOP HIT @ $0.6500 (entry=$0.4550, stop=30%, loss=42.9%, age=1.0min)
+2026-04-05 22:32:06 | INFO | [HYPE] Closed KXHYPE15M-26APR051845-45: STATIC STOP: -30% loss locked in, PnL=$0.78
+2026-04-05 22:32:06 | INFO | Strategy first_cross stats: W=25.00%, R=0.51x, Kelly=4.00%
+2026-04-05 22:32:06 | INFO | Trade recorded: KXHYPE15M-26APR051845-45 no first_cross PnL=$0.78
+2026-04-05 22:32:06 | INFO | [HYPE] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-05 22:32:06 | INFO | FIRST_CROSS SIGNAL (midpoint): KXHYPE15M-26APR051845-45 | Direction: no | Side: no @ $0.6500 | contracts=3 | CONF=56 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-05 22:32:06 | INFO | [HYPE] Opened first_cross: no KXHYPE15M-26APR051845-45 @ $0.6500, contracts=3, cost=$1.05
+2026-04-05 22:32:06 | INFO | 🚀 [HYPE] TRADE EXECUTED: first_cross no KXHYPE15M-26APR051845-45 @ $0.6500, contracts=3 (daily trades: 8/30)
+2026-04-05 22:32:37 | INFO | Status: cash=$83.26, positions=3, loop=19, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:32:37 | INFO | Day Realized P&L: $-16.74 (-16.7%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:32:37 | INFO | Coins: BTC: first_cross no@0.72 | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: first_cross yes@0.70 | HYPE: first_cross no@0.65 | ADA: idle
+2026-04-05 22:32:37 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:32:37 | INFO | KXXRP15M-26APR051845-45: SCALED IN @ $0.8650 (+$1.00), new size=$4.00, avg_price=$0.7663, scale_ins=2
+2026-04-05 22:32:37 | INFO | [XRP] SCALED IN KXXRP15M-26APR051845-45: +$1.00 @ $0.8650, new_size=$4.00
+2026-04-05 22:33:08 | INFO | Status: cash=$83.26, positions=3, loop=20, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:33:08 | INFO | Day Realized P&L: $-16.74 (-16.7%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:33:08 | INFO | Coins: BTC: first_cross no@0.72 | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: first_cross yes@0.70 | HYPE: first_cross no@0.65 | ADA: idle
+2026-04-05 22:33:08 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:33:38 | INFO | Status: cash=$83.26, positions=3, loop=21, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:33:38 | INFO | Day Realized P&L: $-16.74 (-16.7%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:33:38 | INFO | Coins: BTC: first_cross no@0.72 | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: first_cross yes@0.70 | HYPE: first_cross no@0.65 | ADA: idle
+2026-04-05 22:33:38 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:34:09 | INFO | Status: cash=$83.26, positions=3, loop=22, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:34:09 | INFO | Day Realized P&L: $-16.74 (-16.7%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:34:09 | INFO | Coins: BTC: first_cross no@0.72 | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: first_cross yes@0.70 | HYPE: first_cross no@0.65 | ADA: idle
+2026-04-05 22:34:09 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:34:40 | INFO | Status: cash=$83.26, positions=3, loop=23, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:34:40 | INFO | Day Realized P&L: $-16.74 (-16.7%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:34:40 | INFO | Coins: BTC: first_cross no@0.72 | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: first_cross yes@0.70 | HYPE: first_cross no@0.65 | ADA: idle
+2026-04-05 22:34:40 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:35:11 | INFO | Status: cash=$83.26, positions=3, loop=24, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:35:11 | INFO | Day Realized P&L: $-16.74 (-16.7%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:35:11 | INFO | Coins: BTC: first_cross no@0.72 | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: first_cross yes@0.70 | HYPE: first_cross no@0.65 | ADA: idle
+2026-04-05 22:35:11 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:35:41 | INFO | Status: cash=$83.26, positions=3, loop=25, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:35:41 | INFO | Day Realized P&L: $-16.74 (-16.7%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:35:41 | INFO | Coins: BTC: first_cross no@0.72 | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: first_cross yes@0.70 | HYPE: first_cross no@0.65 | ADA: idle
+2026-04-05 22:35:41 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:36:12 | INFO | Status: cash=$83.26, positions=3, loop=26, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:36:12 | INFO | Day Realized P&L: $-16.74 (-16.7%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:36:12 | INFO | Coins: BTC: first_cross no@0.72 | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: first_cross yes@0.70 | HYPE: first_cross no@0.65 | ADA: idle
+2026-04-05 22:36:12 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:36:43 | INFO | Status: cash=$83.26, positions=3, loop=27, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:36:43 | INFO | Day Realized P&L: $-16.74 (-16.7%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:36:43 | INFO | Coins: BTC: first_cross no@0.72 | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: first_cross yes@0.70 | HYPE: first_cross no@0.65 | ADA: idle
+2026-04-05 22:36:43 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:36:43 | INFO | KXHYPE15M-26APR051845-45: SCALED IN @ $0.5800 (+$1.00), new size=$4.00, avg_price=$0.6325, scale_ins=1
+2026-04-05 22:36:43 | INFO | [HYPE] SCALED IN KXHYPE15M-26APR051845-45: +$1.00 @ $0.5800, new_size=$4.00
+2026-04-05 22:37:14 | INFO | Status: cash=$83.26, positions=3, loop=28, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:37:14 | INFO | Day Realized P&L: $-16.74 (-16.7%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:37:14 | INFO | Coins: BTC: first_cross no@0.72 | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: first_cross yes@0.70 | HYPE: first_cross no@0.65 | ADA: idle
+2026-04-05 22:37:14 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:37:14 | INFO | KXHYPE15M-26APR051845-45: SCALED IN @ $0.5650 (+$1.00), new size=$5.00, avg_price=$0.6190, scale_ins=2
+2026-04-05 22:37:14 | INFO | [HYPE] SCALED IN KXHYPE15M-26APR051845-45: +$1.00 @ $0.5650, new_size=$5.00
+2026-04-05 22:37:45 | INFO | Status: cash=$83.26, positions=3, loop=29, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:37:45 | INFO | Day Realized P&L: $-16.74 (-16.7%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:37:45 | INFO | Coins: BTC: first_cross no@0.72 | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: first_cross yes@0.70 | HYPE: first_cross no@0.65 | ADA: idle
+2026-04-05 22:37:45 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:38:15 | INFO | Status: cash=$83.26, positions=3, loop=30, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:38:15 | INFO | Day Realized P&L: $-16.74 (-16.7%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:38:15 | INFO | Coins: BTC: first_cross no@0.72 | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: first_cross yes@0.70 | HYPE: first_cross no@0.65 | ADA: idle
+2026-04-05 22:38:15 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:38:15 | INFO | KXBTC15M-26APR051845-45: STATIC STOP HIT @ $0.9390 (entry=$0.7200, stop=30%, loss=30.4%, age=6.2min)
+2026-04-05 22:38:15 | INFO | [BTC] Closed KXBTC15M-26APR051845-45: STATIC STOP: -30% loss locked in, PnL=$0.44
+2026-04-05 22:38:15 | INFO | Strategy first_cross stats: W=100.00%, R=0.71x, Kelly=20.00%
+2026-04-05 22:38:15 | INFO | Trade recorded: KXBTC15M-26APR051845-45 no first_cross PnL=$0.44
+2026-04-05 22:38:15 | INFO | [BTC] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-05 22:38:46 | INFO | Status: cash=$83.26, positions=2, loop=31, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:38:46 | INFO | Day Realized P&L: $-16.74 (-16.7%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:38:46 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: first_cross yes@0.70 | HYPE: first_cross no@0.65 | ADA: idle
+2026-04-05 22:38:46 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:39:17 | INFO | Status: cash=$83.26, positions=2, loop=32, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:39:17 | INFO | Day Realized P&L: $-16.74 (-16.7%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:39:17 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: first_cross yes@0.70 | HYPE: first_cross no@0.65 | ADA: idle
+2026-04-05 22:39:17 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:39:17 | INFO | KXHYPE15M-26APR051845-45: STATIC STOP HIT @ $0.8950 (entry=$0.6500, stop=30%, loss=37.7%, age=7.2min)
+2026-04-05 22:39:17 | INFO | [HYPE] Closed KXHYPE15M-26APR051845-45: STATIC STOP: -30% loss locked in, PnL=$1.38
+2026-04-05 22:39:17 | INFO | Strategy first_cross stats: W=40.00%, R=0.71x, Kelly=4.00%
+2026-04-05 22:39:17 | INFO | Trade recorded: KXHYPE15M-26APR051845-45 no first_cross PnL=$1.38
+2026-04-05 22:39:17 | INFO | [HYPE] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-05 22:39:47 | INFO | Status: cash=$83.26, positions=1, loop=33, active_series=['KXBTC15M', 'KXHYPE15M', 'KXDOGE15M', 'KXBNB15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M']
+2026-04-05 22:39:47 | INFO | Day Realized P&L: $-16.74 (-16.7%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:39:47 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: first_cross yes@0.70 | HYPE: idle | ADA: idle
+2026-04-05 22:39:47 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:39:57 | INFO | CoinTrader initialized for BTC (KXBTC15M)
+2026-04-05 22:39:57 | INFO | CoinTrader initialized for ETH (KXETH15M)
+2026-04-05 22:39:57 | INFO | CoinTrader initialized for BNB (KXBNB15M)
+2026-04-05 22:39:57 | INFO | CoinTrader initialized for SOL (KXSOL15M)
+2026-04-05 22:39:57 | INFO | CoinTrader initialized for DOGE (KXDOGE15M)
+2026-04-05 22:39:57 | INFO | CoinTrader initialized for XRP (KXXRP15M)
+2026-04-05 22:39:57 | INFO | CoinTrader initialized for HYPE (KXHYPE15M)
+2026-04-05 22:39:57 | INFO | CoinTrader initialized for ADA (KXADA15M)
+2026-04-05 22:39:57 | INFO | ============================================================
+2026-04-05 22:39:57 | INFO | SUPERBOT INITIALIZED - NERD v2 STRATEGY
+2026-04-05 22:39:57 | INFO | Coins: ['BTC', 'ETH', 'BNB', 'SOL', 'DOGE', 'XRP', 'HYPE', 'ADA']
+2026-04-05 22:39:57 | INFO | Tickers: ['KXBTC15M', 'KXETH15M', 'KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXXRP15M', 'KXHYPE15M', 'KXADA15M']
+2026-04-05 22:39:57 | INFO | Starting balance: $100.00
+2026-04-05 22:39:57 | INFO | Max positions: 3 (was 5)
+2026-04-05 22:39:57 | INFO | Max bet per trade: $2.00
+2026-04-05 22:39:57 | INFO | Max daily loss: $99999.00
+2026-04-05 22:39:57 | INFO | Max daily trades: 30
+2026-04-05 22:39:57 | INFO | Coinbase pre-filter: poll every 10s (FREE)
+2026-04-05 22:39:57 | INFO | Kalshi polling: every 30s (was 2s)
+2026-04-05 22:39:57 | INFO | STRATEGY: First Cross + Momentum BOTH (let them compete)
+2026-04-05 22:39:57 | INFO | ============================================================
+2026-04-05 22:39:57 | INFO | Starting SMART POLLING trading loop (Recorder's approach)...
+2026-04-05 22:39:57 | INFO | Report session started: 2026-04-05 22:39:57 UTC
+2026-04-05 22:39:57 | INFO | 😴 IDLE: checked KXBTC15M (poll #1) | Day Realized P&L: $0.00 (0e+00%)
+2026-04-05 22:40:27 | INFO | Status: cash=$100.00, positions=0, loop=2, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:40:27 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:40:27 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:40:27 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:40:57 | INFO | Status: cash=$100.00, positions=0, loop=3, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:40:57 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:40:57 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:40:57 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:41:27 | INFO | Status: cash=$100.00, positions=0, loop=4, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:41:27 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:41:27 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:41:27 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:41:57 | INFO | Status: cash=$100.00, positions=0, loop=5, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:41:57 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:41:57 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:41:57 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:42:27 | INFO | Status: cash=$100.00, positions=0, loop=6, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:42:27 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:42:27 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:42:27 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:42:58 | INFO | Status: cash=$100.00, positions=0, loop=7, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:42:58 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:42:58 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:42:58 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:43:28 | INFO | Status: cash=$100.00, positions=0, loop=8, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:43:28 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:43:28 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:43:28 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:43:58 | INFO | Status: cash=$100.00, positions=0, loop=9, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:43:58 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:43:58 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:43:58 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:44:28 | INFO | Status: cash=$100.00, positions=0, loop=10, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:44:28 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:44:28 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:44:28 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:44:58 | INFO | Status: cash=$100.00, positions=0, loop=11, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:44:58 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:44:58 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:44:58 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:45:28 | INFO | Status: cash=$100.00, positions=0, loop=12, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:45:28 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:45:28 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:45:28 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:45:28 | INFO | FIRST_CROSS: KXBTC15M-26APR051900-00 target price set to $67,905.20
+2026-04-05 22:45:29 | INFO | FIRST_CROSS: KXETH15M-26APR051900-00 target price set to $2,069.79
+2026-04-05 22:45:29 | INFO | FIRST_CROSS: KXBNB15M-26APR051900-00 target price set to $594.52
+2026-04-05 22:45:29 | INFO | FIRST_CROSS: KXSOL15M-26APR051900-00 target price set to $80.15
+2026-04-05 22:45:29 | INFO | FIRST_CROSS: KXDOGE15M-26APR051900-00 target price set to $0.09
+2026-04-05 22:45:29 | INFO | FIRST_CROSS: KXXRP15M-26APR051900-00 target price set to $1.31
+2026-04-05 22:46:00 | INFO | Status: cash=$100.00, positions=0, loop=13, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:46:00 | INFO | Day Realized P&L: $0.00 (0.0%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:46:00 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:46:00 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:46:00 | INFO | FIRST_CROSS: KXBTC15M-26APR051900-00 crossed UP through $0.50 (was $0.4850, now $0.7150)
+2026-04-05 22:46:00 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR051900-00 | Direction: yes | Side: yes @ $0.7150 | contracts=2 | CONF=63 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:46:00 | INFO | [BTC] Opened first_cross: yes KXBTC15M-26APR051900-00 @ $0.7150, contracts=2, cost=$1.43
+2026-04-05 22:46:00 | INFO | 🚀 [BTC] TRADE EXECUTED: first_cross yes KXBTC15M-26APR051900-00 @ $0.7150, contracts=2 (daily trades: 1/30)
+2026-04-05 22:46:00 | INFO | FIRST_CROSS: KXETH15M-26APR051900-00 crossed UP through $0.50 (was $0.4750, now $0.7250)
+2026-04-05 22:46:00 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR051900-00 | Direction: yes | Side: yes @ $0.7250 | contracts=2 | CONF=63 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:46:00 | INFO | [ETH] Opened first_cross: yes KXETH15M-26APR051900-00 @ $0.7250, contracts=2, cost=$1.45
+2026-04-05 22:46:00 | INFO | 🚀 [ETH] TRADE EXECUTED: first_cross yes KXETH15M-26APR051900-00 @ $0.7250, contracts=2 (daily trades: 2/30)
+2026-04-05 22:46:00 | INFO | FIRST_CROSS: KXSOL15M-26APR051900-00 crossed UP through $0.50 (was $0.3550, now $0.7050)
+2026-04-05 22:46:00 | INFO | FIRST_CROSS SIGNAL (midpoint): KXSOL15M-26APR051900-00 | Direction: yes | Side: yes @ $0.7050 | contracts=2 | CONF=63 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-05 22:46:00 | INFO | [SOL] Opened first_cross: yes KXSOL15M-26APR051900-00 @ $0.7050, contracts=2, cost=$1.41
+2026-04-05 22:46:00 | INFO | 🚀 [SOL] TRADE EXECUTED: first_cross yes KXSOL15M-26APR051900-00 @ $0.7050, contracts=2 (daily trades: 3/30)
+2026-04-05 22:46:30 | INFO | Status: cash=$95.71, positions=3, loop=14, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:46:30 | INFO | Day Realized P&L: $-4.29 (-4.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:46:30 | INFO | Coins: BTC: first_cross yes@0.71 | ETH: first_cross yes@0.72 | BNB: idle | SOL: first_cross yes@0.71 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:46:30 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:47:01 | INFO | Status: cash=$95.71, positions=3, loop=15, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:47:01 | INFO | Day Realized P&L: $-4.29 (-4.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:47:01 | INFO | Coins: BTC: first_cross yes@0.71 | ETH: first_cross yes@0.72 | BNB: idle | SOL: first_cross yes@0.71 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:47:01 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:47:01 | INFO | KXBTC15M-26APR051900-00: SCALED IN @ $0.8150 (+$1.00), new size=$3.00, avg_price=$0.7483, scale_ins=1
+2026-04-05 22:47:01 | INFO | [BTC] SCALED IN KXBTC15M-26APR051900-00: +$1.00 @ $0.8150, new_size=$3.00
+2026-04-05 22:47:32 | INFO | Status: cash=$95.71, positions=3, loop=16, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:47:32 | INFO | Day Realized P&L: $-4.29 (-4.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:47:32 | INFO | Coins: BTC: first_cross yes@0.71 | ETH: first_cross yes@0.72 | BNB: idle | SOL: first_cross yes@0.71 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:47:32 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:48:03 | INFO | Status: cash=$95.71, positions=3, loop=17, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:48:03 | INFO | Day Realized P&L: $-4.29 (-4.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:48:03 | INFO | Coins: BTC: first_cross yes@0.71 | ETH: first_cross yes@0.72 | BNB: idle | SOL: first_cross yes@0.71 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:48:03 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:48:34 | INFO | Status: cash=$95.71, positions=3, loop=18, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:48:34 | INFO | Day Realized P&L: $-4.29 (-4.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:48:34 | INFO | Coins: BTC: first_cross yes@0.71 | ETH: first_cross yes@0.72 | BNB: idle | SOL: first_cross yes@0.71 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:48:34 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:49:04 | INFO | Status: cash=$95.71, positions=3, loop=19, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:49:04 | INFO | Day Realized P&L: $-4.29 (-4.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:49:04 | INFO | Coins: BTC: first_cross yes@0.71 | ETH: first_cross yes@0.72 | BNB: idle | SOL: first_cross yes@0.71 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:49:04 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:49:35 | INFO | Status: cash=$95.71, positions=3, loop=20, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:49:35 | INFO | Day Realized P&L: $-4.29 (-4.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:49:35 | INFO | Coins: BTC: first_cross yes@0.71 | ETH: first_cross yes@0.72 | BNB: idle | SOL: first_cross yes@0.71 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:49:35 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:49:35 | INFO | KXBTC15M-26APR051900-00: SCALED IN @ $0.8050 (+$1.00), new size=$4.00, avg_price=$0.7625, scale_ins=2
+2026-04-05 22:49:35 | INFO | [BTC] SCALED IN KXBTC15M-26APR051900-00: +$1.00 @ $0.8050, new_size=$4.00
+2026-04-05 22:50:06 | INFO | Status: cash=$95.71, positions=3, loop=21, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:50:06 | INFO | Day Realized P&L: $-4.29 (-4.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:50:06 | INFO | Coins: BTC: first_cross yes@0.71 | ETH: first_cross yes@0.72 | BNB: idle | SOL: first_cross yes@0.71 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:50:06 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:50:37 | INFO | Status: cash=$95.71, positions=3, loop=22, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:50:37 | INFO | Day Realized P&L: $-4.29 (-4.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:50:37 | INFO | Coins: BTC: first_cross yes@0.71 | ETH: first_cross yes@0.72 | BNB: idle | SOL: first_cross yes@0.71 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:50:37 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:50:37 | INFO | KXETH15M-26APR051900-00: SCALED IN @ $0.8700 (+$1.00), new size=$3.00, avg_price=$0.7733, scale_ins=1
+2026-04-05 22:50:37 | INFO | [ETH] SCALED IN KXETH15M-26APR051900-00: +$1.00 @ $0.8700, new_size=$3.00
+2026-04-05 22:50:37 | INFO | KXSOL15M-26APR051900-00: SCALED IN @ $0.8050 (+$1.00), new size=$3.00, avg_price=$0.7383, scale_ins=1
+2026-04-05 22:50:37 | INFO | [SOL] SCALED IN KXSOL15M-26APR051900-00: +$1.00 @ $0.8050, new_size=$3.00
+2026-04-05 22:51:08 | INFO | Status: cash=$95.71, positions=3, loop=23, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:51:08 | INFO | Day Realized P&L: $-4.29 (-4.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:51:08 | INFO | Coins: BTC: first_cross yes@0.71 | ETH: first_cross yes@0.72 | BNB: idle | SOL: first_cross yes@0.71 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:51:08 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:51:08 | INFO | KXBTC15M-26APR051900-00: TRAILING STOP ACTIVATED @ $0.9380 (entry=$0.7150, profit=31.2%)
+2026-04-05 22:51:08 | INFO | KXETH15M-26APR051900-00: SCALED IN @ $0.8700 (+$1.00), new size=$4.00, avg_price=$0.7975, scale_ins=2
+2026-04-05 22:51:08 | INFO | [ETH] SCALED IN KXETH15M-26APR051900-00: +$1.00 @ $0.8700, new_size=$4.00
+2026-04-05 22:51:08 | INFO | KXSOL15M-26APR051900-00: SCALED IN @ $0.8600 (+$1.00), new size=$4.00, avg_price=$0.7688, scale_ins=2
+2026-04-05 22:51:08 | INFO | [SOL] SCALED IN KXSOL15M-26APR051900-00: +$1.00 @ $0.8600, new_size=$4.00
+2026-04-05 22:51:38 | INFO | Status: cash=$95.71, positions=3, loop=24, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:51:38 | INFO | Day Realized P&L: $-4.29 (-4.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:51:38 | INFO | Coins: BTC: first_cross yes@0.71 | ETH: first_cross yes@0.72 | BNB: idle | SOL: first_cross yes@0.71 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:51:38 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:52:09 | INFO | Status: cash=$95.71, positions=3, loop=25, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:52:09 | INFO | Day Realized P&L: $-4.29 (-4.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:52:09 | INFO | Coins: BTC: first_cross yes@0.71 | ETH: first_cross yes@0.72 | BNB: idle | SOL: first_cross yes@0.71 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:52:09 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:52:40 | INFO | Status: cash=$95.71, positions=3, loop=26, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:52:40 | INFO | Day Realized P&L: $-4.29 (-4.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:52:40 | INFO | Coins: BTC: first_cross yes@0.71 | ETH: first_cross yes@0.72 | BNB: idle | SOL: first_cross yes@0.71 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:52:40 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:52:40 | INFO | KXSOL15M-26APR051900-00: TRAILING STOP ACTIVATED @ $0.9350 (entry=$0.7050, profit=32.6%)
+2026-04-05 22:53:11 | INFO | Status: cash=$95.71, positions=3, loop=27, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:53:11 | INFO | Day Realized P&L: $-4.29 (-4.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:53:11 | INFO | Coins: BTC: first_cross yes@0.71 | ETH: first_cross yes@0.72 | BNB: idle | SOL: first_cross yes@0.71 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:53:11 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:53:42 | INFO | Status: cash=$95.71, positions=3, loop=28, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:53:42 | INFO | Day Realized P&L: $-4.29 (-4.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:53:42 | INFO | Coins: BTC: first_cross yes@0.71 | ETH: first_cross yes@0.72 | BNB: idle | SOL: first_cross yes@0.71 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:53:42 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:54:12 | INFO | Status: cash=$95.71, positions=3, loop=29, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:54:12 | INFO | Day Realized P&L: $-4.29 (-4.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:54:12 | INFO | Coins: BTC: first_cross yes@0.71 | ETH: first_cross yes@0.72 | BNB: idle | SOL: first_cross yes@0.71 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:54:12 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:54:43 | INFO | Status: cash=$95.71, positions=3, loop=30, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:54:43 | INFO | Day Realized P&L: $-4.29 (-4.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:54:43 | INFO | Coins: BTC: first_cross yes@0.71 | ETH: first_cross yes@0.72 | BNB: idle | SOL: first_cross yes@0.71 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:54:43 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:54:43 | INFO | KXETH15M-26APR051900-00: TRAILING STOP ACTIVATED @ $0.9570 (entry=$0.7250, profit=32.0%)
+2026-04-05 22:55:14 | INFO | Status: cash=$95.71, positions=3, loop=31, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:55:14 | INFO | Day Realized P&L: $-4.29 (-4.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:55:14 | INFO | Coins: BTC: first_cross yes@0.71 | ETH: first_cross yes@0.72 | BNB: idle | SOL: first_cross yes@0.71 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:55:14 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:55:45 | INFO | Status: cash=$95.71, positions=3, loop=32, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:55:45 | INFO | Day Realized P&L: $-4.29 (-4.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:55:45 | INFO | Coins: BTC: first_cross yes@0.71 | ETH: first_cross yes@0.72 | BNB: idle | SOL: first_cross yes@0.71 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:55:45 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:56:15 | INFO | Status: cash=$95.71, positions=3, loop=33, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:56:15 | INFO | Day Realized P&L: $-4.29 (-4.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:56:15 | INFO | Coins: BTC: first_cross yes@0.71 | ETH: first_cross yes@0.72 | BNB: idle | SOL: first_cross yes@0.71 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:56:15 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:56:46 | INFO | Status: cash=$95.71, positions=3, loop=34, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:56:46 | INFO | Day Realized P&L: $-4.29 (-4.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:56:46 | INFO | Coins: BTC: first_cross yes@0.71 | ETH: first_cross yes@0.72 | BNB: idle | SOL: first_cross yes@0.71 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:56:46 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:57:17 | INFO | Status: cash=$95.71, positions=3, loop=35, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:57:17 | INFO | Day Realized P&L: $-4.29 (-4.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:57:17 | INFO | Coins: BTC: first_cross yes@0.71 | ETH: first_cross yes@0.72 | BNB: idle | SOL: first_cross yes@0.71 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:57:17 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:57:48 | INFO | Status: cash=$95.71, positions=3, loop=36, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:57:48 | INFO | Day Realized P&L: $-4.29 (-4.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:57:48 | INFO | Coins: BTC: first_cross yes@0.71 | ETH: first_cross yes@0.72 | BNB: idle | SOL: first_cross yes@0.71 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:57:48 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:58:19 | INFO | Status: cash=$95.71, positions=3, loop=37, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:58:19 | INFO | Day Realized P&L: $-4.29 (-4.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:58:19 | INFO | Coins: BTC: first_cross yes@0.71 | ETH: first_cross yes@0.72 | BNB: idle | SOL: first_cross yes@0.71 | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:58:19 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:58:19 | INFO | KXBTC15M-26APR051900-00: Max hold time (12min) reached
+2026-04-05 22:58:19 | INFO | [BTC] Closed KXBTC15M-26APR051900-00: Max hold: 12min, PnL=$0.95
+2026-04-05 22:58:19 | INFO | Strategy first_cross stats: W=100.00%, R=0.95x, Kelly=20.00%
+2026-04-05 22:58:19 | INFO | Trade recorded: KXBTC15M-26APR051900-00 yes first_cross PnL=$0.95
+2026-04-05 22:58:19 | INFO | [BTC] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-05 22:58:19 | INFO | KXETH15M-26APR051900-00: Max hold time (12min) reached
+2026-04-05 22:58:19 | INFO | [ETH] Closed KXETH15M-26APR051900-00: Max hold: 12min, PnL=$0.80
+2026-04-05 22:58:19 | INFO | Strategy first_cross stats: W=100.00%, R=0.80x, Kelly=20.00%
+2026-04-05 22:58:19 | INFO | Trade recorded: KXETH15M-26APR051900-00 yes first_cross PnL=$0.80
+2026-04-05 22:58:19 | INFO | [ETH] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-05 22:58:19 | INFO | KXSOL15M-26APR051900-00: Max hold time (12min) reached
+2026-04-05 22:58:19 | INFO | [SOL] Closed KXSOL15M-26APR051900-00: Max hold: 12min, PnL=$0.90
+2026-04-05 22:58:19 | INFO | Strategy first_cross stats: W=100.00%, R=0.90x, Kelly=20.00%
+2026-04-05 22:58:19 | INFO | Trade recorded: KXSOL15M-26APR051900-00 yes first_cross PnL=$0.90
+2026-04-05 22:58:19 | INFO | [SOL] Position closed. Cooldown started: must wait 0 cycles before re-entering
+2026-04-05 22:58:49 | INFO | Status: cash=$95.71, positions=0, loop=38, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:58:49 | INFO | Day Realized P&L: $-4.29 (-4.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:58:49 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:58:49 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:59:19 | INFO | Status: cash=$95.71, positions=0, loop=39, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:59:19 | INFO | Day Realized P&L: $-4.29 (-4.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:59:19 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:59:19 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-05 22:59:49 | INFO | Status: cash=$95.71, positions=0, loop=40, active_series=['KXBTC15M', 'KXSOL15M', 'KXETH15M', 'KXXRP15M', 'KXBNB15M', 'KXHYPE15M', 'KXDOGE15M']
+2026-04-05 22:59:49 | INFO | Day Realized P&L: $-4.29 (-4.3%) / -$99999.00 daily stop-loss limit
+2026-04-05 22:59:49 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-05 22:59:49 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json

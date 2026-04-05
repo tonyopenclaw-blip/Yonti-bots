@@ -1,9 +1,9 @@
 {
-  "start_time": "2026-04-05 08:48:42 UTC",
+  "start_time": "2026-04-05 09:50:16 UTC",
   "end_time": "",
   "starting_balance": 100.0,
-  "ending_balance": 93.615,
-  "total_pnl": -6.385000000000005,
+  "ending_balance": 94.645,
+  "total_pnl": -5.355000000000004,
   "total_trades": 0,
   "winning_trades": 0,
   "losing_trades": 0,
@@ -15,37 +15,37 @@
   "trades": [],
   "last_10_open_trades": [
     {
-      "ticker": "KXBNB15M-26APR050500-00",
+      "ticker": "KXBTC15M-26APR050600-00",
       "side": "yes",
-      "entry_price": 0.43000000000000005,
-      "shares": 4.0,
-      "cost": 1.7200000000000002,
+      "entry_price": 0.765,
+      "shares": 2.0,
+      "cost": 1.53,
       "pnl": 0.0,
-      "strategy": "momentum_force",
-      "open_time": "2026-04-05 08:49:44 UTC",
-      "current_price": 0.41000000000000003
+      "strategy": "first_cross",
+      "open_time": "2026-04-05 09:50:48 UTC",
+      "current_price": 0.635
     },
     {
-      "ticker": "KXSOL15M-26APR050500-00",
+      "ticker": "KXETH15M-26APR050600-00",
       "side": "yes",
-      "entry_price": 0.5549999999999999,
+      "entry_price": 0.665,
       "shares": 3.0,
-      "cost": 1.6649999999999998,
+      "cost": 1.995,
       "pnl": 0.0,
-      "strategy": "momentum_force",
-      "open_time": "2026-04-05 08:49:44 UTC",
-      "current_price": 0.47
+      "strategy": "first_cross",
+      "open_time": "2026-04-05 09:50:48 UTC",
+      "current_price": 0.5
     },
     {
-      "ticker": "KXDOGE15M-26APR050500-00",
-      "side": "no",
-      "entry_price": 0.4,
-      "shares": 5.0,
-      "cost": 2.0,
+      "ticker": "KXBNB15M-26APR050600-00",
+      "side": "yes",
+      "entry_price": 0.61,
+      "shares": 3.0,
+      "cost": 1.83,
       "pnl": 0.0,
-      "strategy": "momentum_force",
-      "open_time": "2026-04-05 08:49:44 UTC",
-      "current_price": 0.39
+      "strategy": "first_cross",
+      "open_time": "2026-04-05 09:50:48 UTC",
+      "current_price": 0.64
     }
   ],
   "last_10_closed_trades": []

@@ -1105,8 +1105,219 @@ This tells us: if Kalshi opens at $0.40 and Coinbase bias is BULLISH, what's our
 
 ---
 
-## 🔧 GAPS & TODO
+## 🏆 TOP TRADER RESEARCH
 
+_Research findings from live Polymarket API data — pulled 2026-04-06 via `data-api.polymarket.com/v1/leaderboard`. Kalshi has no public leaderboard API._
+
+---
+
+### 🟣 POLYMARKET: TOP 10 ALL-TIME BY P&L
+
+| Rank | Username | P&L | Volume | P&L/Vol | Primary Category |
+|------|----------|-----|--------|---------|-----------------|
+| 1 | **Theo4** | $22.1M | $43.0M | 51.3% | Politics |  
+| 2 | **Fredi9999** | $16.6M | $76.6M | 21.7% | Mixed |
+| 3 | **kch123** | $11.3M | $275.8M | 4.1% | Sports |
+| 4 | **Len9311238** | $8.7M | $16.4M | 53.1% | Mixed |
+| 5 | **zxgngl** | $7.8M | $40.6M | 19.2% | Mixed |
+| 6 | **RepTrump** | $7.5M | $14.0M | 53.6% | Politics |
+| 7 | **RN1** | $6.95M | $368.8M | 1.9% | Sports |
+| 8 | **PrincessCaro** | $6.1M | $23.5M | 25.9% | Mixed |
+| 9 | **walletmobile** | $5.9M | $32.2M | 18.3% | Mixed |
+| 10 | **KeyTransporter** | $5.7M | $20.1M | 28.4% | Sports |
+
+---
+
+### 📊 POLYMARKET: TOP 10 ALL-TIME BY VOLUME
+
+| Rank | Username | Volume | P&L | P&L/Vol | Notes |
+|------|----------|--------|-----|---------|-------|
+| 1 | **swisstony** | $629M | $5.7M | 0.9% | Highest vol on platform |
+| 2 | **risk-manager** | $598M | $229K | 0.04% | Market maker — tiny edge, massive vol |
+| 3 | **gmanas** | $529M | $5.0M | 0.9% | Volume king, solid P&L |
+| 4 | **tripping** | $519M | $89K | 0.02% | Almost pure market maker |
+| 5 | **cigarettes** | $480M | $846K | 0.18% | High-frequency bot trader |
+| 6 | **ImJustKen** | $471M | $2.8M | 0.6% | Verified badge — known trader |
+| 7 | **0x492442E...** | $458M | -$4.9M | -1.1% | Negative P&L — overtrader |
+| 8 | **InfiniteCrypt0** | $440M | $107K | 0.02% | Near-zero edge |
+| 9 | **debased** | $411M | $1.4M | 0.34% | Political/specialist |
+| 10 | **interstellaar** | $408M | $121K | 0.03% | Ultra-high-freq bot |
+
+---
+
+### 🎯 KEY INSIGHTS FROM TOP TRADERS
+
+**1. Volume ≠ Profit — The P&L/Volume Ratio Is What Matters**
+
+| Trader Type | Volume | P&L/Vol | Example |
+|------------|--------|---------|---------|
+| **Sharp Selectors** | Low-Med | 20-50%+ | Theo4, RepTrump, Len9311238 |
+| **Volume Bots** | Ultra-High | 0.02-1% | swisstony, risk-manager, tripping |
+| **Mixed Grinders** | Medium | 0.5-5% | kch123, RN1, gmanas |
+
+**The takeaway:** Don't try to compete on volume. The market-makers (risk-manager, tripping) survive on fractions of a cent. Sharp selectors who only bet when they have real edge dominate P&L rankings.
+
+**2. Top P&L Traders Favor Politics + Sports**
+
+The #1-#2 P&L traders (Theo4, Fredi9999) specialize in **political markets**. The #3 P&L trader kch123 dominates **sports**. Most consistent P&L winners focus on one vertical and go deep.
+
+**Category breakdown — All-Time P&L leaders:**
+- Politics: Theo4 ($22.1M), RepTrump ($7.5M), PrincessCaro ($6.1M)
+- Sports: kch123 ($11.3M), RN1 ($7.0M), KeyTransporter ($5.7M)
+- Culture: ImJustKen ($743K), Annica ($652K), aenews2 ($365K)
+- Economics: bobe2 ($817K), ImJustKen ($559K), pako ($550K)
+- Weather: gopfan2 ($338K), aenews2 ($277K)
+
+**3. The "Big Bet, Hold to Expiry" Pattern**
+
+Top P&L traders like Theo4 and RepTrump show massive P&L/Volume ratios (50%+), which is impossible with high-frequency trading. They are placing large directional bets and holding to resolution — NOT scalping. They're exploiting information advantages on high-liquidity political markets.
+
+**4. Market Makers Make Pennies — But Lots of Pennies**
+
+Risk-manager ($598M vol, $229K P&L), tripping ($519M vol, $89K P&L), and interstellaar ($408M vol, $121K P&L) are running automated market-making strategies. They provide liquidity, capture the spread, and grind out tiny edges. These are NOT prediction traders — they're infrastructure.
+
+**5. Weekly Hot Streaks — The Monthly Leaders Tell a Story**
+
+Recent monthly P&L leaders include:
+- **HorizonSplendidView** — $4.0M P&L in 1 month (no volume shown — likely single big position)
+- **reachingthesky** — $3.7M P&L
+- **beachboy4** — $3.5M P&L
+- **majorexploiter** — $2.4M P&L (username is telling)
+
+These are opportunists hitting hot streaks, not consistent grinders.
+
+---
+
+### 🏅 NOTABLE TRADER PROFILES
+
+**Theo4 — #1 All-Time P&L ($22.1M)**
+- Wallet: `0x56687bf447db6ffa42ffe2204a05edaa20f55839`
+- Volume: $43M | Efficiency: 51% (exceptional)
+- Focus: **Politics** — #1 in Politics category by far
+- Strategy: Big directional bets, hold to resolution. Not a high-frequency trader.
+- Pattern: Very high P&L/Vol ratio suggests he only bets when he has strong conviction
+
+**RN1 — #2 Sports by P&L ($6.95M), #7 All-Time**
+- Wallet: `0x2005d16a84ceefa912d4e380cd32e7ff827875ea`
+- Volume: $369M | Efficiency: 1.9%
+- Focus: **Sports** — #2 in Sports category
+- Strategy: High-volume sports specialist. Big position sizes, shorter holding periods than Theo4
+- Also active in weekly volume leaderboards — consistent top-5 weekly volume
+
+**swisstony — #1 All-Time Volume ($629M)**
+- Wallet: `0x204f72f35326db932158cba6adff0b9a1da95e14`
+- P&L: $5.7M | Efficiency: 0.9%
+- Focus: **Volume** — top-5 in multiple categories (Sports, Politics, Finance)
+- Strategy: High-frequency, bot-driven, volume-intensive. Not scalping 15-min binaries but likely larger sports/political markets with faster turnover
+- Week-over-week: Consistently in top 10 weekly volume leaders
+
+**ImJustKen — Multi-Category ($2.8M P&L, verified)**
+- Wallet: `0x9d84ce0306f8551e02efef1680475fc0f1dc1344`
+- X: @Domahhhh (verified badge)
+- Focus: **Culture + Economics** (top 5 in both)
+- Strategy: The only verified-badge trader in top 10. Known public figure. Spreads across multiple categories.
+
+**debased** — Political Specialist
+- Wallet: `0x24c8cf69a0e0a17eee21f69d29752bfa32e823e1`
+- X: @debased_PM
+- Volume: $411M | P&L: $1.4M | Efficiency: 0.34%
+- Profile: Trump farmer avatar — likely US political specialist, possibly automated
+
+**GamblingIsAllYouNeed** — Sports Grinder
+- Wallet: `0x507e52ef684ca2dd91f90a9d26d149dd3288beae`
+- Volume: $316M | P&L: $4.6M | Efficiency: 1.5%
+- Focus: **Sports** — #6 all-time in Sports P&L
+- Strategy: Consistent sports volume, decent P&L — probably combination of information edge + position sizing
+
+---
+
+### 📅 WEEKLY LEADERS (Hot Traders)
+
+This week's top P&L (from week of 2026-04-06):
+
+| Rank | Trader | Week P&L | Week Volume | Profile |
+|------|--------|----------|-------------|---------|
+| 1 | 0x492442E... | $5.7M | $17.6M | Sharp swing trader |
+| 2 | HorizonSplendidView | $4.0M | $0 | Likely big single position |
+| 3 | reachingthesky | $3.7M | $0 | Big single position |
+| 4 | beachboy4 | $3.5M | $8.6M | Sports specialist |
+| 5 | 0x2a2C53bD... | $2.5M | $31.0M | High conviction bettor |
+| 6 | majorexploiter | $2.4M | $0 | (Username checks out) |
+| 7 | sovereign2013 | $1.8M | $21.5M | Volume + picks |
+
+---
+
+### 🟠 KALSHI: WHAT WE KNOW
+
+**Public Data:** Kalshi does NOT publish a public leaderboard or trader ranking API. The `docs.kalshi.com` API spec has no leaderboard endpoints.
+
+**Known Trader Types on Kalshi:**
+- **Superbot** (our own) — 8-coin crypto 15-min, $100 paper, $2 max bet
+- **Flip Bot** — NBA mean-reversion
+- **Thermostat** — Climate/weather
+- **Other known Kalshi traders** (from Twitter/Market Intel):
+  - Copy-traders following @w1nklerr's leaked bot strategies
+  - Sports bettors using Kalshi for pre-game NBA/NHL odds
+  - Crypto traders using 15-min binaries for short-term directional plays
+
+**Kalshi vs Polymarket Volume:**
+- Kalshi: CFTC-regulated, lower volume overall, institutional-grade users
+- Polymarket: Higher volume, more retail, more speculative
+
+---
+
+### 🎯 STRATEGIES TOP TRADERS USE
+
+**1. The Information Edge (Theo4 model)**
+- Bet big on political markets where you have superior information
+- Hold to resolution — don't scalp
+- Only bet when edge is clear (>20% mispricing)
+- High conviction, low frequency
+
+**2. High-Volume Sports Grinding (RN1, kch123 model)**
+- Focus on NBA, NHL game winners
+- Large position sizes with shorter holding periods
+- Combine with live-game data if possible
+- Win rate matters more than per-trade edge
+
+**3. Market Making (risk-manager, tripping model)**
+- Provide liquidity on both sides
+- Capture spread on high-volume markets
+- Requires bot infrastructure, low per-trade edge
+- Survives on volume, not prediction accuracy
+
+**4. Cross-Platform Arbitrage**
+- Monitor Polymarket vs Kalshi spread differentials
+- When PM YES $0.42 + Kalshi NO $0.56 → 2% arb opportunity
+- Highly automated, requires speed
+
+---
+
+### 💡 WHAT THIS MEANS FOR YONTI
+
+| Insight | Action |
+|---------|--------|
+| **Don't compete on volume** | Market makers have tiny edges, require massive infrastructure |
+| **Focus on 1-2 verticals** | Top P&L traders pick Politics OR Sports, not both |
+| **Bigger bets + hold = higher efficiency** | Theo4 (51% P&L/Vol) vs swisstony (0.9%) |
+| **Politics markets = biggest P&L** | Consider expanding Kalshi/PM political exposure |
+| **NBA/NHL sports = reliable volume** | Superbot/Flip Bot approach is correct |
+| **Weekly hot streaks exist** | Single big positions can spike the leaderboard |
+| **Copy-trading is a real strategy** | Following known wallets can provide signals |
+
+---
+
+### 📂 DATA SOURCES
+
+- Polymarket Leaderboard API: `https://data-api.polymarket.com/v1/leaderboard`
+- Parameters used: `orderBy=PNL|VOL`, `timePeriod=ALL|WEEK|MONTH`, `category=POLITICS|SPORTS|FINANCE|TECH|CULTURE|ECONOMICS|WEATHER|MENTIONS|CRYPTO`
+- Polymarket Gamma API (markets): `https://gamma-api.polymarket.com/events?limit=5&closed=false`
+- Kalshi API (no leaderboard): `https://api.elections.kalshi.com/trade-api/v2/`
+- All data pulled: 2026-04-06 18:23 UTC
+
+---
+
+## 🔧 GAPS & TODO
 - [ ] Polymarket integration (needs Tony to set up account + KYC)
 - [ ] Coinbase CLOB for order book data
 - [ ] Live sports odds via websocket (Kalshi limitation)
@@ -1118,4 +1329,320 @@ This tells us: if Kalshi opens at $0.40 and Coinbase bias is BULLISH, what's our
 
 ---
 
-_Last updated: 2026-04-02 12:07 UTC (Nerd build)_
+_Last updated: 2026-04-06 18:23 UTC (Nerd build — Top Trader Research)_
+---
+
+## 🔍 KALSHI TOP TRADERS RESEARCH (2026-04-06)
+
+### KEY FINDING: No Public Kalshi Leaderboard Exists
+
+Kalshi does NOT publish a public leaderboard, trader ranking, or copy-trading feature. The `docs.kalshi.com` API spec has no leaderboard endpoints. Unlike Polymarket (which exposes `data-api.polymarket.com/v1/leaderboard`), Kalshi provides no equivalent public API for trader rankings.
+
+**What this means:** The identities and strategies of top Kalshi crypto traders are not publicly accessible via API or known community channels.
+
+---
+
+### What Kalshi DOES Have
+
+| Feature | Status | URL |
+|---------|--------|-----|
+| Ideas/Community Feed | Exists (`/ideas/feed`) | Social trading discussion |
+| Discord Community | Exists | `discord.com/invite/kalshi` |
+| Public Leaderboard | ❌ NONE | — |
+| Copy Trading | ❌ NONE | — |
+| Trader Profiles | ❌ NONE | — |
+| P&L API | ❌ NONE | — |
+
+---
+
+### What We Found from Public Sources
+
+**1. Kalshi Ideas Feed (`/ideas/feed`)**
+- Social trading discussion board exists on Kalshi
+- Contains public trade ideas, not trader profiles
+- Limited to no information on top performers
+
+**2. Known Trader Types (from Twitter/community intel)**
+- Copy-traders following @w1nklerr's leaked bot strategies
+- Sports bettors using Kalshi for pre-game NBA/NHL odds
+- Crypto traders using 15-min binaries for short-term directional plays
+- Institutional-grade users (CFTC-regulated environment)
+
+**3. GitHub Bots (relevant to Kalshi 15-min crypto)**
+- **pmxt-dev/pmxt** (1,397 stars) — "CCXT for prediction markets" — unified API for Polymarket + Kalshi
+- **Krypto-Hashers-Community/polymarket-kalshi-arbitrage-bot-15min-market** (100 stars) — specifically targets arbitrage between Kalshi and Polymarket 15-min crypto markets
+- **OctagonAI/kalshi-trading-bot-cli** (149 stars) — AI-native CLI with Kelly sizing + 5-gate risk engine
+- **ryanfrigo/kalshi-ai-trading-bot** (337 stars) — Grok-4 AI trading system
+
+**4. Copy Trading on Kalshi**
+- No native copy trading feature on Kalshi
+- Some traders share strategies via Twitter/X (e.g., @w1nklerr leaked bot strategies)
+- Ethereum wallet addresses shared for following positions
+- Kalshi's "Incentive Program" page (`/incentives`) may have referral/bonus structure but no social trading
+
+---
+
+### Strategies Implied by Known Bots (Inference from Public Code)
+
+From analyzing the public GitHub repos for Kalshi trading bots:
+
+**Strategy Type 1: Cross-Platform Arbitrage (Kalshi ↔ Polymarket)**
+- The Krypto-Hashers bot specifically targets price discrepancies between Kalshi and Polymarket on 15-min crypto markets
+- This is the most sophisticated known strategy for 15-min crypto markets
+- Requires: both exchange accounts, real-time price monitoring, fast execution
+- Edge: Captures spread differential before retail moves it
+
+**Strategy Type 2: AI Probability Estimation + Kelly Sizing**
+- OctagonAI CLI: runs independent probability models, computes edge vs. order book, Kelly-sized positions
+- 5-gate risk engine: multi-layer risk checks before executing
+- Focus: Not scalping, but directional bets with calculated edge
+
+**Strategy Type 3: High-Frequency Crypto Bots**
+- Copy-traders using leaked bot strategies from @w1nklerr
+- Likely: short holding periods, momentum-based entry timing
+- Target: the 15-min window between market open and resolution
+
+---
+
+### What Yonti Should Know
+
+| Finding | Implication |
+|---------|-------------|
+| **No public leaderboard** | Can't study top Kalshi trader strategies via API |
+| **No copy trading** | Can't follow known wallets on Kalshi like Polymarket |
+| **Cross-platform arb is the known edge** | The Krypto-Hashers bot targets Kalshi↔Polymarket spread — same opportunity Superbot could exploit |
+| **15-min crypto is a distinct market** | Different from political/sports prediction markets — requires crypto-specific approach |
+| **AI + Kelly is the sophisticated approach** | OctagonAI's approach (independent probability + Kelly sizing) is the most advanced publicly known Kalshi strategy |
+
+---
+
+### Suggested Next Steps for Yonti
+
+1. **Build cross-platform arb monitoring** — When PM YES $0.42 + Kalshi NO $0.56 → 2% arb. The arbitrage bot from Krypto-Hashers is the reference implementation.
+2. **Study OctagonAI's 5-gate risk engine** — Open-source reference for multi-layer risk management
+3. **Explore pmxt library** — Unified API for both Kalshi + Polymarket (TypeScript + Python SDKs)
+4. **Consider community intel** — Follow Kalshi Discord and Ideas feed for emerging strategies
+5. **Collect own trading data** — Since there's no external leaderboard, Yonti's own Superbot P&L record IS the benchmark
+
+---
+
+_Researched: 2026-04-06 18:46 UTC (Nerd subagent build)_
+---
+
+## 🐙 GitHub Research: Scrapers & Bots
+
+Researched 2026-04-06. Covers Kalshi bots, DraftKings scrapers, browser automation, and sportsbook tools.
+
+---
+
+### ⭐ TOP FINDING: pmxt-dev/pmxt — "CCXT for Prediction Markets"
+
+**URL:** https://github.com/pmxt-dev/pmxt  
+**Stars:** 1,397 | **Forks:** 143 | **Updated:** Apr 6, 2026 (pushed today)  
+**Language:** TypeScript  
+**License:** MIT
+
+> "CCXT for prediction markets. A unified API for trading on Polymarket, Kalshi, and more."
+
+**Why it matters:** This is the single most important tool for the Kalshi/Polymarket ecosystem. If you're building any trading infrastructure, start here. It provides a unified API layer across multiple prediction markets — similar to how CCXT unified crypto exchanges.
+
+**Topics:** algotrading, arbitrage, ccxt, kalshi, market-data, polymarket, prediction-markets, unified-api
+
+**Website:** https://pmxt.dev
+
+---
+
+### 🤖 Kalshi Trading Bots
+
+#### 1. ryanfrigo/kalshi-ai-trading-bot — Grok-4 AI Trading System
+**URL:** https://github.com/ryanfrigo/kalshi-ai-trading-bot  
+**Stars:** 337 | **Forks:** 136 | **Updated:** Apr 5, 2026  
+**Language:** Python | **License:** MIT  
+**Status:** ACTIVELY MAINTAINED
+
+> "Advanced AI-powered trading system for Kalshi prediction markets. Features Grok-4 integration, multi-agent decision making, portfolio optimization, and real-time market analysis."
+
+**Features:** Grok-4 AI, multi-agent decision making, portfolio optimization, real-time market analysis, risk management, quantitative trading, machine learning.
+
+**⚠️ Disclaimer:** "Educational/research purposes only." Not claiming it's a winning system.
+
+**Use case:** Good reference architecture for how to structure a Kalshi bot with AI decision-making.
+
+---
+
+#### 2. Krypto-Hashers-Community/polymarket-kalshi-arbitrage-bot-15min-market
+**URL:** https://github.com/Krypto-Hashers-Community/polymarket-kalshi-arbitrage-bot-15min-market  
+**Stars:** 100 | **Forks:** 149 | **Updated:** Feb 27, 2026  
+**Language:** TypeScript | **License:** None  
+**Status:** ACTIVELY MAINTAINED
+
+> Targets the 15-min crypto markets that Kalshi and Polymarket both offer, looking for arbitrage opportunities between them.
+
+**This is directly relevant to Tony's 8-coin crypto 15-min trading setup.** This bot specifically looks for price discrepancies between Kalshi and Polymarket on the same underlying crypto markets, which is exactly the arbitrage angle Super Bot could be doing.
+
+**Topics:** kalshi-arbitrage, polymarket-arbitrage, polymarket-kalshi-arbitrage, polymarket-bot, polymarket-15min-trading-bot
+
+---
+
+#### 3. OctagonAI/kalshi-trading-bot-cli — AI-Native CLI
+**URL:** https://github.com/OctagonAI/kalshi-trading-bot-cli  
+**Stars:** 149 | **Forks:** 52 | **Updated:** Apr 6, 2026 (pushed today)  
+**Language:** TypeScript | **License:** MIT  
+**Status:** ACTIVELY MAINTAINED
+
+> "AI-native CLI for trading Kalshi prediction markets. Runs deep fundamental research, generates independent probability estimates, computes edge vs. live order books, and executes trades with Kelly sizing and a 5-gate risk engine."
+
+**This is the most sophisticated Kalshi trading tool found.** Features:
+- Deep fundamental research
+- Independent probability estimates (runs its own models)
+- Edge computation vs. live order books
+- **Kelly criterion sizing**
+- **5-gate risk engine** (multi-layer risk checks)
+- Polymarket support
+
+**Homepage:** https://octagonai.co/markets/
+
+**Assessment:** This is the closest to a "professional grade" Kalshi bot found on GitHub. The 5-gate risk engine and Kelly sizing suggest serious quant thinking. Worth studying for architecture ideas even if you don't use it directly.
+
+---
+
+#### 4. RobertMarcellos/polymarket-copy-trading-bot
+**URL:** https://github.com/RobertMarcellos/polymarket-copy-trading-bot  
+**Stars:** 788 | **Forks:** 581 | **Updated:** Apr 6, 2026 (pushed today)  
+**Language:** TypeScript | **License:** MIT  
+**Status:** ACTIVELY MAINTAINED — MOST FORKED POLYMARKET BOT
+
+> Polymarket copy trading bot. 788 stars makes it the highest-starred open-source Polymarket bot.
+
+**⚠️ Note:** This is for Polymarket (polygon blockchain), not Kalshi directly, but there are overlapping markets.
+
+---
+
+#### 5. hackingthemarkets/prediction-market-assistant
+**URL:** https://github.com/hackingthemarkets/prediction-market-assistant  
+**Stars:** 52 | **Forks:** 23 | **Updated:** Feb 22, 2025  
+**Language:** Python | **License:** MIT
+
+> "Prediction market assistant using Kalshi API and Perplexity Sonar API"
+
+Uses Kalshi's official API + Perplexity AI for research. Simple but useful for understanding how to wire Kalshi API to an AI research layer.
+
+---
+
+### 🎰 DraftKings Sportsbook Scrapers
+
+#### 1. BowTiedBettor/DraftKings
+**URL:** https://github.com/BowTiedBettor/DraftKings  
+**Stars:** 14 | **Forks:** 7 | **Updated:** Feb 13, 2026  
+**Language:** Python  
+**Status:** Updated recently but last push was Feb 2023
+
+> "A DraftKings web scraper compatible with any available market."
+
+**Assessment:** Basic web scraper. BowTiedBettor is a known sports betting dev community. No mention of Akamai bypass. Updated Feb 2026 but code last pushed Feb 2023 — may need updates.
+
+---
+
+#### 2. anthonyliao/draftkings-data-scraper
+**URL:** https://github.com/anthonyliao/draftkings-data-scraper  
+**Stars:** 3 | **Forks:** 0 | **Updated:** Jan 2022  
+**Language:** JavaScript | **License:** MIT
+
+> "Scrapes player data and salary from DraftKings" (DFS-focused, not sportsbook)
+
+**Assessment:** Old, DFS (Daily Fantasy) focused, not useful for sportsbook odds scraping.
+
+---
+
+#### 3. flancast90/sportsbookreview-scraper
+**URL:** https://github.com/flancast90/sportsbookreview-scraper  
+**Stars:** 45 | **Forks:** 8 | **Updated:** Apr 5, 2026  
+**Language:** Python | **License:** MIT
+
+> "Sportsbookreview.com scraper + complete 10Y games+odds data for NFL, NBA, NHL, MLB"
+
+**Assessment:** Scrapes a review site's historical odds database, not DraftKings directly. Useful for backtesting, not real-time scraping.
+
+---
+
+#### 4. declanwalpole/sportsbook-odds-scraper
+**URL:** https://github.com/declanwalpole/sportsbook-odds-scraper  
+**Stars:** 12 | **Forks:** 5 | **Updated:** Apr 1, 2026  
+**Language:** Python
+
+> "Tool for scraping sportsbook's current odds on a specified match"
+
+**Assessment:** Generic sportsbook scraper, updated as recently as Apr 2026. No specific DraftKings mention but could work with DK.
+
+---
+
+### 🌐 Browser Automation & Anti-Bot Tools
+
+#### 1. Edioff/oreillyauto-scraper — Akamai Bot Manager v2 Bypass
+**URL:** https://github.com/Edioff/oreillyauto-scraper  
+**Stars:** 2 | **Forks:** 0 | **Updated:** Mar 2026  
+**Language:** Python | **License:** MIT
+
+> "Browserless scraper — Bypasses Akamai Bot Manager v2 using TLS fingerprint impersonation (curl_cffi)"
+
+**Why it matters:** This demonstrates the technique for bypassing Akamai, which is DraftKings' primary bot protection. Uses **curl_cffi** (Chrome-like TLS fingerprinting) to impersonate real browser TLS signatures.
+
+**Key tech:** curl_cffi (TLS fingerprint impersonation) — main technique for bypassing Akamai without running a full browser.
+
+**⚠️ Assessment:** This is NOT a DraftKings scraper — it's an O'Reilly Auto Parts scraper. But the technique (curl_cffi + TLS fingerprinting) could potentially be adapted for DraftKings scraping.
+
+---
+
+#### 2. JumpBearCode/TeslaWebScrape — Akamai + MCP Server + nodriver
+**URL:** https://github.com/JumpBearCode/TeslaWebScrape  
+**Language:** Unknown
+
+> "Tesla inventory scraper using MCP server + nodriver to bypass Akamai bot detection"
+
+**Key tech:** nodriver (browser automation library) + MCP server. Another Akamai bypass approach using browser automation.
+
+---
+
+### 📊 Summary Table
+
+| Repo | Stars | Forks | Type | Status |
+|------|-------|-------|------|--------|
+| pmxt-dev/pmxt | 1,397 | 143 | Unified PM API | 🔥 HOT — pushed today |
+| RobertMarcellos/polymarket-copy-trading-bot | 788 | 581 | Polymarket bot | 🔥 HOT — pushed today |
+| ryanfrigo/kalshi-ai-trading-bot | 337 | 136 | Kalshi AI bot | ✅ Active |
+| OctagonAI/kalshi-trading-bot-cli | 149 | 52 | Kalshi AI CLI | ✅ Active — pushed today |
+| Krypto-Hashers polymarket-kalshi-arbitrage-bot | 100 | 149 | Arbitrage (15-min) | ✅ Active |
+| flancast90/sportsbookreview-scraper | 45 | 8 | Historical odds DB | ✅ Updated |
+| declanwalpole/sportsbook-odds-scraper | 12 | 5 | Generic odds scraper | ✅ Updated |
+| BowTiedBettor/DraftKings | 14 | 7 | DK web scraper | 🟡 Updated but old code |
+| Edioff/oreillyauto-scraper | 2 | 0 | Akamai bypass tech | 🟡 New, technique ref |
+
+---
+
+### 🎯 Key Takeaways
+
+1. **pmxt is the most important tool** — if you're building Kalshi trading infrastructure, study this first. It's the CCXT equivalent for prediction markets.
+
+2. **No "claminv/kalshi-tools" exists** — that repo was not found. Possibly private or renamed.
+
+3. **15-min crypto arbitrage between Kalshi and Polymarket** is a known, active area. The Krypto-Hashers bot specifically targets this.
+
+4. **DraftKings scraping on GitHub is weak** — the best public scrapers are basic web scrapers without Akamai bypass. BowTiedBettor's tool is the most legitimate but lacks modern anti-bot measures.
+
+5. **Akamai bypass technique exists** — curl_cffi TLS fingerprinting (Edioff/oreillyauto-scraper) is the most promising approach for bypassing DraftKings' bot protection. No public DraftKings-specific implementation found.
+
+6. **Kelly sizing + multi-gate risk engines** are appearing in open-source Kalshi bots (OctagonAI), indicating the ecosystem is maturing beyond simple scrapers.
+
+7. **No documented "consistently winning" Kalshi bots** — every serious bot includes disclaimers that it's for educational/research purposes. The arbitrage opportunities are likely being competed away quickly.
+
+---
+
+### 🔗 Key URLs
+
+- pmxt (CCXT for PMs): https://github.com/pmxt-dev/pmxt | https://pmxt.dev
+- Kalshi AI CLI (Kelly + 5-gate risk): https://github.com/OctagonAI/kalshi-trading-bot-cli
+- Kalshi AI Bot (Grok-4): https://github.com/ryanfrigo/kalshi-ai-trading-bot
+- Polymarket-Kalshi Arbitrage (15min): https://github.com/Krypto-Hashers-Community/polymarket-kalshi-arbitrage-bot-15min-market
+- Polymarket Copy Bot: https://github.com/RobertMarcellos/polymarket-copy-trading-bot
+- BowTiedBettor DraftKings Scraper: https://github.com/BowTiedBettor/DraftKings
+- Akamai Bypass (TLS): https://github.com/Edioff/oreillyauto-scraper

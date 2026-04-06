@@ -18,14 +18,6 @@ try:
 except ImportError:
     requests = None
 
-# Sharp scanner for X/Twitter consensus
-try:
-    from sharp_scanner import SharpScanner
-    SHARP_SCANNER_AVAILABLE = True
-except ImportError:
-    SHARP_SCANNER_AVAILABLE = False
-    logger.warning("Sharp scanner not available - X consensus disabled")
-
 # Setup logging
 logging.basicConfig(
     level=logging.INFO,
@@ -996,7 +988,6 @@ class UncleVitoReport:
         self._odds_api_fetched: Dict[str, bool] = {}  # sport -> whether we've fetched player props today
         self._odds_api_game_odds: Dict[str, List[Dict]] = {}  # sport -> game-level odds (h2h/spreads/totals)
         self._odds_api_game_fetched: Dict[str, bool] = {}  # sport -> whether we've fetched game odds today
-        self._sharp_consensus: Dict[str, Any] = {}  # sharp bettor consensus data from X
 
     def fetch_todays_games(self) -> Dict[str, List[Game]]:
         """Fetch today's games across all configured sports."""
@@ -1007,98 +998,6 @@ class UncleVitoReport:
             self.games[sport] = self.espn.parse_games(data, sport)
 
         return self.games
-
-    def fetch_sharp_consensus(self, force_refresh: bool = False) -> Dict[str, Any]:
-        """
-        Fetch sharp bettor consensus from X/Twitter.
-        
-        Scans the 4 sharp bettor accounts for their picks:
-        - dangambleai
-        - codybrownbets  
-        - harrylockpicks
-        - cookitup31
-        
-        Args:
-            force_refresh: Force refresh even if cached
-            
-        Returns:
-            Dict mapping player names to sharp consensus data
-        """
-        if self._sharp_consensus and not force_refresh:
-            return self._sharp_consensus
-        
-        if not SHARP_SCANNER_AVAILABLE:
-            logger.info("Sharp scanner not available, skipping X consensus")
-            return {}
-        
-        try:
-            scanner = SharpScanner()
-            self._sharp_consensus = scanner.scan_sharp_accounts(max_tweets_per_account=20)
-            
-            if self._sharp_consensus:
-                logger.info(f"📊 Sharp consensus: {len(self._sharp_consensus)} players mentioned by sharps")
-                # Log top 5 for visibility
-                top_5 = list(self._sharp_consensus.items())[:5]
-                for name, score in top_5:
-                    logger.info(f"  • {name}: score={score.consensus_score:.2f}, dir={score.sharp_direction}")
-            else:
-                logger.info("No sharp consensus data available (Apify API may need auth)")
-                
-        except Exception as e:
-            logger.warning(f"Failed to fetch sharp consensus: {e}")
-            self._sharp_consensus = {}
-        
-        return self._sharp_consensus
-
-    def apply_sharp_boost(self, pick: Any, consensus: Dict[str, Any] = None) -> int:
-        """
-        Apply sharp consensus boost to a pick's confidence.
-        
-        Args:
-            pick: PropPick or WinnerPick object
-            consensus: Pre-fetched consensus dict (optional)
-            
-        Returns:
-            Boosted confidence value
-        """
-        base_confidence = getattr(pick, 'confidence', 70)
-        
-        if consensus is None:
-            consensus = self._sharp_consensus
-        
-        if not consensus:
-            return base_confidence
-        
-        player_name = getattr(pick, 'player', getattr(pick, 'team', ''))
-        
-        # Find matching sharp data
-        sharp_data = None
-        player_lower = player_name.lower()
-        
-        for name, data in consensus.items():
-            if player_lower in name.lower() or name.lower() in player_lower:
-                sharp_data = data
-                break
-        
-        if not sharp_data:
-            return base_confidence
-        
-        boost = sharp_data.confidence_boost
-        vito_direction = getattr(pick, 'direction', '').lower()
-        
-        # Reduce confidence if sharps are fading this player
-        if sharp_data.is_sharp_fade:
-            return max(40, base_confidence - 15)
-        
-        # Boost confidence if sharps agree with Vito's direction
-        if sharp_data.sharp_direction == vito_direction:
-            return min(95, base_confidence + boost)
-        
-        # Slight reduction if directions conflict
-        if sharp_data.sharp_direction and vito_direction:
-            return max(50, base_confidence - 5)
-        
-        return base_confidence
 
     def generate_props_parlay(self, sport: str, num_legs: int = 3) -> List[PropPick]:
         """
@@ -1146,66 +1045,6 @@ class UncleVitoReport:
             picks.append(pick)
 
         return picks
-
-    def generate_all_money_lines(self, sport: str = None) -> List[WinnerPick]:
-        """
-        Generate ALL game moneyline picks across all sports, sorted by confidence.
-        
-        Args:
-            sport: If specified, only return picks for that sport. Otherwise all sports.
-            
-        Returns:
-            List of WinnerPick objects with pick_type='moneyline', sorted by confidence descending.
-        """
-        all_ml_picks = []
-        
-        sports_to_process = [sport] if sport else config.SPORTS
-        
-        for sport_key in sports_to_process:
-            if sport_key not in self.games:
-                continue
-                
-            games = self.games[sport_key]
-            
-            for game in games:
-                if game.status != "scheduled":
-                    continue
-                    
-                # Get source signal for this game
-                signal = self.sources.get_signal(
-                    sport_key, "winner",
-                    [game.home_team.abbreviation, game.away_team.abbreviation]
-                )
-                
-                # Determine which team to pick (home or away)
-                home_favored = signal["signal_strength"] > 0.3 if random.random() > 0.3 else random.random() > 0.5
-                
-                if home_favored:
-                    pick_team = game.home_team
-                    opp_team = game.away_team
-                else:
-                    pick_team = game.away_team
-                    opp_team = game.home_team
-                
-                # Get default ML odds
-                favorite = home_favored
-                odds = self.odds.get_default_odds(favorite, sport_key.lower())
-                
-                pick = WinnerPick(
-                    team=pick_team.abbreviation,
-                    opponent=opp_team.abbreviation,
-                    pick_type="moneyline",
-                    line=0,
-                    odds=odds,
-                    source_signal=self._get_strongest_source(signal),
-                    confidence=signal["confidence"]
-                )
-                all_ml_picks.append(pick)
-        
-        # Sort by confidence (highest first)
-        all_ml_picks.sort(key=lambda x: x.confidence, reverse=True)
-        
-        return all_ml_picks
 
     def generate_winners_parlay(self, sport: str, num_legs: int = 3) -> List[WinnerPick]:
         """
@@ -1307,7 +1146,7 @@ class UncleVitoReport:
                 # First try exact game match
                 line, odds = get_real_line("totals")
                 if line is not None:
-                    return line, odds, opp_team.abbreviation
+                    return line, odds
                 # Fall back: find any unmatched game with totals
                 for odds_game, home_full, away_full in odds_by_name:
                     key = tuple([home_full, away_full])
@@ -1320,9 +1159,9 @@ class UncleVitoReport:
                                         for o in outcomes:
                                             if o.get("name") == "Over" and o.get("point"):
                                                 total_games_used.add(key)
-                                                return o.get("point", 0), o.get("price", -110), away_full
-                                        return outcomes[0].get("point", 0), outcomes[0].get("price", -110), away_full
-                return None, None, None
+                                                return o.get("point", 0), o.get("price", -110)
+                                        return outcomes[0].get("point", 0), outcomes[0].get("price", -110)
+                return None, None
 
             # Generate line and odds
             if pick_type == "spread":
@@ -1331,15 +1170,10 @@ class UncleVitoReport:
                     line = self._generate_spread(sport)
                     odds = config.DEFAULT_PROP_ODDS
             elif pick_type == "total":
-                line, odds, total_opponent = get_any_total()
+                line, odds = get_any_total()
                 if line is None:
                     line = self._generate_total(sport)
                     odds = config.DEFAULT_PROP_ODDS
-                    total_opponent = opp_team.abbreviation
-                else:
-                    # Use the opponent from the actual game that has this total
-                    if total_opponent:
-                        opp_team = type('Team', (), {'abbreviation': total_opponent})()
             else:  # moneyline
                 line = 0
                 favorite = home_favored
@@ -1372,21 +1206,12 @@ class UncleVitoReport:
             "game_picks": game_picks
         }
 
-    def generate_confidence_parlay(self, min_confidence: int = 70, use_sharp_boost: bool = True) -> List[Dict]:
+    def generate_confidence_parlay(self, min_confidence: int = 70) -> List[Dict]:
         """
         Generate a cross-league confidence parlay with 3-5 legs.
         Only includes picks with >= min_confidence% confidence.
         Uses higher confidence threshold (default 70%).
-        
-        Args:
-            min_confidence: Minimum base confidence to include
-            use_sharp_boost: Whether to apply sharp consensus boost from X (default True)
         """
-        # Fetch sharp consensus from X if enabled
-        consensus = {}
-        if use_sharp_boost:
-            consensus = self.fetch_sharp_consensus()
-        
         all_picks = []
 
         for sport in config.SPORTS:
@@ -1398,59 +1223,28 @@ class UncleVitoReport:
                 if not self.dk.is_player_active_dk(prop.player, prop.team, sport):
                     logger.warning(f"Skipping {prop.player} ({prop.team}) in confidence parlay - not in DK slate")
                     continue
-                
-                # Apply sharp consensus boost
-                boosted_confidence = self.apply_sharp_boost(prop, consensus)
-                
-                if boosted_confidence >= min_confidence:
+                if prop.confidence >= min_confidence:
                     all_picks.append({
                         "type": "prop",
                         "sport": sport,
                         "pick": prop,
-                        "confidence": boosted_confidence,
-                        "sharp_boosted": boosted_confidence != prop.confidence,
-                        "sharp_consensus": self._get_sharp_summary(prop, consensus)
+                        "confidence": prop.confidence
                     })
 
             # Get game picks
             game_picks = self.generate_winners_parlay(sport, config.PARLAY_LEGS)
             for pick in game_picks:
-                boosted_confidence = self.apply_sharp_boost(pick, consensus)
-                if boosted_confidence >= min_confidence:
+                if pick.confidence >= min_confidence:
                     all_picks.append({
                         "type": "game",
                         "sport": sport,
                         "pick": pick,
-                        "confidence": boosted_confidence,
-                        "sharp_boosted": boosted_confidence != pick.confidence,
-                        "sharp_consensus": self._get_sharp_summary(pick, consensus)
+                        "confidence": pick.confidence
                     })
 
         # Sort by confidence and take top 5
         all_picks.sort(key=lambda x: x["confidence"], reverse=True)
         return all_picks[:5]
-
-    def _get_sharp_summary(self, pick: Any, consensus: Dict[str, Any] = None) -> str:
-        """
-        Get a brief summary of sharp consensus for a pick.
-        Returns a string like "📊 3 sharps, 2 agree" or empty string.
-        """
-        if consensus is None:
-            consensus = self._sharp_consensus
-        if not consensus:
-            return ""
-        
-        player_name = getattr(pick, 'player', getattr(pick, 'team', ''))
-        player_lower = player_name.lower()
-        
-        for name, data in consensus.items():
-            if player_lower in name.lower() or name.lower() in player_lower:
-                direction = data.sharp_direction or "?"
-                count = data.raw_count
-                is_fade = " [FADE]" if data.is_sharp_fade else ""
-                return f"📊 {count} sharps going {direction}{is_fade}"
-        
-        return ""
 
     def _fetch_game_odds_api(self, sport: str) -> List[Dict]:
         """
@@ -1817,23 +1611,6 @@ class UncleVitoReport:
 
             report.append("")
 
-        # 💰 ALL MONEY LINES - All games across all sports, sorted by confidence
-        report.append("💰 **ALL MONEY LINES** (sorted by confidence)")
-        report.append("")
-        
-        all_ml_picks = self.generate_all_money_lines()
-        
-        if not all_ml_picks:
-            report.append("_No games available_")
-        else:
-            for pick in all_ml_picks:
-                report.append(
-                    f"  {pick.team} v {pick.opponent} | **{pick.team} ML** | {pick.confidence}%"
-                )
-        
-        report.append("")
-        report.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-        
         # Confidence Parlay (cross-league)
         report.append("🌐 **CONFIDENCE PARLAY** (all leagues)")
         report.append("")
@@ -1843,25 +1620,16 @@ class UncleVitoReport:
         if not confidence_picks:
             report.append("_No high-confidence picks available today_")
         else:
-            # Check if any picks have sharp consensus
-            has_sharp_data = any(p.get("sharp_consensus") for p in confidence_picks)
-            
-            if has_sharp_data:
-                report.append("🍝 *Enhanced with X Sharp Consensus*")
-                report.append("")
-            
             for i, pick_data in enumerate(confidence_picks, 1):
                 sport = pick_data["sport"]
                 emoji = sport_emoji.get(sport, "🏆")
                 pick = pick_data["pick"]
-                sharp_summary = pick_data.get("sharp_consensus", "")
 
                 if pick_data["type"] == "prop":
                     emoji_dir = "📈" if pick.direction == "over" else "📉"
-                    sharp_tag = f" {sharp_summary}" if sharp_summary else ""
                     report.append(
                         f"{i}. {emoji} {pick.player} - **{pick.direction.upper()}** "
-                        f"{pick.stat_type} {pick.line} ({pick.confidence}%){sharp_tag}"
+                        f"{pick.stat_type} {pick.line} ({pick.confidence}%)"
                     )
                 else:
                     if pick.pick_type == "spread":
@@ -1870,9 +1638,8 @@ class UncleVitoReport:
                         line_str = f"O/U {pick.line}"
                     else:
                         line_str = "ML"
-                    sharp_tag = f" {sharp_summary}" if sharp_summary else ""
                     report.append(
-                        f"{i}. {emoji} {pick.team} - **{pick.team}** {line_str} ({pick.confidence}%){sharp_tag}"
+                        f"{i}. {emoji} {pick.team} - **{pick.team}** {line_str} ({pick.confidence}%)"
                     )
 
             # Calculate combined odds
@@ -1995,7 +1762,6 @@ class UncleVitoReport:
         .best-bet-sport { font-size: 0.8rem; }
         .best-bet-text { flex: 1; color: var(--text); }
         .best-bet-conf { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--win); }
-        .sharp-indicator { font-size: 0.65rem; color: var(--sharp, #9b59b6); margin-left: 6px; padding: 2px 6px; background: rgba(155, 89, 182, 0.15); border-radius: 4px; }
         
         .footer { text-align: center; padding: 32px 0 16px; color: var(--text-dim); font-size: 0.75rem; }
         .footer-warning { color: var(--loss); margin-top: 6px; }
@@ -2110,7 +1876,7 @@ __LEAGUE_SECTIONS__
                         line_str = f"{pick.team} ({pick.line})"
                         label = "SPREAD"
                     elif pick.pick_type == "total":
-                        line_str = f"{pick.team} vs {pick.opponent} O/U {pick.line}"
+                        line_str = f"O/U {pick.line}"
                         label = "TOTAL"
                     else:
                         line_str = f"{pick.team} ML"
@@ -2142,26 +1908,19 @@ __LEAGUE_SECTIONS__
                 for p in sport_confidence_picks[:5]:
                     pick = p["pick"]
                     sport_icon = sport_emoji.get(sport, "🏆")
-                    sharp_consensus = p.get("sharp_consensus", "")
                     if p["type"] == "prop":
                         line_str = f"{pick.player} {pick.direction.upper()} {pick.stat_type} {pick.line}"
                     else:
                         if pick.pick_type == "spread":
                             line_str = f"{pick.team} ({pick.line})"
                         elif pick.pick_type == "total":
-                            line_str = f"{pick.team} vs {pick.opponent} O/U {pick.line}"
+                            line_str = f"O/U {pick.line}"
                         else:
                             line_str = f"{pick.team} ML"
-                    # Add sharp consensus indicator
-                    if sharp_consensus:
-                        sharp_indicator = f'<span class="sharp-indicator">{sharp_consensus}</span>'
-                    else:
-                        sharp_indicator = ""
                     section += f'                            <div class="best-bet-item">'
                     section += f'<span class="best-bet-sport">{sport_icon}</span>'
                     section += f'<span class="best-bet-text">{line_str}</span>'
                     section += f'<span class="best-bet-conf">{pick.confidence}%</span>'
-                    section += f'{sharp_indicator}'
                     section += '</div>\n'
                 section += '                        </div>\n'
                 section += '                    </div>\n'
@@ -2169,36 +1928,6 @@ __LEAGUE_SECTIONS__
             
             section += '            </div>\n'
             league_html += section
-        
-        # 💰 ALL MONEY LINES - All games across all sports, sorted by confidence
-        all_ml_picks = self.generate_all_money_lines()
-        ml_section = '''        <div class="league-section">
-            <div class="league-header">
-                <span class="league-emoji">💰</span>
-                <span class="league-name" style="color: var(--gold);">ALL MONEY LINES</span>
-            </div>
-            <div class="pick-group">
-                <div class="pick-group-header">
-                    <span class="pick-group-icon">📊</span>
-                    <span class="pick-group-title">Every Game • Sorted by Confidence</span>
-                </div>
-                <div class="pick-card">
-                    <div class="best-bets-list">
-'''
-        
-        if not all_ml_picks:
-            ml_section += '                        <div class="best-bet-item"><span class="best-bet-text">No games available</span></div>\n'
-        else:
-            for pick in all_ml_picks:
-                line_str = f"{pick.team} v {pick.opponent} | <strong>{pick.team} ML</strong>"
-                ml_section += f'                        <div class="best-bet-item">'
-                ml_section += f'<span class="best-bet-text">{line_str}</span>'
-                ml_section += f'<span class="best-bet-conf">{pick.confidence}%</span>'
-                ml_section += '</div>\n'
-        
-        ml_section += '                    </div>\n                </div>\n            </div>\n        </div>\n'
-        
-        league_html += ml_section
         
         html = html.replace("__DATE_STR__", date_str)
         html = html.replace("__LEAGUE_SECTIONS__", league_html)

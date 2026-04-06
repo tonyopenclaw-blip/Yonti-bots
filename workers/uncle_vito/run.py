@@ -15,8 +15,15 @@ from vito_report import UncleVitoReport
 import config
 
 
-def run(sport_filter: list = None, discord_output: bool = False, channel: str = None):
-    """Run the report generator."""
+def run(sport_filter: list = None, discord_output: bool = False, channel: str = None, use_sharp: bool = True):
+    """Run the report generator.
+    
+    Args:
+        sport_filter: List of sports to include (NBA, NHL, MLB)
+        discord_output: Whether to send to Discord
+        channel: Discord channel name
+        use_sharp: Whether to apply X sharp consensus boost (default True)
+    """
     report = UncleVitoReport()
 
     # Fetch games
@@ -34,6 +41,11 @@ def run(sport_filter: list = None, discord_output: bool = False, channel: str = 
         original_sports = config.SPORTS.copy()
         config.SPORTS = [s for s in config.SPORTS if s in filtered]
         report.games = filtered
+
+    # Pre-fetch sharp consensus if enabled (for display in report)
+    if use_sharp:
+        print("🍝 Fetching sharp consensus from X...")
+        report.fetch_sharp_consensus()
 
     # Format report
     output = report.format_report()
@@ -86,12 +98,13 @@ def main():
     parser.add_argument("--sport", "-s", action="append", help="Filter by sport (NBA, NHL, MLB). Can specify multiple.")
     parser.add_argument("--discord", "-d", action="store_true", help="Send to Discord")
     parser.add_argument("--channel", "-c", default="uncle-vito", help="Discord channel")
+    parser.add_argument("--no-sharp", action="store_true", help="Disable X sharp consensus boost")
     args = parser.parse_args()
 
     # Default to all sports if none specified
     sport_filter = args.sport if args.sport else None
 
-    run(sport_filter=sport_filter, discord_output=args.discord, channel=args.channel)
+    run(sport_filter=sport_filter, discord_output=args.discord, channel=args.channel, use_sharp=not args.no_sharp)
 
 
 if __name__ == "__main__":

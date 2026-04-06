@@ -48,11 +48,16 @@ class KalshiAPI:
             private_key_path = '/home/ubuntu/.openclaw/workspace/workers/superbot/kalshi_private_key.pem'
             with open(private_key_path) as f:
                 private_key_data = f.read()
-            self.sdk_client = create_client(
-                access_key_id=access_key,
-                private_key_data=private_key_data
-            )
-            self.auth = KalshiAuth(access_key_id=access_key, private_key_pem=private_key_data)
+            # Only init SDK if we have an access key
+            if access_key:
+                self.sdk_client = create_client(
+                    access_key_id=access_key,
+                    private_key_data=private_key_data
+                )
+                self.auth = KalshiAuth(access_key_id=access_key, private_key_pem=private_key_data)
+            else:
+                self.sdk_client = None
+                self.auth = KalshiAuth(access_key_id='dummy', private_key_pem=private_key_data)
         except Exception as e:
             logger.warning(f"kalshi_py SDK init failed: {e}")
             self.sdk_client = None
@@ -62,9 +67,9 @@ class KalshiAPI:
         """Generate auth headers using KalshiAuth."""
         if not self.auth:
             return {}
-        # KalshiAuth expects full path including /trade-api/v2 prefix
-        full_path = f"/trade-api/v2{path}" if not path.startswith("/trade-api/v2") else path
-        headers = self.auth.get_auth_headers(method, full_path)
+        # KalshiAuth.get_auth_headers handles /trade-api/v2 prefix internally
+        # Just pass the relative path (e.g., /portfolio/orders)
+        headers = self.auth.get_auth_headers(method, path)
         return headers
         
     def _get(self, endpoint: str, params: Dict = None) -> Dict:
@@ -110,15 +115,14 @@ class KalshiAPI:
     
     def get_balance(self) -> float:
         """Get account balance."""
-        if not self.sdk_client:
+        result = self._get("/portfolio/balance")
+        if "error" in result:
+            logger.warning(f"get_balance error: {result['error']}")
             return 0.0
         try:
-            result = self.sdk_client.portfolio.get_balance()
-            if result:
-                return float(result.balance) / 100.0 if hasattr(result, 'balance') else 0.0
-        except Exception as e:
-            logger.warning(f"get_balance error: {e}")
-        return 0.0
+            return float(result.get('balance', 0)) / 100.0
+        except (ValueError, TypeError):
+            return 0.0
     
     def get_markets(self, series_ticker: str, limit: int = 5) -> List[Market]:
         """Get markets by series ticker."""

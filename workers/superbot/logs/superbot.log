@@ -15589,3 +15589,1005 @@ AttributeError: 'CoinTrader' object has no attribute '_cancel_orders_for_ticker'
 2026-04-06 14:59:32 | INFO | Day Realized P&L: $-27.07 (-78.1%) / -$99999.00 daily stop-loss limit
 2026-04-06 14:59:32 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
 2026-04-06 14:59:32 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:00:03 | INFO | Status: cash=$7.60, positions=0, loop=81, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:00:03 | INFO | Day Realized P&L: $-27.07 (-78.1%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:00:03 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:00:03 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:00:03 | INFO | [HYPE] Cooldown complete - can trade again
+2026-04-06 15:00:33 | INFO | Status: cash=$7.60, positions=0, loop=82, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:00:33 | INFO | Day Realized P&L: $-27.07 (-78.1%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:00:33 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:00:33 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:00:33 | INFO | FIRST_CROSS: KXBNB15M-26APR061115-15 target price set to $607.08
+2026-04-06 15:00:33 | INFO | FIRST_CROSS: KXSOL15M-26APR061115-15 target price set to $82.26
+2026-04-06 15:00:33 | INFO | FIRST_CROSS: KXDOGE15M-26APR061115-15 target price set to $0.09
+2026-04-06 15:00:33 | INFO | FIRST_CROSS: KXXRP15M-26APR061115-15 target price set to $1.35
+2026-04-06 15:00:33 | INFO | FIRST_CROSS: KXHYPE15M-26APR061115-15 target price set to $37.73
+2026-04-06 15:01:03 | INFO | Status: cash=$7.60, positions=0, loop=83, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:01:03 | INFO | Day Realized P&L: $-27.07 (-78.1%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:01:03 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:01:03 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:01:03 | INFO | FIRST_CROSS: KXBTC15M-26APR061115-15 target price set to $69,672.12
+2026-04-06 15:01:03 | INFO | FIRST_CROSS: KXETH15M-26APR061115-15 target price set to $2,158.06
+2026-04-06 15:01:04 | INFO | FIRST_CROSS: KXBNB15M-26APR061115-15 crossed UP through $0.50 (was $0.4900, now $0.5100)
+2026-04-06 15:01:04 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR061115-15 | Direction: yes | Side: yes @ $0.5100 | contracts=0 | CONF=43 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-06 15:01:04 | ERROR | [BNB] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:01:04 | INFO | FIRST_CROSS: KXDOGE15M-26APR061115-15 crossed DOWN through $0.50 (was $0.5100, now $0.4800)
+2026-04-06 15:01:04 | INFO | FIRST_CROSS SIGNAL (midpoint): KXDOGE15M-26APR061115-15 | Direction: no | Side: no @ $0.4800 | contracts=0 | CONF=43 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:01:04 | ERROR | [DOGE] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:01:34 | INFO | Status: cash=$7.60, positions=0, loop=84, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:01:34 | INFO | Day Realized P&L: $-27.07 (-78.1%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:01:34 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:01:34 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:01:34 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR061115-15 | Direction: yes | Side: yes @ $0.5550 | contracts=0 | CONF=43 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-06 15:01:34 | ERROR | [BNB] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:01:34 | INFO | FIRST_CROSS SIGNAL (midpoint): KXDOGE15M-26APR061115-15 | Direction: no | Side: no @ $0.4950 | contracts=0 | CONF=43 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:01:34 | ERROR | [DOGE] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:02:04 | INFO | Status: cash=$7.60, positions=0, loop=85, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:02:04 | INFO | Day Realized P&L: $-27.07 (-78.1%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:02:04 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:02:05 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:02:05 | INFO | FIRST_CROSS: KXBTC15M-26APR061115-15 | Direction: up | Target: $69,672.12 | Coin Price: $69,734.00
+2026-04-06 15:02:05 | INFO | FIRST_CROSS: KXETH15M-26APR061115-15 | Direction: up | Target: $2,158.06 | Coin Price: $2,162.74
+2026-04-06 15:02:05 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR061115-15 | Direction: yes | Side: yes @ $0.5350 | contracts=0 | CONF=43 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-06 15:02:05 | ERROR | [BNB] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:02:05 | INFO | FIRST_CROSS: KXSOL15M-26APR061115-15 | Direction: up | Target: $82.26 | Coin Price: $82.31
+2026-04-06 15:02:05 | INFO | FIRST_CROSS SIGNAL (coin): KXSOL15M-26APR061115-15 | Direction: up | Target: $82.26 | Side: yes @ $0.3600 | contracts=0 | CONF=48 | Coinbase=None
+2026-04-06 15:02:05 | ERROR | [SOL] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:02:05 | INFO | FIRST_CROSS: KXDOGE15M-26APR061115-15 | Direction: up | Target: $0.09 | Coin Price: $0.09
+2026-04-06 15:02:05 | INFO | FIRST_CROSS SIGNAL (coin): KXDOGE15M-26APR061115-15 | Direction: up | Target: $0.09 | Side: yes @ $0.5400 | contracts=0 | CONF=43 | Coinbase=bullish
+2026-04-06 15:02:05 | ERROR | [DOGE] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:02:05 | INFO | FIRST_CROSS: KXXRP15M-26APR061115-15 | Direction: up | Target: $1.35 | Coin Price: $1.35
+2026-04-06 15:02:05 | INFO | FIRST_CROSS SIGNAL (coin): KXXRP15M-26APR061115-15 | Direction: up | Target: $1.35 | Side: yes @ $0.3550 | contracts=0 | CONF=48 | Coinbase=None
+2026-04-06 15:02:05 | ERROR | [XRP] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:02:35 | INFO | Status: cash=$7.60, positions=0, loop=86, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:02:35 | INFO | Day Realized P&L: $-27.07 (-78.1%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:02:35 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:02:35 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:02:35 | INFO | FIRST_CROSS: KXBTC15M-26APR061115-15 crossed UP through $0.50 (was $0.4250, now $0.5350)
+2026-04-06 15:02:35 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR061115-15 | Direction: yes | Side: yes @ $0.5350 | contracts=0 | CONF=43 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-06 15:02:35 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:02:35 | INFO | FIRST_CROSS: KXETH15M-26APR061115-15 crossed UP through $0.50 (was $0.4150, now $0.5400)
+2026-04-06 15:02:35 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR061115-15 | Direction: yes | Side: yes @ $0.5400 | contracts=0 | CONF=43 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-06 15:02:35 | ERROR | [ETH] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:02:35 | INFO | MOMENTUM SIGNAL: KXSOL15M-26APR061115-15 | Side: yes @ $0.5200 | contracts=3 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=122s
+2026-04-06 15:02:35 | WARNING | [SOL] Insufficient cash: $0.95 < $1.04 (contracts=2, price=0.5200)
+2026-04-06 15:02:35 | INFO | MOMENTUM SIGNAL: KXXRP15M-26APR061115-15 | Side: yes @ $0.5650 | contracts=3 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=122s
+2026-04-06 15:02:35 | WARNING | [XRP] Insufficient cash: $0.95 < $1.13 (contracts=2, price=0.5650)
+2026-04-06 15:03:05 | INFO | Status: cash=$7.60, positions=0, loop=87, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:03:05 | INFO | Day Realized P&L: $-27.07 (-78.1%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:03:05 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:03:05 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:03:06 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR061115-15 | Direction: yes | Side: yes @ $0.4700 | contracts=0 | CONF=43 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:03:06 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:03:06 | INFO | MOMENTUM SIGNAL: KXETH15M-26APR061115-15 | Side: yes @ $0.5800 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=122s
+2026-04-06 15:03:06 | INFO | [ETH] REAL ORDER PLACED: {'order': {'action': 'buy', 'client_order_id': '', 'created_time': '2026-04-06T15:03:06.320318Z', 'fill_count_fp': '1.00', 'initial_count_fp': '1.00', 'last_update_time': '2026-04-06T15:03:06.320318Z', 'maker_fees_dollars': '0.000000', 'maker_fill_cost_dollars': '0.000000', 'no_price_dollars': '0.4200', 'order_id': 'bc750c9b-e838-4a3d-8ed1-f3c757827df6', 'remaining_count_fp': '0.00', 'side': 'yes', 'status': 'executed', 'subaccount_number': 0, 'taker_fees_dollars': '0.020000', 'taker_fill_cost_dollars': '0.510000', 'ticker': 'KXETH15M-26APR061115-15', 'type': 'limit', 'user_id': 'dd8ef7dd-9e7f-40f7-965e-e9276a7805a4', 'yes_price_dollars': '0.5800'}}
+2026-04-06 15:03:06 | INFO | [ETH] Opened momentum: yes KXETH15M-26APR061115-15 @ $0.5800, contracts=1, cost=$0.58
+2026-04-06 15:03:06 | INFO | 🚀 [ETH] TRADE EXECUTED: momentum yes KXETH15M-26APR061115-15 @ $0.5800, contracts=1 (daily trades: 25/9999)
+2026-04-06 15:03:06 | INFO | MOMENTUM SIGNAL: KXBNB15M-26APR061115-15 | Side: yes @ $0.6450 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=153s
+2026-04-06 15:03:06 | INFO | [BNB] REAL ORDER PLACED: {'order': {'action': 'buy', 'client_order_id': '', 'created_time': '2026-04-06T15:03:06.566692Z', 'fill_count_fp': '1.00', 'initial_count_fp': '1.00', 'last_update_time': '2026-04-06T15:03:06.566692Z', 'maker_fees_dollars': '0.000000', 'maker_fill_cost_dollars': '0.000000', 'no_price_dollars': '0.3500', 'order_id': '33980bd4-684c-4d30-9900-34297f249a54', 'remaining_count_fp': '0.00', 'side': 'yes', 'status': 'executed', 'subaccount_number': 0, 'taker_fees_dollars': '0.020000', 'taker_fill_cost_dollars': '0.650000', 'ticker': 'KXBNB15M-26APR061115-15', 'type': 'limit', 'user_id': 'dd8ef7dd-9e7f-40f7-965e-e9276a7805a4', 'yes_price_dollars': '0.6500'}}
+2026-04-06 15:03:06 | INFO | [BNB] Opened momentum: yes KXBNB15M-26APR061115-15 @ $0.6450, contracts=1, cost=$0.65
+2026-04-06 15:03:06 | INFO | 🚀 [BNB] TRADE EXECUTED: momentum yes KXBNB15M-26APR061115-15 @ $0.6450, contracts=1 (daily trades: 26/9999)
+2026-04-06 15:03:06 | INFO | MOMENTUM SIGNAL: KXDOGE15M-26APR061115-15 | Side: yes @ $0.5850 | contracts=2 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=153s
+2026-04-06 15:03:06 | WARNING | [DOGE] Insufficient cash: $0.80 < $1.17 (contracts=2, price=0.5850)
+2026-04-06 15:03:36 | INFO | Status: cash=$6.37, positions=2, loop=88, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:03:36 | INFO | Day Realized P&L: $-28.30 (-81.6%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:03:36 | INFO | Coins: BTC: idle | ETH: momentum yes@0.58 | BNB: momentum yes@0.65 | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:03:36 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:03:36 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR061115-15 | Direction: yes | Side: yes @ $0.3900 | contracts=0 | CONF=56 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:03:36 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:03:36 | INFO | KXETH15M-26APR061115-15: TIME-SCALED STOP HIT @ $0.5050 (entry=$0.5800, stop=0%, loss=12.9%, age=0.5min)
+2026-04-06 15:03:37 | INFO | [ETH] REAL CLOSE ORDER PLACED: {'order': {'action': 'buy', 'client_order_id': '', 'created_time': '2026-04-06T15:03:37.124021Z', 'fill_count_fp': '0.00', 'initial_count_fp': '1.00', 'last_update_time': '2026-04-06T15:03:37.124021Z', 'maker_fees_dollars': '0.000000', 'maker_fill_cost_dollars': '0.000000', 'no_price_dollars': '0.4900', 'order_id': '1776636a-23a0-422c-8bf1-08c8c0b916af', 'remaining_count_fp': '1.00', 'side': 'no', 'status': 'resting', 'subaccount_number': 0, 'taker_fees_dollars': '0.000000', 'taker_fill_cost_dollars': '0.000000', 'ticker': 'KXETH15M-26APR061115-15', 'type': 'limit', 'user_id': 'dd8ef7dd-9e7f-40f7-965e-e9276a7805a4', 'yes_price_dollars': '0.5100'}}
+2026-04-06 15:03:37 | INFO | [ETH] Closed KXETH15M-26APR061115-15: TIME-SCALED STOP: -0% loss locked in, PnL=$-0.07
+2026-04-06 15:03:37 | INFO | Strategy momentum stats: W=37.50%, R=0.60x, Kelly=4.00%
+2026-04-06 15:03:37 | INFO | Trade recorded: KXETH15M-26APR061115-15 yes momentum PnL=$-0.07
+2026-04-06 15:03:37 | INFO | [ETH] Position closed. Cooldown started: must wait 2 cycles before re-entering
+2026-04-06 15:03:37 | INFO | MOMENTUM SIGNAL: KXETH15M-26APR061115-15 | Side: yes @ $0.5050 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=153s
+2026-04-06 15:03:37 | INFO | [ETH] REAL ORDER PLACED: {'order': {'action': 'buy', 'client_order_id': '', 'created_time': '2026-04-06T15:03:37.386623Z', 'fill_count_fp': '1.00', 'initial_count_fp': '1.00', 'last_update_time': '2026-04-06T15:03:37.386623Z', 'maker_fees_dollars': '0.000000', 'maker_fill_cost_dollars': '0.000000', 'no_price_dollars': '0.4900', 'order_id': '110144eb-dfce-41ae-ad85-583f5a863f57', 'remaining_count_fp': '0.00', 'side': 'yes', 'status': 'executed', 'subaccount_number': 0, 'taker_fees_dollars': '0.020000', 'taker_fill_cost_dollars': '0.470000', 'ticker': 'KXETH15M-26APR061115-15', 'type': 'limit', 'user_id': 'dd8ef7dd-9e7f-40f7-965e-e9276a7805a4', 'yes_price_dollars': '0.5100'}}
+2026-04-06 15:03:37 | INFO | [ETH] Opened momentum: yes KXETH15M-26APR061115-15 @ $0.5050, contracts=1, cost=$0.51
+2026-04-06 15:03:37 | INFO | 🚀 [ETH] TRADE EXECUTED: momentum yes KXETH15M-26APR061115-15 @ $0.5050, contracts=1 (daily trades: 27/9999)
+2026-04-06 15:03:37 | INFO | KXBNB15M-26APR061115-15: TIME-SCALED STOP HIT @ $0.6350 (entry=$0.6450, stop=0%, loss=1.6%, age=0.5min)
+2026-04-06 15:03:37 | INFO | [BNB] REAL CLOSE ORDER PLACED: {'order': {'action': 'buy', 'client_order_id': '', 'created_time': '2026-04-06T15:03:37.614958Z', 'fill_count_fp': '0.00', 'initial_count_fp': '1.00', 'last_update_time': '2026-04-06T15:03:37.614958Z', 'maker_fees_dollars': '0.000000', 'maker_fill_cost_dollars': '0.000000', 'no_price_dollars': '0.3600', 'order_id': '3d649fa1-9ed6-405c-99b4-4fd7c66a586f', 'remaining_count_fp': '1.00', 'side': 'no', 'status': 'resting', 'subaccount_number': 0, 'taker_fees_dollars': '0.000000', 'taker_fill_cost_dollars': '0.000000', 'ticker': 'KXBNB15M-26APR061115-15', 'type': 'limit', 'user_id': 'dd8ef7dd-9e7f-40f7-965e-e9276a7805a4', 'yes_price_dollars': '0.6400'}}
+2026-04-06 15:03:37 | INFO | [BNB] Closed KXBNB15M-26APR061115-15: TIME-SCALED STOP: -0% loss locked in, PnL=$-0.01
+2026-04-06 15:03:37 | INFO | Strategy momentum stats: W=0.00%, R=2.22x, Kelly=4.00%
+2026-04-06 15:03:37 | INFO | Trade recorded: KXBNB15M-26APR061115-15 yes momentum PnL=$-0.01
+2026-04-06 15:03:37 | INFO | [BNB] Position closed. Cooldown started: must wait 2 cycles before re-entering
+2026-04-06 15:03:37 | INFO | MOMENTUM SIGNAL: KXBNB15M-26APR061115-15 | Side: yes @ $0.6350 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=184s
+2026-04-06 15:03:37 | INFO | [BNB] REAL ORDER PLACED: {'order': {'action': 'buy', 'client_order_id': '', 'created_time': '2026-04-06T15:03:37.863558Z', 'fill_count_fp': '1.00', 'initial_count_fp': '1.00', 'last_update_time': '2026-04-06T15:03:37.863558Z', 'maker_fees_dollars': '0.000000', 'maker_fill_cost_dollars': '0.000000', 'no_price_dollars': '0.3600', 'order_id': '8d32a7f9-1d53-48f1-acef-59a1942d535b', 'remaining_count_fp': '0.00', 'side': 'yes', 'status': 'executed', 'subaccount_number': 0, 'taker_fees_dollars': '0.020000', 'taker_fill_cost_dollars': '0.640000', 'ticker': 'KXBNB15M-26APR061115-15', 'type': 'limit', 'user_id': 'dd8ef7dd-9e7f-40f7-965e-e9276a7805a4', 'yes_price_dollars': '0.6400'}}
+2026-04-06 15:03:37 | INFO | [BNB] Opened momentum: yes KXBNB15M-26APR061115-15 @ $0.6350, contracts=1, cost=$0.64
+2026-04-06 15:03:37 | INFO | 🚀 [BNB] TRADE EXECUTED: momentum yes KXBNB15M-26APR061115-15 @ $0.6350, contracts=1 (daily trades: 28/9999)
+2026-04-06 15:03:37 | INFO | MOMENTUM SIGNAL: KXDOGE15M-26APR061115-15 | Side: yes @ $0.5300 | contracts=2 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=184s
+2026-04-06 15:03:37 | WARNING | [DOGE] Insufficient cash: $0.65 < $1.06 (contracts=2, price=0.5300)
+2026-04-06 15:04:08 | INFO | Status: cash=$5.23, positions=2, loop=89, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:04:08 | INFO | Day Realized P&L: $-29.44 (-84.9%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:04:08 | INFO | Coins: BTC: idle | ETH: momentum yes@0.51 | BNB: momentum yes@0.64 | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:04:08 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:04:08 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR061115-15 | Direction: yes | Side: yes @ $0.3850 | contracts=0 | CONF=56 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:04:08 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:04:08 | INFO | KXETH15M-26APR061115-15: TIME-SCALED STOP HIT @ $0.4650 (entry=$0.5050, stop=0%, loss=7.9%, age=0.5min)
+2026-04-06 15:04:08 | INFO | [ETH] REAL CLOSE ORDER PLACED: {'order': {'action': 'buy', 'client_order_id': '', 'created_time': '2026-04-06T15:04:08.427163Z', 'fill_count_fp': '0.00', 'initial_count_fp': '1.00', 'last_update_time': '2026-04-06T15:04:08.427163Z', 'maker_fees_dollars': '0.000000', 'maker_fill_cost_dollars': '0.000000', 'no_price_dollars': '0.5400', 'order_id': '51b86ac8-5cbe-451f-98c1-3be6ce9ea0c9', 'remaining_count_fp': '1.00', 'side': 'no', 'status': 'resting', 'subaccount_number': 0, 'taker_fees_dollars': '0.000000', 'taker_fill_cost_dollars': '0.000000', 'ticker': 'KXETH15M-26APR061115-15', 'type': 'limit', 'user_id': 'dd8ef7dd-9e7f-40f7-965e-e9276a7805a4', 'yes_price_dollars': '0.4600'}}
+2026-04-06 15:04:08 | INFO | [ETH] Closed KXETH15M-26APR061115-15: TIME-SCALED STOP: -0% loss locked in, PnL=$-0.04
+2026-04-06 15:04:08 | INFO | Strategy momentum stats: W=33.33%, R=0.69x, Kelly=4.00%
+2026-04-06 15:04:08 | INFO | Trade recorded: KXETH15M-26APR061115-15 yes momentum PnL=$-0.04
+2026-04-06 15:04:08 | INFO | [ETH] Position closed. Cooldown started: must wait 2 cycles before re-entering
+2026-04-06 15:04:08 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR061115-15 | Direction: yes | Side: yes @ $0.4650 | contracts=0 | CONF=43 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:04:08 | ERROR | [ETH] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:04:08 | INFO | KXBNB15M-26APR061115-15: TIME-SCALED STOP HIT @ $0.5800 (entry=$0.6350, stop=0%, loss=8.7%, age=0.5min)
+2026-04-06 15:04:08 | INFO | [BNB] REAL CLOSE ORDER PLACED: {'order': {'action': 'buy', 'client_order_id': '', 'created_time': '2026-04-06T15:04:08.689416Z', 'fill_count_fp': '0.00', 'initial_count_fp': '1.00', 'last_update_time': '2026-04-06T15:04:08.689416Z', 'maker_fees_dollars': '0.000000', 'maker_fill_cost_dollars': '0.000000', 'no_price_dollars': '0.4200', 'order_id': '0857d73c-df26-4586-b7c3-97704f294d6a', 'remaining_count_fp': '1.00', 'side': 'no', 'status': 'resting', 'subaccount_number': 0, 'taker_fees_dollars': '0.000000', 'taker_fill_cost_dollars': '0.000000', 'ticker': 'KXBNB15M-26APR061115-15', 'type': 'limit', 'user_id': 'dd8ef7dd-9e7f-40f7-965e-e9276a7805a4', 'yes_price_dollars': '0.5800'}}
+2026-04-06 15:04:08 | INFO | [BNB] Closed KXBNB15M-26APR061115-15: TIME-SCALED STOP: -0% loss locked in, PnL=$-0.06
+2026-04-06 15:04:08 | INFO | Strategy momentum stats: W=0.00%, R=2.70x, Kelly=4.00%
+2026-04-06 15:04:08 | INFO | Trade recorded: KXBNB15M-26APR061115-15 yes momentum PnL=$-0.06
+2026-04-06 15:04:08 | INFO | [BNB] Position closed. Cooldown started: must wait 2 cycles before re-entering
+2026-04-06 15:04:08 | INFO | MOMENTUM SIGNAL: KXBNB15M-26APR061115-15 | Side: yes @ $0.5800 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=215s
+2026-04-06 15:04:08 | INFO | [BNB] REAL ORDER PLACED: {'order': {'action': 'buy', 'client_order_id': '', 'created_time': '2026-04-06T15:04:08.932907Z', 'fill_count_fp': '0.00', 'initial_count_fp': '1.00', 'last_update_time': '2026-04-06T15:04:08.932907Z', 'maker_fees_dollars': '0.000000', 'maker_fill_cost_dollars': '0.000000', 'no_price_dollars': '0.4200', 'order_id': '45b3ebd2-17af-4f2d-9916-7566ea23f6e5', 'remaining_count_fp': '0.00', 'side': 'yes', 'status': 'canceled', 'subaccount_number': 0, 'taker_fees_dollars': '0.000000', 'taker_fill_cost_dollars': '0.000000', 'ticker': 'KXBNB15M-26APR061115-15', 'type': 'limit', 'user_id': 'dd8ef7dd-9e7f-40f7-965e-e9276a7805a4', 'yes_price_dollars': '0.5800'}}
+2026-04-06 15:04:08 | INFO | [BNB] Opened momentum: yes KXBNB15M-26APR061115-15 @ $0.5800, contracts=1, cost=$0.58
+2026-04-06 15:04:08 | INFO | 🚀 [BNB] TRADE EXECUTED: momentum yes KXBNB15M-26APR061115-15 @ $0.5800, contracts=1 (daily trades: 29/9999)
+2026-04-06 15:04:08 | INFO | FIRST_CROSS SIGNAL (midpoint): KXDOGE15M-26APR061115-15 | Direction: no | Side: no @ $0.4250 | contracts=0 | CONF=43 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:04:08 | ERROR | [DOGE] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:04:39 | INFO | Status: cash=$4.65, positions=1, loop=90, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:04:39 | INFO | Day Realized P&L: $-30.02 (-86.6%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:04:39 | INFO | Coins: BTC: idle | ETH: idle | BNB: momentum yes@0.58 | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:04:39 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:04:39 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR061115-15 | Direction: yes | Side: yes @ $0.3750 | contracts=0 | CONF=56 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:04:39 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:04:39 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR061115-15 | Direction: yes | Side: yes @ $0.4450 | contracts=0 | CONF=43 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:04:39 | ERROR | [ETH] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:04:39 | INFO | KXBNB15M-26APR061115-15: TIME-SCALED STOP HIT @ $0.5750 (entry=$0.5800, stop=0%, loss=0.9%, age=0.5min)
+2026-04-06 15:04:39 | INFO | [BNB] REAL CLOSE ORDER PLACED: {'order': {'action': 'buy', 'client_order_id': '', 'created_time': '2026-04-06T15:04:39.475415Z', 'fill_count_fp': '1.00', 'initial_count_fp': '1.00', 'last_update_time': '2026-04-06T15:04:39.475415Z', 'maker_fees_dollars': '0.000000', 'maker_fill_cost_dollars': '0.000000', 'no_price_dollars': '0.4300', 'order_id': 'f51b3f38-f1af-45db-b0e1-928217459dee', 'remaining_count_fp': '0.00', 'side': 'no', 'status': 'executed', 'subaccount_number': 0, 'taker_fees_dollars': '0.020000', 'taker_fill_cost_dollars': '0.410000', 'ticker': 'KXBNB15M-26APR061115-15', 'type': 'limit', 'user_id': 'dd8ef7dd-9e7f-40f7-965e-e9276a7805a4', 'yes_price_dollars': '0.5700'}}
+2026-04-06 15:04:39 | INFO | [BNB] Closed KXBNB15M-26APR061115-15: TIME-SCALED STOP: -0% loss locked in, PnL=$-0.01
+2026-04-06 15:04:39 | INFO | Strategy momentum stats: W=0.00%, R=3.23x, Kelly=4.00%
+2026-04-06 15:04:39 | INFO | Trade recorded: KXBNB15M-26APR061115-15 yes momentum PnL=$-0.01
+2026-04-06 15:04:39 | INFO | [BNB] Position closed. Cooldown started: must wait 2 cycles before re-entering
+2026-04-06 15:04:39 | INFO | MOMENTUM SIGNAL: KXBNB15M-26APR061115-15 | Side: yes @ $0.5750 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=246s
+2026-04-06 15:04:39 | INFO | [BNB] REAL ORDER PLACED: {'order': {'action': 'buy', 'client_order_id': '', 'created_time': '2026-04-06T15:04:39.722472Z', 'fill_count_fp': '0.00', 'initial_count_fp': '1.00', 'last_update_time': '2026-04-06T15:04:39.722472Z', 'maker_fees_dollars': '0.000000', 'maker_fill_cost_dollars': '0.000000', 'no_price_dollars': '0.4300', 'order_id': '21a4356e-966d-4829-ad4e-5862a35a64c4', 'remaining_count_fp': '1.00', 'side': 'yes', 'status': 'resting', 'subaccount_number': 0, 'taker_fees_dollars': '0.000000', 'taker_fill_cost_dollars': '0.000000', 'ticker': 'KXBNB15M-26APR061115-15', 'type': 'limit', 'user_id': 'dd8ef7dd-9e7f-40f7-965e-e9276a7805a4', 'yes_price_dollars': '0.5700'}}
+2026-04-06 15:04:39 | INFO | [BNB] Opened momentum: yes KXBNB15M-26APR061115-15 @ $0.5750, contracts=1, cost=$0.57
+2026-04-06 15:04:39 | INFO | 🚀 [BNB] TRADE EXECUTED: momentum yes KXBNB15M-26APR061115-15 @ $0.5750, contracts=1 (daily trades: 30/9999)
+2026-04-06 15:04:39 | INFO | FIRST_CROSS SIGNAL (midpoint): KXDOGE15M-26APR061115-15 | Direction: no | Side: no @ $0.3500 | contracts=0 | CONF=56 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:04:39 | ERROR | [DOGE] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:05:09 | INFO | Status: cash=$4.08, positions=1, loop=91, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:05:09 | INFO | Day Realized P&L: $-30.59 (-88.2%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:05:09 | INFO | Coins: BTC: idle | ETH: idle | BNB: momentum yes@0.57 | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:05:09 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:05:09 | INFO | [ETH] Cooldown complete - can trade again
+2026-04-06 15:05:09 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR061115-15 | Direction: yes | Side: yes @ $0.4200 | contracts=0 | CONF=40 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:05:10 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:05:10 | INFO | MOMENTUM SIGNAL: KXETH15M-26APR061115-15 | Side: yes @ $0.5500 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=246s
+2026-04-06 15:05:10 | WARNING | [ETH] Insufficient cash: $0.51 < $0.55 (contracts=1, price=0.5500)
+2026-04-06 15:05:10 | INFO | FIRST_CROSS SIGNAL (midpoint): KXDOGE15M-26APR061115-15 | Direction: no | Side: no @ $0.3450 | contracts=0 | CONF=53 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:05:10 | ERROR | [DOGE] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:05:40 | INFO | Status: cash=$4.08, positions=1, loop=92, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:05:40 | INFO | Day Realized P&L: $-30.59 (-88.2%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:05:40 | INFO | Coins: BTC: idle | ETH: idle | BNB: momentum yes@0.57 | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:05:40 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:05:40 | INFO | [BNB] Cooldown complete - can trade again
+2026-04-06 15:05:40 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR061115-15 | Direction: yes | Side: yes @ $0.3750 | contracts=0 | CONF=53 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:05:40 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:05:40 | INFO | MOMENTUM SIGNAL: KXETH15M-26APR061115-15 | Side: yes @ $0.5300 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=277s
+2026-04-06 15:05:40 | WARNING | [ETH] Insufficient cash: $0.51 < $0.53 (contracts=1, price=0.5300)
+2026-04-06 15:06:10 | INFO | Status: cash=$4.08, positions=1, loop=93, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:06:10 | INFO | Day Realized P&L: $-30.59 (-88.2%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:06:10 | INFO | Coins: BTC: idle | ETH: idle | BNB: momentum yes@0.57 | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:06:10 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:06:10 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR061115-15 | Direction: yes | Side: yes @ $0.3550 | contracts=0 | CONF=53 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:06:10 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:06:10 | INFO | MOMENTUM SIGNAL: KXETH15M-26APR061115-15 | Side: yes @ $0.6000 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=307s
+2026-04-06 15:06:10 | WARNING | [ETH] Insufficient cash: $0.51 < $0.60 (contracts=1, price=0.6000)
+2026-04-06 15:06:10 | INFO | KXBNB15M-26APR061115-15: SCALED IN @ $0.7100 (+$0.00), new size=$1.00, avg_price=$0.5750, scale_ins=1
+2026-04-06 15:06:10 | INFO | [BNB] SCALED IN KXBNB15M-26APR061115-15: +$0.00 @ $0.7100, new_size=$1.00
+2026-04-06 15:06:40 | INFO | Status: cash=$4.08, positions=1, loop=94, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:06:40 | INFO | Day Realized P&L: $-30.59 (-88.2%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:06:40 | INFO | Coins: BTC: idle | ETH: idle | BNB: momentum yes@0.57 | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:06:41 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:06:41 | INFO | MOMENTUM SIGNAL: KXETH15M-26APR061115-15 | Side: yes @ $0.5350 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=337s
+2026-04-06 15:06:41 | WARNING | [ETH] Insufficient cash: $0.51 < $0.53 (contracts=1, price=0.5350)
+2026-04-06 15:07:11 | INFO | Status: cash=$4.08, positions=1, loop=95, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:07:11 | INFO | Day Realized P&L: $-30.59 (-88.2%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:07:11 | INFO | Coins: BTC: idle | ETH: idle | BNB: momentum yes@0.57 | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:07:11 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:07:11 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR061115-15 | Direction: yes | Side: yes @ $0.4250 | contracts=0 | CONF=40 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:07:11 | ERROR | [ETH] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:07:11 | INFO | KXBNB15M-26APR061115-15: TIME-SCALED STOP HIT @ $0.5550 (entry=$0.5750, stop=0%, loss=3.5%, age=2.5min)
+2026-04-06 15:07:11 | INFO | [BNB] REAL CLOSE ORDER PLACED: {'order': {'action': 'buy', 'client_order_id': '', 'created_time': '2026-04-06T15:07:11.664837Z', 'fill_count_fp': '0.00', 'initial_count_fp': '1.00', 'last_update_time': '2026-04-06T15:07:11.664837Z', 'maker_fees_dollars': '0.000000', 'maker_fill_cost_dollars': '0.000000', 'no_price_dollars': '0.4500', 'order_id': 'dfca2403-eb52-421b-83d2-f020ae47f80e', 'remaining_count_fp': '1.00', 'side': 'no', 'status': 'resting', 'subaccount_number': 0, 'taker_fees_dollars': '0.000000', 'taker_fill_cost_dollars': '0.000000', 'ticker': 'KXBNB15M-26APR061115-15', 'type': 'limit', 'user_id': 'dd8ef7dd-9e7f-40f7-965e-e9276a7805a4', 'yes_price_dollars': '0.5500'}}
+2026-04-06 15:07:11 | INFO | [BNB] Closed KXBNB15M-26APR061115-15: TIME-SCALED STOP: -0% loss locked in, PnL=$-0.02
+2026-04-06 15:07:11 | INFO | Strategy momentum stats: W=0.00%, R=3.72x, Kelly=4.00%
+2026-04-06 15:07:11 | INFO | Trade recorded: KXBNB15M-26APR061115-15 yes momentum PnL=$-0.02
+2026-04-06 15:07:11 | INFO | [BNB] Position closed. Cooldown started: must wait 2 cycles before re-entering
+2026-04-06 15:07:11 | INFO | MOMENTUM SIGNAL: KXBNB15M-26APR061115-15 | Side: yes @ $0.5550 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=398s
+2026-04-06 15:07:11 | WARNING | [BNB] Insufficient cash: $0.51 < $0.55 (contracts=1, price=0.5550)
+2026-04-06 15:07:41 | INFO | Status: cash=$4.08, positions=0, loop=96, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:07:41 | INFO | Day Realized P&L: $-30.59 (-88.2%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:07:41 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:07:41 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:07:41 | INFO | MOMENTUM SIGNAL: KXETH15M-26APR061115-15 | Side: yes @ $0.5150 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=398s
+2026-04-06 15:07:41 | WARNING | [ETH] Insufficient cash: $0.51 < $0.52 (contracts=1, price=0.5150)
+2026-04-06 15:07:42 | INFO | FIRST_CROSS: KXBNB15M-26APR061115-15 | Direction: down | Target: $607.08 | Coin Price: $607.07
+2026-04-06 15:07:42 | INFO | FIRST_CROSS SIGNAL (coin): KXBNB15M-26APR061115-15 | Direction: down | Target: $607.08 | Side: no @ $0.4850 | contracts=0 | CONF=40 | Coinbase=None
+2026-04-06 15:07:42 | ERROR | [BNB] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:08:12 | INFO | Status: cash=$4.08, positions=0, loop=97, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:08:12 | INFO | Day Realized P&L: $-30.59 (-88.2%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:08:12 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:08:12 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:08:12 | INFO | [BNB] Cooldown complete - can trade again
+2026-04-06 15:08:12 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR061115-15 | Direction: yes | Side: yes @ $0.3700 | contracts=0 | CONF=53 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:08:12 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:08:12 | INFO | MOMENTUM SIGNAL: KXETH15M-26APR061115-15 | Side: yes @ $0.6550 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=428s
+2026-04-06 15:08:12 | WARNING | [ETH] Insufficient cash: $0.51 < $0.66 (contracts=1, price=0.6550)
+2026-04-06 15:08:12 | INFO | MOMENTUM SIGNAL: KXBNB15M-26APR061115-15 | Side: yes @ $0.6600 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=459s
+2026-04-06 15:08:12 | WARNING | [BNB] Insufficient cash: $0.51 < $0.66 (contracts=1, price=0.6600)
+2026-04-06 15:08:42 | INFO | Status: cash=$4.08, positions=0, loop=98, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:08:42 | INFO | Day Realized P&L: $-30.59 (-88.2%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:08:42 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:08:42 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:08:42 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR061115-15 | Direction: yes | Side: yes @ $0.4650 | contracts=0 | CONF=40 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:08:42 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:08:42 | INFO | MOMENTUM SIGNAL: KXETH15M-26APR061115-15 | Side: yes @ $0.6600 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=459s
+2026-04-06 15:08:42 | WARNING | [ETH] Insufficient cash: $0.51 < $0.66 (contracts=1, price=0.6600)
+2026-04-06 15:09:12 | INFO | Status: cash=$4.08, positions=0, loop=99, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:09:12 | INFO | Day Realized P&L: $-30.59 (-88.2%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:09:12 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:09:12 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:09:12 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR061115-15 | Direction: yes | Side: yes @ $0.4100 | contracts=0 | CONF=40 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:09:12 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:09:12 | INFO | MOMENTUM SIGNAL: KXETH15M-26APR061115-15 | Side: yes @ $0.6700 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=489s
+2026-04-06 15:09:13 | WARNING | [ETH] Insufficient cash: $0.51 < $0.67 (contracts=1, price=0.6700)
+2026-04-06 15:09:13 | INFO | MOMENTUM SIGNAL: KXBNB15M-26APR061115-15 | Side: yes @ $0.6600 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=520s
+2026-04-06 15:09:13 | WARNING | [BNB] Insufficient cash: $0.51 < $0.66 (contracts=1, price=0.6600)
+2026-04-06 15:09:43 | INFO | Status: cash=$4.08, positions=0, loop=100, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:09:43 | INFO | Day Realized P&L: $-30.59 (-88.2%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:09:43 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:09:43 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:09:43 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR061115-15 | Direction: yes | Side: yes @ $0.4050 | contracts=0 | CONF=40 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:09:43 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:09:43 | INFO | MOMENTUM SIGNAL: KXBNB15M-26APR061115-15 | Side: yes @ $0.5950 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=550s
+2026-04-06 15:09:43 | WARNING | [BNB] Insufficient cash: $0.51 < $0.59 (contracts=1, price=0.5950)
+2026-04-06 15:10:13 | INFO | Status: cash=$4.08, positions=0, loop=101, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:10:13 | INFO | Day Realized P&L: $-30.59 (-88.2%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:10:13 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:10:13 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:10:13 | INFO | MOMENTUM SIGNAL: KXBNB15M-26APR061115-15 | Side: yes @ $0.6750 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=580s
+2026-04-06 15:10:13 | WARNING | [BNB] Insufficient cash: $0.51 < $0.68 (contracts=1, price=0.6750)
+2026-04-06 15:10:43 | INFO | Status: cash=$4.08, positions=0, loop=102, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:10:43 | INFO | Day Realized P&L: $-30.59 (-88.2%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:10:43 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:10:43 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:10:43 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR061115-15 | Direction: yes | Side: yes @ $0.3700 | contracts=0 | CONF=50 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:10:43 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:10:43 | INFO | MOMENTUM SIGNAL: KXBNB15M-26APR061115-15 | Side: yes @ $0.6650 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=610s
+2026-04-06 15:10:43 | WARNING | [BNB] Insufficient cash: $0.51 < $0.67 (contracts=1, price=0.6650)
+2026-04-06 15:11:14 | INFO | Status: cash=$4.08, positions=0, loop=103, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:11:14 | INFO | Day Realized P&L: $-30.59 (-88.2%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:11:14 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:11:14 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:11:14 | INFO | MOMENTUM SIGNAL: KXETH15M-26APR061115-15 | Side: yes @ $0.5050 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=610s
+2026-04-06 15:11:14 | INFO | [ETH] REAL ORDER PLACED: {'order': {'action': 'buy', 'client_order_id': '', 'created_time': '2026-04-06T15:11:14.380456Z', 'fill_count_fp': '0.00', 'initial_count_fp': '1.00', 'last_update_time': '2026-04-06T15:11:14.380456Z', 'maker_fees_dollars': '0.000000', 'maker_fill_cost_dollars': '0.000000', 'no_price_dollars': '0.4900', 'order_id': '22a0c66f-9847-4906-b6b8-2050711f6210', 'remaining_count_fp': '1.00', 'side': 'yes', 'status': 'resting', 'subaccount_number': 0, 'taker_fees_dollars': '0.000000', 'taker_fill_cost_dollars': '0.000000', 'ticker': 'KXETH15M-26APR061115-15', 'type': 'limit', 'user_id': 'dd8ef7dd-9e7f-40f7-965e-e9276a7805a4', 'yes_price_dollars': '0.5100'}}
+2026-04-06 15:11:14 | INFO | [ETH] Opened momentum: yes KXETH15M-26APR061115-15 @ $0.5050, contracts=1, cost=$0.51
+2026-04-06 15:11:14 | INFO | 🚀 [ETH] TRADE EXECUTED: momentum yes KXETH15M-26APR061115-15 @ $0.5050, contracts=1 (daily trades: 31/9999)
+2026-04-06 15:11:14 | INFO | MOMENTUM SIGNAL: KXBNB15M-26APR061115-15 | Side: yes @ $0.6950 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=641s
+2026-04-06 15:11:14 | WARNING | [BNB] Insufficient cash: $0.45 < $0.70 (contracts=1, price=0.6950)
+2026-04-06 15:11:44 | INFO | Status: cash=$3.57, positions=1, loop=104, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:11:44 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:11:44 | INFO | Coins: BTC: idle | ETH: momentum yes@0.51 | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:11:44 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:11:44 | INFO | KXETH15M-26APR061115-15: TRAILING STOP ACTIVATED @ $0.6750 (entry=$0.5050, profit=33.7%)
+2026-04-06 15:11:44 | INFO | KXETH15M-26APR061115-15: SCALED IN @ $0.6750 (+$0.00), new size=$1.00, avg_price=$0.5050, scale_ins=1
+2026-04-06 15:11:44 | INFO | [ETH] SCALED IN KXETH15M-26APR061115-15: +$0.00 @ $0.6750, new_size=$1.00
+2026-04-06 15:11:44 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBNB15M-26APR061115-15 | Direction: yes | Side: yes @ $0.3800 | contracts=0 | CONF=50 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:11:44 | ERROR | [BNB] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:12:14 | INFO | Status: cash=$3.57, positions=1, loop=105, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:12:14 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:12:14 | INFO | Coins: BTC: idle | ETH: momentum yes@0.51 | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:12:14 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:12:14 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR061115-15 | Direction: yes | Side: yes @ $0.3450 | contracts=0 | CONF=41 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:12:14 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:12:14 | INFO | KXETH15M-26APR061115-15: SCALED IN @ $0.8950 (+$0.00), new size=$1.00, avg_price=$0.5050, scale_ins=2
+2026-04-06 15:12:14 | INFO | [ETH] SCALED IN KXETH15M-26APR061115-15: +$0.00 @ $0.8950, new_size=$1.00
+2026-04-06 15:12:45 | INFO | Status: cash=$3.57, positions=1, loop=106, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:12:45 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:12:45 | INFO | Coins: BTC: idle | ETH: momentum yes@0.51 | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:12:45 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:12:45 | INFO | MOMENTUM SIGNAL: KXBTC15M-26APR061115-15 | Side: yes @ $0.6200 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=701s
+2026-04-06 15:12:45 | WARNING | [BTC] Insufficient cash: $0.45 < $0.62 (contracts=1, price=0.6200)
+2026-04-06 15:13:15 | INFO | Status: cash=$3.57, positions=1, loop=107, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:13:15 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:13:15 | INFO | Coins: BTC: idle | ETH: momentum yes@0.51 | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:13:15 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:13:45 | INFO | Status: cash=$3.57, positions=1, loop=108, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:13:45 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:13:45 | INFO | Coins: BTC: idle | ETH: momentum yes@0.51 | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:13:45 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:14:15 | INFO | Status: cash=$3.57, positions=1, loop=109, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:14:15 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:14:15 | INFO | Coins: BTC: idle | ETH: momentum yes@0.51 | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:14:16 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:14:16 | INFO | KXETH15M-26APR061115-15: Near expiry (43s) - closing position
+2026-04-06 15:14:16 | WARNING | API POST failed (attempt 1/3): 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/portfolio/orders, retrying...
+2026-04-06 15:14:17 | WARNING | API POST failed (attempt 2/3): 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/portfolio/orders, retrying...
+2026-04-06 15:14:19 | ERROR | API POST failed after 3 attempts: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/portfolio/orders
+2026-04-06 15:14:19 | ERROR | [ETH] REAL CLOSE ORDER FAILED: 400 Client Error: Bad Request for url: https://api.elections.kalshi.com/trade-api/v2/portfolio/orders
+2026-04-06 15:14:19 | INFO | [ETH] Closed KXETH15M-26APR061115-15: Expiry: closing at $0.9995, PnL=$0.49
+2026-04-06 15:14:19 | INFO | Strategy momentum stats: W=40.00%, R=1.26x, Kelly=4.00%
+2026-04-06 15:14:19 | INFO | Trade recorded: KXETH15M-26APR061115-15 yes momentum PnL=$0.49
+2026-04-06 15:14:19 | INFO | [ETH] Position closed. Cooldown started: must wait 2 cycles before re-entering
+2026-04-06 15:14:49 | INFO | Status: cash=$3.57, positions=0, loop=110, active_series=['KXBNB15M', 'KXSOL15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:14:49 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:14:49 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:14:49 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:15:20 | INFO | Status: cash=$3.57, positions=0, loop=111, active_series=['KXBNB15M', 'KXSOL15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:15:20 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:15:20 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:15:20 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:15:20 | INFO | [ETH] Cooldown complete - can trade again
+2026-04-06 15:15:20 | INFO | FIRST_CROSS: KXBTC15M-26APR061130-30 target price set to $69,697.71
+2026-04-06 15:15:20 | INFO | FIRST_CROSS: KXETH15M-26APR061130-30 target price set to $2,166.41
+2026-04-06 15:15:20 | INFO | FIRST_CROSS: KXBNB15M-26APR061130-30 target price set to $607.72
+2026-04-06 15:15:20 | INFO | FIRST_CROSS: KXDOGE15M-26APR061130-30 target price set to $0.09
+2026-04-06 15:15:50 | INFO | Status: cash=$3.57, positions=0, loop=112, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:15:50 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:15:50 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:15:50 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:15:50 | INFO | FIRST_CROSS: KXBTC15M-26APR061130-30 crossed UP through $0.50 (was $0.4950, now $0.5450)
+2026-04-06 15:15:50 | INFO | FIRST_CROSS: KXETH15M-26APR061130-30 crossed DOWN through $0.50 (was $0.5750, now $0.4850)
+2026-04-06 15:15:50 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR061130-30 | Direction: no | Side: no @ $0.4850 | contracts=0 | CONF=43 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:15:50 | ERROR | [ETH] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:15:50 | INFO | FIRST_CROSS: KXSOL15M-26APR061130-30 target price set to $82.18
+2026-04-06 15:15:50 | INFO | FIRST_CROSS: KXDOGE15M-26APR061130-30 crossed DOWN through $0.50 (was $0.5300, now $0.3900)
+2026-04-06 15:15:50 | INFO | FIRST_CROSS SIGNAL (midpoint): KXDOGE15M-26APR061130-30 | Direction: no | Side: no @ $0.3900 | contracts=0 | CONF=56 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-06 15:15:50 | ERROR | [DOGE] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:15:50 | INFO | FIRST_CROSS: KXXRP15M-26APR061130-30 target price set to $1.35
+2026-04-06 15:15:50 | INFO | FIRST_CROSS: KXHYPE15M-26APR061130-30 target price set to $37.54
+2026-04-06 15:16:20 | INFO | Status: cash=$3.57, positions=0, loop=113, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:16:20 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:16:20 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:16:20 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:16:20 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR061130-30 | Direction: no | Side: no @ $0.4200 | contracts=0 | CONF=43 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:16:21 | ERROR | [ETH] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:16:21 | INFO | FIRST_CROSS: KXSOL15M-26APR061130-30 crossed DOWN through $0.50 (was $0.5700, now $0.4550)
+2026-04-06 15:16:21 | INFO | FIRST_CROSS SIGNAL (midpoint): KXDOGE15M-26APR061130-30 | Direction: no | Side: no @ $0.3850 | contracts=0 | CONF=56 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-06 15:16:21 | ERROR | [DOGE] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:16:21 | INFO | FIRST_CROSS: KXXRP15M-26APR061130-30 crossed DOWN through $0.50 (was $0.5950, now $0.4850)
+2026-04-06 15:16:21 | INFO | FIRST_CROSS SIGNAL (midpoint): KXXRP15M-26APR061130-30 | Direction: no | Side: no @ $0.4850 | contracts=0 | CONF=43 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-06 15:16:21 | ERROR | [XRP] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:16:51 | INFO | Status: cash=$3.57, positions=0, loop=114, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:16:51 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:16:51 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:16:51 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:16:51 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR061130-30 | Direction: no | Side: no @ $0.4250 | contracts=0 | CONF=43 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:16:51 | ERROR | [ETH] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:16:51 | INFO | FIRST_CROSS SIGNAL (midpoint): KXDOGE15M-26APR061130-30 | Direction: no | Side: no @ $0.3750 | contracts=0 | CONF=56 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-06 15:16:51 | ERROR | [DOGE] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:16:51 | INFO | FIRST_CROSS SIGNAL (midpoint): KXXRP15M-26APR061130-30 | Direction: no | Side: no @ $0.4900 | contracts=0 | CONF=43 | TS=50%/40% | Coinbase=bearish | max_hold=10min
+2026-04-06 15:16:51 | ERROR | [XRP] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:17:22 | INFO | Status: cash=$3.57, positions=0, loop=115, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:17:22 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:17:22 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:17:22 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:17:22 | INFO | FIRST_CROSS: KXBTC15M-26APR061130-30 | Direction: up | Target: $69,697.71 | Coin Price: $69,711.11
+2026-04-06 15:17:22 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR061130-30 | Direction: no | Side: no @ $0.3800 | contracts=0 | CONF=56 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:17:22 | ERROR | [ETH] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:17:22 | INFO | MOMENTUM SIGNAL: KXDOGE15M-26APR061130-30 | Side: no @ $0.3800 | contracts=2 | CONF=60 | TS=30%/40% | Coinbase=bearish | age=122s
+2026-04-06 15:17:22 | WARNING | [DOGE] Insufficient cash: $0.45 < $1.24 (contracts=2, price=0.3800)
+2026-04-06 15:17:22 | INFO | FIRST_CROSS SIGNAL (midpoint): KXXRP15M-26APR061130-30 | Direction: no | Side: no @ $0.5100 | contracts=0 | CONF=43 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:17:22 | ERROR | [XRP] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:17:22 | INFO | FIRST_CROSS: KXHYPE15M-26APR061130-30 | Direction: down | Target: $37.54 | Coin Price: $37.54
+2026-04-06 15:17:52 | INFO | Status: cash=$3.57, positions=0, loop=116, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:17:52 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:17:52 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:17:52 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:17:52 | INFO | MOMENTUM SIGNAL: KXETH15M-26APR061130-30 | Side: yes @ $0.5050 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=152s
+2026-04-06 15:17:52 | WARNING | [ETH] Insufficient cash: $0.45 < $0.51 (contracts=1, price=0.5050)
+2026-04-06 15:17:52 | INFO | FIRST_CROSS: KXSOL15M-26APR061130-30 | Direction: up | Target: $82.18 | Coin Price: $82.22
+2026-04-06 15:17:52 | INFO | MOMENTUM SIGNAL: KXDOGE15M-26APR061130-30 | Side: no @ $0.4500 | contracts=2 | CONF=60 | TS=30%/40% | Coinbase=bearish | age=153s
+2026-04-06 15:17:52 | WARNING | [DOGE] Insufficient cash: $0.45 < $1.10 (contracts=2, price=0.4500)
+2026-04-06 15:17:52 | INFO | FIRST_CROSS: KXXRP15M-26APR061130-30 | Direction: up | Target: $1.35 | Coin Price: $1.35
+2026-04-06 15:17:52 | INFO | FIRST_CROSS SIGNAL (coin): KXXRP15M-26APR061130-30 | Direction: up | Target: $1.35 | Side: yes @ $0.5250 | contracts=0 | CONF=43 | Coinbase=None
+2026-04-06 15:17:52 | ERROR | [XRP] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:17:52 | INFO | MOMENTUM SIGNAL: KXHYPE15M-26APR061130-30 | Side: no @ $0.4600 | contracts=2 | CONF=60 | TS=30%/40% | Coinbase=bearish | age=122s
+2026-04-06 15:17:52 | WARNING | [HYPE] Insufficient cash: $0.45 < $1.08 (contracts=2, price=0.4600)
+2026-04-06 15:18:23 | INFO | Status: cash=$3.57, positions=0, loop=117, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:18:23 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:18:23 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:18:23 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:18:23 | INFO | MOMENTUM SIGNAL: KXETH15M-26APR061130-30 | Side: yes @ $0.5050 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=183s
+2026-04-06 15:18:23 | WARNING | [ETH] Insufficient cash: $0.45 < $0.51 (contracts=1, price=0.5050)
+2026-04-06 15:18:23 | INFO | MOMENTUM SIGNAL: KXDOGE15M-26APR061130-30 | Side: no @ $0.4700 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bearish | age=183s
+2026-04-06 15:18:23 | WARNING | [DOGE] Insufficient cash: $0.45 < $0.53 (contracts=1, price=0.4700)
+2026-04-06 15:18:23 | INFO | FIRST_CROSS SIGNAL (midpoint): KXXRP15M-26APR061130-30 | Direction: no | Side: no @ $0.5500 | contracts=0 | CONF=43 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:18:23 | ERROR | [XRP] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:18:53 | INFO | Status: cash=$3.57, positions=0, loop=118, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:18:53 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:18:53 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:18:53 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:18:53 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR061130-30 | Direction: yes | Side: yes @ $0.6450 | contracts=0 | CONF=51 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:18:53 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:18:53 | INFO | MOMENTUM SIGNAL: KXETH15M-26APR061130-30 | Side: yes @ $0.5450 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=213s
+2026-04-06 15:18:53 | WARNING | [ETH] Insufficient cash: $0.45 < $0.55 (contracts=1, price=0.5450)
+2026-04-06 15:18:53 | INFO | MOMENTUM SIGNAL: KXDOGE15M-26APR061130-30 | Side: no @ $0.4650 | contracts=2 | CONF=60 | TS=30%/40% | Coinbase=bearish | age=213s
+2026-04-06 15:18:53 | WARNING | [DOGE] Insufficient cash: $0.45 < $1.07 (contracts=2, price=0.4650)
+2026-04-06 15:18:53 | INFO | FIRST_CROSS SIGNAL (midpoint): KXXRP15M-26APR061130-30 | Direction: no | Side: no @ $0.6200 | contracts=0 | CONF=56 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:18:53 | ERROR | [XRP] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:19:23 | INFO | Status: cash=$3.57, positions=0, loop=119, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:19:23 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:19:23 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:19:23 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:19:23 | INFO | MOMENTUM SIGNAL: KXETH15M-26APR061130-30 | Side: yes @ $0.5350 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=244s
+2026-04-06 15:19:24 | WARNING | [ETH] Insufficient cash: $0.45 < $0.54 (contracts=1, price=0.5350)
+2026-04-06 15:19:24 | INFO | MOMENTUM SIGNAL: KXDOGE15M-26APR061130-30 | Side: no @ $0.3150 | contracts=2 | CONF=60 | TS=30%/40% | Coinbase=bearish | age=244s
+2026-04-06 15:19:24 | WARNING | [DOGE] Insufficient cash: $0.45 < $1.37 (contracts=2, price=0.3150)
+2026-04-06 15:19:24 | INFO | FIRST_CROSS SIGNAL (midpoint): KXXRP15M-26APR061130-30 | Direction: no | Side: no @ $0.5950 | contracts=0 | CONF=43 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:19:24 | ERROR | [XRP] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:19:54 | INFO | Status: cash=$3.57, positions=0, loop=120, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:19:54 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:19:54 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:19:54 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:19:54 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR061130-30 | Direction: no | Side: no @ $0.4050 | contracts=0 | CONF=43 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:19:54 | ERROR | [ETH] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:19:54 | INFO | MOMENTUM SIGNAL: KXXRP15M-26APR061130-30 | Side: no @ $0.4450 | contracts=2 | CONF=60 | TS=30%/40% | Coinbase=bearish | age=244s
+2026-04-06 15:19:54 | WARNING | [XRP] Insufficient cash: $0.45 < $1.11 (contracts=2, price=0.4450)
+2026-04-06 15:20:24 | INFO | Status: cash=$3.57, positions=0, loop=121, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:20:24 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:20:24 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:20:24 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:20:24 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR061130-30 | Direction: yes | Side: yes @ $0.3650 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:20:24 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:20:24 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR061130-30 | Direction: no | Side: no @ $0.3500 | contracts=0 | CONF=53 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:20:24 | ERROR | [ETH] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:20:24 | INFO | MOMENTUM SIGNAL: KXXRP15M-26APR061130-30 | Side: no @ $0.3700 | contracts=2 | CONF=60 | TS=30%/40% | Coinbase=bearish | age=274s
+2026-04-06 15:20:24 | WARNING | [XRP] Insufficient cash: $0.45 < $1.26 (contracts=2, price=0.3700)
+2026-04-06 15:20:24 | INFO | MOMENTUM SIGNAL: KXHYPE15M-26APR061130-30 | Side: no @ $0.4500 | contracts=2 | CONF=60 | TS=30%/40% | Coinbase=bearish | age=274s
+2026-04-06 15:20:24 | WARNING | [HYPE] Insufficient cash: $0.45 < $1.10 (contracts=2, price=0.4500)
+2026-04-06 15:20:54 | INFO | Status: cash=$3.57, positions=0, loop=122, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:20:54 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:20:54 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:20:54 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:20:54 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR061130-30 | Direction: no | Side: no @ $0.3200 | contracts=0 | CONF=53 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:20:54 | ERROR | [ETH] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:20:55 | INFO | FIRST_CROSS SIGNAL (midpoint): KXSOL15M-26APR061130-30 | Direction: no | Side: no @ $0.3950 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:20:55 | ERROR | [SOL] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:20:55 | INFO | MOMENTUM SIGNAL: KXDOGE15M-26APR061130-30 | Side: no @ $0.3500 | contracts=2 | CONF=60 | TS=30%/40% | Coinbase=bearish | age=335s
+2026-04-06 15:20:55 | WARNING | [DOGE] Insufficient cash: $0.45 < $1.30 (contracts=2, price=0.3500)
+2026-04-06 15:20:55 | INFO | MOMENTUM SIGNAL: KXHYPE15M-26APR061130-30 | Side: no @ $0.4850 | contracts=2 | CONF=60 | TS=30%/40% | Coinbase=bearish | age=304s
+2026-04-06 15:20:55 | WARNING | [HYPE] Insufficient cash: $0.45 < $1.03 (contracts=2, price=0.4850)
+2026-04-06 15:21:25 | INFO | Status: cash=$3.57, positions=0, loop=123, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:21:25 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:21:25 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:21:25 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:21:25 | INFO | FIRST_CROSS SIGNAL (midpoint): KXSOL15M-26APR061130-30 | Direction: no | Side: no @ $0.3250 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:21:25 | ERROR | [SOL] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:21:25 | INFO | MOMENTUM SIGNAL: KXDOGE15M-26APR061130-30 | Side: no @ $0.3500 | contracts=2 | CONF=60 | TS=30%/40% | Coinbase=bearish | age=365s
+2026-04-06 15:21:25 | WARNING | [DOGE] Insufficient cash: $0.45 < $1.30 (contracts=2, price=0.3500)
+2026-04-06 15:21:25 | INFO | MOMENTUM SIGNAL: KXXRP15M-26APR061130-30 | Side: no @ $0.4050 | contracts=2 | CONF=60 | TS=30%/40% | Coinbase=bearish | age=335s
+2026-04-06 15:21:25 | WARNING | [XRP] Insufficient cash: $0.45 < $1.19 (contracts=2, price=0.4050)
+2026-04-06 15:21:25 | INFO | MOMENTUM SIGNAL: KXHYPE15M-26APR061130-30 | Side: no @ $0.4700 | contracts=2 | CONF=60 | TS=30%/40% | Coinbase=bearish | age=335s
+2026-04-06 15:21:25 | WARNING | [HYPE] Insufficient cash: $0.45 < $1.06 (contracts=2, price=0.4700)
+2026-04-06 15:21:55 | INFO | Status: cash=$3.57, positions=0, loop=124, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:21:55 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:21:55 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:21:55 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:21:55 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR061130-30 | Direction: yes | Side: yes @ $0.3550 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:21:55 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:21:55 | INFO | MOMENTUM SIGNAL: KXHYPE15M-26APR061130-30 | Side: no @ $0.4750 | contracts=2 | CONF=60 | TS=30%/40% | Coinbase=bearish | age=365s
+2026-04-06 15:21:55 | WARNING | [HYPE] Insufficient cash: $0.45 < $1.05 (contracts=2, price=0.4750)
+2026-04-06 15:22:25 | INFO | Status: cash=$3.57, positions=0, loop=125, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:22:25 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:22:25 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:22:25 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:22:25 | INFO | MOMENTUM SIGNAL: KXDOGE15M-26APR061130-30 | Side: no @ $0.3300 | contracts=2 | CONF=60 | TS=30%/40% | Coinbase=bearish | age=426s
+2026-04-06 15:22:26 | WARNING | [DOGE] Insufficient cash: $0.45 < $1.34 (contracts=2, price=0.3300)
+2026-04-06 15:22:26 | INFO | MOMENTUM SIGNAL: KXXRP15M-26APR061130-30 | Side: no @ $0.4150 | contracts=2 | CONF=60 | TS=30%/40% | Coinbase=bearish | age=395s
+2026-04-06 15:22:26 | WARNING | [XRP] Insufficient cash: $0.45 < $1.17 (contracts=2, price=0.4150)
+2026-04-06 15:22:56 | INFO | Status: cash=$3.57, positions=0, loop=126, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:22:56 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:22:56 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:22:56 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:22:56 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR061130-30 | Direction: yes | Side: yes @ $0.3000 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:22:56 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:22:56 | INFO | MOMENTUM SIGNAL: KXDOGE15M-26APR061130-30 | Side: no @ $0.3750 | contracts=2 | CONF=60 | TS=30%/40% | Coinbase=bearish | age=456s
+2026-04-06 15:22:56 | WARNING | [DOGE] Insufficient cash: $0.45 < $1.25 (contracts=2, price=0.3750)
+2026-04-06 15:22:56 | INFO | MOMENTUM SIGNAL: KXXRP15M-26APR061130-30 | Side: no @ $0.3050 | contracts=2 | CONF=60 | TS=30%/40% | Coinbase=bearish | age=426s
+2026-04-06 15:22:56 | WARNING | [XRP] Insufficient cash: $0.45 < $1.39 (contracts=2, price=0.3050)
+2026-04-06 15:22:56 | INFO | MOMENTUM SIGNAL: KXHYPE15M-26APR061130-30 | Side: no @ $0.4850 | contracts=2 | CONF=60 | TS=30%/40% | Coinbase=bearish | age=426s
+2026-04-06 15:22:56 | WARNING | [HYPE] Insufficient cash: $0.45 < $1.03 (contracts=2, price=0.4850)
+2026-04-06 15:23:26 | INFO | Status: cash=$3.57, positions=0, loop=127, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:23:26 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:23:26 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:23:26 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:23:26 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR061130-30 | Direction: no | Side: no @ $0.3350 | contracts=0 | CONF=53 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:23:26 | ERROR | [ETH] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:23:26 | INFO | FIRST_CROSS SIGNAL (midpoint): KXSOL15M-26APR061130-30 | Direction: no | Side: no @ $0.3750 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:23:26 | ERROR | [SOL] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:23:26 | INFO | MOMENTUM SIGNAL: KXDOGE15M-26APR061130-30 | Side: no @ $0.3750 | contracts=2 | CONF=60 | TS=30%/40% | Coinbase=bearish | age=486s
+2026-04-06 15:23:26 | WARNING | [DOGE] Insufficient cash: $0.45 < $1.25 (contracts=2, price=0.3750)
+2026-04-06 15:23:56 | INFO | Status: cash=$3.57, positions=0, loop=128, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:23:56 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:23:56 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:23:56 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:23:56 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR061130-30 | Direction: yes | Side: yes @ $0.3400 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:23:57 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:23:57 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR061130-30 | Direction: no | Side: no @ $0.3000 | contracts=0 | CONF=53 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:23:57 | ERROR | [ETH] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:23:57 | INFO | FIRST_CROSS SIGNAL (midpoint): KXSOL15M-26APR061130-30 | Direction: no | Side: no @ $0.3800 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:23:57 | ERROR | [SOL] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:23:57 | INFO | MOMENTUM SIGNAL: KXDOGE15M-26APR061130-30 | Side: no @ $0.4050 | contracts=2 | CONF=60 | TS=30%/40% | Coinbase=bearish | age=517s
+2026-04-06 15:23:57 | WARNING | [DOGE] Insufficient cash: $0.45 < $1.19 (contracts=2, price=0.4050)
+2026-04-06 15:23:57 | INFO | MOMENTUM SIGNAL: KXXRP15M-26APR061130-30 | Side: no @ $0.4300 | contracts=2 | CONF=60 | TS=30%/40% | Coinbase=bearish | age=486s
+2026-04-06 15:23:57 | WARNING | [XRP] Insufficient cash: $0.45 < $1.14 (contracts=2, price=0.4300)
+2026-04-06 15:24:27 | INFO | Status: cash=$3.57, positions=0, loop=129, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:24:27 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:24:27 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:24:27 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:24:27 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR061130-30 | Direction: yes | Side: yes @ $0.3650 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:24:27 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:24:27 | INFO | MOMENTUM SIGNAL: KXXRP15M-26APR061130-30 | Side: no @ $0.3350 | contracts=2 | CONF=60 | TS=30%/40% | Coinbase=bearish | age=517s
+2026-04-06 15:24:27 | WARNING | [XRP] Insufficient cash: $0.45 < $1.33 (contracts=2, price=0.3350)
+2026-04-06 15:24:57 | INFO | Status: cash=$3.57, positions=0, loop=130, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:24:57 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:24:57 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:24:57 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:24:57 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR061130-30 | Direction: yes | Side: yes @ $0.3250 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:24:57 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:24:57 | INFO | MOMENTUM SIGNAL: KXDOGE15M-26APR061130-30 | Side: no @ $0.3000 | contracts=2 | CONF=60 | TS=30%/40% | Coinbase=bearish | age=577s
+2026-04-06 15:24:57 | WARNING | [DOGE] Insufficient cash: $0.45 < $1.40 (contracts=2, price=0.3000)
+2026-04-06 15:25:27 | INFO | Status: cash=$3.57, positions=0, loop=131, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:25:27 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:25:27 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:25:27 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:25:57 | INFO | Status: cash=$3.57, positions=0, loop=132, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:25:57 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:25:57 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:25:58 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:25:58 | INFO | MOMENTUM SIGNAL: KXHYPE15M-26APR061130-30 | Side: no @ $0.4900 | contracts=2 | CONF=60 | TS=30%/40% | Coinbase=bearish | age=607s
+2026-04-06 15:25:58 | WARNING | [HYPE] Insufficient cash: $0.45 < $1.02 (contracts=2, price=0.4900)
+2026-04-06 15:26:28 | INFO | Status: cash=$3.57, positions=0, loop=133, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:26:28 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:26:28 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:26:28 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:26:28 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR061130-30 | Direction: yes | Side: yes @ $0.3050 | contracts=0 | CONF=45 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:26:28 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:26:58 | INFO | Status: cash=$3.57, positions=0, loop=134, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:26:58 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:26:58 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:26:58 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:27:28 | INFO | Status: cash=$3.57, positions=0, loop=135, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:27:28 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:27:28 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:27:28 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:27:59 | INFO | Status: cash=$3.57, positions=0, loop=136, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:27:59 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:27:59 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:27:59 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:28:29 | INFO | Status: cash=$3.57, positions=0, loop=137, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:28:29 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:28:29 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:28:29 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:28:59 | INFO | Status: cash=$3.57, positions=0, loop=138, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:28:59 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:28:59 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:28:59 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:29:29 | INFO | Status: cash=$3.57, positions=0, loop=139, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:29:29 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:29:29 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:29:29 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:30:00 | INFO | Status: cash=$3.57, positions=0, loop=140, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:30:00 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:30:00 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:30:00 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:30:30 | INFO | Status: cash=$3.57, positions=0, loop=141, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:30:30 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:30:30 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:30:30 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:30:30 | INFO | FIRST_CROSS: KXBTC15M-26APR061145-45 target price set to $69,709.77
+2026-04-06 15:30:30 | INFO | FIRST_CROSS: KXETH15M-26APR061145-45 target price set to $2,165.06
+2026-04-06 15:30:30 | INFO | FIRST_CROSS: KXBNB15M-26APR061145-45 target price set to $607.35
+2026-04-06 15:30:30 | INFO | FIRST_CROSS: KXSOL15M-26APR061145-45 target price set to $82.15
+2026-04-06 15:30:30 | INFO | FIRST_CROSS: KXDOGE15M-26APR061145-45 target price set to $0.09
+2026-04-06 15:30:30 | INFO | FIRST_CROSS: KXXRP15M-26APR061145-45 target price set to $1.35
+2026-04-06 15:30:30 | INFO | FIRST_CROSS: KXHYPE15M-26APR061145-45 target price set to $37.59
+2026-04-06 15:31:00 | INFO | Status: cash=$3.57, positions=0, loop=142, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:31:00 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:31:00 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:31:00 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:31:31 | INFO | Status: cash=$3.57, positions=0, loop=143, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:31:31 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:31:31 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:31:31 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:31:31 | INFO | FIRST_CROSS: KXXRP15M-26APR061145-45 | Direction: down | Target: $1.35 | Coin Price: $1.35
+2026-04-06 15:32:01 | INFO | Status: cash=$3.57, positions=0, loop=144, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:32:01 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:32:01 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:32:01 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:32:02 | INFO | FIRST_CROSS: KXHYPE15M-26APR061145-45 crossed DOWN through $0.50 (was $0.5300, now $0.4550)
+2026-04-06 15:32:32 | INFO | Status: cash=$3.57, positions=0, loop=145, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:32:32 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:32:32 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:32:32 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:32:32 | INFO | MOMENTUM SIGNAL: KXBTC15M-26APR061145-45 | Side: yes @ $0.5050 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=122s
+2026-04-06 15:32:32 | WARNING | [BTC] Insufficient cash: $0.45 < $0.51 (contracts=1, price=0.5050)
+2026-04-06 15:32:32 | INFO | FIRST_CROSS: KXETH15M-26APR061145-45 | Direction: down | Target: $2,165.06 | Coin Price: $2,163.42
+2026-04-06 15:32:32 | INFO | MOMENTUM SIGNAL: KXBNB15M-26APR061145-45 | Side: no @ $0.4800 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bearish | age=122s
+2026-04-06 15:32:32 | WARNING | [BNB] Insufficient cash: $0.45 < $0.52 (contracts=1, price=0.4800)
+2026-04-06 15:33:02 | INFO | Status: cash=$3.57, positions=0, loop=146, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:33:02 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:33:02 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:33:02 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:33:02 | INFO | MOMENTUM SIGNAL: KXBTC15M-26APR061145-45 | Side: yes @ $0.5250 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=152s
+2026-04-06 15:33:02 | WARNING | [BTC] Insufficient cash: $0.45 < $0.53 (contracts=1, price=0.5250)
+2026-04-06 15:33:02 | INFO | FIRST_CROSS: KXETH15M-26APR061145-45 crossed DOWN through $0.50 (was $0.5100, now $0.4350)
+2026-04-06 15:33:02 | INFO | MOMENTUM SIGNAL: KXBNB15M-26APR061145-45 | Side: no @ $0.5000 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bearish | age=152s
+2026-04-06 15:33:02 | WARNING | [BNB] Insufficient cash: $0.45 < $0.50 (contracts=1, price=0.5000)
+2026-04-06 15:33:33 | INFO | Status: cash=$3.57, positions=0, loop=147, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:33:33 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:33:33 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:33:33 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:33:33 | INFO | FIRST_CROSS: KXBTC15M-26APR061145-45 crossed DOWN through $0.50 (was $0.5650, now $0.4650)
+2026-04-06 15:33:33 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR061145-45 | Direction: no | Side: no @ $0.4650 | contracts=0 | CONF=43 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:33:33 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:33:33 | INFO | FIRST_CROSS: KXHYPE15M-26APR061145-45 | Direction: down | Target: $37.59 | Coin Price: $37.58
+2026-04-06 15:34:03 | INFO | Status: cash=$3.57, positions=0, loop=148, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:34:03 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:34:03 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:34:03 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:34:03 | INFO | MOMENTUM SIGNAL: KXBTC15M-26APR061145-45 | Side: yes @ $0.6550 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=213s
+2026-04-06 15:34:03 | WARNING | [BTC] Insufficient cash: $0.45 < $0.66 (contracts=1, price=0.6550)
+2026-04-06 15:34:33 | INFO | Status: cash=$3.57, positions=0, loop=149, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:34:33 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:34:33 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:34:33 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:34:33 | INFO | MOMENTUM SIGNAL: KXBTC15M-26APR061145-45 | Side: yes @ $0.6650 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=244s
+2026-04-06 15:34:34 | WARNING | [BTC] Insufficient cash: $0.45 < $0.67 (contracts=1, price=0.6650)
+2026-04-06 15:35:04 | INFO | Status: cash=$3.57, positions=0, loop=150, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:35:04 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:35:04 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:35:04 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:35:04 | INFO | MOMENTUM SIGNAL: KXBTC15M-26APR061145-45 | Side: yes @ $0.6750 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=274s
+2026-04-06 15:35:04 | WARNING | [BTC] Insufficient cash: $0.45 < $0.68 (contracts=1, price=0.6750)
+2026-04-06 15:35:04 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR061145-45 | Direction: no | Side: no @ $0.3850 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:35:04 | ERROR | [ETH] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:35:04 | INFO | FIRST_CROSS: KXDOGE15M-26APR061145-45 | Direction: down | Target: $0.09 | Coin Price: $0.09
+2026-04-06 15:35:04 | INFO | FIRST_CROSS SIGNAL (coin): KXDOGE15M-26APR061145-45 | Direction: down | Target: $0.09 | Side: no @ $0.6050 | contracts=0 | CONF=40 | Coinbase=neutral
+2026-04-06 15:35:04 | ERROR | [DOGE] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:35:34 | INFO | Status: cash=$3.57, positions=0, loop=151, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:35:34 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:35:34 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:35:34 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:35:34 | INFO | MOMENTUM SIGNAL: KXBTC15M-26APR061145-45 | Side: yes @ $0.5950 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=304s
+2026-04-06 15:35:34 | WARNING | [BTC] Insufficient cash: $0.45 < $0.59 (contracts=1, price=0.5950)
+2026-04-06 15:35:34 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR061145-45 | Direction: no | Side: no @ $0.3600 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:35:34 | ERROR | [ETH] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:35:34 | INFO | FIRST_CROSS: KXSOL15M-26APR061145-45 | Direction: down | Target: $82.15 | Coin Price: $82.13
+2026-04-06 15:35:35 | INFO | FIRST_CROSS: KXDOGE15M-26APR061145-45 crossed DOWN through $0.50 (was $0.6700, now $0.4700)
+2026-04-06 15:35:35 | INFO | FIRST_CROSS: KXXRP15M-26APR061145-45 crossed DOWN through $0.50 (was $0.6150, now $0.4350)
+2026-04-06 15:36:05 | INFO | Status: cash=$3.57, positions=0, loop=152, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:36:05 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:36:05 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:36:05 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:36:05 | INFO | MOMENTUM SIGNAL: KXBTC15M-26APR061145-45 | Side: yes @ $0.6950 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=335s
+2026-04-06 15:36:05 | WARNING | [BTC] Insufficient cash: $0.45 < $0.69 (contracts=1, price=0.6950)
+2026-04-06 15:36:35 | INFO | Status: cash=$3.57, positions=0, loop=153, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:36:35 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:36:35 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:36:35 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:36:35 | INFO | MOMENTUM SIGNAL: KXBTC15M-26APR061145-45 | Side: yes @ $0.5900 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=365s
+2026-04-06 15:36:35 | WARNING | [BTC] Insufficient cash: $0.45 < $0.59 (contracts=1, price=0.5900)
+2026-04-06 15:36:35 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR061145-45 | Direction: no | Side: no @ $0.3650 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:36:35 | ERROR | [ETH] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:36:35 | INFO | FIRST_CROSS: KXSOL15M-26APR061145-45 crossed DOWN through $0.50 (was $0.5300, now $0.4650)
+2026-04-06 15:37:05 | INFO | Status: cash=$3.57, positions=0, loop=154, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:37:05 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:37:05 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:37:05 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:37:05 | INFO | MOMENTUM SIGNAL: KXBTC15M-26APR061145-45 | Side: yes @ $0.5600 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=395s
+2026-04-06 15:37:05 | WARNING | [BTC] Insufficient cash: $0.45 < $0.56 (contracts=1, price=0.5600)
+2026-04-06 15:37:35 | INFO | Status: cash=$3.57, positions=0, loop=155, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:37:35 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:37:35 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:37:36 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:37:36 | INFO | FIRST_CROSS: KXBTC15M-26APR061145-45 | Direction: down | Target: $69,709.77 | Coin Price: $69,681.36
+2026-04-06 15:37:36 | INFO | FIRST_CROSS SIGNAL (coin): KXBTC15M-26APR061145-45 | Direction: down | Target: $69,709.77 | Side: no @ $0.4450 | contracts=0 | CONF=40 | Coinbase=None
+2026-04-06 15:37:36 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:37:36 | INFO | FIRST_CROSS SIGNAL (midpoint): KXDOGE15M-26APR061145-45 | Direction: no | Side: no @ $0.3450 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:37:36 | ERROR | [DOGE] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:37:36 | INFO | FIRST_CROSS SIGNAL (midpoint): KXHYPE15M-26APR061145-45 | Direction: no | Side: no @ $0.3900 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:37:36 | ERROR | [HYPE] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:38:06 | INFO | Status: cash=$3.57, positions=0, loop=156, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:38:06 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:38:06 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:38:06 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:38:06 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR061145-45 | Direction: no | Side: no @ $0.4250 | contracts=0 | CONF=40 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:38:06 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:38:06 | INFO | FIRST_CROSS SIGNAL (midpoint): KXXRP15M-26APR061145-45 | Direction: no | Side: no @ $0.3150 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:38:06 | ERROR | [XRP] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:38:06 | INFO | FIRST_CROSS SIGNAL (midpoint): KXHYPE15M-26APR061145-45 | Direction: no | Side: no @ $0.3550 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:38:06 | ERROR | [HYPE] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:38:36 | INFO | Status: cash=$3.57, positions=0, loop=157, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:38:36 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:38:36 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:38:36 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:38:36 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR061145-45 | Direction: no | Side: no @ $0.4900 | contracts=0 | CONF=40 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:38:36 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:38:36 | INFO | FIRST_CROSS SIGNAL (midpoint): KXDOGE15M-26APR061145-45 | Direction: no | Side: no @ $0.3250 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:38:36 | ERROR | [DOGE] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:38:36 | INFO | FIRST_CROSS SIGNAL (midpoint): KXXRP15M-26APR061145-45 | Direction: no | Side: no @ $0.3600 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:38:36 | ERROR | [XRP] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:38:36 | INFO | FIRST_CROSS SIGNAL (midpoint): KXHYPE15M-26APR061145-45 | Direction: no | Side: no @ $0.3450 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:38:36 | ERROR | [HYPE] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:39:06 | INFO | Status: cash=$3.57, positions=0, loop=158, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:39:06 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:39:06 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:39:07 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:39:07 | INFO | MOMENTUM SIGNAL: KXBTC15M-26APR061145-45 | Side: yes @ $0.5550 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=517s
+2026-04-06 15:39:07 | WARNING | [BTC] Insufficient cash: $0.45 < $0.55 (contracts=1, price=0.5550)
+2026-04-06 15:39:07 | INFO | FIRST_CROSS SIGNAL (midpoint): KXDOGE15M-26APR061145-45 | Direction: no | Side: no @ $0.3200 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:39:07 | ERROR | [DOGE] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:39:07 | INFO | FIRST_CROSS SIGNAL (midpoint): KXHYPE15M-26APR061145-45 | Direction: no | Side: no @ $0.3600 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:39:07 | ERROR | [HYPE] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:39:37 | INFO | Status: cash=$3.57, positions=0, loop=159, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:39:37 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:39:37 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:39:37 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:39:37 | INFO | MOMENTUM SIGNAL: KXBTC15M-26APR061145-45 | Side: yes @ $0.5200 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=547s
+2026-04-06 15:39:37 | WARNING | [BTC] Insufficient cash: $0.45 < $0.52 (contracts=1, price=0.5200)
+2026-04-06 15:39:37 | INFO | FIRST_CROSS SIGNAL (midpoint): KXSOL15M-26APR061145-45 | Direction: no | Side: no @ $0.3450 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:39:37 | ERROR | [SOL] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:39:37 | INFO | FIRST_CROSS SIGNAL (midpoint): KXHYPE15M-26APR061145-45 | Direction: no | Side: no @ $0.3600 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:39:37 | ERROR | [HYPE] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:40:07 | INFO | Status: cash=$3.57, positions=0, loop=160, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:40:07 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:40:07 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:40:07 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:40:07 | INFO | MOMENTUM SIGNAL: KXBTC15M-26APR061145-45 | Side: yes @ $0.6750 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=577s
+2026-04-06 15:40:07 | WARNING | [BTC] Insufficient cash: $0.45 < $0.68 (contracts=1, price=0.6750)
+2026-04-06 15:40:07 | INFO | FIRST_CROSS SIGNAL (midpoint): KXDOGE15M-26APR061145-45 | Direction: no | Side: no @ $0.6150 | contracts=0 | CONF=45 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:40:07 | ERROR | [DOGE] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:40:07 | INFO | FIRST_CROSS SIGNAL (midpoint): KXHYPE15M-26APR061145-45 | Direction: no | Side: no @ $0.3550 | contracts=0 | CONF=45 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:40:07 | ERROR | [HYPE] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:40:38 | INFO | Status: cash=$3.57, positions=0, loop=161, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:40:38 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:40:38 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:40:38 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:40:38 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR061145-45 | Direction: no | Side: no @ $0.3600 | contracts=0 | CONF=45 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:40:38 | ERROR | [ETH] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:40:38 | INFO | FIRST_CROSS SIGNAL (midpoint): KXSOL15M-26APR061145-45 | Direction: no | Side: no @ $0.3850 | contracts=0 | CONF=45 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:40:38 | ERROR | [SOL] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:40:38 | INFO | FIRST_CROSS SIGNAL (midpoint): KXDOGE15M-26APR061145-45 | Direction: no | Side: no @ $0.6100 | contracts=0 | CONF=45 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:40:38 | ERROR | [DOGE] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:40:38 | INFO | FIRST_CROSS SIGNAL (midpoint): KXHYPE15M-26APR061145-45 | Direction: no | Side: no @ $0.3450 | contracts=0 | CONF=45 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:40:38 | ERROR | [HYPE] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:41:08 | INFO | Status: cash=$3.57, positions=0, loop=162, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:41:08 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:41:08 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:41:08 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:41:38 | INFO | Status: cash=$3.57, positions=0, loop=163, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:41:38 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:41:38 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:41:38 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:41:38 | INFO | FIRST_CROSS SIGNAL (midpoint): KXHYPE15M-26APR061145-45 | Direction: no | Side: no @ $0.3250 | contracts=0 | CONF=45 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:41:38 | ERROR | [HYPE] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:42:08 | INFO | Status: cash=$3.57, positions=0, loop=164, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:42:08 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:42:08 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:42:08 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:42:08 | INFO | MOMENTUM SIGNAL: KXBTC15M-26APR061145-45 | Side: yes @ $0.5800 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=699s
+2026-04-06 15:42:09 | WARNING | [BTC] Insufficient cash: $0.45 < $0.58 (contracts=1, price=0.5800)
+2026-04-06 15:42:39 | INFO | Status: cash=$3.57, positions=0, loop=165, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:42:39 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:42:39 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:42:39 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:42:39 | INFO | MOMENTUM SIGNAL: KXBTC15M-26APR061145-45 | Side: yes @ $0.6650 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=729s
+2026-04-06 15:42:39 | WARNING | [BTC] Insufficient cash: $0.45 < $0.67 (contracts=1, price=0.6650)
+2026-04-06 15:43:09 | INFO | Status: cash=$3.57, positions=0, loop=166, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:43:09 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:43:09 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:43:09 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:43:39 | INFO | Status: cash=$3.57, positions=0, loop=167, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:43:39 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:43:39 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:43:39 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:44:09 | INFO | Status: cash=$3.57, positions=0, loop=168, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:44:09 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:44:09 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:44:09 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:44:40 | INFO | Status: cash=$3.57, positions=0, loop=169, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:44:40 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:44:40 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:44:40 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:45:10 | INFO | Status: cash=$3.57, positions=0, loop=170, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:45:10 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:45:10 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:45:10 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:45:10 | INFO | FIRST_CROSS: KXETH15M-26APR061200-00 target price set to $2,164.15
+2026-04-06 15:45:40 | INFO | Status: cash=$3.57, positions=0, loop=171, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:45:40 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:45:40 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:45:40 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:45:40 | INFO | FIRST_CROSS: KXBTC15M-26APR061200-00 target price set to $69,834.47
+2026-04-06 15:45:40 | INFO | FIRST_CROSS: KXBNB15M-26APR061200-00 target price set to $608.56
+2026-04-06 15:45:40 | INFO | FIRST_CROSS: KXSOL15M-26APR061200-00 target price set to $82.14
+2026-04-06 15:45:40 | INFO | FIRST_CROSS: KXDOGE15M-26APR061200-00 target price set to $0.09
+2026-04-06 15:45:40 | INFO | FIRST_CROSS: KXXRP15M-26APR061200-00 target price set to $1.35
+2026-04-06 15:45:40 | INFO | FIRST_CROSS: KXHYPE15M-26APR061200-00 target price set to $37.59
+2026-04-06 15:46:10 | INFO | Status: cash=$3.57, positions=0, loop=172, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:46:10 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:46:10 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:46:11 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:46:11 | INFO | FIRST_CROSS: KXBTC15M-26APR061200-00 crossed DOWN through $0.50 (was $0.5150, now $0.3900)
+2026-04-06 15:46:11 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR061200-00 | Direction: no | Side: no @ $0.3900 | contracts=0 | CONF=56 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:46:11 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:46:11 | INFO | FIRST_CROSS: KXETH15M-26APR061200-00 crossed DOWN through $0.50 (was $0.5400, now $0.4950)
+2026-04-06 15:46:11 | INFO | FIRST_CROSS: KXSOL15M-26APR061200-00 crossed DOWN through $0.50 (was $0.5650, now $0.5000)
+2026-04-06 15:46:11 | INFO | FIRST_CROSS: KXXRP15M-26APR061200-00 crossed UP through $0.50 (was $0.4550, now $0.5850)
+2026-04-06 15:46:11 | INFO | FIRST_CROSS SIGNAL (midpoint): KXXRP15M-26APR061200-00 | Direction: yes | Side: yes @ $0.5850 | contracts=0 | CONF=43 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-06 15:46:11 | ERROR | [XRP] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:46:41 | INFO | Status: cash=$3.57, positions=0, loop=173, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:46:41 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:46:41 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:46:41 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:46:41 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR061200-00 | Direction: no | Side: no @ $0.4000 | contracts=0 | CONF=43 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:46:41 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:46:41 | INFO | FIRST_CROSS: KXETH15M-26APR061200-00 | Direction: down | Target: $2,164.15 | Coin Price: $2,163.66
+2026-04-06 15:46:41 | INFO | FIRST_CROSS SIGNAL (midpoint): KXXRP15M-26APR061200-00 | Direction: yes | Side: yes @ $0.6100 | contracts=0 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-06 15:46:41 | ERROR | [XRP] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:46:42 | INFO | FIRST_CROSS: KXHYPE15M-26APR061200-00 | Direction: down | Target: $37.59 | Coin Price: $37.57
+2026-04-06 15:47:12 | INFO | Status: cash=$3.57, positions=0, loop=174, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:47:12 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:47:12 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:47:12 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:47:12 | INFO | FIRST_CROSS SIGNAL (midpoint): KXBTC15M-26APR061200-00 | Direction: no | Side: no @ $0.4050 | contracts=0 | CONF=43 | TS=50%/40% | Coinbase=None | max_hold=10min
+2026-04-06 15:47:12 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:47:12 | INFO | FIRST_CROSS SIGNAL (midpoint): KXXRP15M-26APR061200-00 | Direction: yes | Side: yes @ $0.6150 | contracts=0 | CONF=56 | TS=50%/40% | Coinbase=bullish | max_hold=10min
+2026-04-06 15:47:12 | ERROR | [XRP] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:47:42 | INFO | Status: cash=$3.57, positions=0, loop=175, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:47:42 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:47:42 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:47:42 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:47:42 | INFO | FIRST_CROSS: KXBTC15M-26APR061200-00 | Direction: up | Target: $69,834.47 | Coin Price: $69,876.53
+2026-04-06 15:47:42 | INFO | FIRST_CROSS SIGNAL (coin): KXBTC15M-26APR061200-00 | Direction: up | Target: $69,834.47 | Side: yes @ $0.4650 | contracts=0 | CONF=43 | Coinbase=None
+2026-04-06 15:47:42 | ERROR | [BTC] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:47:42 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR061200-00 | Direction: no | Side: no @ $0.6100 | contracts=0 | CONF=51 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:47:42 | ERROR | [ETH] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:47:42 | INFO | FIRST_CROSS: KXSOL15M-26APR061200-00 | Direction: up | Target: $82.14 | Coin Price: $82.24
+2026-04-06 15:48:12 | INFO | Status: cash=$3.57, positions=0, loop=176, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:48:12 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:48:12 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:48:13 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:48:13 | INFO | MOMENTUM SIGNAL: KXBTC15M-26APR061200-00 | Side: yes @ $0.6250 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=152s
+2026-04-06 15:48:13 | WARNING | [BTC] Insufficient cash: $0.45 < $0.62 (contracts=1, price=0.6250)
+2026-04-06 15:48:13 | INFO | FIRST_CROSS: KXHYPE15M-26APR061200-00 crossed UP through $0.50 (was $0.4700, now $0.5050)
+2026-04-06 15:48:43 | INFO | Status: cash=$3.57, positions=0, loop=177, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:48:43 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:48:43 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:48:43 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:48:43 | INFO | MOMENTUM SIGNAL: KXBTC15M-26APR061200-00 | Side: yes @ $0.5750 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=183s
+2026-04-06 15:48:43 | WARNING | [BTC] Insufficient cash: $0.45 < $0.57 (contracts=1, price=0.5750)
+2026-04-06 15:48:43 | INFO | FIRST_CROSS SIGNAL (midpoint): KXSOL15M-26APR061200-00 | Direction: no | Side: no @ $0.6550 | contracts=0 | CONF=51 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:48:43 | ERROR | [SOL] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:49:13 | INFO | Status: cash=$3.57, positions=0, loop=178, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:49:13 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:49:13 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:49:13 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:49:13 | INFO | MOMENTUM SIGNAL: KXBTC15M-26APR061200-00 | Side: yes @ $0.5000 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=213s
+2026-04-06 15:49:13 | WARNING | [BTC] Insufficient cash: $0.45 < $0.50 (contracts=1, price=0.5000)
+2026-04-06 15:49:43 | INFO | Status: cash=$3.57, positions=0, loop=179, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:49:43 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:49:43 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:49:43 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:49:43 | INFO | MOMENTUM SIGNAL: KXBTC15M-26APR061200-00 | Side: yes @ $0.5350 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=243s
+2026-04-06 15:49:44 | WARNING | [BTC] Insufficient cash: $0.45 < $0.54 (contracts=1, price=0.5350)
+2026-04-06 15:50:14 | INFO | Status: cash=$3.57, positions=0, loop=180, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:50:14 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:50:14 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:50:14 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:50:14 | INFO | MOMENTUM SIGNAL: KXBTC15M-26APR061200-00 | Side: yes @ $0.5050 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=274s
+2026-04-06 15:50:14 | WARNING | [BTC] Insufficient cash: $0.45 < $0.51 (contracts=1, price=0.5050)
+2026-04-06 15:50:44 | INFO | Status: cash=$3.57, positions=0, loop=181, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:50:44 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:50:44 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:50:44 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:50:44 | INFO | MOMENTUM SIGNAL: KXBTC15M-26APR061200-00 | Side: yes @ $0.5250 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=304s
+2026-04-06 15:50:44 | WARNING | [BTC] Insufficient cash: $0.45 < $0.53 (contracts=1, price=0.5250)
+2026-04-06 15:51:14 | INFO | Status: cash=$3.57, positions=0, loop=182, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:51:14 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:51:14 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:51:14 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:51:14 | INFO | MOMENTUM SIGNAL: KXBTC15M-26APR061200-00 | Side: yes @ $0.6150 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=334s
+2026-04-06 15:51:15 | WARNING | [BTC] Insufficient cash: $0.45 < $0.61 (contracts=1, price=0.6150)
+2026-04-06 15:51:15 | INFO | MOMENTUM SIGNAL: KXBNB15M-26APR061200-00 | Side: yes @ $0.5550 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=334s
+2026-04-06 15:51:15 | WARNING | [BNB] Insufficient cash: $0.45 < $0.55 (contracts=1, price=0.5550)
+2026-04-06 15:51:45 | INFO | Status: cash=$3.57, positions=0, loop=183, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:51:45 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:51:45 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:51:45 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:51:45 | INFO | MOMENTUM SIGNAL: KXBTC15M-26APR061200-00 | Side: yes @ $0.6950 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=365s
+2026-04-06 15:51:45 | WARNING | [BTC] Insufficient cash: $0.45 < $0.69 (contracts=1, price=0.6950)
+2026-04-06 15:51:45 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR061200-00 | Direction: no | Side: no @ $0.6150 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:51:45 | ERROR | [ETH] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:51:45 | INFO | MOMENTUM SIGNAL: KXBNB15M-26APR061200-00 | Side: yes @ $0.5250 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=365s
+2026-04-06 15:51:45 | WARNING | [BNB] Insufficient cash: $0.45 < $0.53 (contracts=1, price=0.5250)
+2026-04-06 15:52:15 | INFO | Status: cash=$3.57, positions=0, loop=184, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:52:15 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:52:15 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:52:15 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:52:15 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR061200-00 | Direction: no | Side: no @ $0.6600 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:52:15 | ERROR | [ETH] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:52:15 | INFO | FIRST_CROSS: KXBNB15M-26APR061200-00 | Direction: up | Target: $608.56 | Coin Price: $608.70
+2026-04-06 15:52:45 | INFO | Status: cash=$3.57, positions=0, loop=185, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:52:45 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:52:45 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:52:45 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:52:45 | INFO | MOMENTUM SIGNAL: KXBTC15M-26APR061200-00 | Side: yes @ $0.6100 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=425s
+2026-04-06 15:52:45 | WARNING | [BTC] Insufficient cash: $0.45 < $0.61 (contracts=1, price=0.6100)
+2026-04-06 15:52:45 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR061200-00 | Direction: no | Side: no @ $0.6500 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:52:45 | ERROR | [ETH] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:53:15 | INFO | Status: cash=$3.57, positions=0, loop=186, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:53:15 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:53:15 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:53:16 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:53:16 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR061200-00 | Direction: no | Side: no @ $0.6900 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:53:16 | ERROR | [ETH] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:53:16 | INFO | FIRST_CROSS SIGNAL (midpoint): KXHYPE15M-26APR061200-00 | Direction: yes | Side: yes @ $0.6150 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:53:16 | ERROR | [HYPE] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:53:46 | INFO | Status: cash=$3.57, positions=0, loop=187, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:53:46 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:53:46 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:53:46 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:53:46 | INFO | MOMENTUM SIGNAL: KXBNB15M-26APR061200-00 | Side: yes @ $0.5300 | contracts=1 | CONF=60 | TS=30%/40% | Coinbase=bullish | age=486s
+2026-04-06 15:53:46 | WARNING | [BNB] Insufficient cash: $0.45 < $0.53 (contracts=1, price=0.5300)
+2026-04-06 15:54:16 | INFO | Status: cash=$3.57, positions=0, loop=188, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:54:16 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:54:16 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:54:16 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:54:16 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR061200-00 | Direction: no | Side: no @ $0.6850 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:54:16 | ERROR | [ETH] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:54:46 | INFO | Status: cash=$3.57, positions=0, loop=189, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:54:46 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:54:46 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:54:46 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:54:47 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR061200-00 | Direction: no | Side: no @ $0.6600 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:54:47 | ERROR | [ETH] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:54:47 | INFO | FIRST_CROSS SIGNAL (midpoint): KXHYPE15M-26APR061200-00 | Direction: yes | Side: yes @ $0.6300 | contracts=0 | CONF=48 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:54:47 | ERROR | [HYPE] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:55:17 | INFO | Status: cash=$3.57, positions=0, loop=190, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:55:17 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:55:17 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:55:17 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:55:47 | INFO | Status: cash=$3.57, positions=0, loop=191, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:55:47 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:55:47 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:55:47 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:55:47 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR061200-00 | Direction: no | Side: no @ $0.6150 | contracts=0 | CONF=45 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:55:47 | ERROR | [ETH] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:55:47 | INFO | FIRST_CROSS SIGNAL (midpoint): KXHYPE15M-26APR061200-00 | Direction: yes | Side: yes @ $0.6900 | contracts=0 | CONF=45 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:55:47 | ERROR | [HYPE] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:56:17 | INFO | Status: cash=$3.57, positions=0, loop=192, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:56:17 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:56:17 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:56:17 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:56:48 | INFO | Status: cash=$3.57, positions=0, loop=193, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:56:48 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:56:48 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:56:48 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:56:48 | INFO | FIRST_CROSS SIGNAL (midpoint): KXETH15M-26APR061200-00 | Direction: no | Side: no @ $0.6400 | contracts=0 | CONF=45 | TS=50%/40% | Coinbase=neutral | max_hold=10min
+2026-04-06 15:56:48 | ERROR | [ETH] REAL ORDER FAILED: Invalid price or amount
+2026-04-06 15:57:18 | INFO | Status: cash=$3.57, positions=0, loop=194, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:57:18 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:57:18 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:57:18 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:57:48 | INFO | Status: cash=$3.57, positions=0, loop=195, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:57:48 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:57:48 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:57:48 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:58:18 | INFO | Status: cash=$3.57, positions=0, loop=196, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:58:18 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:58:18 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:58:18 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:58:48 | INFO | Status: cash=$3.57, positions=0, loop=197, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:58:48 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:58:48 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:58:49 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:59:19 | INFO | Status: cash=$3.57, positions=0, loop=198, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:59:19 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:59:19 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:59:19 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json
+2026-04-06 15:59:49 | INFO | Status: cash=$3.57, positions=0, loop=199, active_series=['KXBNB15M', 'KXSOL15M', 'KXDOGE15M', 'KXHYPE15M', 'KXXRP15M', 'KXETH15M', 'KXBTC15M']
+2026-04-06 15:59:49 | INFO | Day Realized P&L: $-31.10 (-89.7%) / -$99999.00 daily stop-loss limit
+2026-04-06 15:59:49 | INFO | Coins: BTC: idle | ETH: idle | BNB: idle | SOL: idle | DOGE: idle | XRP: idle | HYPE: idle | ADA: idle
+2026-04-06 15:59:49 | INFO | JSON summary saved to /home/ubuntu/.openclaw/workspace/workers/superbot/report.json

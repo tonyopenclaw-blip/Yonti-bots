@@ -1850,9 +1850,8 @@ class UncleVitoReport:
         simulated_props = self._simulate_player_props(all_games)
 
         for prop in simulated_props:
-            # Skip rest day players (they are OUT)
-            if prop.get("rest_day", False):
-                continue
+            # When using simulated props (fallback), include all of them
+            # Simulated props are always valid for the parlay
             if len(picks) >= num_legs:
                 break
 
@@ -2266,6 +2265,38 @@ class UncleVitoReport:
         # First, try to get real props from Odds API
         all_props = []
         
+        # MLB team abbreviation to star players
+        mlb_team_players = {
+            "NYY": [("Aaron Judge", "hits", 0.5), ("Juan Soto", "runs", 0.5)],
+            "LAD": [("Mookie Betts", "hits", 0.5), ("Shohei Ohtani", "strikeouts", 6.5)],
+            "BOS": [("Rafael Devers", "RBI", 0.5)],
+            "PHI": [("Kyle Schwarber", "home_runs", 0.5)],
+            "HOU": [("Jose Altuve", "hits", 0.5)],
+            "ATL": [("Ronald Acuna Jr.", "runs", 0.5)],
+            "SD": [("Manny Machado", "RBI", 0.5)],
+            "STL": [("Nolan Arenado", "RBI", 0.5)],
+            "CHC": [("Christopher Morel", "home_runs", 0.5)],
+            "NYM": [("Francisco Lindor", "hits", 0.5)],
+            "TOR": [("Vladimir Guerrero Jr.", "RBI", 0.5)],
+            "SEA": [("Julio Rodriguez", "runs", 0.5)],
+            "TEX": [("Corey Seager", "hits", 0.5)],
+            "MIL": [("Christian Yelich", "home_runs", 0.5)],
+            "CLE": [("Jose Ramirez", "RBI", 0.5)],
+            "SF": [("Logan Webb", "strikeouts", 6.5)],
+            "CIN": [("Elly De La Cruz", "runs", 0.5)],
+            "MIA": [("Jazz Chisholm", "home_runs", 0.5)],
+            "MIN": [("Carlos Correa", "hits", 0.5)],
+            "LAA": [("Mike Trout", "home_runs", 0.5)],
+            "COL": [("Ryan McMahon", "RBI", 0.5)],
+            "OAK": [("Lawrence Butler", "runs", 0.5)],
+            "KC": [("Bobby Witt Jr.", "hits", 0.5)],
+            "TB": [("Isaac Paredes", "RBI", 0.5)],
+            "PIT": [("Oneil Cruz", "home_runs", 0.5)],
+            "BAL": [("Gunnar Henderson", "runs", 0.5)],
+            "AZ": [("Ketel Marte", "hits", 0.5)],
+            "WSH": [("James Wood", "runs", 0.5)],
+        }
+
         for game, sport in games:
             # Fetch from Odds API if not already fetched
             api_props = self._fetch_odds_api_props(sport)
@@ -2375,6 +2406,40 @@ class UncleVitoReport:
             "WSH": [("James Wood", "runs", 0.5)],
         }
 
+        # NBA team abbreviation to star players
+        nba_team_players = {
+            "PHI": [("Tyrese Maxey", "points", 23.5), ("Paul George", "threes", 3.5)],
+            "WSH": [("Jordan Poole", "points", 19.5)],
+            "ORL": [("Paolo Banchero", "points", 22.5), ("Franz Wagner", "rebounds", 5.5)],
+            "ATL": [("Trae Young", "points", 25.5), ("Jalen Johnson", "rebounds", 7.5)],
+            "MIA": [("Tyler Herro", "points", 21.5), ("Bam Adebayo", "rebounds", 9.5)],
+            "BOS": [("Jayson Tatum", "points", 27.5), ("Jaylen Brown", "threes", 3.5)],
+            "MEM": [("Jaren Jackson Jr.", "points", 19.5), ("Desmond Bane", "threes", 2.5)],
+            "NY": [("Karl-Anthony Towns", "rebounds", 10.5), ("Jalen Brunson", "assists", 6.5)],
+            "LAL": [("LeBron James", "points", 25.5), ("Luka Doncic", "rebounds", 7.5)],
+            "DEN": [("Nikola Jokic", "assists", 9.5), ("Jamal Murray", "points", 21.5)],
+            "GSW": [("Stephen Curry", "points", 28.5), ("Klay Thompson", "threes", 4.5)],
+            "MIL": [("Giannis Antetokounmpo", "points", 29.5), ("Damian Lillard", "assists", 7.5)],
+            "DAL": [("Kyrie Irving", "points", 24.5), ("Dereck Lively", "rebounds", 6.5)],
+            "OKC": [("Shai Gilgeous-Alexander", "points", 31.5), ("Jalen Williams", "threes", 2.5)],
+            "CLE": [("Donovan Mitchell", "points", 24.5), ("Darius Garland", "assists", 7.5)],
+            "MIN": [("Anthony Edwards", "points", 26.5), ("Julius Randle", "rebounds", 8.5)],
+            "HOU": [("Alperen Sengun", "rebounds", 8.5), ("Fred VanVleet", "assists", 6.5)],
+            "SAS": [("Victor Wembanyama", "blocks", 3.5), ("Chris Paul", "assists", 8.5)],
+            "PHX": [("Kevin Durant", "points", 26.5), ("Devin Booker", "threes", 3.5)],
+            "NOP": [("Zion Williamson", "points", 22.5), ("CJ McCollum", "threes", 3.5)],
+            "SAC": [("De'Aaron Fox", "points", 24.5), ("Domantas Sabonis", "rebounds", 11.5)],
+            "IND": [("Tyrese Haliburton", "assists", 10.5), ("Pascal Siakam", "points", 20.5)],
+            "UTAH": [("Lauri Markkanen", "points", 20.5)],
+            "CHA": [("LaMelo Ball", "points", 23.5), ("Miles Bridges", "rebounds", 5.5)],
+            "BKN": [("Cameron Thomas", "points", 21.5)],
+            "DET": [("Cade Cunningham", "points", 22.5), ("Jaden Ivey", "threes", 2.5)],
+            "TOR": [("Scottie Barnes", "rebounds", 7.5), ("RJ Barrett", "points", 20.5)],
+            "POR": [("Anfernee Simons", "points", 22.5)],
+            "CHI": [("Zach LaVine", "points", 24.5), ("Nikola Vucevic", "rebounds", 9.5)],
+            "LAC": [("Kawhi Leonard", "points", 23.5), ("James Harden", "assists", 8.5)],
+        }
+
         # NHL team abbreviation to star players
         nhl_team_players = {
             "EDM": [("Connor McDavid", "points", 1.5), ("Leon Draisaitl", "points", 1.5)],
@@ -2409,6 +2474,38 @@ class UncleVitoReport:
             "CHI": [("Patrick Kane", "points", 0.5)],
         }
 
+        # MLB team abbreviation to star players
+        mlb_team_players = {
+            "NYY": [("Aaron Judge", "hits", 0.5), ("Juan Soto", "runs", 0.5)],
+            "LAD": [("Mookie Betts", "hits", 0.5), ("Shohei Ohtani", "strikeouts", 6.5)],
+            "BOS": [("Rafael Devers", "RBI", 0.5)],
+            "PHI": [("Kyle Schwarber", "home_runs", 0.5)],
+            "HOU": [("Jose Altuve", "hits", 0.5)],
+            "ATL": [("Ronald Acuna Jr.", "runs", 0.5)],
+            "SD": [("Manny Machado", "RBI", 0.5)],
+            "STL": [("Nolan Arenado", "RBI", 0.5)],
+            "CHC": [("Christopher Morel", "home_runs", 0.5)],
+            "NYM": [("Francisco Lindor", "hits", 0.5)],
+            "TOR": [("Vladimir Guerrero Jr.", "RBI", 0.5)],
+            "SEA": [("Julio Rodriguez", "runs", 0.5)],
+            "TEX": [("Corey Seager", "hits", 0.5)],
+            "MIL": [("Christian Yelich", "home_runs", 0.5)],
+            "CLE": [("Jose Ramirez", "RBI", 0.5)],
+            "SF": [("Logan Webb", "strikeouts", 6.5)],
+            "CIN": [("Elly De La Cruz", "runs", 0.5)],
+            "MIA": [("Jazz Chisholm", "home_runs", 0.5)],
+            "MIN": [("Carlos Correa", "hits", 0.5)],
+            "LAA": [("Mike Trout", "home_runs", 0.5)],
+            "COL": [("Ryan McMahon", "RBI", 0.5)],
+            "OAK": [("Lawrence Butler", "runs", 0.5)],
+            "KC": [("Bobby Witt Jr.", "hits", 0.5)],
+            "TB": [("Isaac Paredes", "RBI", 0.5)],
+            "PIT": [("Oneil Cruz", "home_runs", 0.5)],
+            "BAL": [("Gunnar Henderson", "runs", 0.5)],
+            "AZ": [("Ketel Marte", "hits", 0.5)],
+            "WSH": [("James Wood", "runs", 0.5)],
+        }
+
         for game, sport in games:
             home_abbr = game.home_team.abbreviation
             away_abbr = game.away_team.abbreviation
@@ -2416,8 +2513,10 @@ class UncleVitoReport:
             # Select the right player map based on sport
             if sport == "NHL":
                 player_map = nhl_team_players
+            elif sport == "NBA":
+                player_map = nba_team_players  # NBA only players
             else:
-                player_map = team_players
+                player_map = mlb_team_players  # MLB players
 
             # Check if we have players for these teams
             for abbr in [home_abbr, away_abbr]:
@@ -2884,7 +2983,7 @@ __LEAGUE_SECTIONS__
                 combo_parts = []
                 for p in props[:3]:
                     direction_tag = f'<span class="pick-direction {p.direction}">{p.direction.upper()}</span>'
-                    combo_parts.append(f'{p.player} {direction_tag} {p.stat_type} {p.line}')
+                    combo_parts.append(f'{p.player} ({p.team}) {direction_tag} {p.stat_type} {p.line}')
                 section += '                        <div class="parlay-combo">'
                 for i, part in enumerate(combo_parts):
                     if i > 0:

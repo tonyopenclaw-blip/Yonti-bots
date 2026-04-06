@@ -39,6 +39,109 @@ _(Tony to fill in API details, auth requirements, market structure)_
 
 ---
 
+## 📊 ENTRY/EXIT MATRIX RESEARCH (Superbot)
+
+### Observed Market Structure (15-min periods)
+
+| Time in Period | Phase | Behavior |
+|----------------|-------|----------|
+| 0-3 min | Market settling | Price oscillating, no clear direction yet |
+| 3-7 min | Early positioning | `first_cross` signals fire (price hits $0.45 threshold) |
+| 7-11 min | Sweet spot window | Momentum establishes, trends develop, TS starts tracking |
+| 11-14 min | Late entries | Momentum plays getting rushed, less time for position to work |
+| 14-15 min | Expiry play | Too close to expiry, price often snaps back to $0 |
+
+### Price Distance from $0.50 — Observed Behavior
+
+| Distance | Price Range | Observed Behavior |
+|----------|-------------|-------------------|
+| 0-10% | $0.45-0.50 | Dead zone, choppy, first_cross triggers here |
+| 10-20% | $0.40-0.45 | Good first_cross entry zone, moderate signal |
+| 20-30% | $0.35-0.40 | Strong momentum signal, TS works well |
+| 30%+ | $0.00-0.35 | Very strong but risky — mean reversion often snaps it back |
+
+### Historical Trade Analysis (Tonight's Session)
+
+**WINNERS:**
+| Trade | Entry | Distance | Time In | Hold | Exit | Result |
+|-------|-------|----------|---------|------|------|--------|
+| DOGE first_cross no | $0.3450 | 31% | ~21:00:44 | 7 min | TS @ $0.0795 | +$0.97 |
+| HYPE momentum yes | $0.2250 | 55% | ~20:55:10 | ~4 min | TS @ 93.3% locked | Winner |
+| SOL momentum yes | $0.2250 | 55% | ~20:55:10 | ~4 min | TS @ 93.3% locked | Winner |
+
+**LOSERS:**
+| Trade | Entry | Distance | Time In | Hold | Exit | Result |
+|-------|-------|----------|---------|------|------|--------|
+| BTC first_cross yes | $0.5550 | 11% | ~20:46:01 | 13 min | Expiry @ $0.0015 | -$1.03 |
+| ETH first_cross no | $0.4550 | 9% | ~21:01:15 | 4.5 min | TS @ 18.7% locked → Expiry | -$0.25 |
+| HYPE momentum no | $0.4000 | 20% | ~21:05:19 | 9 min | Expiry @ $0.0020 | -$1.19 |
+| ETH momentum no | $0.3700 | 26% | ~21:05:49 | 8.5 min | Expiry @ $0.0005 | -$1.11 |
+| XRP first_cross no | $0.3450 | 31% | ~21:00:45 | 4.5 min | TS @ 49.3% locked | -$0.51 |
+| DOGE first_cross no | $0.5450 | 9% | ~20:46:32 | 13 min | Expiry @ $0.9850 | -$1.06 |
+
+### Key Patterns Discovered
+
+1. **first_cross at 0.45 (10% away) = TRAP**: Price often crosses, triggers signal, then reverses. Dogs/BTC fell for this.
+2. **Momentum at 0.40-0.37 (20-26% away) = TOO LATE**: TS locks tiny gains, then expiry wipes it out. ETH/HYPE momentum plays died this way.
+3. **Strong momentum entries at 30%+ distance = SWEET SPOT**: Price has momentum behind it, TS has room to lock gains before expiry snaps back.
+4. **Holding to expiry = DEATH**: Most positions that held to expiry lost. Only DOGE winner locked via TS before expiry.
+
+### THE ENTRY/EXIT MATRIX
+
+```
+                    │  0-10%         │  10-20%        │  20-30%        │  30%+
+────────────────────┼────────────────┼────────────────┼────────────────┼────────────────
+  0-3 min           │    SKIP        │    SKIP        │   LOW BUY      │   MED BUY
+  (Market settling) │   0% conf      │   0% conf      │   55% conf     │   65% conf
+                    │                │                │                │
+  3-7 min           │    SKIP        │   LOW BUY      │   MED BUY      │   HIGH BUY
+  (First cross)     │   0% conf      │   45% conf     │   70% conf     │   75% conf
+                    │                │                │                │
+  7-11 min          │   SKIP         │   MED BUY      │   HIGH BUY     │   HIGH BUY
+  (Sweet spot)      │   0% conf      │   60% conf     │   80% conf     │   70% conf
+                    │                │                │                │
+  11-14 min         │   SKIP         │   LOW BUY      │   MED BUY      │   SCALP ONLY
+  (Late entries)    │   0% conf      │   35% conf     │   45% conf     │   50% conf
+                    │                │                │                │
+  14-15 min         │    SKIP        │    SKIP        │    SKIP        │    SKIP
+  (Expiry play)     │   0% conf      │   0% conf      │   0% conf      │   0% conf
+```
+
+### Position Sizing by Cell
+
+| Cell | Kelly % | Effective % | Max Bet ($100 bankroll) | Max Bet ($50 bankroll) |
+|------|---------|-------------|--------------------------|-------------------------|
+| 0-3 min / 20-30% | 4% | 2% | $2.00 | $1.00 |
+| 0-3 min / 30%+ | 6% | 3% | $3.00 | $1.50 |
+| 3-7 min / 10-20% | 4% | 2% | $2.00 | $1.00 |
+| 3-7 min / 20-30% | 10% | 5% | $5.00 | $2.50 |
+| 3-7 min / 30%+ | 15% | 7.5% | $7.50 | $3.75 |
+| 7-11 min / 10-20% | 8% | 4% | $4.00 | $2.00 |
+| 7-11 min / 20-30% | 15% | 7.5% | $7.50 | $3.75 |
+| 7-11 min / 30%+ | 20% | 10% | $10.00 | $5.00 |
+| 11-14 min / 10-20% | 4% | 2% | $2.00 | $1.00 |
+| 11-14 min / 20-30% | 6% | 3% | $3.00 | $1.50 |
+| 11-14 min / 30%+ | 4% | 2% | $2.00 | $1.00 |
+
+### Exit Rules by Entry Type
+
+| Entry Type | Target Exit | Stop Trigger |
+|------------|-------------|--------------|
+| first_cross (10-20%) | $0.75+ | TS 30% rise, locked 25% |
+| momentum (20-30%) | $0.80+ | TS 40% rise, locked 35% |
+| momentum (30%+) | $0.85+ | TS 50% rise, locked 45% |
+| Any / Late (11-14 min) | $0.70+ | TS 25% rise, locked 20% |
+
+### Hard Rules
+
+1. **NEVER hold to expiry** — exit via TS or manual at 13:45/14:45 mark
+2. **Skip the dead zone (0-10%)** — chop kills you
+3. **Momentum entries need distance** — 20%+ away from $0.50 minimum
+4. **Late entries (11-14 min) = scalp only** — don't bet the farm
+5. **first_cross at 0.45 is a trap** — price crosses then reverses
+
+---
+
 ## 🧮 TRADING FORMULA IMPROVEMENTS
 
 ### Enhanced Kelly Criterion (Standard Industry Approach)

@@ -4,6 +4,7 @@ import time
 
 import logging
 import os
+import random
 import subprocess
 import json
 from dataclasses import dataclass
@@ -1011,33 +1012,56 @@ class StrategyEngine:
                     elif momentum_side == 'no' and rsi > 70:
                         momentum_conf = max(momentum_conf, 80)  # RSI strongly overbought
 
-                confidence = momentum_conf
-                size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.MOMENTUM, mid_price, confidence, mid_price)
-
-                if confidence >= 40:
+                # === ENTRY/EXIT MATRIX CHECK ===
+                # Calculate time since market opened and price distance from midpoint
+                time_minutes = (900 - time_left) / 60.0  # Minutes since market opened
+                price_distance_pct = abs(mid_price - 0.50) * 100  # Distance as percentage
+                
+                matrix_action, matrix_size, matrix_conf_boost = self.get_entry_signal(time_minutes, price_distance_pct)
+                
+                # Matrix says SKIP - don't trade
+                if matrix_action == "skip":
                     logger.info(
-                        f"MOMENTUM SIGNAL: {market.ticker} | "
-                        f"Side: {momentum_side} @ ${mid_price:.4f} | contracts={int(size):d} | "
-                        f"CONF={confidence} | TS=30%/40% | Coinbase={bias} | RSI={rsi} | age={market_age_sec:.0f}s"
+                        f"MOMENTUM SKIPPED (MATRIX): {market.ticker} | "
+                        f"Side: {momentum_side} | time={time_minutes:.1f}min | dist={price_distance_pct:.1f}% | "
+                        f"Cell: {time_minutes:.0f}min/{price_distance_pct:.0f}% = SKIP"
                     )
+                else:
+                    # Apply matrix size and confidence boost
+                    confidence = momentum_conf + matrix_conf_boost
+                    
+                    # Use matrix-determined size instead of Kelly (convert dollars to contracts)
+                    if matrix_size > 0 and mid_price > 0:
+                        size = max(1, int(matrix_size / mid_price))
+                    else:
+                        size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.MOMENTUM, mid_price, confidence, mid_price)
 
-                    return TradeSignal(
-                        strategy=Strategy.MOMENTUM,
-                        ticker=market.ticker,
-                        side=momentum_side,
-                        price=mid_price,
-                        size=size,
-                        scale_in_size=0,  # FIX 3: Disable scale-in - averaging into losing positions
-                        reason=f"MOMENTUM: {momentum_reason}, Coinbase={bias}, RSI={rsi}, CONF={confidence}, age={market_age_sec:.0f}s",
-                        take_profit=0.95 if momentum_side == "yes" else 0.05,
-                        stop_loss=None,
-                        trailing_stop_pct=0.40,
-                        trailing_stop_trigger_pct=0.30,
-                        confidence=confidence,
-                        trailing_stop_buffer=0.40,
-                        max_hold_minutes=13,  # Nerd's research: 13min for momentum (was 10)
-                        use_time_scaling=True  # TIME SCALING: 80%->20%
-                    )
+                    if confidence >= 40:
+                        logger.info(
+                            f"MOMENTUM SIGNAL: {market.ticker} | "
+                            f"Side: {momentum_side} @ ${mid_price:.4f} | contracts={int(size):d} | "
+                            f"CONF={confidence} (matrix boost +{matrix_conf_boost}) | TS=30%/40% | "
+                            f"Matrix cell: {time_minutes:.0f}min/{price_distance_pct:.0f}% = {matrix_action.upper()} | "
+                            f"Coinbase={bias} | RSI={rsi} | age={market_age_sec:.0f}s"
+                        )
+
+                        return TradeSignal(
+                            strategy=Strategy.MOMENTUM,
+                            ticker=market.ticker,
+                            side=momentum_side,
+                            price=mid_price,
+                            size=size,
+                            scale_in_size=0,  # FIX 3: Disable scale-in - averaging into losing positions
+                            reason=f"MOMENTUM: {momentum_reason}, Coinbase={bias}, RSI={rsi}, CONF={confidence} (matrix boost +{matrix_conf_boost}), matrix_cell={time_minutes:.0f}min/{price_distance_pct:.0f}%, age={market_age_sec:.0f}s",
+                            take_profit=0.95 if momentum_side == "yes" else 0.05,
+                            stop_loss=None,
+                            trailing_stop_pct=0.40,
+                            trailing_stop_trigger_pct=0.30,
+                            confidence=confidence,
+                            trailing_stop_buffer=0.40,
+                            max_hold_minutes=13,  # Nerd's research: 13min for momentum (was 10)
+                            use_time_scaling=True  # TIME SCALING: 80%->20%
+                        )
 
         # === FIRST CROSS: Real cross through floor strike (not market open) ===
         # --- First Cross: Coin price vs target price ---
@@ -1079,33 +1103,55 @@ class StrategyEngine:
                 
                 confidence = self.calculate_confidence(Strategy.FIRST_CROSS, market, coin, mid_price, time_left) + conf_boost
                 prob = mid_price
-                size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.FIRST_CROSS, prob, confidence, prob)
-
-                if confidence >= 40:
+                
+                # === ENTRY/EXIT MATRIX CHECK ===
+                time_minutes = (900 - time_left) / 60.0
+                price_distance_pct = abs(mid_price - 0.50) * 100
+                
+                matrix_action, matrix_size, matrix_conf_boost = self.get_entry_signal(time_minutes, price_distance_pct)
+                
+                # Matrix says SKIP - don't trade
+                if matrix_action == "skip":
                     logger.info(
-                        f"FIRST_CROSS SIGNAL (coin): {market.ticker} | "
-                        f"Direction: {cross_direction} | Target: ${target_price:,.2f} | "
-                        f"Side: {side} @ ${mid_price:.4f} | contracts={int(size):d} | CONF={confidence} | Coinbase={bias}"
+                        f"FIRST_CROSS SKIPPED (MATRIX): {market.ticker} | "
+                        f"Direction: {cross_direction} | Side: {side} | time={time_minutes:.1f}min | dist={price_distance_pct:.1f}% | "
+                        f"Cell: {time_minutes:.0f}min/{price_distance_pct:.0f}% = SKIP"
                     )
+                else:
+                    confidence = confidence + matrix_conf_boost
+                    
+                    # Use matrix-determined size instead of Kelly
+                    if matrix_size > 0 and mid_price > 0:
+                        size = max(1, int(matrix_size / mid_price))
+                    else:
+                        size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.FIRST_CROSS, prob, confidence, prob)
 
-                    # FIX 2: Relax trailing stop for FIRST_CROSS from 30%/40% to 60%/70%
-                    return TradeSignal(
-                        strategy=Strategy.FIRST_CROSS,
-                        ticker=market.ticker,
-                        side=side,
-                        price=mid_price,
-                        size=size,
-                        scale_in_size=0,  # FIX 3: Disable scale-in - averaging into losing positions
-                        reason=f"FIRST_CROSS: {reason_suffix}, target=${target_price:,.2f}, Coinbase={bias}, Kelly={kelly_pct:.2%}, CONF={confidence}",
-                        take_profit=0.95 if side == "yes" else 0.05,
-                        stop_loss=None,
-                        trailing_stop_pct=0.70,  # FIX 2: Changed from 0.40 to 0.70
-                        trailing_stop_trigger_pct=0.60,  # FIX 2: Changed from 0.30 to 0.60
-                        confidence=confidence,
-                        trailing_stop_buffer=0.70,  # FIX 2: Changed from 0.40 to 0.70
-                        max_hold_minutes=14,  # Nerd's research: 14min max hold (was 10, was cutting winners short)
-                        use_time_scaling=False  # NO TIME SCALING for FIRST_CROSS
-                    )
+                    if confidence >= 40:
+                        logger.info(
+                            f"FIRST_CROSS SIGNAL (coin): {market.ticker} | "
+                            f"Direction: {cross_direction} | Target: ${target_price:,.2f} | "
+                            f"Side: {side} @ ${mid_price:.4f} | contracts={int(size):d} | CONF={confidence} (matrix boost +{matrix_conf_boost}) | "
+                            f"Matrix cell: {time_minutes:.0f}min/{price_distance_pct:.0f}% = {matrix_action.upper()} | Coinbase={bias}"
+                        )
+
+                        # FIX 2: Relax trailing stop for FIRST_CROSS from 30%/40% to 60%/70%
+                        return TradeSignal(
+                            strategy=Strategy.FIRST_CROSS,
+                            ticker=market.ticker,
+                            side=side,
+                            price=mid_price,
+                            size=size,
+                            scale_in_size=0,  # FIX 3: Disable scale-in - averaging into losing positions
+                            reason=f"FIRST_CROSS: {reason_suffix}, target=${target_price:,.2f}, Coinbase={bias}, CONF={confidence} (matrix boost +{matrix_conf_boost}), matrix_cell={time_minutes:.0f}min/{price_distance_pct:.0f}%",
+                            take_profit=0.95 if side == "yes" else 0.05,
+                            stop_loss=None,
+                            trailing_stop_pct=0.70,  # FIX 2: Changed from 0.40 to 0.70
+                            trailing_stop_trigger_pct=0.60,  # FIX 2: Changed from 0.30 to 0.60
+                            confidence=confidence,
+                            trailing_stop_buffer=0.70,  # FIX 2: Changed from 0.40 to 0.70
+                            max_hold_minutes=14,  # Nerd's research: 14min max hold (was 10, was cutting winners short)
+                            use_time_scaling=False  # NO TIME SCALING for FIRST_CROSS
+                        )
 
         # --- First Cross: Midpoint crossing ---
         has_midpoint_cross = self.first_cross.has_crossed(market.ticker)
@@ -1139,35 +1185,58 @@ class StrategyEngine:
                 
                 confidence = self.calculate_confidence(Strategy.FIRST_CROSS, market, coin, mid_price, time_left) + conf_boost
                 prob = mid_price
-                size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.FIRST_CROSS, prob, confidence, prob)
-
-                if confidence >= 40:
-                    max_hold = 14  # Nerd's research: 14min for first cross (was 10)
-
+                
+                # === ENTRY/EXIT MATRIX CHECK ===
+                time_minutes = (900 - time_left) / 60.0
+                price_distance_pct = abs(mid_price - 0.50) * 100
+                
+                matrix_action, matrix_size, matrix_conf_boost = self.get_entry_signal(time_minutes, price_distance_pct)
+                
+                # Matrix says SKIP - don't trade
+                if matrix_action == "skip":
                     logger.info(
-                        f"FIRST_CROSS SIGNAL (midpoint): {market.ticker} | "
-                        f"Direction: {preferred_side} | Side: {side} @ ${mid_price:.4f} | "
-                        f"contracts={int(size):d} | CONF={confidence} | TS=50%/40% | Coinbase={bias} | max_hold={max_hold}min"
+                        f"FIRST_CROSS SKIPPED (MATRIX): {market.ticker} | "
+                        f"Direction: {preferred_side} | Side: {side} | time={time_minutes:.1f}min | dist={price_distance_pct:.1f}% | "
+                        f"Cell: {time_minutes:.0f}min/{price_distance_pct:.0f}% = SKIP"
                     )
+                else:
+                    confidence = confidence + matrix_conf_boost
+                    
+                    # Use matrix-determined size instead of Kelly
+                    if matrix_size > 0 and mid_price > 0:
+                        size = max(1, int(matrix_size / mid_price))
+                    else:
+                        size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.FIRST_CROSS, prob, confidence, prob)
 
-                    # FIX 2: Relax trailing stop for FIRST_CROSS from 30%/40% to 60%/70%
-                    return TradeSignal(
-                        strategy=Strategy.FIRST_CROSS,
-                        ticker=market.ticker,
-                        side=side,
-                        price=mid_price,
-                        size=size,
-                        scale_in_size=0,  # FIX 3: Disable scale-in - averaging into losing positions
-                        reason=f"FIRST_CROSS: {reason_suffix}, Coinbase={bias}, CONF={confidence}, Kelly={kelly_pct:.2%}",
-                        take_profit=0.95 if side == "yes" else 0.05,
-                        stop_loss=None,
-                        trailing_stop_pct=0.70,  # FIX 2: Changed from 0.40 to 0.70
-                        trailing_stop_trigger_pct=0.60,  # FIX 2: Changed from 0.30 to 0.60
-                        confidence=confidence,
-                        trailing_stop_buffer=0.70,  # FIX 2: Changed from 0.40 to 0.70
-                        max_hold_minutes=max_hold,
-                        use_time_scaling=False  # NO TIME SCALING for FIRST_CROSS
-                    )
+                    if confidence >= 40:
+                        max_hold = 14  # Nerd's research: 14min for first cross (was 10)
+
+                        logger.info(
+                            f"FIRST_CROSS SIGNAL (midpoint): {market.ticker} | "
+                            f"Direction: {preferred_side} | Side: {side} @ ${mid_price:.4f} | "
+                            f"contracts={int(size):d} | CONF={confidence} (matrix boost +{matrix_conf_boost}) | "
+                            f"Matrix cell: {time_minutes:.0f}min/{price_distance_pct:.0f}% = {matrix_action.upper()} | "
+                            f"TS=50%/40% | Coinbase={bias} | max_hold={max_hold}min"
+                        )
+
+                        # FIX 2: Relax trailing stop for FIRST_CROSS from 30%/40% to 60%/70%
+                        return TradeSignal(
+                            strategy=Strategy.FIRST_CROSS,
+                            ticker=market.ticker,
+                            side=side,
+                            price=mid_price,
+                            size=size,
+                            scale_in_size=0,  # FIX 3: Disable scale-in - averaging into losing positions
+                            reason=f"FIRST_CROSS: {reason_suffix}, Coinbase={bias}, CONF={confidence} (matrix boost +{matrix_conf_boost}), matrix_cell={time_minutes:.0f}min/{price_distance_pct:.0f}%",
+                            take_profit=0.95 if side == "yes" else 0.05,
+                            stop_loss=None,
+                            trailing_stop_pct=0.70,  # FIX 2: Changed from 0.40 to 0.70
+                            trailing_stop_trigger_pct=0.60,  # FIX 2: Changed from 0.30 to 0.60
+                            confidence=confidence,
+                            trailing_stop_buffer=0.70,  # FIX 2: Changed from 0.40 to 0.70
+                            max_hold_minutes=max_hold,
+                            use_time_scaling=False  # NO TIME SCALING for FIRST_CROSS
+                        )
 
         # === MOMENTUM_FORCE: Last resort - wait 60s, no cross, force entry ===
         no_cross_yet = not has_coin_cross and not has_midpoint_cross
@@ -1537,6 +1606,105 @@ Your estimate:"""
             trailing_stop_buffer=ts_buffer,
             max_hold_minutes=max_hold
         )
+
+    def get_entry_signal(self, time_minutes: float, price_distance_pct: float) -> Tuple[str, float, int]:
+        """
+        Entry/Exit Matrix lookup.
+        
+        Returns: (action, size_dollars, conf_boost)
+        - action: "yes", "no", or "skip" (skip means don't trade)
+        - size_dollars: position size based on matrix cell
+        - conf_boost: confidence boost based on matrix cell strength
+        
+        Matrix:
+                            |  0-10%       |  10-20%      |  20-30%      |  30%+
+        --------------------+--------------+--------------+--------------+------------
+          0-3 min           |    SKIP       |    SKIP      |   LOW        |   MED
+          3-7 min           |    SKIP       |   LOW        |   MED        |   HIGH
+          7-11 min           |   SKIP        |   MED        |   HIGH       |   HIGH
+          11-14 min          |   SKIP        |   LOW        |   MED        |   SCALP
+          14-15 min          |    SKIP       |    SKIP      |    SKIP      |    SKIP
+        
+        Position Sizing:
+        - LOW = $1-2
+        - MED = $3-5  
+        - HIGH = $7.50-10
+        
+        Confidence Boosts:
+        - HIGH = +10 CONF
+        - MED = +5 CONF
+        - LOW = 0 CONF boost
+        - SCALP = +5 CONF (same as MED)
+        - SKIP = reject trade
+        """
+        # SKIP all 14-15 min entries (expiry play)
+        if time_minutes >= 14:
+            return "skip", 0, 0
+        
+        # Determine time bucket
+        if time_minutes <= 3:
+            time_bucket = "0-3"
+        elif time_minutes <= 7:
+            time_bucket = "3-7"
+        elif time_minutes <= 11:
+            time_bucket = "7-11"
+        else:  # 11-14
+            time_bucket = "11-14"
+        
+        # Determine price distance bucket
+        if price_distance_pct <= 10:
+            dist_bucket = "0-10"
+        elif price_distance_pct <= 20:
+            dist_bucket = "10-20"
+        elif price_distance_pct <= 30:
+            dist_bucket = "20-30"
+        else:
+            dist_bucket = "30+"
+        
+        # Matrix lookup table
+        matrix = {
+            "0-3": {
+                "0-10": ("skip", 0, 0),
+                "10-20": ("skip", 0, 0),
+                "20-30": ("low", 1.5, 0),    # $1-2, no boost
+                "30+": ("med", 4.0, 5),       # $3-5, +5 CONF
+            },
+            "3-7": {
+                "0-10": ("skip", 0, 0),
+                "10-20": ("low", 1.5, 0),     # $1-2, no boost
+                "20-30": ("med", 4.0, 5),     # $3-5, +5 CONF
+                "30+": ("high", 8.75, 10),   # $7.50-10, +10 CONF
+            },
+            "7-11": {
+                "0-10": ("skip", 0, 0),
+                "10-20": ("med", 4.0, 5),     # $3-5, +5 CONF
+                "20-30": ("high", 8.75, 10),  # $7.50-10, +10 CONF
+                "30+": ("high", 8.75, 10),   # $7.50-10, +10 CONF
+            },
+            "11-14": {
+                "0-10": ("skip", 0, 0),
+                "10-20": ("low", 1.5, 0),     # $1-2, no boost
+                "20-30": ("med", 4.0, 5),     # $3-5, +5 CONF
+                "30+": ("scalp", 8.75, 5),    # HIGH size but MED boost (scalp only)
+            },
+        }
+        
+        cell = matrix[time_bucket][dist_bucket]
+        action, base_size, conf_boost = cell
+        
+        # Add randomness to size within range to avoid pattern detection
+        if action == "low":
+            size = random.uniform(1.0, 2.0)
+        elif action == "med":
+            size = random.uniform(3.0, 5.0)
+        elif action == "high":
+            size = random.uniform(7.50, 10.0)
+        elif action == "scalp":
+            size = random.uniform(7.50, 10.0)  # Same as HIGH for sizing
+        else:
+            size = 0
+        
+        return action, round(size, 2), conf_boost
 
     def check_position_exit(self, position: Position, current_price: float, time_left: int) -> Tuple[bool, str]:
         """

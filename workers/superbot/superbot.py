@@ -149,6 +149,22 @@ class CoinTrader:
 
         logger.info(f"CoinTrader initialized for {coin} ({series_ticker})")
 
+    def _cancel_orders_for_ticker(self, ticker: str):
+        """Cancel all unfilled orders for a given ticker to avoid double exposure."""
+        try:
+            open_orders = self.api.get_open_orders()
+            for order in open_orders:
+                if order.get("ticker") == ticker:
+                    order_id = order.get("order_id") or order.get("id")
+                    if order_id:
+                        result = self.api.cancel_order(order_id)
+                        if "error" in result:
+                            logger.warning(f"[{self.coin}] Failed to cancel order {order_id} for {ticker}: {result['error']}")
+                        else:
+                            logger.info(f"[{self.coin}] Canceled unfilled order {order_id} for {ticker}")
+        except Exception as e:
+            logger.warning(f"[{self.coin}] Error canceling orders for {ticker}: {e}")
+
     def get_scanner_markets(self) -> List[dict]:
         """
         Read markets from Searcher/Scanner output file.
@@ -383,8 +399,6 @@ class CoinTrader:
 
         # Cancel any existing unfilled orders for this ticker before placing new one
         self._cancel_orders_for_ticker(ticker)
-
-        # Check max positions per coin
         if len(self.positions) >= 1:  # One position per coin at a time
             return False, 0.0
 

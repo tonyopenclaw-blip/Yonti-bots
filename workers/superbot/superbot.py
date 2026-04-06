@@ -615,6 +615,7 @@ class Superbot:
             self.stop_loss_triggered = False
             self.sizing_reduced = False
             self.daily_trades = 0
+            self.trading_stopped = False
 
         # Check trade limit
         if self.daily_trades >= self.daily_trade_limit:

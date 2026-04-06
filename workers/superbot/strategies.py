@@ -703,9 +703,12 @@ class StrategyEngine:
             max_contracts = MAX_BET / entry_price
             contracts = min(contracts, max_contracts)
 
-        # Minimum 0 contracts (skip if too small)
-        if contracts <= 0:
-            return 0.0, effective_pct, confidence
+        # Cap at MAX_CONTRACTS (Tony fix: prevent excessive position size)
+        MAX_CONTRACTS = 20
+        contracts = min(contracts, MAX_CONTRACTS)
+
+        # Minimum 1 contract if there's a valid signal (Tony fix: was returning 0 and skipping trade)
+        contracts = max(1, contracts)
 
         return int(contracts), effective_pct, confidence
 

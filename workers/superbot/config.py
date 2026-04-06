@@ -49,7 +49,7 @@ BALANCE_RESET_AMOUNT = 100.00
 # (3) Using 1/2 Kelly instead of 1/4 Kelly since we're in paper trading mode
 
 MAX_BET = 2.00   # Safety cap: $2 max per trade (Nerd v2)
-MIN_BET = 0.10   # Minimum bet (Nerd v2)
+MIN_BET = 0.05   # Minimum bet (Tony fix: lowered from 0.10 to allow smaller trades with low cash)
 
 # Kelly Criterion — CRITICAL FIX
 # With 37.8% WR, the STRATEGY ITSELF is negative EV.

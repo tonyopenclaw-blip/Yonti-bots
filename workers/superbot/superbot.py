@@ -679,6 +679,13 @@ class Superbot:
 
     def _distribute_cash_to_traders(self):
         """Distribute available cash to each coin's strategy engine."""
+        # Tony fix: Sync with real Kalshi balance (was showing $3.57 vs real $13.67)
+        real_balance = self.api.get_balance()
+        if real_balance > 0:
+            if abs(real_balance - self.cash) > 0.50:
+                logger.info(f"[CashSync] Synced cash from ${self.cash:.2f} to real balance ${real_balance:.2f}")
+            self.cash = real_balance
+
         per_coin_cash = self.cash / len(COINS)
         for trader in self.coin_traders.values():
             trader.cash = per_coin_cash  # Initialize per-coin cash for scale-in logic

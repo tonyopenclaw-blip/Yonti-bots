@@ -1027,7 +1027,7 @@ class StrategyEngine:
                         side=momentum_side,
                         price=mid_price,
                         size=size,
-                        scale_in_size=int(size * 0.5),  # Scale in: add 50% more when winning
+                        scale_in_size=0,  # FIX 3: Disable scale-in - averaging into losing positions
                         reason=f"MOMENTUM: {momentum_reason}, Coinbase={bias}, RSI={rsi}, CONF={confidence}, age={market_age_sec:.0f}s",
                         take_profit=0.95 if momentum_side == "yes" else 0.05,
                         stop_loss=None,
@@ -1198,7 +1198,7 @@ class StrategyEngine:
                         side=side,
                         price=mid_price,
                         size=size,
-                        scale_in_size=int(size * 0.5),  # Scale in: add 50% more when winning
+                        scale_in_size=0,  # FIX 3: Disable scale-in - averaging into losing positions
                         reason=f"MOMENTUM_FORCE: {reason_suffix}, Coinbase={bias}, CONF={confidence}, age={market_age_sec:.0f}s",
                         take_profit=0.95 if side == "yes" else 0.05,
                         stop_loss=None,

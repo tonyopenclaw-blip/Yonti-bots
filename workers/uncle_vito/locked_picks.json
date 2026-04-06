@@ -1,0 +1,101 @@
+{
+  "NBA": {
+    "locked_at": "2026-04-06T20:24:09.556634",
+    "picks": {
+      "props": [],
+      "game_picks": [
+        {
+          "type": "spread",
+          "team": "NY",
+          "opponent": "ATL",
+          "line": -2.5,
+          "odds": -110,
+          "confidence": 68
+        },
+        {
+          "type": "total",
+          "team": "ORL",
+          "opponent": "DET",
+          "line": 240.5,
+          "odds": -110,
+          "confidence": 68
+        },
+        {
+          "type": "moneyline",
+          "team": "MEM",
+          "opponent": "CLE",
+          "line": 0,
+          "odds": -150,
+          "confidence": 68
+        }
+      ]
+    },
+    "odds": -110
+  },
+  "NHL": {
+    "locked_at": "2026-04-06T20:24:09.724967",
+    "picks": {
+      "props": [],
+      "game_picks": [
+        {
+          "type": "spread",
+          "team": "TB",
+          "opponent": "BUF",
+          "line": 1.5,
+          "odds": -110,
+          "confidence": 68
+        },
+        {
+          "type": "total",
+          "team": "SEA",
+          "opponent": "WPG",
+          "line": 6.0,
+          "odds": -110,
+          "confidence": 68
+        },
+        {
+          "type": "moneyline",
+          "team": "SJ",
+          "opponent": "CHI",
+          "line": 0,
+          "odds": -140,
+          "confidence": 68
+        }
+      ]
+    },
+    "odds": -110
+  },
+  "MLB": {
+    "locked_at": "2026-04-06T20:24:09.782170",
+    "picks": {
+      "props": [],
+      "game_picks": [
+        {
+          "type": "spread",
+          "team": "KC",
+          "opponent": "CLE",
+          "line": -1.5,
+          "odds": -110,
+          "confidence": 68
+        },
+        {
+          "type": "total",
+          "team": "CIN",
+          "opponent": "MIA",
+          "line": 10.0,
+          "odds": -110,
+          "confidence": 68
+        },
+        {
+          "type": "moneyline",
+          "team": "PIT",
+          "opponent": "SD",
+          "line": 0,
+          "odds": -160,
+          "confidence": 68
+        }
+      ]
+    },
+    "odds": -110
+  }
+}

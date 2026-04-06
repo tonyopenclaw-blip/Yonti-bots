@@ -253,8 +253,12 @@ class CoinTrader:
                     positions_changed = True
                     continue
 
-                # Check if market has expired (status=closed/settled or time_left <= 0)
-                if market.status in ("closed", "settled") or market.time_to_expiry_sec() <= 0:
+                # FIX 1: Add try/except for time_to_expiry_sec crash loop
+                try:
+                    market_time_left = market.time_to_expiry_sec()
+                except (AttributeError, TypeError):
+                    market_time_left = 900  # Default to 15 min if method fails
+                if market.status in ("closed", "settled") or market_time_left <= 0:
                     # Nerd's fix: use actual settlement result for P&L, not mid-price
                     # For settled markets, YES resolution = 1.0, NO resolution = 0.0
                     settlement_result = self.api.get_market_result(ticker)
@@ -274,7 +278,11 @@ class CoinTrader:
                     continue
 
             mid_price = (market.yes_bid + market.yes_ask) / 2
-            time_left = market.time_to_expiry_sec()
+            # FIX 1: Add try/except for time_to_expiry_sec crash loop
+            try:
+                time_left = market.time_to_expiry_sec()
+            except (AttributeError, TypeError):
+                time_left = 900  # Default to 15 min if method fails
 
             # Check if expired
             if time_left <= 0:
@@ -447,8 +455,8 @@ class CoinTrader:
             trailing_stop_trigger_pct=signal.trailing_stop_trigger_pct,
             peak_price=signal.price,
             scale_in_count=0,
-            max_scale_ins=2,
-            scale_in_size=signal.scale_in_size,
+            max_scale_ins=0,  # FIX 3: DISABLED scale-in - was averaging into losing positions
+            scale_in_size=0,  # FIX 3: Scale-in disabled
             unrealized_pnl=0.0,
             avg_price=signal.price,
             use_time_scaling=getattr(signal, 'use_time_scaling', False)
@@ -486,8 +494,14 @@ class CoinTrader:
             if market.ticker in self.positions:
                 continue
 
+            # FIX 1: Add try/except for time_to_expiry_sec crash loop
+            try:
+                market_time_left = market.time_to_expiry_sec()
+            except (AttributeError, TypeError):
+                market_time_left = 900  # Default to 15 min if method fails
+
             # Skip if market is about to expire
-            if market.time_to_expiry_sec() < 60:
+            if market_time_left < 60:
                 continue
 
             signal = self.strategy_engine.evaluate_market(market, self.coin)
@@ -679,12 +693,21 @@ class Superbot:
 
     def _distribute_cash_to_traders(self):
         """Distribute available cash to each coin's strategy engine."""
-        # Tony fix: Sync with real Kalshi balance (was showing $3.57 vs real $13.67)
+        # FIX 4: Force real balance pull from Kalshi API
+        # If API fails (401 etc), get_balance returns 0 - we should NOT trust cached balance
         real_balance = self.api.get_balance()
         if real_balance > 0:
             if abs(real_balance - self.cash) > 0.50:
                 logger.info(f"[CashSync] Synced cash from ${self.cash:.2f} to real balance ${real_balance:.2f}")
             self.cash = real_balance
+        else:
+            # FIX 4: API failed (likely 401 auth error) - don't trust cached balance
+            # Use a conservative estimate (10% of paper balance) until API recovers
+            conservative_estimate = self.cash * 0.2  # Only trust 20% of cached value
+            if conservative_estimate < 5.0:
+                conservative_estimate = 5.0  # Floor at $5 to avoid division issues
+            logger.warning(f"[CashSync] API balance failed (auth error?) - using conservative estimate ${conservative_estimate:.2f} (was ${self.cash:.2f})")
+            self.cash = conservative_estimate
 
         per_coin_cash = self.cash / len(COINS)
         for trader in self.coin_traders.values():
@@ -760,8 +783,14 @@ class Superbot:
         per_coin_cash = self.cash / len(COINS)
 
         for market in markets:
+            # FIX 1: Add try/except for time_to_expiry_sec crash loop
+            try:
+                market_time_left = market.time_to_expiry_sec()
+            except (AttributeError, TypeError):
+                market_time_left = 900  # Default to 15 min if method fails
+
             # Skip if market is about to expire
-            if market.time_to_expiry_sec() < 60:
+            if market_time_left < 60:
                 continue
 
             # Evaluate market for trading signal
@@ -831,7 +860,12 @@ class Superbot:
                     continue
 
                 # Cancel if market is closed/settled/expired or time has run out
-                is_expired = market.status in ("closed", "settled") or market.time_to_expiry_sec() <= 0
+                # FIX 1: Add try/except for time_to_expiry_sec crash loop
+                try:
+                    market_time_left = market.time_to_expiry_sec()
+                except (AttributeError, TypeError):
+                    market_time_left = 900  # Default to 15 min if method fails
+                is_expired = market.status in ("closed", "settled") or market_time_left <= 0
 
                 # Also cancel if order is older than 15 minutes (resting too long)
                 order_time = order.get("created_at", "")

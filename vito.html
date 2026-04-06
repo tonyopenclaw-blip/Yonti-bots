@@ -37,6 +37,9 @@
         .league-name.nba { color: var(--nba); }
         .league-name.nhl { color: var(--nhl); }
         .league-name.mlb { color: var(--mlb); }
+        .lock-status { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; padding: 3px 8px; border-radius: 4px; background: rgba(255,255,255,0.05); color: var(--text-dim); }
+        .lock-status.locked { background: rgba(240,185,11,0.15); color: var(--gold); }
+        .lock-status.cooking { background: rgba(0,230,118,0.1); color: var(--win); }
         
         /* Pick Group (Prop Parlay, ML/Spread, Best Bets) */
         .pick-group { margin-bottom: 16px; }
@@ -104,27 +107,26 @@
                 <div class="league-header">
                     <span class="league-emoji">🏀</span>
                     <span class="league-name nba">NBA</span>
+                    <span class="lock-status locked">🔒 LOCKED 08:24 PM</span>
                 </div>
                 <div class="pick-group">
-                    <div class="pick-group-header"><span class="pick-group-icon">🎯</span><span class="pick-group-title">3 Prop Parlay</span><span class="pick-group-odds">+595</span></div>
-                    <div class="pick-card">
-                        <div class="parlay-combo"><span class="parlay-pick">Jalen Brunson <span class="pick-direction over">OVER</span> assists 7.5</span><span class="parlay-plus">+</span><span class="parlay-pick">Jalen Johnson <span class="pick-direction over">OVER</span> assists 7.5</span><span class="parlay-plus">+</span><span class="parlay-pick">Jalen Brunson <span class="pick-direction over">OVER</span> points 25.5</span></div>
-                    </div>
+                    <div class="pick-group-header"><span class="pick-group-icon">🎯</span><span class="pick-group-title">3 Prop Parlay</span></div>
+                    <div class="pick-card"><div class="pick-item"><span class="pick-label">No props available</span></div></div>
                 </div>
                 <div class="pick-group">
                     <div class="pick-group-header"><span class="pick-group-icon">📊</span><span class="pick-group-title">ML / Spread / O-U</span><span class="pick-group-odds">+507</span></div>
                     <div class="pick-card">
                         <div class="pick-item">
                             <span class="pick-label">SPREAD</span>
-                            <span class="pick-value">ATL (-1.5)</span>
-                            <span class="pick-line">-108</span>
+                            <span class="pick-value">NY (-5.5)</span>
+                            <span class="pick-line">-110</span>
                         </div>
                     </div>
                     <div class="pick-card">
                         <div class="pick-item">
                             <span class="pick-label">TOTAL</span>
-                            <span class="pick-value">DET vs ORL O/U 222.5</span>
-                            <span class="pick-line">-112</span>
+                            <span class="pick-value">ORL vs DET O/U 230.5</span>
+                            <span class="pick-line">-110</span>
                         </div>
                     </div>
                     <div class="pick-card">
@@ -135,42 +137,31 @@
                         </div>
                     </div>
                 </div>
-                <div class="pick-group">
-                    <div class="pick-group-header"><span class="pick-group-icon">🏆</span><span class="pick-group-title">Best Bets Parlay (3 picks)</span><span class="pick-group-odds">+507</span></div>
-                    <div class="pick-card">
-                        <div class="best-bets-list">
-                            <div class="best-bet-item"><span class="best-bet-sport">🏀</span><span class="best-bet-text">ATL (-1.5)</span><span class="best-bet-conf">68%</span></div>
-                            <div class="best-bet-item"><span class="best-bet-sport">🏀</span><span class="best-bet-text">DET vs ORL O/U 222.5</span><span class="best-bet-conf">68%</span></div>
-                            <div class="best-bet-item"><span class="best-bet-sport">🏀</span><span class="best-bet-text">MEM ML</span><span class="best-bet-conf">68%</span></div>
-                        </div>
-                    </div>
-                </div>
             </div>
 <div class="league-section">
                 <div class="league-header">
                     <span class="league-emoji">🧊</span>
                     <span class="league-name nhl">NHL</span>
+                    <span class="lock-status locked">🔒 LOCKED 08:24 PM</span>
                 </div>
                 <div class="pick-group">
-                    <div class="pick-group-header"><span class="pick-group-icon">🎯</span><span class="pick-group-title">3 Prop Parlay</span><span class="pick-group-odds">+595</span></div>
-                    <div class="pick-card">
-                        <div class="parlay-combo"><span class="parlay-pick">Tage Thompson <span class="pick-direction over">OVER</span> points 0.5</span><span class="parlay-plus">+</span><span class="parlay-pick">Tage Thompson <span class="pick-direction over">OVER</span> goals 0.5</span><span class="parlay-plus">+</span><span class="parlay-pick">Mark Scheifele <span class="pick-direction over">OVER</span> points 1.5</span></div>
-                    </div>
+                    <div class="pick-group-header"><span class="pick-group-icon">🎯</span><span class="pick-group-title">3 Prop Parlay</span></div>
+                    <div class="pick-card"><div class="pick-item"><span class="pick-label">No props available</span></div></div>
                 </div>
                 <div class="pick-group">
-                    <div class="pick-group-header"><span class="pick-group-icon">📊</span><span class="pick-group-title">ML / Spread / O-U</span><span class="pick-group-odds">+455</span></div>
+                    <div class="pick-group-header"><span class="pick-group-icon">📊</span><span class="pick-group-title">ML / Spread / O-U</span><span class="pick-group-odds">+701</span></div>
                     <div class="pick-card">
                         <div class="pick-item">
                             <span class="pick-label">SPREAD</span>
-                            <span class="pick-value">TB (1.5)</span>
-                            <span class="pick-line">-265</span>
+                            <span class="pick-value">TB (-1.5)</span>
+                            <span class="pick-line">-110</span>
                         </div>
                     </div>
                     <div class="pick-card">
                         <div class="pick-item">
                             <span class="pick-label">TOTAL</span>
-                            <span class="pick-value">SEA vs WPG O/U 5.5</span>
-                            <span class="pick-line">-120</span>
+                            <span class="pick-value">WPG vs SEA O/U 5.5</span>
+                            <span class="pick-line">-110</span>
                         </div>
                     </div>
                     <div class="pick-card">
@@ -182,11 +173,11 @@
                     </div>
                 </div>
                 <div class="pick-group">
-                    <div class="pick-group-header"><span class="pick-group-icon">🏆</span><span class="pick-group-title">Best Bets Parlay (2 picks)</span><span class="pick-group-odds">+152</span></div>
+                    <div class="pick-group-header"><span class="pick-group-icon">🏆</span><span class="pick-group-title">Best Bets Parlay (2 picks)</span><span class="pick-group-odds">+264</span></div>
                     <div class="pick-card">
                         <div class="best-bets-list">
-                            <div class="best-bet-item"><span class="best-bet-sport">🧊</span><span class="best-bet-text">TB (1.5)</span><span class="best-bet-conf">68%</span></div>
-                            <div class="best-bet-item"><span class="best-bet-sport">🧊</span><span class="best-bet-text">SEA vs WPG O/U 5.5</span><span class="best-bet-conf">68%</span></div>
+                            <div class="best-bet-item"><span class="best-bet-sport">🧊</span><span class="best-bet-text">WPG vs SEA O/U 5.5</span><span class="best-bet-conf">72%</span></div>
+                            <div class="best-bet-item"><span class="best-bet-sport">🧊</span><span class="best-bet-text">TB (-1.5)</span><span class="best-bet-conf">71%</span></div>
                         </div>
                     </div>
                 </div>
@@ -195,6 +186,7 @@
                 <div class="league-header">
                     <span class="league-emoji">⚾</span>
                     <span class="league-name mlb">MLB</span>
+                    <span class="lock-status locked">🔒 LOCKED 08:24 PM</span>
                 </div>
                 <div class="pick-group">
                     <div class="pick-group-header"><span class="pick-group-icon">🎯</span><span class="pick-group-title">3 Prop Parlay</span></div>
@@ -205,22 +197,32 @@
                     <div class="pick-card">
                         <div class="pick-item">
                             <span class="pick-label">SPREAD</span>
-                            <span class="pick-value">TB (1.5)</span>
+                            <span class="pick-value">CLE (-1.5)</span>
                             <span class="pick-line">-110</span>
                         </div>
                     </div>
                     <div class="pick-card">
                         <div class="pick-item">
                             <span class="pick-label">TOTAL</span>
-                            <span class="pick-value">KC vs CLE O/U 8.5</span>
+                            <span class="pick-value">MIA vs CIN O/U 9.5</span>
                             <span class="pick-line">-110</span>
                         </div>
                     </div>
                     <div class="pick-card">
                         <div class="pick-item">
                             <span class="pick-label">MONEYLINE</span>
-                            <span class="pick-value">MIA ML</span>
+                            <span class="pick-value">PIT ML</span>
                             <span class="pick-line">-160</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="pick-group">
+                    <div class="pick-group-header"><span class="pick-group-icon">🏆</span><span class="pick-group-title">Best Bets Parlay (3 picks)</span><span class="pick-group-odds">+492</span></div>
+                    <div class="pick-card">
+                        <div class="best-bets-list">
+                            <div class="best-bet-item"><span class="best-bet-sport">⚾</span><span class="best-bet-text">PIT ML</span><span class="best-bet-conf">83%</span></div>
+                            <div class="best-bet-item"><span class="best-bet-sport">⚾</span><span class="best-bet-text">MIA vs CIN O/U 9.5</span><span class="best-bet-conf">82%</span></div>
+                            <div class="best-bet-item"><span class="best-bet-sport">⚾</span><span class="best-bet-text">CLE (-1.5)</span><span class="best-bet-conf">74%</span></div>
                         </div>
                     </div>
                 </div>
@@ -237,28 +239,41 @@
                 </div>
                 <div class="pick-card">
                     <div class="best-bets-list">
-                        <div class="best-bet-item"><span class="best-bet-text">⚾ SD v PIT | <strong>SD ML</strong></span><span class="best-bet-conf">86%</span></div>
-                        <div class="best-bet-item"><span class="best-bet-text">⚾ KC v CLE | <strong>KC ML</strong></span><span class="best-bet-conf">83%</span></div>
-                        <div class="best-bet-item"><span class="best-bet-text">🏀 MEM v CLE | <strong>MEM ML</strong></span><span class="best-bet-conf">80%</span></div>
-                        <div class="best-bet-item"><span class="best-bet-text">🏀 DET v ORL | <strong>DET ML</strong></span><span class="best-bet-conf">79%</span></div>
-                        <div class="best-bet-item"><span class="best-bet-text">🧊 SEA v WPG | <strong>SEA ML</strong></span><span class="best-bet-conf">79%</span></div>
-                        <div class="best-bet-item"><span class="best-bet-text">⚾ COL v HOU | <strong>COL ML</strong></span><span class="best-bet-conf">78%</span></div>
-                        <div class="best-bet-item"><span class="best-bet-text">🧊 LA v NSH | <strong>LA ML</strong></span><span class="best-bet-conf">76%</span></div>
-                        <div class="best-bet-item"><span class="best-bet-text">⚾ TB v CHC | <strong>TB ML</strong></span><span class="best-bet-conf">76%</span></div>
-                        <div class="best-bet-item"><span class="best-bet-text">⚾ MIA v CIN | <strong>MIA ML</strong></span><span class="best-bet-conf">73%</span></div>
-                        <div class="best-bet-item"><span class="best-bet-text">⚾ SF v PHI | <strong>SF ML</strong></span><span class="best-bet-conf">73%</span></div>
-                        <div class="best-bet-item"><span class="best-bet-text">🏀 POR v DEN | <strong>POR ML</strong></span><span class="best-bet-conf">71%</span></div>
-                        <div class="best-bet-item"><span class="best-bet-text">🧊 TB v BUF | <strong>TB ML</strong></span><span class="best-bet-conf">71%</span></div>
-                        <div class="best-bet-item"><span class="best-bet-text">🧊 CHI v SJ | <strong>CHI ML</strong></span><span class="best-bet-conf">71%</span></div>
-                        <div class="best-bet-item"><span class="best-bet-text">⚾ MIN v DET | <strong>MIN ML</strong></span><span class="best-bet-conf">70%</span></div>
-                        <div class="best-bet-item"><span class="best-bet-text">⚾ MIL v BOS | <strong>MIL ML</strong></span><span class="best-bet-conf">68%</span></div>
-                        <div class="best-bet-item"><span class="best-bet-text">⚾ CHW v BAL | <strong>CHW ML</strong></span><span class="best-bet-conf">68%</span></div>
-                        <div class="best-bet-item"><span class="best-bet-text">⚾ LAD v TOR | <strong>LAD ML</strong></span><span class="best-bet-conf">66%</span></div>
-                        <div class="best-bet-item"><span class="best-bet-text">🏀 SA v PHI | <strong>SA ML</strong></span><span class="best-bet-conf">64%</span></div>
-                        <div class="best-bet-item"><span class="best-bet-text">⚾ WSH v STL | <strong>WSH ML</strong></span><span class="best-bet-conf">60%</span></div>
-                        <div class="best-bet-item"><span class="best-bet-text">⚾ SEA v TEX | <strong>SEA ML</strong></span><span class="best-bet-conf">58%</span></div>
-                        <div class="best-bet-item"><span class="best-bet-text">⚾ ATL v LAA | <strong>ATL ML</strong></span><span class="best-bet-conf">58%</span></div>
-                        <div class="best-bet-item"><span class="best-bet-text">🏀 ATL v NY | <strong>ATL ML</strong></span><span class="best-bet-conf">55%</span></div>
+                        <div class="best-bet-item"><span class="best-bet-text">🏆 PIT v SD | <strong>PIT ML</strong></span><span class="best-bet-conf">83%</span></div>
+                        <div class="best-bet-item"><span class="best-bet-text">🏆 MIA v CIN | <strong>MIA ML</strong></span><span class="best-bet-conf">82%</span></div>
+                        <div class="best-bet-item"><span class="best-bet-text">🏆 CHW v BAL | <strong>CHW ML</strong></span><span class="best-bet-conf">81%</span></div>
+                        <div class="best-bet-item"><span class="best-bet-text">🏆 LA v NSH | <strong>LA ML</strong></span><span class="best-bet-conf">77%</span></div>
+                        <div class="best-bet-item"><span class="best-bet-text">🏆 STL v WSH | <strong>STL ML</strong></span><span class="best-bet-conf">77%</span></div>
+                        <div class="best-bet-item"><span class="best-bet-text">🏆 POR v DEN | <strong>POR ML</strong></span><span class="best-bet-conf">76%</span></div>
+                        <div class="best-bet-item"><span class="best-bet-text">🏆 LAD v TOR | <strong>LAD ML</strong></span><span class="best-bet-conf">76%</span></div>
+                        <div class="best-bet-item"><span class="best-bet-text">🏆 SEA v TEX | <strong>SEA ML</strong></span><span class="best-bet-conf">75%</span></div>
+                        <div class="best-bet-item"><span class="best-bet-text">🏆 CLE v KC | <strong>CLE ML</strong></span><span class="best-bet-conf">74%</span></div>
+                        <div class="best-bet-item"><span class="best-bet-text">🏆 NY v ATL | <strong>NY ML</strong></span><span class="best-bet-conf">72%</span></div>
+                        <div class="best-bet-item"><span class="best-bet-text">🏆 WPG v SEA | <strong>WPG ML</strong></span><span class="best-bet-conf">72%</span></div>
+                        <div class="best-bet-item"><span class="best-bet-text">🏆 COL v HOU | <strong>COL ML</strong></span><span class="best-bet-conf">72%</span></div>
+                        <div class="best-bet-item"><span class="best-bet-text">🏆 SA v PHI | <strong>SA ML</strong></span><span class="best-bet-conf">71%</span></div>
+                        <div class="best-bet-item"><span class="best-bet-text">🏆 TB v BUF | <strong>TB ML</strong></span><span class="best-bet-conf">71%</span></div>
+                        <div class="best-bet-item"><span class="best-bet-text">🏆 CHI v SJ | <strong>CHI ML</strong></span><span class="best-bet-conf">70%</span></div>
+                        <div class="best-bet-item"><span class="best-bet-text">🏆 MEM v CLE | <strong>MEM ML</strong></span><span class="best-bet-conf">69%</span></div>
+                        <div class="best-bet-item"><span class="best-bet-text">🏆 DET v MIN | <strong>DET ML</strong></span><span class="best-bet-conf">67%</span></div>
+                        <div class="best-bet-item"><span class="best-bet-text">🏆 ORL v DET | <strong>ORL ML</strong></span><span class="best-bet-conf">64%</span></div>
+                        <div class="best-bet-item"><span class="best-bet-text">🏆 MIL v BOS | <strong>MIL ML</strong></span><span class="best-bet-conf">63%</span></div>
+                        <div class="best-bet-item"><span class="best-bet-text">🏆 PHI v SF | <strong>PHI ML</strong></span><span class="best-bet-conf">63%</span></div>
+                        <div class="best-bet-item"><span class="best-bet-text">🏆 ATL v LAA | <strong>ATL ML</strong></span><span class="best-bet-conf">59%</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="league-section">
+            <div class="league-header">
+                <span class="league-emoji">📊</span>
+                <span class="league-name" style="color: var(--gold);">VITO'S RECORD</span>
+            </div>
+            <div class="pick-group">
+                <div class="pick-card">
+                    <div class="best-bet-item">
+                        <span class="best-bet-text">Locked Picks W-L</span>
+                        <span class="best-bet-conf" style="font-size: 1rem;">0-0 (0.0%)</span>
                     </div>
                 </div>
             </div>

@@ -10,8 +10,14 @@ import random
 import logging
 from datetime import datetime, date, timedelta
 from typing import Optional, List, Dict, Any, Set
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import config
+import os
+
+# Lock/COOK settings
+LOCK_THRESHOLD_HOURS = 1  # Lock picks when first game is within this many hours
+LOCKED_PICKS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "locked_picks.json")
+SCOREBOARD_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "scoreboard.json")
 
 try:
     import requests
@@ -42,6 +48,156 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger("uncle_vito")
+
+
+class Scoreboard:
+    """
+    Tracks Vito's locked picks record (W-L) across all sports.
+    """
+    
+    def __init__(self, scoreboard_file: str = SCOREBOARD_FILE):
+        self.scoreboard_file = scoreboard_file
+        self.record: Dict[str, Dict[str, int]] = {}  # sport -> {"wins": X, "losses": Y}
+        self._load()
+    
+    def _load(self):
+        """Load scoreboard from file."""
+        if os.path.exists(self.scoreboard_file):
+            try:
+                with open(self.scoreboard_file, 'r') as f:
+                    self.record = json.load(f)
+            except Exception:
+                self.record = {}
+        else:
+            self.record = {}
+    
+    def _save(self):
+        """Save scoreboard to file."""
+        try:
+            with open(self.scoreboard_file, 'w') as f:
+                json.dump(self.record, f, indent=2)
+        except Exception as e:
+            logger.warning(f"Failed to save scoreboard: {e}")
+    
+    def get_record(self, sport: str = None) -> Dict[str, int]:
+        """
+        Get record for a sport or all sports combined.
+        Returns dict with wins, losses, total, win_pct.
+        """
+        if sport:
+            data = self.record.get(sport, {"wins": 0, "losses": 0})
+        else:
+            total_wins = sum(d.get("wins", 0) for d in self.record.values())
+            total_losses = sum(d.get("losses", 0) for d in self.record.values())
+            return {"wins": total_wins, "losses": total_losses}
+        return data
+    
+    def get_win_pct(self, sport: str = None) -> float:
+        """Get win percentage for a sport or overall."""
+        data = self.get_record(sport)
+        total = data.get("wins", 0) + data.get("losses", 0)
+        if total == 0:
+            return 0.0
+        return (data.get("wins", 0) / total) * 100
+    
+    def add_win(self, sport: str):
+        """Record a win for a sport."""
+        if sport not in self.record:
+            self.record[sport] = {"wins": 0, "losses": 0}
+        self.record[sport]["wins"] = self.record[sport].get("wins", 0) + 1
+        self._save()
+    
+    def add_loss(self, sport: str):
+        """Record a loss for a sport."""
+        if sport not in self.record:
+            self.record[sport] = {"wins": 0, "losses": 0}
+        self.record[sport]["losses"] = self.record[sport].get("losses", 0) + 1
+        self._save()
+    
+    def format_record_str(self, sport: str = None) -> str:
+        """Format record as string like '14-8 (63.5%)'."""
+        data = self.get_record(sport)
+        wins = data.get("wins", 0)
+        losses = data.get("losses", 0)
+        pct = self.get_win_pct(sport)
+        return f"{wins}-{losses} ({pct:.1f}%)"
+
+
+class LockedPicks:
+    """
+    Manages locked picks per sport.
+    Once a sport is locked, picks are immutable and stored with timestamp.
+    """
+    
+    def __init__(self, locked_picks_file: str = LOCKED_PICKS_FILE):
+        self.locked_picks_file = locked_picks_file
+        self.picks: Dict[str, Dict] = {}  # sport -> {locked_at, picks}
+        self._load()
+    
+    def _load(self):
+        """Load locked picks from file."""
+        if os.path.exists(self.locked_picks_file):
+            try:
+                with open(self.locked_picks_file, 'r') as f:
+                    self.picks = json.load(f)
+            except Exception:
+                self.picks = {}
+        else:
+            self.picks = {}
+    
+    def _save(self):
+        """Save locked picks to file."""
+        try:
+            with open(self.locked_picks_file, 'w') as f:
+                json.dump(self.picks, f, indent=2)
+        except Exception as e:
+            logger.warning(f"Failed to save locked picks: {e}")
+    
+    def is_locked(self, sport: str) -> bool:
+        """Check if a sport's picks are locked."""
+        return sport in self.picks and "locked_at" in self.picks[sport]
+    
+    def get_locked_at(self, sport: str) -> Optional[str]:
+        """Get the timestamp when sport was locked."""
+        if sport in self.picks:
+            return self.picks[sport].get("locked_at")
+        return None
+    
+    def get_picks(self, sport: str) -> List[Dict]:
+        """Get locked picks for a sport."""
+        if sport in self.picks:
+            return self.picks[sport].get("picks", [])
+        return []
+    
+    def lock(self, sport: str, picks: List[Dict], odds: int = -110):
+        """
+        Lock picks for a sport. Once locked, cannot be overwritten.
+        Stores picks with timestamp.
+        """
+        if self.is_locked(sport):
+            logger.info(f"{sport} already locked, skipping")
+            return False
+        
+        locked_at = datetime.now().isoformat()
+        self.picks[sport] = {
+            "locked_at": locked_at,
+            "picks": picks,
+            "odds": odds,
+        }
+        self._save()
+        logger.info(f"🔒 LOCKED {sport} at {locked_at}")
+        return True
+    
+    def clear_sport(self, sport: str):
+        """Clear locked picks for a sport (for new day reset)."""
+        if sport in self.picks:
+            del self.picks[sport]
+            self._save()
+    
+    def clear_all(self):
+        """Clear all locked picks (for new day reset)."""
+        self.picks = {}
+        self._save()
 
 
 @dataclass
@@ -1472,6 +1628,10 @@ class UncleVitoReport:
         self._odds_api_game_odds: Dict[str, List[Dict]] = {}  # sport -> game-level odds (h2h/spreads/totals)
         self._odds_api_game_fetched: Dict[str, bool] = {}  # sport -> whether we've fetched game odds today
         self._sharp_consensus: Dict[str, Any] = {}  # sharp bettor consensus data from X
+        
+        # Lock/COOK tracking
+        self.locked_picks = LockedPicks(LOCKED_PICKS_FILE)
+        self.scoreboard = Scoreboard(SCOREBOARD_FILE)
 
     def fetch_todays_games(self) -> Dict[str, List[Game]]:
         """Fetch today's games across all configured sports."""
@@ -1524,6 +1684,106 @@ class UncleVitoReport:
             self._sharp_consensus = {}
         
         return self._sharp_consensus
+
+    def should_lock_sport(self, sport: str) -> bool:
+        """
+        Check if a sport should be locked based on first game time.
+        Locks when first game is within LOCK_THRESHOLD_HOURS.
+        """
+        if sport not in self.games or not self.games[sport]:
+            return False
+        
+        # Already locked
+        if self.locked_picks.is_locked(sport):
+            return False
+        
+        # Find first game time
+        for game in self.games[sport]:
+            if game.status != "scheduled":
+                continue
+            try:
+                game_dt = datetime.fromisoformat(game.date.replace("Z", "+00:00"))
+                now = datetime.now(game_dt.tzinfo) if game_dt.tzinfo else datetime.now()
+                hours_until = (game_dt - now).total_seconds() / 3600
+                
+                if hours_until <= LOCK_THRESHOLD_HOURS:
+                    return True
+            except Exception:
+                continue
+        
+        return False
+    
+    def lock_sport_picks(self, sport: str) -> bool:
+        """
+        Lock the current picks for a sport.
+        Returns True if locked successfully.
+        """
+        if self.locked_picks.is_locked(sport):
+            return False
+        
+        # Get current picks for this sport
+        parlays = self.generate_league_parlays(sport)
+        props = parlays.get("props", [])
+        game_picks = parlays.get("game_picks", [])
+        
+        # Format props for storage
+        props_data = []
+        for p in props:
+            props_data.append({
+                "type": "prop",
+                "player": p.player,
+                "team": p.team,
+                "stat_type": p.stat_type,
+                "line": p.line,
+                "direction": p.direction,
+                "odds": p.odds,
+                "confidence": p.confidence,
+            })
+        
+        # Format game picks for storage
+        games_data = []
+        for p in game_picks:
+            games_data.append({
+                "type": p.pick_type,
+                "team": p.team,
+                "opponent": p.opponent,
+                "line": p.line,
+                "odds": p.odds,
+                "confidence": p.confidence,
+            })
+        
+        picks_data = {
+            "props": props_data,
+            "game_picks": games_data,
+        }
+        
+        return self.locked_picks.lock(sport, picks_data)
+    
+    def get_lock_status(self, sport: str) -> Dict[str, Any]:
+        """
+        Get the lock status for a sport.
+        Returns dict with is_locked, locked_at, status_text.
+        """
+        is_locked = self.locked_picks.is_locked(sport)
+        locked_at = self.locked_picks.get_locked_at(sport)
+        
+        if is_locked and locked_at:
+            # Format timestamp as human-readable time
+            try:
+                dt = datetime.fromisoformat(locked_at)
+                time_str = dt.strftime("%I:%M %p")
+                status_text = f"🔒 LOCKED {time_str}"
+            except Exception:
+                status_text = "🔒 LOCKED"
+        else:
+            status_text = "🧑‍🍳 COOKING..."
+        
+        return {
+            "is_locked": is_locked,
+            "locked_at": locked_at,
+            "status_text": status_text,
+        }
+
 
     def apply_sharp_boost(self, pick: Any, consensus: Dict[str, Any] = None) -> int:
         """
@@ -1673,7 +1933,7 @@ class UncleVitoReport:
                 confidence_result = self.confidence_calc.calculate_real_confidence(
                     pick_team=pick_team_abbr,
                     opp_team=opp_team_abbr,
-                    sport=sport_key,
+                    sport=sport,
                     game_date=game.date
                 )
                 
@@ -1688,7 +1948,7 @@ class UncleVitoReport:
                     odds=odds,
                     source_signal=self._get_strongest_source(signal),
                     confidence=confidence_result["confidence"],
-                    sport=sport_key,
+                    sport=sport,
                     analysis=confidence_result["analysis"]
                 )
                 all_ml_picks.append(pick)
@@ -1838,6 +2098,14 @@ class UncleVitoReport:
 
             pick_types_used.append(pick_type)
 
+            # Calculate REAL confidence using ConfidenceCalculator
+            confidence_result = self.confidence_calc.calculate_real_confidence(
+                pick_team=pick_team.abbreviation,
+                opp_team=opp_team.abbreviation,
+                sport=sport,
+                game_date=game.date
+            )
+            
             pick = WinnerPick(
                 team=pick_team.abbreviation,
                 opponent=opp_team.abbreviation,
@@ -1845,7 +2113,9 @@ class UncleVitoReport:
                 line=line,
                 odds=odds,
                 source_signal=self._get_strongest_source(signal),
-                confidence=signal["confidence"]
+                confidence=confidence_result["confidence"],
+                sport=sport,
+                analysis=confidence_result["analysis"]
             )
             picks.append(pick)
 
@@ -2408,9 +2678,41 @@ class UncleVitoReport:
         
         # Fetch games
         self.fetch_todays_games()
+        
+        # Check for stale locks (from previous days) and clear them
+        self._check_and_clear_stale_locks()
+        
+        # Check if any sports should be locked (first game within threshold)
+        self._check_and_lock_sports()
 
         # Report is generated on-the-fly in format_report now
         return self.format_report()
+    
+    def _check_and_clear_stale_locks(self):
+        """
+        Check if any locked picks are from a previous day and clear them.
+        This ensures fresh locks for each new day.
+        """
+        today = datetime.now().date()
+        for sport in list(self.locked_picks.picks.keys()):
+            locked_at = self.locked_picks.get_locked_at(sport)
+            if locked_at:
+                try:
+                    lock_date = datetime.fromisoformat(locked_at).date()
+                    if lock_date < today:
+                        logger.info(f"Clearing stale lock for {sport} (locked on {lock_date})")
+                        self.locked_picks.clear_sport(sport)
+                except Exception:
+                    pass
+    
+    def _check_and_lock_sports(self):
+        """
+        Check each sport and lock it if the first game is within threshold.
+        """
+        for sport in config.SPORTS:
+            if sport in self.games and self.games[sport]:
+                if self.should_lock_sport(sport):
+                    self.lock_sport_picks(sport)
 
 
 
@@ -2459,6 +2761,9 @@ class UncleVitoReport:
         .league-name.nba { color: var(--nba); }
         .league-name.nhl { color: var(--nhl); }
         .league-name.mlb { color: var(--mlb); }
+        .lock-status { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; padding: 3px 8px; border-radius: 4px; background: rgba(255,255,255,0.05); color: var(--text-dim); }
+        .lock-status.locked { background: rgba(240,185,11,0.15); color: var(--gold); }
+        .lock-status.cooking { background: rgba(0,230,118,0.1); color: var(--win); }
         
         /* Pick Group (Prop Parlay, ML/Spread, Best Bets) */
         .pick-group { margin-bottom: 16px; }
@@ -2551,10 +2856,13 @@ __LEAGUE_SECTIONS__
             game_picks = league_parlays.get("game_picks", [])
             
             # Build league section
+            lock_status = self.get_lock_status(sport)
+            lock_css_class = "locked" if lock_status["is_locked"] else "cooking"
             section = f'''<div class="league-section">
                 <div class="league-header">
                     <span class="league-emoji">{emoji}</span>
                     <span class="league-name {color_class}">{sport}</span>
+                    <span class="lock-status {lock_css_class}">{lock_status["status_text"]}</span>
                 </div>
 '''
             
@@ -2696,6 +3004,25 @@ __LEAGUE_SECTIONS__
         ml_section += '                    </div>\n                </div>\n            </div>\n        </div>\n'
         
         league_html += ml_section
+        
+        # Vito's Record section
+        record_str = self.scoreboard.format_record_str()
+        record_section = '''        <div class="league-section">
+            <div class="league-header">
+                <span class="league-emoji">📊</span>
+                <span class="league-name" style="color: var(--gold);">VITO'S RECORD</span>
+            </div>
+            <div class="pick-group">
+                <div class="pick-card">
+                    <div class="best-bet-item">
+                        <span class="best-bet-text">Locked Picks W-L</span>
+                        <span class="best-bet-conf" style="font-size: 1rem;">''' + record_str + '''</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+'''
+        league_html += record_section
         
         html = html.replace("__DATE_STR__", date_str)
         html = html.replace("__LEAGUE_SECTIONS__", league_html)

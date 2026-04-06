@@ -28,8 +28,8 @@ from config import (
 )
 
 # === TONY'S ENTRY PRICE FILTER: Only enter when share price is $0.20-$0.80 ===
-MIN_ENTRY_PRICE = 0.30
-MAX_ENTRY_PRICE = 0.70
+MIN_ENTRY_PRICE = 0.20
+MAX_ENTRY_PRICE = 0.80
 
 # === TONY'S TWO-STAGE STOP SYSTEM ===
 # STOPS DISABLED per Nerd's production analysis (2026-04-06)
@@ -657,8 +657,8 @@ class StrategyEngine:
         """
         import math
 
-        # Skip if confidence too low
-        if confidence < 60:  # RAISED from 40 to 60 - only strong signals
+        # Skip if confidence too low (CONF=40 or below is skipped)
+        if confidence <= 40:
             return 0.0, 0.0, confidence
 
         if prob <= 0 or prob >= 1:
@@ -709,6 +709,9 @@ class StrategyEngine:
 
         # Minimum 1 contract if there's a valid signal (Tony fix: was returning 0 and skipping trade)
         contracts = max(1, contracts)
+
+        # Log the Kelly sizing result for debugging
+        logger.info(f"KELLY CALCULATED: strategy={strategy.value} | CONF={confidence} | kelly_pct={kelly_pct:.2%} | conf_mult={conf_mult:.2f}x | effective_pct={effective_pct:.2%} | dollar_amount=${dollar_amount:.2f} | entry_price=${entry_price:.4f} | contracts={int(contracts):d}")
 
         return int(contracts), effective_pct, confidence
 
@@ -1452,8 +1455,8 @@ Your estimate:"""
             if time_left <= 180:
                 stop_pct = max(stop_pct, MIN_STOP_PCT)
         else:
-            # Static -30% stop for FIRST_CROSS
-            stop_pct = 0.30
+            # Use INITIAL_STOP_PCT (which is 0.0 = disabled per Tony's request)
+            stop_pct = INITIAL_STOP_PCT
 
         # === NEAR-EXPIRY EXIT (last 60 seconds) ===
         if time_left <= 60:
@@ -1465,13 +1468,14 @@ Your estimate:"""
         if position.side == "yes":
             # YES: We profit when price goes UP
 
-            # Stage 1: STATIC STOP
-            static_stop_price = entry_price * (1 - stop_pct)
-            if current_price <= static_stop_price:
-                loss_pct = (entry_price - current_price) / entry_price
-                stop_label = "TIME-SCALED STOP" if use_time_scale else "STATIC STOP"
-                logger.info(f"{position.ticker}: {stop_label} HIT @ ${current_price:.4f} (entry=${entry_price:.4f}, stop={stop_pct:.0%}, loss={loss_pct:.1%}, age={time_elapsed_min:.1f}min)")
-                return True, f"{stop_label}: -{stop_pct:.0%} loss locked in"
+            # Stage 1: STATIC STOP (skip if stop_pct disabled)
+            if stop_pct > 0:
+                static_stop_price = entry_price * (1 - stop_pct)
+                if current_price <= static_stop_price:
+                    loss_pct = (entry_price - current_price) / entry_price
+                    stop_label = "TIME-SCALED STOP" if use_time_scale else "STATIC STOP"
+                    logger.info(f"{position.ticker}: {stop_label} HIT @ ${current_price:.4f} (entry=${entry_price:.4f}, stop={stop_pct:.0%}, loss={loss_pct:.1%}, age={time_elapsed_min:.1f}min)")
+                    return True, f"{stop_label}: -{stop_pct:.0%} loss locked in"
 
             # Stage 2: TRAILING STOP (after +30% profit)
             profit_target_price = entry_price * (1 + TRAILING_TRIGGER_PCT)
@@ -1495,13 +1499,14 @@ Your estimate:"""
         else:
             # NO: We profit when price goes DOWN
 
-            # Stage 1: STATIC STOP
-            static_stop_price = entry_price * (1 + stop_pct)
-            if current_price >= static_stop_price:
-                loss_pct = (current_price - entry_price) / entry_price
-                stop_label = "TIME-SCALED STOP" if use_time_scale else "STATIC STOP"
-                logger.info(f"{position.ticker}: {stop_label} HIT @ ${current_price:.4f} (entry=${entry_price:.4f}, stop={stop_pct:.0%}, loss={loss_pct:.1%}, age={time_elapsed_min:.1f}min)")
-                return True, f"{stop_label}: -{stop_pct:.0%} loss locked in"
+            # Stage 1: STATIC STOP (skip if stop_pct disabled)
+            if stop_pct > 0:
+                static_stop_price = entry_price * (1 + stop_pct)
+                if current_price >= static_stop_price:
+                    loss_pct = (current_price - entry_price) / entry_price
+                    stop_label = "TIME-SCALED STOP" if use_time_scale else "STATIC STOP"
+                    logger.info(f"{position.ticker}: {stop_label} HIT @ ${current_price:.4f} (entry=${entry_price:.4f}, stop={stop_pct:.0%}, loss={loss_pct:.1%}, age={time_elapsed_min:.1f}min)")
+                    return True, f"{stop_label}: -{stop_pct:.0%} loss locked in"
 
             # Stage 2: TRAILING STOP (after +30% profit)
             profit_target_price = entry_price * (1 - TRAILING_TRIGGER_PCT)

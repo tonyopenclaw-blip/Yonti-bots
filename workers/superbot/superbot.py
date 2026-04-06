@@ -233,8 +233,8 @@ class CoinTrader:
                 logger.info(f"[{self.coin}] Using {len(markets)} markets from Searcher/Scanner")
                 return markets
 
-        # Fall back to direct API call
-        return self.api.get_markets(series_ticker=self.series_ticker)
+        # Fall back to direct API call - only open markets
+        return self.api.get_open_markets(series_ticker=self.series_ticker)
 
     def _check_existing_positions(self, markets: Dict[str, Market]) -> bool:
         """Check open positions for exit conditions. Returns True if positions changed."""

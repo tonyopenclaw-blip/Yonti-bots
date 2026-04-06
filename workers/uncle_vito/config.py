@@ -69,7 +69,7 @@ ODDS_API_KEYS = [
     "5b62457b1049c4e92541d10b53b64aa3",  # Key 1
     "cb42c4fe578ae32bbaf58923493d26e5",  # Key 2 (alternate)
 ]
-ODDS_API_KEY = "cb42c4fe578ae32bbaf58923493d26e5"  # Default key 1
+ODDS_API_KEY = "5b62457b1049c4e92541d10b53b64aa3"  # Default key 1
 ODDS_API_BASE = "https://api.the-odds-api.com/v4"
 ODDS_REGIONS = "us"  # Covers DraftKings, FanDuel
 ODDS_SPORTS = {

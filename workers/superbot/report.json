@@ -1,98 +1,18 @@
 {
-  "start_time": "2026-04-06 16:51:18 UTC",
+  "start_time": "2026-04-06 17:57:29 UTC",
   "end_time": "",
   "starting_balance": 34.67,
-  "ending_balance": 12.59,
-  "total_pnl": -22.080000000000002,
-  "total_trades": 3,
+  "ending_balance": 0.0,
+  "total_pnl": -34.67,
+  "total_trades": 0,
   "winning_trades": 0,
-  "losing_trades": 3,
-  "win_rate": 0.0,
+  "losing_trades": 0,
+  "win_rate": 0,
   "largest_win": 0.0,
-  "largest_loss": -0.11499999999999999,
+  "largest_loss": 0.0,
   "open_positions": 0,
   "thermostat": 0,
-  "trades": [
-    {
-      "ticker": "KXHYPE15M-26APR061300-00",
-      "side": "yes",
-      "entry_price": 0.56,
-      "exit_price": 0.53,
-      "shares": 1,
-      "cost": 0.56,
-      "pnl": -0.030000000000000027,
-      "strategy": "momentum",
-      "open_time": "2026-04-06 16:53:20 UTC",
-      "close_time": "2026-04-06 16:53:50 UTC",
-      "exit_reason": "TIME-SCALED STOP: -0% loss locked in"
-    },
-    {
-      "ticker": "KXHYPE15M-26APR061300-00",
-      "side": "yes",
-      "entry_price": 0.53,
-      "exit_price": 0.44999999999999996,
-      "shares": 1,
-      "cost": 0.53,
-      "pnl": -0.08000000000000007,
-      "strategy": "momentum",
-      "open_time": "2026-04-06 16:53:51 UTC",
-      "close_time": "2026-04-06 16:54:21 UTC",
-      "exit_reason": "TIME-SCALED STOP: -0% loss locked in"
-    },
-    {
-      "ticker": "KXHYPE15M-26APR061300-00",
-      "side": "yes",
-      "entry_price": 0.505,
-      "exit_price": 0.39,
-      "shares": 1,
-      "cost": 0.505,
-      "pnl": -0.11499999999999999,
-      "strategy": "momentum",
-      "open_time": "2026-04-06 16:54:52 UTC",
-      "close_time": "2026-04-06 16:55:22 UTC",
-      "exit_reason": "TIME-SCALED STOP: -0% loss locked in"
-    }
-  ],
+  "trades": [],
   "last_10_open_trades": [],
-  "last_10_closed_trades": [
-    {
-      "ticker": "KXHYPE15M-26APR061300-00",
-      "side": "yes",
-      "entry_price": 0.505,
-      "exit_price": 0.39,
-      "shares": 1,
-      "cost": 0.505,
-      "pnl": -0.11499999999999999,
-      "strategy": "momentum",
-      "open_time": "2026-04-06 16:54:52 UTC",
-      "close_time": "2026-04-06 16:55:22 UTC",
-      "exit_reason": "TIME-SCALED STOP: -0% loss locked in"
-    },
-    {
-      "ticker": "KXHYPE15M-26APR061300-00",
-      "side": "yes",
-      "entry_price": 0.53,
-      "exit_price": 0.44999999999999996,
-      "shares": 1,
-      "cost": 0.53,
-      "pnl": -0.08000000000000007,
-      "strategy": "momentum",
-      "open_time": "2026-04-06 16:53:51 UTC",
-      "close_time": "2026-04-06 16:54:21 UTC",
-      "exit_reason": "TIME-SCALED STOP: -0% loss locked in"
-    },
-    {
-      "ticker": "KXHYPE15M-26APR061300-00",
-      "side": "yes",
-      "entry_price": 0.56,
-      "exit_price": 0.53,
-      "shares": 1,
-      "cost": 0.56,
-      "pnl": -0.030000000000000027,
-      "strategy": "momentum",
-      "open_time": "2026-04-06 16:53:20 UTC",
-      "close_time": "2026-04-06 16:53:50 UTC",
-      "exit_reason": "TIME-SCALED STOP: -0% loss locked in"
-    }
-  ]
+  "last_10_closed_trades": []
 }

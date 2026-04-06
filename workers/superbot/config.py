@@ -32,8 +32,8 @@ KALSHI_TRACKER_KEY = os.getenv("KALSHI_TRACKER_KEY", "dd143eb9-ac4a-4cc2-bb17-11
 # =============================================================================
 # PAPER TRADING CONFIG
 # =============================================================================
-PAPER_MODE = True
-PAPER_BALANCE = 100.00
+PAPER_MODE = False
+PAPER_BALANCE = 44.52
 BALANCE_FLOOR = 3.00
 BALANCE_RESET_AMOUNT = 100.00
 

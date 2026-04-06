@@ -1,4 +1,5 @@
 # kalshi_api.py - Kalshi API wrapper for Superbot
+# Uses requests directly with RSA-PSS signature auth (kalshi_py SDK models don't match API)
 
 import logging
 import requests
@@ -7,14 +8,20 @@ from typing import Dict, List, Optional, Any
 from datetime import datetime
 from dataclasses import dataclass
 
-from config import KALSHI_BASE_URL, SERIES_TICKERS, MARKETS_LIMIT, KALSHI_ACCESS_KEY
+from kalshi_py.auth import KalshiAuth
+
+from config import KALSHI_BASE_URL, SERIES_TICKERS, MARKETS_LIMIT
 
 # Rate limiting constants
-API_CALL_DELAY_SEC = 0.2  # Small delay between API calls to avoid hammering
+API_CALL_DELAY_SEC = 0.2
 MAX_RETRIES = 3
-INITIAL_BACKOFF_SEC = 1.0  # Initial backoff for 429 errors
+INITIAL_BACKOFF_SEC = 1.0
 
 logger = logging.getLogger(__name__)
+
+# Hardcoded access key for live trading
+KALSHI_ACCESS_KEY_ID = "e275fa0a-90e0-4eaa-9fb1-d25c9f8ed804"
+PRIVATE_KEY_PATH = "/home/ubuntu/.openclaw/workspace/workers/superbot/kalshi_private_key.pem"
 
 
 @dataclass
@@ -22,8 +29,8 @@ class Market:
     """Represents a Kalshi market."""
     ticker: str
     question: str
-    yes_bid: float  # Highest bid to buy YES
-    yes_ask: float  # Lowest ask to sell YES
+    yes_bid: float  # Highest bid to buy YES (dollars)
+    yes_ask: float  # Lowest ask to sell YES (dollars)
     no_bid: float
     no_ask: float
     prob_yes: float  # Calculated probability
@@ -43,39 +50,68 @@ class Market:
             return 0
 
 
+def _cents_to_dollars(cents: int) -> float:
+    """Convert cents to dollars."""
+    return cents / 100.0
+
+
+def _dollars_to_cents(dollars: float) -> int:
+    """Convert dollars to cents."""
+    return int(dollars * 100)
+
+
 class KalshiAPI:
-    """Wrapper for Kalshi Trade API v2."""
+    """Wrapper for Kalshi Trade API v2 using RSA-PSS signature auth."""
     
     def __init__(self, access_key: str = ""):
-        self.access_key = access_key or KALSHI_ACCESS_KEY
+        self.access_key = access_key or KALSHI_ACCESS_KEY_ID
         self.base_url = KALSHI_BASE_URL
-        self.session = requests.Session()
-        self.session.headers.update({
-            "KALSHI-ACCESS-KEY": self.access_key,
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-        })
+        self._auth = None
+        self._session = None
+    
+    @property
+    def auth(self) -> KalshiAuth:
+        """Lazy initialization of the Kalshi auth handler."""
+        if self._auth is None:
+            with open(PRIVATE_KEY_PATH) as f:
+                private_key_pem = f.read()
+            self._auth = KalshiAuth(self.access_key, private_key_pem)
+        return self._auth
+    
+    @property
+    def session(self) -> requests.Session:
+        """Lazy initialization of requests session."""
+        if self._session is None:
+            self._session = requests.Session()
+            self._session.headers.update({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        return self._session
+    
+    def _get_auth_headers(self, method: str, path: str) -> Dict[str, str]:
+        """Get auth headers for a request."""
+        return self.auth.get_auth_headers(method, path)
     
     def _get(self, endpoint: str, params: Optional[Dict] = None) -> Dict[str, Any]:
-        """Make GET request to Kalshi API with retry and backoff for 429 errors."""
+        """Make GET request to Kalshi API with retry and backoff."""
         url = f"{self.base_url}{endpoint}"
         backoff = INITIAL_BACKOFF_SEC
         
         for attempt in range(MAX_RETRIES):
             try:
-                # Small delay before each call to avoid hammering
-                if attempt > 0 or endpoint != "/markets":  # Skip initial delay for first call
+                if attempt > 0:
                     time.sleep(API_CALL_DELAY_SEC)
                 
-                resp = self.session.get(url, params=params, timeout=10)
+                headers = self._get_auth_headers("GET", endpoint)
+                resp = self.session.get(url, params=params, headers=headers, timeout=10)
                 
                 if resp.status_code == 429:
-                    # Rate limited - retry with exponential backoff
                     retry_after = resp.headers.get('Retry-After', str(int(backoff)))
                     wait_time = int(retry_after) if retry_after.isdigit() else backoff
-                    logger.warning(f"Rate limited (429) on {url}, attempt {attempt+1}/{MAX_RETRIES}, waiting {wait_time}s")
+                    logger.warning(f"Rate limited (429), attempt {attempt+1}/{MAX_RETRIES}, waiting {wait_time}s")
                     time.sleep(wait_time)
-                    backoff *= 2  # Exponential backoff
+                    backoff *= 2
                     continue
                 
                 resp.raise_for_status()
@@ -83,32 +119,31 @@ class KalshiAPI:
                 
             except requests.RequestException as e:
                 if attempt < MAX_RETRIES - 1:
-                    logger.warning(f"API GET failed (attempt {attempt+1}/{MAX_RETRIES}): {url} | Error: {e}, retrying...")
+                    logger.warning(f"API GET failed (attempt {attempt+1}/{MAX_RETRIES}): {e}, retrying...")
                     time.sleep(backoff)
                     backoff *= 2
                     continue
-                logger.error(f"API GET failed after {MAX_RETRIES} attempts: {url} | Error: {e}")
+                logger.error(f"API GET failed after {MAX_RETRIES} attempts: {e}")
                 return {"error": str(e)}
         
         return {"error": "Max retries exceeded"}
     
     def _post(self, endpoint: str, data: Optional[Dict] = None) -> Dict[str, Any]:
-        """Make POST request to Kalshi API with retry and backoff for 429 errors."""
+        """Make POST request to Kalshi API with retry and backoff."""
         url = f"{self.base_url}{endpoint}"
         backoff = INITIAL_BACKOFF_SEC
         
         for attempt in range(MAX_RETRIES):
             try:
-                # Small delay before each call
-                time.sleep(API_CALL_DELAY_SEC)
+                time.sleep(API_CALL_DELAY_SEC if attempt >= 0 else 0)
                 
-                resp = self.session.post(url, json=data, timeout=10)
+                headers = self._get_auth_headers("POST", endpoint)
+                resp = self.session.post(url, json=data, headers=headers, timeout=10)
                 
                 if resp.status_code == 429:
-                    # Rate limited - retry with exponential backoff
                     retry_after = resp.headers.get('Retry-After', str(int(backoff)))
                     wait_time = int(retry_after) if retry_after.isdigit() else backoff
-                    logger.warning(f"Rate limited (429) on {url}, attempt {attempt+1}/{MAX_RETRIES}, waiting {wait_time}s")
+                    logger.warning(f"Rate limited (429), attempt {attempt+1}/{MAX_RETRIES}, waiting {wait_time}s")
                     time.sleep(wait_time)
                     backoff *= 2
                     continue
@@ -118,25 +153,20 @@ class KalshiAPI:
                 
             except requests.RequestException as e:
                 if attempt < MAX_RETRIES - 1:
-                    logger.warning(f"API POST failed (attempt {attempt+1}/{MAX_RETRIES}): {url} | Error: {e}, retrying...")
+                    logger.warning(f"API POST failed (attempt {attempt+1}/{MAX_RETRIES}): {e}, retrying...")
                     time.sleep(backoff)
                     backoff *= 2
                     continue
-                logger.error(f"API POST failed after {MAX_RETRIES} attempts: {url} | Error: {e}")
+                logger.error(f"API POST failed after {MAX_RETRIES} attempts: {e}")
                 return {"error": str(e)}
         
         return {"error": "Max retries exceeded"}
     
     def get_open_markets(self, series_ticker: str = None) -> List[Market]:
-        """
-        Fetch OPEN markets for a series using the /markets endpoint with status=open.
-        This is the key method Recorder uses to find tradeable markets.
-        Only returns markets with yes_bid > 0 (tradeable).
-        """
+        """Fetch OPEN markets for a series using the /markets endpoint."""
         if series_ticker is None:
             series_ticker = SERIES_TICKERS['BTC']
         
-        # Use /markets endpoint with status=open filter (same as Recorder)
         result = self._get("/markets", params={
             "series_ticker": series_ticker,
             "status": "open",
@@ -149,19 +179,22 @@ class KalshiAPI:
         
         markets = []
         for m in result.get("markets", []):
-            # Filter for markets with yes_bid > 0 (tradeable)
+            # API returns yes_bid_dollars as float (e.g., 0.35)
             yes_bid_raw = m.get("yes_bid_dollars", m.get("yes_bid", 0))
             if not yes_bid_raw or float(yes_bid_raw) <= 0:
                 continue
             
             try:
                 yes_ask_raw = m.get("yes_ask_dollars", m.get("yes_ask", 0))
-                no_ask_raw = m.get("no_ask_dollars", m.get("no_ask", 0))
                 no_bid_raw = m.get("no_bid_dollars", m.get("no_bid", 0))
+                no_ask_raw = m.get("no_ask_dollars", m.get("no_ask", 0))
+                
+                # Use title as question (API field name)
+                question = m.get("title", m.get("question", ""))
                 
                 market = Market(
                     ticker=m.get("ticker", ""),
-                    question=m.get("question", ""),
+                    question=question,
                     yes_bid=float(yes_bid_raw) if yes_bid_raw else 0.0,
                     yes_ask=float(yes_ask_raw) if yes_ask_raw else 0.0,
                     no_bid=float(no_bid_raw) if no_bid_raw else 0.0,
@@ -181,75 +214,87 @@ class KalshiAPI:
         return markets
     
     def get_markets(self, series_ticker: str = None, limit: int = MARKETS_LIMIT) -> List[Market]:
-        """
-        Fetch active markets for a series using the /events endpoint.
-        Falls back to get_open_markets for better filtering.
-        """
-        # Use the improved get_open_markets method
+        """Fetch active markets for a series."""
         return self.get_open_markets(series_ticker)
     
     def _calc_prob(self, m: Dict) -> float:
         """Calculate YES probability from bid/ask."""
-        yes_ask = float(m.get("yes_ask", 0))
+        yes_ask = float(m.get("yes_ask_dollars", m.get("yes_ask", 0)))
         if yes_ask > 0:
             return yes_ask
-        # Fallback: use 1 - no_bid
-        no_bid = float(m.get("no_bid", 0))
+        no_bid = float(m.get("no_bid_dollars", m.get("no_bid", 0)))
         return 1.0 - no_bid if no_bid > 0 else 0.5
     
     def get_balance(self) -> float:
-        """Get account balance (paper mode returns simulated balance)."""
-        # In live mode, this would fetch from API
-        # For paper trading, we manage balance externally
-        return 0.0  # Paper balance managed by superbot
+        """Get account balance in dollars."""
+        result = self._get("/portfolio/balance")
+        if "error" in result:
+            logger.warning(f"Failed to get balance: {result['error']}")
+            return 0.0
+        # Balance is returned in cents
+        balance_cents = result.get("balance", 0)
+        return float(balance_cents) / 100.0
     
     def place_order(self, ticker: str, side: str, price: float, amount: float) -> Dict[str, Any]:
         """
         Place an order on Kalshi.
         side: 'yes' or 'no'
         price: probability price (e.g., 0.35 for 35 cents)
-        amount: dollar amount to risk
+        amount: dollar amount to risk (used to calculate contract count)
         """
-        if side == "yes":
-            # Buying YES - pay price * 100
-            cost = price * amount
-            if cost > 0:
-                return self._post(f"/markets/{ticker}/orders", {
-                    "type": "market",
+        try:
+            # Calculate contracts from dollar amount and price
+            # price is in dollars per contract (yes_bid_dollars format)
+            price_str = f"{price:.4f}"
+            
+            if price <= 0 or amount <= 0:
+                return {"error": "Invalid price or amount"}
+            
+            contracts = int(amount / price)  # dollar_amount / price_per_contract
+            if contracts < 1:
+                contracts = 1
+            
+            if side == "yes":
+                order_data = {
+                    "action": "buy",
                     "side": "yes",
-                    "yes_price": price
-                })
-        else:
-            # Buying NO - pay (1 - price) * amount
-            cost = (1 - price) * amount
-            if cost > 0:
-                return self._post(f"/markets/{ticker}/orders", {
-                    "type": "market", 
+                    "ticker": ticker,
+                    "type": "market",
+                    "yes_price_dollars": price_str,
+                    "count": contracts,
+                }
+            else:
+                no_price = round(1.0 - price, 4)
+                order_data = {
+                    "action": "buy",
                     "side": "no",
-                    "no_price": 1 - price
-                })
-        
-        return {"error": "Invalid order parameters"}
+                    "ticker": ticker,
+                    "type": "market",
+                    "no_price_dollars": f"{no_price:.4f}",
+                    "count": contracts,
+                }
+            
+            return self._post("/portfolio/orders", order_data)
+            
+        except Exception as e:
+            logger.error(f"Failed to place order: {e}")
+            return {"error": str(e)}
     
     def get_open_positions(self) -> List[Dict[str, Any]]:
         """Get open positions/orders."""
-        result = self._get("/orders", params={"status": "open"})
+        result = self._get("/portfolio/orders", params={"status": "open"})
         if "error" in result:
             return []
         return result.get("orders", [])
     
     def get_market_by_ticker(self, ticker: str) -> Optional[Market]:
-        """
-        Fetch a specific market by ticker.
-        Returns Market object even if market is closed/settled.
-        Used to check on positions whose markets have expired.
-        """
+        """Fetch a specific market by ticker."""
         result = self._get(f"/markets/{ticker}")
         if "error" in result:
             logger.warning(f"Failed to fetch market {ticker}: {result['error']}")
             return None
         
-        m = result.get("market", {})
+        m = result.get("market", result)
         if not m:
             return None
         
@@ -259,9 +304,11 @@ class KalshiAPI:
             no_bid_raw = m.get("no_bid_dollars", m.get("no_bid", 0))
             no_ask_raw = m.get("no_ask_dollars", m.get("no_ask", 0))
             
+            question = m.get("title", m.get("question", ""))
+            
             market = Market(
                 ticker=m.get("ticker", ""),
-                question=m.get("question", ""),
+                question=question,
                 yes_bid=float(yes_bid_raw) if yes_bid_raw else 0.0,
                 yes_ask=float(yes_ask_raw) if yes_ask_raw else 0.0,
                 no_bid=float(no_bid_raw) if no_bid_raw else 0.0,
@@ -278,19 +325,13 @@ class KalshiAPI:
     
     def get_order_status(self, order_id: str) -> Dict[str, Any]:
         """Get status of a specific order."""
-        return self._get(f"/orders/{order_id}")
+        return self._get(f"/portfolio/orders/{order_id}")
     
     def parse_ticker(self, ticker: str) -> Dict[str, Any]:
         """
         Parse ticker format: KX{coin}15M-DDMMMYYHHMM-MM
         Example: KXBTC15M-26APR012145-45
-        - series: KXBTC15M
-        - DDMONYYHHMM: day=26, month=APR, year=01, hour=21, minute=45
-        - MM suffix: 45 (minute marker: 00, 15, 30, or 45)
-        
-        Returns dict with date/time info and minute suffix.
         """
-        # Month abbreviation to number mapping
         MONTH_MAP = {
             'JAN': 1, 'FEB': 2, 'MAR': 3, 'APR': 4,
             'MAY': 5, 'JUN': 6, 'JUL': 7, 'AUG': 8,
@@ -299,16 +340,13 @@ class KalshiAPI:
         
         parts = ticker.split("-")
         if len(parts) >= 3:
-            # series = parts[0] e.g., "KXBTC15M"
-            # ts_part = parts[1] e.g., "26APR012145"
-            # minute_suffix = parts[2] e.g., "45"
             ts_part = parts[1]
             minute_suffix = parts[2]
             
             if len(ts_part) == 11:
                 day = int(ts_part[0:2])
                 month_abbr = ts_part[2:5]
-                year = int("20" + ts_part[5:7])  # 01 -> 2001
+                year = int("20" + ts_part[5:7])
                 hour = int(ts_part[7:9])
                 minute = int(ts_part[9:11])
                 month = MONTH_MAP.get(month_abbr, 1)
@@ -325,25 +363,16 @@ class KalshiAPI:
         return {}
 
     def construct_ticker(self, series_ticker: str, dt: datetime) -> str:
-        """
-        Construct a 15-min crypto market ticker from series and datetime.
-        Format: {SERIES}-{DDMONYYHHMM}-{MM_suffix}
-        Example: KXBTC15M-02APR012145-45 for Apr 2, 2026 01:45 UTC
-        
-        The minute_suffix is 00, 15, 30, or 45 - the minute of the 15-min interval close.
-        At time 01:37 UTC, we're in the 01:45 interval, so minute_suffix=45.
-        """
+        """Construct a 15-min crypto market ticker from series and datetime."""
         MONTH_ABBR = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN',
                       'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
         
-        day = dt.strftime("%d")  # 2-digit day
+        day = dt.strftime("%d")
         month_abbr = MONTH_ABBR[dt.month - 1]
-        year = dt.strftime("%y")  # 2-digit year
-        hour = dt.strftime("%H")  # 2-digit hour
-        minute = dt.strftime("%M")  # 2-digit minute
+        year = dt.strftime("%y")
+        hour = dt.strftime("%H")
+        minute = dt.strftime("%M")
         
-        # The minute suffix is the closing minute of the 15-min interval
-        # Round up to next 15-min boundary
         minute_int = dt.minute
         minute_suffix = ((minute_int // 15) + 1) * 15
         if minute_suffix >= 60:
@@ -353,17 +382,12 @@ class KalshiAPI:
         return f"{series_ticker}-{ts_part}-{minute_suffix:02d}"
     
     def get_market_result(self, ticker: str) -> Optional[str]:
-        """
-        Fetch a market's settlement result.
-        Returns 'yes', 'no', or None if not settled yet.
-        """
+        """Fetch a market's settlement result."""
         result = self._get(f"/markets/{ticker}")
         if "error" in result:
             return None
         
-        # Check if market is settled
         status = result.get("status", "")
         if status == "settled":
-            # Get the result field
             return result.get("result", None)
         return None

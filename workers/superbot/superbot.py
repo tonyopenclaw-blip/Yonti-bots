@@ -293,6 +293,25 @@ class CoinTrader:
 
         position = self.positions[ticker]
 
+        # Actually close the position on Kalshi by placing opposite order
+        close_side = "no" if position.side == "yes" else "yes"
+        # Calculate cost to close: for YES use price*size, for NO use (1-price)*size
+        if close_side == "yes":
+            close_cost = exit_price * position.size
+        else:
+            close_cost = (1 - exit_price) * position.size
+        
+        close_result = self.api.place_order(
+            ticker=ticker,
+            side=close_side,
+            price=exit_price,
+            amount=close_cost
+        )
+        if "error" in close_result:
+            logger.error(f"[{self.coin}] REAL CLOSE ORDER FAILED: {close_result['error']}")
+        else:
+            logger.info(f"[{self.coin}] REAL CLOSE ORDER PLACED: {close_result}")
+
         # Use avg_price for PnL calculation (accounts for scale-ins)
         calc_price = position.avg_price if position.avg_price > 0 else position.entry_price
 
@@ -392,6 +411,22 @@ class CoinTrader:
             use_time_scaling=getattr(signal, 'use_time_scaling', False)
         )
         self.positions[ticker] = position
+
+        # Actually place the order on Kalshi
+        order_result = self.api.place_order(
+            ticker=ticker,
+            side=signal.side,
+            price=signal.price,
+            amount=cost  # amount = dollar cost
+        )
+        if "error" in order_result:
+            logger.error(f"[{self.coin}] REAL ORDER FAILED: {order_result['error']}")
+            # Rollback: remove position, refund cash
+            del self.positions[ticker]
+            self.cash += cost
+            return False, 0.0
+        else:
+            logger.info(f"[{self.coin}] REAL ORDER PLACED: {order_result}")
 
         return True, cost
 

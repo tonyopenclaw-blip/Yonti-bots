@@ -381,6 +381,9 @@ class CoinTrader:
         if ticker in self.positions:
             return False, 0.0
 
+        # Cancel any existing unfilled orders for this ticker before placing new one
+        self._cancel_orders_for_ticker(ticker)
+
         # Check max positions per coin
         if len(self.positions) >= 1:  # One position per coin at a time
             return False, 0.0
@@ -763,6 +766,79 @@ class Superbot:
 
         return True
 
+    def _cancel_orders_for_ticker(self, ticker: str):
+        """Cancel all unfilled orders for a given ticker to avoid double exposure."""
+        try:
+            open_orders = self.api.get_open_orders()
+            for order in open_orders:
+                if order.get("ticker") == ticker:
+                    order_id = order.get("order_id") or order.get("id")
+                    if order_id:
+                        result = self.api.cancel_order(order_id)
+                        if "error" in result:
+                            logger.warning(f"[{self}] Failed to cancel order {order_id} for {ticker}: {result['error']}")
+                        else:
+                            logger.info(f"[{self}] Canceled unfilled order {order_id} for {ticker} before new order")
+        except Exception as e:
+            logger.warning(f"Error canceling orders for {ticker}: {e}")
+
+    def _cleanup_expired_orders(self):
+        """
+        Cancel all open orders whose markets have expired or are >15 minutes old.
+        Runs at the start of each trading cycle to clean up stale resting orders.
+        """
+        try:
+            open_orders = self.api.get_open_orders()
+            if not open_orders:
+                return
+
+            canceled_count = 0
+            for order in open_orders:
+                ticker = order.get("ticker", "")
+                order_id = order.get("order_id") or order.get("id")
+                if not order_id or not ticker:
+                    continue
+
+                # Get market status to check if expired
+                market = self.api.get_market_by_ticker(ticker)
+                if market is None:
+                    # Market no longer exists - cancel the order
+                    result = self.api.cancel_order(order_id)
+                    if "error" not in result:
+                        logger.info(f"[ORDER CLEANUP] Canceled order {order_id} for {ticker}: market not found")
+                        canceled_count += 1
+                    continue
+
+                # Cancel if market is closed/settled/expired or time has run out
+                is_expired = market.status in ("closed", "settled") or market.time_to_expiry_sec() <= 0
+
+                # Also cancel if order is older than 15 minutes (resting too long)
+                order_time = order.get("created_at", "")
+                is_stale = False
+                if order_time:
+                    try:
+                        order_dt = datetime.fromisoformat(order_time.replace("Z", ""))
+                        if order_dt.tzinfo:
+                            order_dt = order_dt.replace(tzinfo=None)
+                        age_minutes = (datetime.utcnow() - order_dt).total_seconds() / 60
+                        is_stale = age_minutes > 15
+                    except Exception:
+                        pass
+
+                if is_expired or is_stale:
+                    result = self.api.cancel_order(order_id)
+                    if "error" not in result:
+                        reason = "market expired/settled" if is_expired else "order stale (>15min)"
+                        logger.info(f"[ORDER CLEANUP] Canceled {order_id} for {ticker}: {reason}")
+                        canceled_count += 1
+                    else:
+                        logger.warning(f"[ORDER CLEANUP] Failed to cancel {order_id}: {result.get('error')}")
+
+            if canceled_count > 0:
+                logger.info(f"[ORDER CLEANUP] Total orders canceled: {canceled_count}")
+        except Exception as e:
+            logger.warning(f"Error in order cleanup: {e}")
+
     def _poll_active_markets_fast(self):
         """
         Poll active series every 1 second - monitor positions and look for new trades.
@@ -790,6 +866,9 @@ class Superbot:
         while self.running:
             loop_count += 1
             try:
+                # Clean up expired/stale resting orders first
+                self._cleanup_expired_orders()
+
                 # Distribute cash to each coin's strategy engine
                 self._distribute_cash_to_traders()
 

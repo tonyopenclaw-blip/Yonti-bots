@@ -162,6 +162,40 @@ class KalshiAPI:
         
         return {"error": "Max retries exceeded"}
     
+    def _delete(self, endpoint: str) -> Dict[str, Any]:
+        """Make DELETE request to Kalshi API with retry and backoff."""
+        url = f"{self.base_url}{endpoint}"
+        backoff = INITIAL_BACKOFF_SEC
+        
+        for attempt in range(MAX_RETRIES):
+            try:
+                time.sleep(API_CALL_DELAY_SEC if attempt >= 0 else 0)
+                
+                headers = self._get_auth_headers("DELETE", endpoint)
+                resp = self.session.delete(url, headers=headers, timeout=10)
+                
+                if resp.status_code == 429:
+                    retry_after = resp.headers.get('Retry-After', str(int(backoff)))
+                    wait_time = int(retry_after) if retry_after.isdigit() else backoff
+                    logger.warning(f"Rate limited (429), attempt {attempt+1}/{MAX_RETRIES}, waiting {wait_time}s")
+                    time.sleep(wait_time)
+                    backoff *= 2
+                    continue
+                
+                resp.raise_for_status()
+                return resp.json()
+                
+            except requests.RequestException as e:
+                if attempt < MAX_RETRIES - 1:
+                    logger.warning(f"API DELETE failed (attempt {attempt+1}/{MAX_RETRIES}): {e}, retrying...")
+                    time.sleep(backoff)
+                    backoff *= 2
+                    continue
+                logger.error(f"API DELETE failed after {MAX_RETRIES} attempts: {e}")
+                return {"error": str(e)}
+        
+        return {"error": "Max retries exceeded"}
+    
     def get_open_markets(self, series_ticker: str = None) -> List[Market]:
         """Fetch OPEN markets for a series using the /markets endpoint."""
         if series_ticker is None:
@@ -325,6 +359,21 @@ class KalshiAPI:
     def get_order_status(self, order_id: str) -> Dict[str, Any]:
         """Get status of a specific order."""
         return self._get(f"/portfolio/orders/{order_id}")
+    
+    def get_open_orders(self) -> List[Dict]:
+        """Get all open/resting orders."""
+        result = self._get("/portfolio/orders", params={"status": "open"})
+        if "error" in result:
+            return []
+        return result.get("orders", [])
+    
+    def cancel_order(self, order_id: str) -> Dict:
+        """Cancel a specific order by ID."""
+        try:
+            return self._delete(f"/portfolio/orders/{order_id}")
+        except Exception as e:
+            logger.error(f"Failed to cancel order {order_id}: {e}")
+            return {"error": str(e)}
     
     def parse_ticker(self, ticker: str) -> Dict[str, Any]:
         """

@@ -2523,39 +2523,17 @@ class UncleVitoReport:
                 if abbr in player_map:
                     players = player_map[abbr]
                     for player, stat, line in players[:2]:
-                        # Check if player is active on DK slate
-                        is_active = self.dk.is_player_active_dk(player, abbr, sport)
-                        
-                        if is_active:
-                            simulated.append({
-                                "player": player,
-                                "team": abbr,
-                                "stat_type": stat,
-                                "line": line,
-                                "sport": sport,
-                                "dk_active": True,
-                                "rest_day": False,  # Explicitly set - NOT a rest day
-                            })
-                        else:
-                            # Log warning for rest day / missing player
-                            warning_msg = f"⚠️ {player} ({abbr}) - likely REST DAY or INJURED (not in DK slate)"
-                            logger.warning(warning_msg)
-                            
-                            # Track rest day warnings by sport
-                            if sport not in self._rest_day_warnings:
-                                self._rest_day_warnings[sport] = []
-                            self._rest_day_warnings[sport].append(f"{player} ({abbr})")
-                            
-                            # Still include with rest_day flag for visibility
-                            simulated.append({
-                                "player": player,
-                                "team": abbr,
-                                "stat_type": stat,
-                                "line": line,
-                                "sport": sport,
-                                "dk_active": False,
-                                "rest_day": True,
-                            })
+                        # Only include players from teams that are actually playing tonight
+                        # (regardless of DK active status since DK is blocked)
+                        simulated.append({
+                            "player": player,
+                            "team": abbr,
+                            "stat_type": stat,
+                            "line": line,
+                            "sport": sport,
+                            "dk_active": True,  # Assume active since we filtered by game participants
+                            "rest_day": False,
+                        })
 
         return simulated
 

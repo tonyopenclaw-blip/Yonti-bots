@@ -33,7 +33,7 @@ KALSHI_TRACKER_KEY = os.getenv("KALSHI_TRACKER_KEY", "dd143eb9-ac4a-4cc2-bb17-11
 # PAPER TRADING CONFIG
 # =============================================================================
 PAPER_MODE = False
-PAPER_BALANCE = 44.52
+PAPER_BALANCE = 38.90
 BALANCE_FLOOR = 3.00
 BALANCE_RESET_AMOUNT = 100.00
 
@@ -137,7 +137,7 @@ DRIFT_SL_PCT = 0.20    # 20% stop-loss on drift positions
 # Coinbase bias should FILTER trades, not amplify bad entries.
 # BEARISH bias on a DRIFT_BUY = skip the trade (don't fight the trend)
 # BULLISH bias on a DRIFT_SHORT = skip the trade
-COINBASE_BIAS_ENABLED = True  # Enable filtering
+COINBASE_BIAS_ENABLED = False  # DISABLED - bias calculation is consistently wrong
 COINBASE_BIAS_STRICT = True   # If bias contradicts signal, SKIP not boost
 
 # =============================================================================
@@ -180,7 +180,7 @@ AI_EDGE_THRESHOLD = 0.05
 # =============================================================================
 # DAILY STOP-LOSS AND SESSION LIMITS — TIGHTENED
 # =============================================================================
-COOLDOWN_CYCLES = 0
+COOLDOWN_CYCLES = 2  # 2 cycles × 15s = 30 second cooldown between orders
 DAILY_STOP_LOSS_PCT = 1.00  # DISABLED — paper trading, no stop loss
 SESSION_WIN_LIMIT_PCT = 0.50  # NEW: if we're UP 50%, take a break
 

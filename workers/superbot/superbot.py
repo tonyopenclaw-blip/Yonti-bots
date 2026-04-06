@@ -382,12 +382,24 @@ class CoinTrader:
             logger.warning(f"[{self.coin}] Insufficient cash: ${available_cash:.2f} < ${cost:.2f} (contracts={int(signal.size):d}, price={signal.price:.4f})")
             return False, 0.0
 
-        logger.info(f"[{self.coin}] Opened {signal.strategy.value}: {signal.side} {ticker} @ ${signal.price:.4f}, contracts={int(signal.size):d}, cost=${cost:.2f}")
-
         # Get first cross direction for this ticker from strategy engine
         first_cross_dir = self.strategy_engine.first_cross.get_direction(ticker) or ""
 
-        # Record position
+        # Actually place the order on Kalshi FIRST, before recording locally
+        order_result = self.api.place_order(
+            ticker=ticker,
+            side=signal.side,
+            price=signal.price,
+            amount=cost  # amount = dollar cost
+        )
+        if "error" in order_result:
+            logger.error(f"[{self.coin}] REAL ORDER FAILED: {order_result['error']}")
+            return False, 0.0
+        else:
+            logger.info(f"[{self.coin}] REAL ORDER PLACED: {order_result}")
+            logger.info(f"[{self.coin}] Opened {signal.strategy.value}: {signal.side} {ticker} @ ${signal.price:.4f}, contracts={int(signal.size):d}, cost=${cost:.2f}")
+
+        # Only record position locally AFTER API call succeeds
         position = Position(
             ticker=ticker,
             side=signal.side,
@@ -411,22 +423,6 @@ class CoinTrader:
             use_time_scaling=getattr(signal, 'use_time_scaling', False)
         )
         self.positions[ticker] = position
-
-        # Actually place the order on Kalshi
-        order_result = self.api.place_order(
-            ticker=ticker,
-            side=signal.side,
-            price=signal.price,
-            amount=cost  # amount = dollar cost
-        )
-        if "error" in order_result:
-            logger.error(f"[{self.coin}] REAL ORDER FAILED: {order_result['error']}")
-            # Rollback: remove position, refund cash
-            del self.positions[ticker]
-            self.cash += cost
-            return False, 0.0
-        else:
-            logger.info(f"[{self.coin}] REAL ORDER PLACED: {order_result}")
 
         return True, cost
 

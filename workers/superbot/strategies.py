@@ -28,14 +28,14 @@ from config import (
 )
 
 # === TONY'S ENTRY PRICE FILTER: Only enter when share price is $0.20-$0.80 ===
-MIN_ENTRY_PRICE = 0.20
-MAX_ENTRY_PRICE = 0.80
+MIN_ENTRY_PRICE = 0.30
+MAX_ENTRY_PRICE = 0.70
 
 # === TONY'S TWO-STAGE STOP SYSTEM ===
 # Stage 1: TIME-SCALED STOP - 80% at open → 20% at close (15 min)
 # Stage 2: TRAILING STOP (only after +30% profit) - trail from there
-INITIAL_STOP_PCT = 0.80       # 80% stop at open (0 min)
-FINAL_STOP_PCT = 0.20         # 20% stop at close (15 min)
+INITIAL_STOP_PCT = 0.50       # 50% stop at open (tightened from 80%)
+FINAL_STOP_PCT = 0.20         # 20% stop at close
 MARKET_DURATION_SEC = 900      # 15 minutes
 TRAILING_TRIGGER_PCT = 0.30   # 30% profit before trailing stop activates
 TRAILING_BUFFER_PCT = 0.40    # 40% buffer from peak
@@ -439,7 +439,7 @@ class Position:
     trailing_stop_trigger_pct: float = 0.50  # 50% profit before trailing stop activates
     peak_price: float = 0.0              # Track peak price for longs, trough for shorts
     scale_in_count: int = 0              # Number of times we've scaled in
-    max_scale_ins: int = 2               # Max 2 scale-ins per position
+    max_scale_ins: int = 0               # DISABLED - scale-ins averaging into losses
     scale_in_size: float = 0.0           # Additional size per scale-in
     unrealized_pnl: float = 0.0          # Running unrealized PnL
     avg_price: float = 0.0               # Weighted average entry price
@@ -657,7 +657,7 @@ class StrategyEngine:
         import math
 
         # Skip if confidence too low
-        if confidence < 40:
+        if confidence < 60:  # RAISED from 40 to 60 - only strong signals
             return 0.0, 0.0, confidence
 
         if prob <= 0 or prob >= 1:

@@ -243,9 +243,9 @@ class KalshiAPI:
         amount: dollar amount to risk (used to calculate contract count)
         """
         try:
-            # Calculate contracts from dollar amount and price
-            # price is in dollars per contract (yes_bid_dollars format)
-            price_str = f"{price:.4f}"
+            # Round to 2 decimal places (API requires valid tick size of $0.01)
+            price_str = f"{price:.2f}"
+            no_price_str = f"{1.0 - price:.2f}"
             
             if price <= 0 or amount <= 0:
                 return {"error": "Invalid price or amount"}
@@ -264,13 +264,12 @@ class KalshiAPI:
                     "count": contracts,
                 }
             else:
-                no_price = round(1.0 - price, 4)
                 order_data = {
                     "action": "buy",
                     "side": "no",
                     "ticker": ticker,
                     "type": "market",
-                    "no_price_dollars": f"{no_price:.4f}",
+                    "no_price_dollars": no_price_str,
                     "count": contracts,
                 }
             

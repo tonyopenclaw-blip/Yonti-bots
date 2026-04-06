@@ -63,6 +63,44 @@ def get_coinbase_bias(coin: str) -> str:
     return 'neutral'
 
 
+def get_coinbase_rsi(coin: str, period: int = 4) -> Optional[float]:
+    """
+    Compute simple RSI-4 from Coinbase price history.
+    Reads recent close prices from the Coinbase fetcher's price history file.
+    Returns RSI value 0-100, or None if insufficient data.
+    """
+    rsi_file = "/home/ubuntu/.openclaw/workspace/workers/coinbase/last_prices.json"
+    if not os.path.exists(rsi_file):
+        return None
+    try:
+        with open(rsi_file) as f:
+            data = json.load(f)
+        prices = data.get(coin, {}).get('prices', [])
+        if len(prices) < period + 1:
+            return None
+        # Use last `period+1` close prices
+        closes = [p.get('price', p) if isinstance(p, dict) else p for p in prices[-(period+1):]]
+        if not all(isinstance(c, (int, float)) for c in closes):
+            return None
+        gains = []
+        losses = []
+        for i in range(1, len(closes)):
+            delta = closes[i] - closes[i-1]
+            if delta > 0:
+                gains.append(delta)
+            else:
+                losses.append(abs(delta))
+        avg_gain = sum(gains) / period if gains else 0.0
+        avg_loss = sum(losses) / period if losses else 0.0
+        if avg_loss == 0:
+            return 100.0
+        rs = avg_gain / avg_loss
+        rsi = 100.0 - (100.0 / (1.0 + rs))
+        return rsi
+    except Exception:
+        return None
+
+
 class Strategy(Enum):
     # DEPRECATED: DRIFT_BUY and DRIFT_SHORT disabled per Nerd's strategy v2
     DEEP_SHORT = "deep_short"  # Disabled
@@ -417,7 +455,7 @@ class TradeSignal:
     trailing_stop_trigger_pct: float = 0.30  # 30% profit before trailing stop activates
     confidence: int = 50                  # Signal confidence 0-100
     trailing_stop_buffer: float = 0.40    # 40% buffer (alias for clarity)
-    max_hold_minutes: int = 10           # Dynamic based on entry zone
+    max_hold_minutes: int = 14           # Default 14min max hold (Nerd's research)
     use_time_scaling: bool = False        # If True, use 80%->20% time-scaled stop
 
 
@@ -872,7 +910,11 @@ class StrategyEngine:
 
         # Use mid price for decision
         mid_price = (market.yes_bid + market.yes_ask) / 2
-        time_left = market.time_to_expiry_sec()
+        # FIX 1: Add try/except for time_to_expiry_sec crash loop
+        try:
+            time_left = market.time_to_expiry_sec()
+        except (AttributeError, TypeError):
+            time_left = 900  # Default to 15 min if method fails
 
         logger.debug(f"Evaluating {market.ticker}: price=${mid_price:.4f}, time_left={time_left}s")
 
@@ -899,54 +941,103 @@ class StrategyEngine:
         if deep_buy_signal:
             return deep_buy_signal
 
-        # === Get Coinbase bias ===
+        # === Get Coinbase bias and RSI ===
         bias = get_coinbase_bias(coin)
+        rsi = get_coinbase_rsi(coin)
 
-        # === MOMENTUM: Fire when Coinbase has strong bias AND price trending, AFTER grace period ===
-        # Coinbase bias: must be bullish or bearish (not neutral)
-        # Price: trending in bias direction (not at extreme required)
+        # === MOMENTUM: Fire when Coinbase has strong bias OR RSI extreme, AFTER grace period ===
+        # Entry conditions (expanded per Nerd's research):
+        #   - Coinbase bias non-neutral + price on correct side of $0.50 (original), OR
+        #   - RSI extreme (oversold <30 for YES, overbought >70 for NO), OR
+        #   - Strong price momentum (price at extreme: <$0.30 for YES, >$0.70 for NO)
         # MUST be at least 2 minutes into the series (grace period)
+
+        momentum_signal = False
+        momentum_side = None
+        momentum_reason = None
+        momentum_conf = 50  # Base confidence
+
+        # Condition 1: Coinbase bias (original logic - still required for this path)
         if bias != 'neutral' and (mid_price >= 0.20 and mid_price <= 0.80):
-            # Check if price is moving in the bias direction (above midpoint for bullish, below for bearish)
             if bias == 'bullish' and mid_price >= 0.50:
-                side = 'yes'
-                reason_suffix = 'momentum: bullish bias + price above midpoint'
+                momentum_signal = True
+                momentum_side = 'yes'
+                momentum_reason = f'momentum: bullish bias + price above midpoint'
+                momentum_conf = 65  # Coinbase bias confirmed
             elif bias == 'bearish' and mid_price <= 0.50:
-                side = 'no'
-                reason_suffix = 'momentum: bearish bias + price below midpoint'
-            else:
-                bias = None
-            
-            if bias is not None:
-                # GRACE PERIOD: Skip MOMENTUM in first 2 minutes
-                if market_age_sec >= self.GRACE_PERIOD_SEC:
-                    confidence = 60  # Momentum confidence
-                    size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.MOMENTUM, mid_price, confidence, mid_price)
+                momentum_signal = True
+                momentum_side = 'no'
+                momentum_reason = f'momentum: bearish bias + price below midpoint'
+                momentum_conf = 65  # Coinbase bias confirmed
 
-                    if confidence >= 40:
-                        logger.info(
-                            f"MOMENTUM SIGNAL: {market.ticker} | "
-                            f"Side: {side} @ ${mid_price:.4f} | contracts={int(size):d} | "
-                            f"CONF={confidence} | TS=30%/40% | Coinbase={bias} | age={market_age_sec:.0f}s"
-                        )
+        # Condition 2: RSI extremes (NEW - per Nerd's research)
+        # RSI < 30 = oversold → bias toward YES
+        # RSI > 70 = overbought → bias toward NO
+        if not momentum_signal and rsi is not None:
+            if rsi < 30 and mid_price <= 0.80:
+                momentum_signal = True
+                momentum_side = 'yes'
+                momentum_reason = f'RSI oversold ({rsi:.1f})'
+                momentum_conf = 70  # RSI extreme = strong signal
+            elif rsi > 70 and mid_price >= 0.20:
+                momentum_signal = True
+                momentum_side = 'no'
+                momentum_reason = f'RSI overbought ({rsi:.1f})'
+                momentum_conf = 70  # RSI extreme = strong signal
 
-                        return TradeSignal(
-                            strategy=Strategy.MOMENTUM,
-                            ticker=market.ticker,
-                            side=side,
-                            price=mid_price,
-                            size=size,
-                            scale_in_size=int(size * 0.5),  # Scale in: add 50% more when winning
-                            reason=f"MOMENTUM: {reason_suffix}, Coinbase={bias}, CONF={confidence}, age={market_age_sec:.0f}s",
-                            take_profit=0.95 if side == "yes" else 0.05,
-                            stop_loss=None,
-                            trailing_stop_pct=0.40,
-                            trailing_stop_trigger_pct=0.30,
-                            confidence=confidence,
-                            trailing_stop_buffer=0.40,
-                            max_hold_minutes=10,
-                            use_time_scaling=True  # TIME SCALING: 80%->20%
-                        )
+        # Condition 3: Strong price momentum at extremes (NEW)
+        # Price at deep extreme = strong momentum signal even without Coinbase bias
+        if not momentum_signal:
+            if mid_price <= 0.30:  # Deep oversold zone
+                momentum_signal = True
+                momentum_side = 'yes'
+                momentum_reason = f'price extreme oversold (${mid_price:.4f})'
+                momentum_conf = 60
+            elif mid_price >= 0.70:  # Deep overbought zone
+                momentum_signal = True
+                momentum_side = 'no'
+                momentum_reason = f'price extreme overbought (${mid_price:.4f})'
+                momentum_conf = 60
+
+        # Fire MOMENTUM signal if any condition met
+        if momentum_signal and momentum_side is not None:
+            # GRACE PERIOD: Skip MOMENTUM in first 2 minutes
+            if market_age_sec >= self.GRACE_PERIOD_SEC:
+                # Dynamic CONF based on signal strength (was fixed 60)
+                # Boost CONF if both bias and RSI agree
+                if rsi is not None:
+                    if momentum_side == 'yes' and rsi < 30:
+                        momentum_conf = max(momentum_conf, 80)  # RSI strongly oversold
+                    elif momentum_side == 'no' and rsi > 70:
+                        momentum_conf = max(momentum_conf, 80)  # RSI strongly overbought
+
+                confidence = momentum_conf
+                size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.MOMENTUM, mid_price, confidence, mid_price)
+
+                if confidence >= 40:
+                    logger.info(
+                        f"MOMENTUM SIGNAL: {market.ticker} | "
+                        f"Side: {momentum_side} @ ${mid_price:.4f} | contracts={int(size):d} | "
+                        f"CONF={confidence} | TS=30%/40% | Coinbase={bias} | RSI={rsi} | age={market_age_sec:.0f}s"
+                    )
+
+                    return TradeSignal(
+                        strategy=Strategy.MOMENTUM,
+                        ticker=market.ticker,
+                        side=momentum_side,
+                        price=mid_price,
+                        size=size,
+                        scale_in_size=int(size * 0.5),  # Scale in: add 50% more when winning
+                        reason=f"MOMENTUM: {momentum_reason}, Coinbase={bias}, RSI={rsi}, CONF={confidence}, age={market_age_sec:.0f}s",
+                        take_profit=0.95 if momentum_side == "yes" else 0.05,
+                        stop_loss=None,
+                        trailing_stop_pct=0.40,
+                        trailing_stop_trigger_pct=0.30,
+                        confidence=confidence,
+                        trailing_stop_buffer=0.40,
+                        max_hold_minutes=13,  # Nerd's research: 13min for momentum (was 10)
+                        use_time_scaling=True  # TIME SCALING: 80%->20%
+                    )
 
         # === FIRST CROSS: Real cross through floor strike (not market open) ===
         # --- First Cross: Coin price vs target price ---
@@ -973,6 +1064,19 @@ class StrategyEngine:
 
                 # First cross requires Coinbase momentum (not neutral) for higher confidence
                 conf_boost = 10 if bias != 'neutral' else 0
+                
+                # RSI-based CONF boost for extreme values (Nerd option 3)
+                rsi = get_coinbase_rsi(coin)
+                if rsi is not None:
+                    if rsi < 30:  # Oversold - strong YES signal
+                        conf_boost += 15
+                    elif rsi > 70:  # Overbought - strong NO signal
+                        conf_boost += 15
+                    elif rsi < 40:  # Mildly oversold
+                        conf_boost += 8
+                    elif rsi > 60:  # Mildly overbought
+                        conf_boost += 8
+                
                 confidence = self.calculate_confidence(Strategy.FIRST_CROSS, market, coin, mid_price, time_left) + conf_boost
                 prob = mid_price
                 size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.FIRST_CROSS, prob, confidence, prob)
@@ -984,21 +1088,22 @@ class StrategyEngine:
                         f"Side: {side} @ ${mid_price:.4f} | contracts={int(size):d} | CONF={confidence} | Coinbase={bias}"
                     )
 
+                    # FIX 2: Relax trailing stop for FIRST_CROSS from 30%/40% to 60%/70%
                     return TradeSignal(
                         strategy=Strategy.FIRST_CROSS,
                         ticker=market.ticker,
                         side=side,
                         price=mid_price,
                         size=size,
-                        scale_in_size=int(size * 0.5),  # Scale in: add 50% more when winning
+                        scale_in_size=0,  # FIX 3: Disable scale-in - averaging into losing positions
                         reason=f"FIRST_CROSS: {reason_suffix}, target=${target_price:,.2f}, Coinbase={bias}, Kelly={kelly_pct:.2%}, CONF={confidence}",
                         take_profit=0.95 if side == "yes" else 0.05,
                         stop_loss=None,
-                        trailing_stop_pct=0.40,
-                        trailing_stop_trigger_pct=0.30,
+                        trailing_stop_pct=0.70,  # FIX 2: Changed from 0.40 to 0.70
+                        trailing_stop_trigger_pct=0.60,  # FIX 2: Changed from 0.30 to 0.60
                         confidence=confidence,
-                        trailing_stop_buffer=0.40,
-                        max_hold_minutes=10,
+                        trailing_stop_buffer=0.70,  # FIX 2: Changed from 0.40 to 0.70
+                        max_hold_minutes=14,  # Nerd's research: 14min max hold (was 10, was cutting winners short)
                         use_time_scaling=False  # NO TIME SCALING for FIRST_CROSS
                     )
 
@@ -1019,12 +1124,25 @@ class StrategyEngine:
 
                 # First cross requires Coinbase momentum (not neutral) for higher confidence
                 conf_boost = 10 if bias != 'neutral' else 0
+                
+                # RSI-based CONF boost for extreme values (Nerd option 3)
+                rsi = get_coinbase_rsi(coin)
+                if rsi is not None:
+                    if rsi < 30:  # Oversold - strong YES signal
+                        conf_boost += 15
+                    elif rsi > 70:  # Overbought - strong NO signal
+                        conf_boost += 15
+                    elif rsi < 40:  # Mildly oversold
+                        conf_boost += 8
+                    elif rsi > 60:  # Mildly overbought
+                        conf_boost += 8
+                
                 confidence = self.calculate_confidence(Strategy.FIRST_CROSS, market, coin, mid_price, time_left) + conf_boost
                 prob = mid_price
                 size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.FIRST_CROSS, prob, confidence, prob)
 
                 if confidence >= 40:
-                    max_hold = 10
+                    max_hold = 14  # Nerd's research: 14min for first cross (was 10)
 
                     logger.info(
                         f"FIRST_CROSS SIGNAL (midpoint): {market.ticker} | "
@@ -1032,20 +1150,21 @@ class StrategyEngine:
                         f"contracts={int(size):d} | CONF={confidence} | TS=50%/40% | Coinbase={bias} | max_hold={max_hold}min"
                     )
 
+                    # FIX 2: Relax trailing stop for FIRST_CROSS from 30%/40% to 60%/70%
                     return TradeSignal(
                         strategy=Strategy.FIRST_CROSS,
                         ticker=market.ticker,
                         side=side,
                         price=mid_price,
                         size=size,
-                        scale_in_size=int(size * 0.5),  # Scale in: add 50% more when winning
+                        scale_in_size=0,  # FIX 3: Disable scale-in - averaging into losing positions
                         reason=f"FIRST_CROSS: {reason_suffix}, Coinbase={bias}, CONF={confidence}, Kelly={kelly_pct:.2%}",
                         take_profit=0.95 if side == "yes" else 0.05,
                         stop_loss=None,
-                        trailing_stop_pct=0.40,
-                        trailing_stop_trigger_pct=0.30,
+                        trailing_stop_pct=0.70,  # FIX 2: Changed from 0.40 to 0.70
+                        trailing_stop_trigger_pct=0.60,  # FIX 2: Changed from 0.30 to 0.60
                         confidence=confidence,
-                        trailing_stop_buffer=0.40,
+                        trailing_stop_buffer=0.70,  # FIX 2: Changed from 0.40 to 0.70
                         max_hold_minutes=max_hold,
                         use_time_scaling=False  # NO TIME SCALING for FIRST_CROSS
                     )
@@ -1087,7 +1206,7 @@ class StrategyEngine:
                         trailing_stop_trigger_pct=0.30,
                         confidence=confidence,
                         trailing_stop_buffer=0.40,
-                        max_hold_minutes=8,
+                        max_hold_minutes=13,  # Nerd's research: 13min for momentum force (was 8)
                         use_time_scaling=True  # TIME SCALING: 80%->20%
                     )
 
@@ -1526,24 +1645,9 @@ Your estimate:"""
                         return True, f"TRAILING STOP: locked in profits"
 
         # === MAX HOLD TIME ===
-        max_hold_minutes = 12
+        max_hold_minutes = 14  # Nerd's research: 14min max hold (was 12, was cutting winners short)
         if time_elapsed_sec / 60.0 >= max_hold_minutes:
             logger.info(f"{position.ticker}: Max hold time ({max_hold_minutes}min) reached")
             return True, f"Max hold: {max_hold_minutes}min"
-
-        return False, ""
-        hold_time_sec = time.time() - position.open_time
-        hold_time_min = hold_time_sec / 60
-
-        if hold_time_min > max_hold_minutes:
-            logger.info(f"{position.ticker}: Max hold time exceeded ({hold_time_min:.1f}min > {max_hold_minutes}min) - closing")
-            return True, f"Max hold time: {hold_time_min:.1f}min > {max_hold_minutes}min"
-
-        # === NEAR-MAX PROFIT EXIT ===
-        if position.take_profit is not None:
-            if position.side == "yes" and current_price >= 0.95:
-                return True, f"Near-max TP: ${current_price:.4f} >= $0.95"
-            if position.side == "no" and current_price <= 0.05:
-                return True, f"Near-max TP: ${current_price:.4f} <= $0.05"
 
         return False, ""

@@ -1332,6 +1332,260 @@ This week's top P&L (from week of 2026-04-06):
 _Last updated: 2026-04-06 18:23 UTC (Nerd build — Top Trader Research)_
 ---
 
+## 📊 STRATEGY OPTIMIZATION RESEARCH (2026-04-06)
+
+_Research findings from analyzing superbot performance data, strategy code, and publicly known parameters from GitHub bots._
+
+---
+
+### 📈 PERFORMANCE ANALYSIS (Today's Session: 2026-04-06)
+
+**Summary:** 14 trades | 8W/6L | 57.1% win rate | -$34.67 P&L
+
+**By Strategy:**
+| Strategy | Trades | Win Rate | Avg Win | Avg Loss | Notes |
+|----------|--------|----------|---------|----------|-------|
+| FIRST_CROSS | 13 | 54% | +$0.52 | -$0.33 | Dominated activity |
+| MOMENTUM | 1 | 0% | - | -$0.41 | Only 1 trade all session |
+
+**By Exit Reason:**
+| Exit | Count | Win Rate | Notes |
+|------|--------|----------|-------|
+| Expiry (closed at settlement) | 8 | 75% | BEST exit reason - let winners run |
+| Max Hold (12min) | 5 | 40% | Cutting winners short - BTC/ETH wins turned to losses |
+| Trailing Stop | 2 | 50% | Mixed - sometimes triggered too early |
+
+**Key Finding:** 
+> Expiry exits win 75% of the time. Max Hold exits (12min) only win 40%. The bot is **cutting winners short** with the 12-minute max hold. The BTC trade (KXBTX15M-26APR061445-45) would have won big at expiry but got stopped at 12min for only $0.023 vs potential $0.95+.
+
+**Biggest Winners (all FIRST_CROSS, held to expiry):**
+- KXETH15M: +$0.74 (YES @ $0.26 → $0.998)
+- KXHYPE15M: +$0.69 (NO @ $0.31 → $0.998)
+- KXSOL15M: +$0.62 (YES @ $0.37 → $0.990)
+
+**Biggest Losers:**
+- KXBTC15M: -$0.62 (YES @ $0.645, Max Hold, closed $0.023) — winner cut short
+- KXETH15M: -$0.52 (YES @ $0.54, Max Hold, closed $0.018) — winner cut short
+- KXXRP15M: -$0.41 (MOMENTUM, closed at expiry $0.355 from $0.765)
+
+---
+
+### 🎯 CURRENT STRATEGY PARAMETERS (from strategies.py)
+
+**FIRST_CROSS:**
+| Parameter | Current | Assessment |
+|-----------|---------|-------------|
+| Entry trigger | Midpoint ($0.50) cross OR coin/target cross | ✅ Good dual trigger |
+| Entry price filter | $0.20 - $0.80 | ✅ Good range |
+| Grace period | None (vs MOMENTUM's 2 min) | ✅ First cross fires immediately |
+| Trailing stop trigger | 50% profit | ✅ Good - only lock in winners |
+| Trailing stop buffer | 40% | ✅ Wide enough to avoid whipsaws |
+| Max hold | 10 min (for midpoint) / 12min | ⚠️ TOO SHORT - cuts winners |
+| Coinbase bias boost | +10 CONF if bias aligns | ✅ Good signal amplifier |
+
+**MOMENTUM:**
+| Parameter | Current | Assessment |
+|-----------|---------|-------------|
+| Entry trigger | Coinbase bias + price at correct side of $0.50 | ⚠️ TOO RESTRICTIVE - barely fires |
+| Entry price filter | $0.20 - $0.80 | ✅ Good range |
+| Grace period | 2 minutes | ✅ Good - avoid early volatility |
+| Confidence | Fixed 60 | ⚠️ Should be dynamic based on bias strength |
+| Trailing stop trigger | 30% profit | ✅ Conservative for momentum |
+| Trailing stop buffer | 40% | ✅ Wide enough |
+| Max hold | 10 min | ⚠️ TOO SHORT for momentum (needs more time) |
+
+**KELLY SIZING:**
+| Parameter | Current | Assessment |
+|-----------|---------|-------------|
+| Kelly % | 4% (FIXED_KELLY_PCT) | ⚠️ No historical data yet - using floor |
+| Confidence multiplier | 80+ = 1.0x, 60-79 = 0.75x, 40-59 = 0.50x | ✅ Good tiered approach |
+| Max contracts | 20 | ✅ Cap prevents overbetting |
+| Min contracts | 1 | ✅ Always at least 1 contract |
+
+---
+
+### 🔍 WHAT THE GITHUB BOTS USE (OctagonAI, Krypto-Hashers)
+
+**From OctagonAI/kalshi-trading-bot-cli:**
+- **Kelly Criterion** for position sizing (same as us)
+- **5-gate risk engine**: Multi-layer risk checks before executing
+- **Independent probability estimation**: Runs own models, not just market price
+- **Edge computation vs live order book**: Only trades when edge > threshold
+
+**From Krypto-Hashers-Community/polymarket-kalshi-arbitrage-bot:**
+- **Cross-platform spread monitoring**: PM vs Kalshi price discrepancy
+- **15-min market focus**: Same market structure as our crypto 15-min
+- **Real-time execution**: Fast enough to capture arb windows
+
+**Our gap vs these bots:**
+1. We don't compute independent probability estimates (we trust market + Coinbase bias)
+2. No 5-gate risk engine - we skip on low CONF only
+3. No cross-platform arb monitoring (PM vs Kalshi)
+
+---
+
+### 📋 RECOMMENDED CHANGES
+
+#### 1. INCREASE MAX HOLD TIME (HIGH PRIORITY)
+
+**Problem:** 12min max hold cuts winners short. BTC went from $0.645 to $0.023 only because of max hold timing.
+
+**Fix:**
+```python
+# Current (bad)
+max_hold_minutes = 10  # FIRST_CROSS
+max_hold_minutes = 8   # MOMENTUM
+
+# Recommended
+max_hold_minutes = 14  # FIRST_CROSS (leave 1min for expiry close)
+max_hold_minutes = 13  # MOMENTUM (leave 2min for momentum to develop)
+```
+
+**Rationale:** 15-min market, so 14min hold = ride to ~60sec before expiry. This is what the big winners did (expiry exits).
+
+---
+
+#### 2. FIRST_CROSS: ADD VOLUME CONFIRMATION (MEDIUM PRIORITY)
+
+**Problem:** First cross triggers on price crossing midpoint, but doesn't confirm with volume.
+
+**Fix:** Check Coinbase volume spike when cross detected:
+```python
+# In FirstCrossTracker.check_cross()
+# After detecting cross, verify volume
+volume = get_coinbase_volume(coin)  # Need to add this
+if volume_spike_detected(coin):
+    conf_boost = 15  # +15 CONF for volume confirmation
+else:
+    conf_boost = 0
+```
+
+**Rationale:** Wyckoff's Law of Effort vs Result: strong cross should have volume behind it. Volume confirmation could improve signal quality.
+
+---
+
+#### 3. MOMENTUM: LOWER ENTRY THRESHOLD (HIGH PRIORITY)
+
+**Problem:** MOMENTUM only fired 1 time in the session. Coinbase bias being non-neutral is rare based on current implementation.
+
+**Current logic:**
+```python
+if bias != 'neutral' and (mid_price >= 0.20 and mid_price <= 0.80):
+    if bias == 'bullish' and mid_price >= 0.50:
+        # enter long
+```
+
+**Issue:** The bias file (`/home/ubuntu/.openclaw/workspace/workers/coinbase/last_bias.json`) may not be updating frequently enough, or bias stays "neutral" too often.
+
+**Fix options:**
+```python
+# Option A: Accept weaker bias signals
+if bias in ['bullish', 'neutral_bullish']:  # Expand bias states
+    conf_mult = 0.75  # Reduce Kelly by 25%
+
+# Option B: Use price momentum instead of pure bias
+price_velocity = get_price_velocity_5min(coin)
+if price_velocity > THRESHOLD:  # Price moving up
+    bias = 'bullish'
+
+# Option C: Add RSI confirmation to bias
+rsi_4 = get_rsi(coin, 4)
+if bias == 'neutral' and rsi_4 < 30:
+    bias = 'bullish_oversold'  # Treat oversold as bullish bias
+```
+
+---
+
+#### 4. ADD DYNAMIC CONFIDENCE FOR MOMENTUM (MEDIUM PRIORITY)
+
+**Problem:** MOMENTUM uses fixed CONF=60 regardless of how strong the signal is.
+
+**Fix:**
+```python
+def calculate_momentum_confidence(bias, mid_price, coin):
+    conf = 50  # Base
+    
+    # Price location (stronger at extremes)
+    if mid_price <= 0.20 or mid_price >= 0.80:
+        conf += 20  # Extreme - high conviction
+    elif mid_price <= 0.35 or mid_price >= 0.65:
+        conf += 10  # Good zone
+    
+    # RSI confirmation
+    rsi = get_rsi(coin, 4)
+    if bias == 'bullish' and rsi < 30:
+        conf += 15  # Oversold bounce = strong
+    elif bias == 'bearish' and rsi > 70:
+        conf += 15  # Overbought rejection = strong
+    
+    # Volume confirmation
+    if volume_spike(coin):
+        conf += 15
+    
+    return min(conf, 95)  # Cap at 95
+```
+
+---
+
+#### 5. STOP-LOSS RETHINK (TONY ALREADY DISABLED STOPS)
+
+Tony's fix: Stops disabled. The 38-49% loss before settlement when they would have won confirms stops hurt more than help for 15-min binary options.
+
+**Verdict:** Keep stops disabled. Let winners run to expiry. Only exit via:
+1. Trailing stop (after +30-50% profit, 40% buffer)
+2. Max hold (but extend to 14min)
+3. Expiry (best exit reason)
+
+---
+
+#### 6. KELLY SIZING ADJUSTMENT (LOW PRIORITY)
+
+**Problem:** Kelly outputting 4% = only 1 contract at $0.05. Too small to make meaningful gains.
+
+**Fix:** Once we have 20+ trades of history, Kelly will self-adjust. For now:
+```python
+# Increase FIXED_KELLY_PCT as floor
+FIXED_KELLY_PCT = 0.06  # Was 0.04 (6% of bankroll vs 4%)
+```
+
+Or better: Use asymmetric Kelly for binary options:
+```python
+# For binary outcomes: full win or full loss
+# Kelly formula simplifies to: f = (p - q/b) / b where q = 1-p, b = 1
+# For $0.50 market: f = 2p - 1
+# At 60% win rate: f = 2(0.6) - 1 = 20% Kelly
+```
+
+---
+
+### 📊 PARAMETER RECOMMENDATIONS SUMMARY
+
+| Strategy | Parameter | Current | Recommended | Priority |
+|----------|-----------|---------|-------------|----------|
+| ALL | Max hold | 10-12 min | **14 min** | 🔴 HIGH |
+| MOMENTUM | Entry trigger | bias + midpoint | **bias OR price momentum** | 🔴 HIGH |
+| MOMENTUM | Confidence | Fixed 60 | **Dynamic 50-95** | 🟡 MEDIUM |
+| FIRST_CROSS | Volume check | None | **+15 CONF with volume** | 🟡 MEDIUM |
+| ALL | Trailing trigger | 30-50% | **Keep 30-50%** | ✅ GOOD |
+| ALL | Trailing buffer | 40% | **Keep 40%** | ✅ GOOD |
+| KELLY | Floor | 4% | **6%** | 🟡 MEDIUM |
+| FIRST_CROSS | Max hold | 10 min | **14 min** | 🔴 HIGH |
+
+---
+
+### 🚨 IMMEDIATE ACTION ITEMS
+
+1. **Fix the API auth issue** (400 Bad Request on orders) — bot can't trade
+2. **Extend max hold to 14min** — biggest performance gain with smallest code change
+3. **Fix MOMENTUM entry logic** — currently barely firing
+4. **Enable volume confirmation** for FIRST_CROSS — requires Coinbase volume API
+
+---
+
+_Researched: 2026-04-06 19:15 UTC (Subagent build for Jenkins/Nerd)_
+
+---
+
 ## 🔍 KALSHI TOP TRADERS RESEARCH (2026-04-06)
 
 ### KEY FINDING: No Public Kalshi Leaderboard Exists

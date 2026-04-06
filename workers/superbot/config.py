@@ -73,7 +73,8 @@ DEEP_MIN_TIME_LEFT_SEC = 60
 # DEEP BUY — THIS IS THE HIGHER-QUALITY ENTRY. BOT NEVER USED IT.
 # Nerd's research: $0.05-$0.15 entry, needs only 5-15% WR to break even.
 # Historical data shows ZERO trades in this zone. This is our biggest missed opportunity.
-DEEP_BUY_ENABLED = True  # NEW — was effectively dead code
+DEEP_BUY_ENABLED = False  # DISABLED per Nerd's production analysis (2026-04-06)
+# Lost on ALL 4 trades at $0.01-$0.18. KXETH @ $0.01 cost $6.67. NO penny odds entries.
 DEEP_BUY_MAX_PRICE = 0.15  # Nerd's research: max acceptable entry
 DEEP_BUY_MIN_PRICE = 0.03  # Penny odds — if we can get in at $0.03, 3.3x return
 DEEP_BUY_STOP_LOSS = None  # Binary: max loss is the price you paid (ride to expiry)
@@ -85,8 +86,10 @@ DEEP_MIN_TIME_LEFT_SEC = 120  # Need time for the penny odds to play out
 # Previous WR in this zone: 37.3% (need ~55% to be +EV after spreads)
 # FIX: Only enter in the $0.30-$0.35 zone where RSI and MACD confirm oversold
 DRIFT_BUY_ENABLED = True
-DRIFT_BUY_MIN_PRICE = 0.30   # Strong support zone
-DRIFT_BUY_MAX_PRICE = 0.35   # TIGHTENED from 0.38 — only best entries ($0.30-$0.35 is high-conviction)
+DRIFT_BUY_MIN_PRICE = 0.30   # Strong support zone (below mid)
+DRIFT_BUY_MAX_PRICE = 0.50   # EXPANDED per Nerd: block YES above $0.55, $0.30-$0.50 is valid
+# Nerd's research: $0.62-$0.70 range hits 67-86% WR. YES $0.35-$0.70 is dead zone at 44% WR.
+# FIX: Only allow YES entries $0.30-$0.50 (below mid), block above $0.55
 # IMPORTANT: This means many setups that previously triggered (0.35-0.45) will be skipped.
 # That's correct. Only take the best entries.
 DRIFT_MIN_TIME_LEFT_SEC = 180  # 3+ minutes (tightened from 2 min)
@@ -99,10 +102,10 @@ DRIFT_TP_PRICE = 0.90         # TP at $0.90 (lowered from $0.95 — lock in prof
 # Previous WR: 38.9% but PnL = -$0.38 (wins too small, losses too big)
 # FIX: Only enter 0.57-0.62 zone with confirmed overbought signal (tightened from 0.55-0.62)
 DRIFT_SHORT_ENABLED = True
-DRIFT_SHORT_MIN_PRICE = 0.57  # TIGHTENED from 0.55 — avoid weak setups at lower prices
-DRIFT_SHORT_MAX_PRICE = 0.62   # TIGHTENED from 0.70 — entries above 0.62 have poor WR
-DRIFT_SHORT_SL_PRICE = 0.75    # Absolute $0.75 SL (Nerd's research)
-DRIFT_SHORT_STOP_LOSS = 0.75   # Alias for DRIFT_SHORT_SL_PRICE (used in strategies.py)
+DRIFT_SHORT_MIN_PRICE = 0.57  # Expanded from 0.55 — NO side is winning here
+DRIFT_SHORT_MAX_PRICE = 0.75   # EXPANDED from 0.62 per Nerd: $0.62-$0.70 hits 67-86% WR
+DRIFT_SHORT_SL_PRICE = 0.80    # Absolute $0.80 SL (wider to accommodate expanded range)
+DRIFT_SHORT_STOP_LOSS = 0.80   # Alias for DRIFT_SHORT_SL_PRICE (used in strategies.py)
 DRIFT_TP_PCT = 0.20            # TP at 20% gain (lowered from 25%)
 DRIFT_TP_PRICE_SHORT = 0.44   # TP when YES drops to $0.44
 

@@ -239,9 +239,18 @@ class CoinTrader:
 
                 # Check if market has expired (status=closed/settled or time_left <= 0)
                 if market.status in ("closed", "settled") or market.time_to_expiry_sec() <= 0:
-                    mid_price = (market.yes_bid + market.yes_ask) / 2 if market.yes_bid > 0 else 0.5
-                    logger.info(f"[{self.coin}] Market {ticker} expired (status={market.status}) - closing at {mid_price:.4f}")
-                    self._close_position(ticker, "expired", mid_price)
+                    # Nerd's fix: use actual settlement result for P&L, not mid-price
+                    # For settled markets, YES resolution = 1.0, NO resolution = 0.0
+                    settlement_result = self.api.get_market_result(ticker)
+                    if settlement_result:
+                        # Use actual settlement price for accurate P&L
+                        exit_price = 1.0 if settlement_result == "yes" else 0.0
+                        logger.info(f"[{self.coin}] Market {ticker} settled (result={settlement_result}) - closing at {exit_price:.4f}")
+                    else:
+                        # Fallback to mid-price if settlement not available
+                        exit_price = (market.yes_bid + market.yes_ask) / 2 if market.yes_bid > 0 else 0.5
+                        logger.info(f"[{self.coin}] Market {ticker} expired (status={market.status}) - closing at {exit_price:.4f}")
+                    self._close_position(ticker, "settled", exit_price)
                     positions_changed = True
                     continue
                 else:
@@ -253,8 +262,13 @@ class CoinTrader:
 
             # Check if expired
             if time_left <= 0:
-                settlement = mid_price
-                self._close_position(ticker, "expired", settlement)
+                # Nerd's fix: use actual settlement for accurate P&L
+                settlement_result = self.api.get_market_result(ticker)
+                if settlement_result:
+                    exit_price = 1.0 if settlement_result == "yes" else 0.0
+                else:
+                    exit_price = mid_price
+                self._close_position(ticker, "settled", exit_price)
                 positions_changed = True
                 continue
 

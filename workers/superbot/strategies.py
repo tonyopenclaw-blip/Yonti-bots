@@ -32,14 +32,15 @@ MIN_ENTRY_PRICE = 0.30
 MAX_ENTRY_PRICE = 0.70
 
 # === TONY'S TWO-STAGE STOP SYSTEM ===
-# Stage 1: TIME-SCALED STOP - 80% at open → 20% at close (15 min)
-# Stage 2: TRAILING STOP (only after +30% profit) - trail from there
-INITIAL_STOP_PCT = 0.50       # 50% stop at open (tightened from 80%)
-FINAL_STOP_PCT = 0.20         # 20% stop at close
-MARKET_DURATION_SEC = 900      # 15 minutes
-TRAILING_TRIGGER_PCT = 0.30   # 30% profit before trailing stop activates
-TRAILING_BUFFER_PCT = 0.40    # 40% buffer from peak
-MIN_STOP_PCT = 0.30           # Never tighter than 30% in final 3 min
+# STOPS DISABLED per Nerd's production analysis (2026-04-06)
+# Bot was cutting positions 38-49% loss BEFORE settlement when they would have won
+# Let positions ride to settlement only. NO stops, NO less coins.
+INITIAL_STOP_PCT = 0.0        # DISABLED - was 50%, positions were stopped out before winning
+FINAL_STOP_PCT = 0.0          # DISABLED - was 20%
+MARKET_DURATION_SEC = 900     # 15 minutes
+TRAILING_TRIGGER_PCT = 0.30  # Keep trailing for winners (only after +30% profit)
+TRAILING_BUFFER_PCT = 0.40   # 40% buffer from peak
+MIN_STOP_PCT = 0.0            # DISABLED - was 30%
 import requests
 from kalshi_api import Market
 

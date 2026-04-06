@@ -155,11 +155,34 @@ class ReportGenerator:
         
         self._save_json_summary()
     
-    def update_session_stats(self, cash: float, positions_count: int, positions: List[dict] = None):
-        """Update session stats mid-run for Discord reporting."""
-        self.stats.ending_balance = cash
+    def update_session_stats(self, cash: float, positions_count: int, positions: List[dict] = None, use_kalshi_balance: bool = True):
+        """Update session stats mid-run for Discord reporting.
+        
+        Args:
+            cash: Internal cash tracking (fallback)
+            positions_count: Number of open positions
+            positions: Details of open positions
+            use_kalshi_balance: If True, fetch actual balance from Kalshi API
+        """
+        # Nerd's fix: Use Kalshi API balance for accuracy, not internal cash
+        if use_kalshi_balance:
+            try:
+                from kalshi_api import KalshiAPI
+                api = KalshiAPI()
+                actual_balance = api.get_balance()
+                self.stats.ending_balance = actual_balance
+                # P&L = actual balance - starting balance (realized only, no unrealized)
+                self.stats.total_pnl = actual_balance - self.stats.starting_balance
+                logger.debug(f"Kalshi balance: ${actual_balance:.2f}, internal cash: ${cash:.2f}")
+            except Exception as e:
+                logger.warning(f"Could not fetch Kalshi balance: {e} - using internal cash")
+                self.stats.ending_balance = cash
+                self.stats.total_pnl = cash - self.stats.starting_balance
+        else:
+            self.stats.ending_balance = cash
+            self.stats.total_pnl = cash - self.stats.starting_balance
+        
         self.stats.open_positions = positions_count
-        self.stats.total_pnl = cash - self.stats.starting_balance
         
         # If positions details provided, update them too
         # DEFENSIVE: ensure open_time is always properly formatted

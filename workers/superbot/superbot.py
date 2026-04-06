@@ -55,7 +55,7 @@ logger = setup_logging()
 # =============================================================================
 MAX_POSITIONS = 3           # Max 3 concurrent positions (was 5)
 MAX_DAILY_LOSS = 99999.00  # DISABLED - no daily loss limit
-MAX_DAILY_TRADES = 30      # Max 30 trades per calendar day
+MAX_DAILY_TRADES = 9999     # No limit      # Max 30 trades per calendar day
 
 
 class CoinbasePreFilter:
@@ -603,7 +603,7 @@ class Superbot:
         If balance drops below $50, stop trading for the day.
 
         NEW: MAX_DAILY_LOSS = $5 (stop if down $5)
-        NEW: MAX_DAILY_TRADES = 30 (stop if 30 trades)
+        NEW: MAX_DAILY_TRADES = 9999     # No limit (stop if 30 trades)
         """
         # Check if we crossed into a new day - reset tracking
         current_day = datetime.now().strftime("%Y-%m-%d")

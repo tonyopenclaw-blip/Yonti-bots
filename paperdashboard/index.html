@@ -333,6 +333,11 @@
             <span class="tab-name">Thermostat</span>
             <span class="tab-pnl" id="tab-pnl-thermo"></span>
         </button>
+        <button class="bot-tab" data-bot="poly">
+            <span class="tab-icon">🌊</span>
+            <span class="tab-name">SuperPolybot</span>
+            <span class="tab-pnl" id="tab-pnl-poly"></span>
+        </button>
     </div>
 
     <!-- STAT CARDS -->
@@ -399,6 +404,7 @@
                     <option value="super">Super Bot</option>
                     <option value="flip">Flip Bot</option>
                     <option value="thermo">Thermostat</option>
+                    <option value="poly">SuperPolybot</option>
                 </select>
                 <select class="filter-select" id="f-strat">
                     <option value="">All Strategies</option>
@@ -522,16 +528,36 @@
                 </div>
             </div>
 
+            <!-- SuperPolybot Card -->
+            <div class="bot-card" id="polyCard">
+                <div class="bot-card-head">
+                    <div class="bot-card-icon" style="background:rgba(6,182,212,0.15);">🌊</div>
+                    <div>
+                        <div class="bot-card-name">SuperPolybot</div>
+                        <div class="bot-card-sub">Polymarket 5-min binaries</div>
+                    </div>
+                </div>
+                <div class="bot-card-body">
+                    <div class="bc-row"><span class="bc-label">Balance</span><span class="bc-val" id="poly-bal">$100.00</span></div>
+                    <div class="bc-row"><span class="bc-label">P&L</span><span class="bc-val" id="poly-pnl">$0.00</span></div>
+                    <div class="bc-row"><span class="bc-label">Win Rate</span><span class="bc-val" id="poly-wr">--%</span></div>
+                    <div class="bc-row"><span class="bc-label">Trades</span><span class="bc-val" id="poly-trades">0</span></div>
+                    <div class="bc-row bc-params"><span class="bc-label">Strategy</span><span class="bc-val">Momentum Matrix</span></div>
+                    <div class="bc-row bc-params"><span class="bc-label">Market</span><span class="bc-val">5-min binaries</span></div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
 
 <script>
 // ===== STATE =====
-let botData = { super: [], flip: [], thermo: [] };
+let botData = { super: [], flip: [], thermo: [], poly: [] };
 let superStats = {};
 let flipStats = {};
 let thermoStats = {};
+let polyStats = {};
 let activeBot = 'all';
 let sortField = 'time';
 let sortDir = 'desc';
@@ -566,7 +592,7 @@ function toEST(utcStr) {
 
 // ===== DATA LOADING =====
 async function loadAllData() {
-    await Promise.all([loadSuperData(), loadFlipData(), loadThermoData()]);
+    await Promise.all([loadSuperData(), loadFlipData(), loadThermoData(), loadPolyData()]);
     renderAll();
 }
 
@@ -731,9 +757,65 @@ async function loadThermoData() {
     } catch(e) { console.error('Thermo data error:', e); }
 }
 
+async function loadPolyData() {
+    try {
+        const r = await fetch('http://129.80.245.91/workers/superpolybot/report.json?t=' + Date.now());
+        if (!r.ok) return;
+        const d = await r.json();
+        polyStats = {
+            balance: parseFloat(d.ending_balance || 100),
+            pnl: parseFloat(d.total_pnl || 0),
+            wins: parseInt(d.winning_trades || 0),
+            losses: parseInt(d.losing_trades || 0),
+            total: parseInt(d.total_trades || 0),
+            wr: parseFloat(d.win_rate || 0),
+            startTime: d.start_time || '',
+            open: (d.last_10_open_trades || []).length
+        };
+        const closedTrades = (d.trades || []).map(t => ({
+            id: (t.ticker || '?') + '_' + t.open_time,
+            bot: 'poly',
+            ticker: t.ticker || '?',
+            botName: 'SuperPolybot',
+            strategy: t.strategy || '?',
+            side: t.side || '?',
+            entry: parseFloat(t.entry_price || 0),
+            exit: parseFloat(t.exit_price || 0),
+            contracts: parseFloat(t.contracts || 0),
+            size: parseFloat(t.size || 0),
+            pnl: parseFloat(t.pnl || 0),
+            openTime: t.open_time || '',
+            closeTime: t.close_time || '',
+            exitReason: t.exit_reason || '',
+            isOpen: false,
+            isWin: parseFloat(t.pnl || 0) > 0
+        }));
+        const openTrades = (d.last_10_open_trades || []).map(t => ({
+            id: (t.ticker || '?') + '_open_' + (t.open_time || Date.now()),
+            bot: 'poly',
+            ticker: t.ticker || '?',
+            botName: 'SuperPolybot',
+            strategy: t.strategy || '?',
+            side: t.side || '?',
+            entry: parseFloat(t.entry_price || 0),
+            exit: parseFloat(t.current_price || 0),
+            contracts: parseFloat(t.contracts || 0),
+            size: parseFloat(t.contracts || 0) * parseFloat(t.entry_price || 0),
+            pnl: 0,
+            currentPrice: parseFloat(t.current_price || 0),
+            openTime: t.open_time || '',
+            closeTime: '',
+            exitReason: '',
+            isOpen: true,
+            isWin: false
+        }));
+        botData.poly = [...closedTrades, ...openTrades];
+    } catch(e) { console.error('Poly data error:', e); }
+}
+
 // ===== UNIFIED TRADE LIST =====
 function getAllTrades() {
-    let trades = [...botData.super, ...botData.flip, ...botData.thermo];
+    let trades = [...botData.super, ...botData.flip, ...botData.thermo, ...botData.poly];
     if (activeBot !== 'all') trades = trades.filter(t => t.bot === activeBot);
     return trades;
 }
@@ -810,13 +892,23 @@ function renderBotCards() {
     tpEl.className = 'bc-val ' + (thermoStats.pnl >= 0 ? 'pos' : 'neg');
     document.getElementById('th-wr').textContent = twr + '%';
     document.getElementById('th-trades').textContent = thermoStats.total || 0;
+
+    // Poly
+    const pwr = polyStats.total > 0 ? (polyStats.wins / polyStats.total * 100).toFixed(0) : '--';
+    document.getElementById('poly-bal').textContent = '$' + (polyStats.balance || 100).toFixed(2);
+    const ppEl = document.getElementById('poly-pnl');
+    ppEl.textContent = (polyStats.pnl >= 0 ? '+$' : '-$') + Math.abs(polyStats.pnl || 0).toFixed(2);
+    ppEl.className = 'bc-val ' + (polyStats.pnl >= 0 ? 'pos' : 'neg');
+    document.getElementById('poly-wr').textContent = pwr + '%';
+    document.getElementById('poly-trades').textContent = polyStats.total || 0;
 }
 
 function renderBotTabPnls() {
     const tabs = [
         { id: 'super', stats: superStats },
         { id: 'flip', stats: flipStats },
-        { id: 'thermo', stats: thermoStats }
+        { id: 'thermo', stats: thermoStats },
+        { id: 'poly', stats: polyStats }
     ];
     tabs.forEach(({ id, stats }) => {
         const el = document.getElementById('tab-pnl-' + id);
@@ -901,7 +993,8 @@ function renderPnlByBotChart() {
     const bots = [
         { name: 'Super', pnl: superStats.pnl || 0, color: '#F97316' },
         { name: 'Flip', pnl: flipStats.pnl || 0, color: '#EC4899' },
-        { name: 'Thermo', pnl: thermoStats.pnl || 0, color: '#84CC16' }
+        { name: 'Thermo', pnl: thermoStats.pnl || 0, color: '#84CC16' },
+        { name: 'Poly', pnl: polyStats.pnl || 0, color: '#06B6D4' }
     ];
     const maxAbs = Math.max(...bots.map(b => Math.abs(b.pnl)), 0.01);
     const barH = 20, gap = 14, labelW = 48, valW = 55;

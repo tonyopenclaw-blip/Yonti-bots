@@ -13,6 +13,9 @@ from typing import Optional, Tuple, Dict, List
 from collections import deque
 from enum import Enum
 
+# First Cross toggle
+FIRST_CROSS_DISABLED = True  # Disabled by Tony 2026-04-07
+
 from config import (
     MAX_BET, MIN_BET,
     DEEP_SHORT_ENABLED, DEEP_SHORT_MAX_PRICE, DEEP_MIN_TIME_LEFT_SEC,
@@ -1068,12 +1071,12 @@ class StrategyEngine:
                         )
 
         # === FIRST CROSS: Real cross through floor strike (not market open) ===
-        # OFF-HOURS CHECK: FIRST_CROSS runs off-hours only (00:00-14:00 UTC)
-        current_hour_utc = datetime.datetime.utcnow().hour
-        is_off_hours = current_hour_utc < 14  # 00:00-13:59 UTC
+        # DISABLED: FIRST_CROSS is turned off (2026-04-07)
+        # current_hour_utc = datetime.datetime.utcnow().hour
+        # is_off_hours = current_hour_utc < 14  # 00:00-13:59 UTC
         
-        if not is_off_hours:
-            logger.info(f"FIRST_CROSS SKIPPED (off-hours only): current_hour={current_hour_utc} UTC (trading hours 14:00-00:00)")
+        if False:  # Always skip first_cross
+            pass
         else:
             # --- First Cross: Coin price vs target price ---
             if market.ticker not in self._floor_strikes:
@@ -1089,6 +1092,8 @@ class StrategyEngine:
             cross_direction = self.coin_first_cross.check_cross(market.ticker, coin, target_price, self.api)
 
             if cross_direction:
+                if FIRST_CROSS_DISABLED:
+                    return None
                 has_coin_cross = True
                 if cross_direction == "up":
                     side = "yes"
@@ -1174,7 +1179,7 @@ class StrategyEngine:
 
         if self.first_cross.should_wait(market.ticker, mid_price):
             logger.debug(f"FIRST_CROSS: {market.ticker} in dead zone (${mid_price:.4f}) - WAITING")
-        elif has_midpoint_cross or (has_coin_cross == False and self.first_cross.get_preferred_side(market.ticker)):
+        elif (has_midpoint_cross or (has_coin_cross == False and self.first_cross.get_preferred_side(market.ticker))) and not FIRST_CROSS_DISABLED:
             preferred_side = self.first_cross.get_preferred_side(market.ticker)
             if preferred_side:
                 side = 'yes' if preferred_side == 'yes' else 'no'

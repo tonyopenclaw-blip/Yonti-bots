@@ -1,4 +1,5 @@
 import time
+import datetime
 # strategies.py - Superbot Trading Strategies
 # CONFIDENCE SCHEMA v1.0 - Size trades based on signal strength, let winners run
 
@@ -1067,13 +1068,20 @@ class StrategyEngine:
                         )
 
         # === FIRST CROSS: Real cross through floor strike (not market open) ===
-        # --- First Cross: Coin price vs target price ---
-        if market.ticker not in self._floor_strikes:
-            if self.api is not None:
-                floor_strike = self.coin_first_cross.get_floor_strike(market.ticker, self.api)
-                if floor_strike is not None:
-                    self._floor_strikes[market.ticker] = floor_strike
-                    logger.info(f"FIRST_CROSS: {market.ticker} target price set to ${floor_strike:,.2f}")
+        # OFF-HOURS CHECK: FIRST_CROSS runs off-hours only (00:00-14:00 UTC)
+        current_hour_utc = datetime.datetime.utcnow().hour
+        is_off_hours = current_hour_utc < 14  # 00:00-13:59 UTC
+        
+        if not is_off_hours:
+            logger.info(f"FIRST_CROSS SKIPPED (off-hours only): current_hour={current_hour_utc} UTC (trading hours 14:00-00:00)")
+        else:
+            # --- First Cross: Coin price vs target price ---
+            if market.ticker not in self._floor_strikes:
+                if self.api is not None:
+                    floor_strike = self.coin_first_cross.get_floor_strike(market.ticker, self.api)
+                    if floor_strike is not None:
+                        self._floor_strikes[market.ticker] = floor_strike
+                        logger.info(f"FIRST_CROSS: {market.ticker} target price set to ${floor_strike:,.2f}")
 
         has_coin_cross = False
         if market.ticker in self._floor_strikes and coin:

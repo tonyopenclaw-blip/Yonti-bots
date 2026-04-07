@@ -2003,3 +2003,59 @@ Uses Kalshi's official API + Perplexity AI for research. Simple but useful for u
 - Polymarket Copy Bot: https://github.com/RobertMarcellos/polymarket-copy-trading-bot
 - BowTiedBettor DraftKings Scraper: https://github.com/BowTiedBettor/DraftKings
 - Akamai Bypass (TLS): https://github.com/Edioff/oreillyauto-scraper
+
+---
+
+## 📊 MATRIX PERFORMANCE REVIEW — 2026-04-06
+
+**Session:** 2026-04-06 17:32 - 23:01 UTC  
+**Trades Analyzed:** 32 (all completed today)  
+**Overall Win Rate:** 28.1% (9W/23L)  
+**Total P&L:** -$34.67  
+**Account:** $34.67 → $0.00 (wiped out)
+
+### MATRIX CELL PERFORMANCE
+
+Matrix Cell       | Trades | Wins | Losses | Win%  | Total P&L  
+------------------|--------|------|--------|-------|------------
+3-7 min / 30%+   |   7    |  2   |   5    | 29%   |  -$2.73   
+7-11 min / 30%+  |   7    |  0   |   7    |  0%   |  -$5.14   
+7-11 min / 20-30%|   1    |  0   |   1    |  0%   |  -$1.05   
+11-14 min / 30%+ |  16    |  5   |  11    | 31%   |  -$5.75   
+11-14 min / 20-30%|  1    |  0   |   1    |  0%   |  -$0.23   
+
+### KEY FINDINGS
+
+1. ALL matrix cells FAILED — 28% win rate is catastrophic
+2. 30%+ distance bucket is TOO BROAD — entries from 27% to 60% treated identically
+3. Trailing stops killing winners — best trade (BNB +$2.46) held to expiry
+4. YES momentum at 50-60% distance = TRAP — fighting strong directional trend
+5. first_cross at 11-14 min = too late — window has passed
+
+### UPDATED MATRIX RECOMMENDATIONS
+
+                    | 0-10%    | 10-20%   | 20-30%   | 30%+       
+--------------------|----------|----------|----------|------------
+0-3 min            | SKIP     | SKIP     | LOW BUY  | MED BUY    
+3-7 min            | SKIP     | LOW BUY  | MED BUY  | LOW BUY*   
+                   |          |          |          | [was HIGH]
+7-11 min           | SKIP     | MED BUY  | MED BUY  | SKIP*      
+                   |          |          |          | [was HIGH]
+11-14 min          | SKIP     | LOW BUY  | SKIP*    | SKIP*      
+                   |          |          | [was MED]| [was SCALP]
+14-15 min          | SKIP     | SKIP     | SKIP     | SKIP       
+
+### REFINED 30%+ SUB-BUCKET
+
+30-40% distance: MED BUY (possible mean reversion)
+40-50% distance: SKIP (reversion unlikely)  
+50%+ distance: SKIP (strong directional trend)
+
+### ACTION ITEMS
+
+1. Pixel: Fix time_to_expiry_sec() bug
+2. Pixel: Fix 401/400 API auth errors  
+3. Pixel: Implement 30%+ sub-bucket logic
+4. Tony: Consider adding capital — $34.67 too thin for $2 max bets
+
+_Analyzed: 2026-04-06 23:01 UTC (nerd-matrix-review subagent)_

@@ -458,6 +458,7 @@ class TradeSignal:
     trailing_stop_buffer: float = 0.40    # 40% buffer (alias for clarity)
     max_hold_minutes: int = 14           # Default 14min max hold (Nerd's research)
     use_time_scaling: bool = False        # If True, use 80%->20% time-scaled stop
+    entry_distance_pct: float = 0.0      # Price distance % at entry (for 30%+ zone trailing stop awareness)
 
 
 @dataclass
@@ -485,6 +486,7 @@ class Position:
     avg_price: float = 0.0               # Weighted average entry price
     confidence: int = 50                 # Signal confidence 0-100 (for trailing stop logging)
     use_time_scaling: bool = False        # If True, use 80%->20% time-scaled stop
+    entry_distance_pct: float = 0.0      # Price distance % at entry (for 30%+ zone trailing stop awareness)
 
     def __post_init__(self):
         """Initialize computed fields after dataclass init."""
@@ -1060,7 +1062,8 @@ class StrategyEngine:
                             confidence=confidence,
                             trailing_stop_buffer=0.40,
                             max_hold_minutes=13,  # Nerd's research: 13min for momentum (was 10)
-                            use_time_scaling=True  # TIME SCALING: 80%->20%
+                            use_time_scaling=True,  # TIME SCALING: 80%->20%
+                            entry_distance_pct=price_distance_pct
                         )
 
         # === FIRST CROSS: Real cross through floor strike (not market open) ===
@@ -1150,7 +1153,8 @@ class StrategyEngine:
                             confidence=confidence,
                             trailing_stop_buffer=0.70,  # FIX 2: Changed from 0.40 to 0.70
                             max_hold_minutes=14,  # Nerd's research: 14min max hold (was 10, was cutting winners short)
-                            use_time_scaling=False  # NO TIME SCALING for FIRST_CROSS
+                            use_time_scaling=False,  # NO TIME SCALING for FIRST_CROSS
+                            entry_distance_pct=price_distance_pct
                         )
 
         # --- First Cross: Midpoint crossing ---
@@ -1235,7 +1239,8 @@ class StrategyEngine:
                             confidence=confidence,
                             trailing_stop_buffer=0.70,  # FIX 2: Changed from 0.40 to 0.70
                             max_hold_minutes=max_hold,
-                            use_time_scaling=False  # NO TIME SCALING for FIRST_CROSS
+                            use_time_scaling=False,  # NO TIME SCALING for FIRST_CROSS
+                            entry_distance_pct=price_distance_pct
                         )
 
         # === MOMENTUM_FORCE: Last resort - wait 60s, no cross, force entry ===
@@ -1276,7 +1281,8 @@ class StrategyEngine:
                         confidence=confidence,
                         trailing_stop_buffer=0.40,
                         max_hold_minutes=13,  # Nerd's research: 13min for momentum force (was 8)
-                        use_time_scaling=True  # TIME SCALING: 80%->20%
+                        use_time_scaling=True,  # TIME SCALING: 80%->20%
+                        entry_distance_pct=abs(mid_price - 0.50) * 100
                     )
 
         return None
@@ -1378,7 +1384,8 @@ Your estimate:"""
             stop_loss=None,     # No SL - ride to expiry
             confidence=confidence,
             trailing_stop_buffer=0.0,
-            max_hold_minutes=15
+            max_hold_minutes=15,
+            entry_distance_pct=abs(mid_price - 0.50) * 100
         )
 
     def _check_deep_buy(self, market: Market, mid_price: float, time_left: int) -> Optional[TradeSignal]:
@@ -1424,7 +1431,8 @@ Your estimate:"""
             stop_loss=None,  # No SL - ride to expiry, max loss is the entry price
             confidence=confidence,
             trailing_stop_buffer=0.0,
-            max_hold_minutes=15
+            max_hold_minutes=15,
+            entry_distance_pct=abs(mid_price - 0.50) * 100
         )
 
     def _check_drift_buy(self, market: Market, mid_price: float, time_left: int) -> Optional[TradeSignal]:
@@ -1515,7 +1523,8 @@ Your estimate:"""
             trailing_stop_trigger_pct=ts_trigger,
             confidence=confidence,
             trailing_stop_buffer=ts_buffer,
-            max_hold_minutes=max_hold
+            max_hold_minutes=max_hold,
+            entry_distance_pct=abs(mid_price - 0.50) * 100
         )
 
     def _check_drift_short(self, market: Market, mid_price: float, time_left: int) -> Optional[TradeSignal]:
@@ -1604,7 +1613,8 @@ Your estimate:"""
             trailing_stop_trigger_pct=ts_trigger,
             confidence=confidence,
             trailing_stop_buffer=ts_buffer,
-            max_hold_minutes=max_hold
+            max_hold_minutes=max_hold,
+            entry_distance_pct=abs(mid_price - 0.50) * 100
         )
 
     def get_entry_signal(self, time_minutes: float, price_distance_pct: float) -> Tuple[str, float, int]:
@@ -1616,14 +1626,23 @@ Your estimate:"""
         - size_dollars: position size based on matrix cell
         - conf_boost: confidence boost based on matrix cell strength
         
-        Matrix:
-                            |  0-10%       |  10-20%      |  20-30%      |  30%+
-        --------------------+--------------+--------------+--------------+------------
-          0-3 min           |    SKIP       |    SKIP      |   LOW        |   MED
-          3-7 min           |    SKIP       |   LOW        |   MED        |   HIGH
-          7-11 min           |   SKIP        |   MED        |   HIGH       |   HIGH
-          11-14 min          |   SKIP        |   LOW        |   MED        |   SCALP
-          14-15 min          |    SKIP       |    SKIP      |    SKIP      |    SKIP
+        Matrix (updated 2026-04-06 based on Nerd's performance review):
+        30%+ bucket split into sub-buckets:
+        - 30-40%: Keep as MED BUY (still valid)
+        - 40-50%: Downgrade to LOW (trending strong)
+        - 50%+: SKIP (trending too strong, mean reversion unlikely)
+        
+        7-11/30%+ downgraded to SKIP (0% WR on 7 trades!)
+        11-14/30%+ downgraded to SKIP (31% WR but heavy losses)
+        3-7/30%+ downgraded to LOW BUY (29% WR, still losing)
+        
+                            |  0-10%       |  10-20%      |  20-30%      |  30-40%     |  40-50%     |  50%+
+        --------------------+--------------+--------------+--------------+-------------+-------------+------------
+          0-3 min           |    SKIP       |    SKIP      |   LOW        |   MED       |   LOW       |   SKIP
+          3-7 min           |    SKIP       |   LOW        |   MED        |   LOW       |   SKIP       |   SKIP
+          7-11 min           |   SKIP        |   MED        |   HIGH       |   SKIP       |   SKIP       |   SKIP
+          11-14 min          |    SKIP        |   LOW        |   MED        |   SKIP       |   SKIP       |   SKIP
+          14-15 min          |    SKIP       |    SKIP      |    SKIP      |    SKIP      |    SKIP      |    SKIP
         
         Position Sizing:
         - LOW = $1-2
@@ -1651,41 +1670,53 @@ Your estimate:"""
         else:  # 11-14
             time_bucket = "11-14"
         
-        # Determine price distance bucket
+        # Determine price distance bucket (30%+ split into 3 sub-buckets per Nerd's review)
         if price_distance_pct <= 10:
             dist_bucket = "0-10"
         elif price_distance_pct <= 20:
             dist_bucket = "10-20"
         elif price_distance_pct <= 30:
             dist_bucket = "20-30"
+        elif price_distance_pct <= 40:
+            dist_bucket = "30-40"
+        elif price_distance_pct <= 50:
+            dist_bucket = "40-50"
         else:
-            dist_bucket = "30+"
+            dist_bucket = "50+"
         
         # Matrix lookup table
         matrix = {
             "0-3": {
                 "0-10": ("skip", 0, 0),
                 "10-20": ("skip", 0, 0),
-                "20-30": ("low", 1.5, 0),    # $1-2, no boost
-                "30+": ("med", 4.0, 5),       # $3-5, +5 CONF
+                "20-30": ("low", 1.5, 0),     # $1-2, no boost
+                "30-40": ("med", 4.0, 5),     # $3-5, +5 CONF (kept from old 30+)
+                "40-50": ("low", 1.5, 0),     # $1-2, downgrade from MED
+                "50+": ("skip", 0, 0),         # SKIP - trending too strong
             },
             "3-7": {
                 "0-10": ("skip", 0, 0),
                 "10-20": ("low", 1.5, 0),     # $1-2, no boost
                 "20-30": ("med", 4.0, 5),     # $3-5, +5 CONF
-                "30+": ("high", 8.75, 10),   # $7.50-10, +10 CONF
+                "30-40": ("low", 1.5, 0),     # DOWNGRADED from HIGH to LOW
+                "40-50": ("skip", 0, 0),     # SKIP - trending strong
+                "50+": ("skip", 0, 0),         # SKIP - trending too strong
             },
             "7-11": {
                 "0-10": ("skip", 0, 0),
                 "10-20": ("med", 4.0, 5),     # $3-5, +5 CONF
                 "20-30": ("high", 8.75, 10),  # $7.50-10, +10 CONF
-                "30+": ("high", 8.75, 10),   # $7.50-10, +10 CONF
+                "30-40": ("skip", 0, 0),     # DOWNGRADED from HIGH to SKIP (0% WR!)
+                "40-50": ("skip", 0, 0),     # SKIP
+                "50+": ("skip", 0, 0),         # SKIP
             },
             "11-14": {
                 "0-10": ("skip", 0, 0),
                 "10-20": ("low", 1.5, 0),     # $1-2, no boost
                 "20-30": ("med", 4.0, 5),     # $3-5, +5 CONF
-                "30+": ("scalp", 8.75, 5),    # HIGH size but MED boost (scalp only)
+                "30-40": ("skip", 0, 0),     # DOWNGRADED from SCALP to SKIP
+                "40-50": ("skip", 0, 0),     # SKIP
+                "50+": ("skip", 0, 0),         # SKIP
             },
         }
         
@@ -1764,24 +1795,42 @@ Your estimate:"""
                     logger.info(f"{position.ticker}: {stop_label} HIT @ ${current_price:.4f} (entry=${entry_price:.4f}, stop={stop_pct:.0%}, loss={loss_pct:.1%}, age={time_elapsed_min:.1f}min)")
                     return True, f"{stop_label}: -{stop_pct:.0%} loss locked in"
 
-            # Stage 2: TRAILING STOP (after +30% profit)
-            profit_target_price = entry_price * (1 + TRAILING_TRIGGER_PCT)
+            # Stage 2: TRAILING STOP (after effective_trailing_trigger profit)
+            # Nerd's update (2026-04-06): 30%+ zone = wider trailing stop to let winners run
+            entry_dist = getattr(position, 'entry_distance_pct', 0.0)
+            if entry_dist >= 50:
+                # 50%+ zone: disable trailing stop entirely - let winners run to expiry
+                effective_trailing_buffer = 1.0  # 100% buffer = basically disabled
+                effective_trailing_trigger = 10.0  # 1000% trigger = never activates
+                ts_zone_label = "50%+ DISABLED"
+            elif entry_dist >= 30:
+                # 30-50% zone: very wide trailing stop (70% buffer instead of 40%)
+                effective_trailing_buffer = 0.70  # 70% buffer - very loose
+                effective_trailing_trigger = 0.50  # 50% profit before trailing activates
+                ts_zone_label = "30%+ WIDE"
+            else:
+                # Normal zone (<30%): use standard settings
+                effective_trailing_buffer = TRAILING_BUFFER_PCT  # 40%
+                effective_trailing_trigger = TRAILING_TRIGGER_PCT  # 30%
+                ts_zone_label = ""
+
+            profit_target_price = entry_price * (1 + effective_trailing_trigger)
 
             if not position.trailing_stop_active and current_price >= profit_target_price:
                 position.trailing_stop_active = True
                 position.peak_price = current_price
                 profit_pct = (current_price - entry_price) / entry_price
-                logger.info(f"{position.ticker}: TRAILING STOP ACTIVATED @ ${current_price:.4f} (entry=${entry_price:.4f}, profit={profit_pct:.1%})")
+                logger.info(f"{position.ticker}: TRAILING STOP ACTIVATED [{ts_zone_label}] @ ${current_price:.4f} (entry=${entry_price:.4f}, profit={profit_pct:.1%}, buffer={effective_trailing_buffer:.0%})")
 
             if position.trailing_stop_active:
                 if current_price > position.peak_price:
                     position.peak_price = current_price
                 else:
                     drop_from_peak = (position.peak_price - current_price) / position.peak_price
-                    if drop_from_peak >= TRAILING_BUFFER_PCT:
+                    if drop_from_peak >= effective_trailing_buffer:
                         current_profit_pct = (current_price - entry_price) / entry_price
-                        logger.info(f"{position.ticker}: TRAILING STOP HIT @ ${current_price:.4f} (peak=${position.peak_price:.4f}, drop={drop_from_peak:.1%}, locked={current_profit_pct:.1%})")
-                        return True, f"TRAILING STOP: locked in profits"
+                        logger.info(f"{position.ticker}: TRAILING STOP HIT [{ts_zone_label}] @ ${current_price:.4f} (peak=${position.peak_price:.4f}, drop={drop_from_peak:.1%}, locked={current_profit_pct:.1%})")
+                        return True, f"TRAILING STOP [{ts_zone_label}]: locked in profits"
 
         else:
             # NO: We profit when price goes DOWN
@@ -1795,8 +1844,23 @@ Your estimate:"""
                     logger.info(f"{position.ticker}: {stop_label} HIT @ ${current_price:.4f} (entry=${entry_price:.4f}, stop={stop_pct:.0%}, loss={loss_pct:.1%}, age={time_elapsed_min:.1f}min)")
                     return True, f"{stop_label}: -{stop_pct:.0%} loss locked in"
 
-            # Stage 2: TRAILING STOP (after +30% profit)
-            profit_target_price = entry_price * (1 - TRAILING_TRIGGER_PCT)
+            # Stage 2: TRAILING STOP (after effective_trailing_trigger profit)
+            # Nerd's update (2026-04-06): 30%+ zone = wider trailing stop to let winners run
+            entry_dist = getattr(position, 'entry_distance_pct', 0.0)
+            if entry_dist >= 50:
+                effective_trailing_buffer = 1.0
+                effective_trailing_trigger = 10.0
+                ts_zone_label = "50%+ DISABLED"
+            elif entry_dist >= 30:
+                effective_trailing_buffer = 0.70
+                effective_trailing_trigger = 0.50
+                ts_zone_label = "30%+ WIDE"
+            else:
+                effective_trailing_buffer = TRAILING_BUFFER_PCT
+                effective_trailing_trigger = TRAILING_TRIGGER_PCT
+                ts_zone_label = ""
+
+            profit_target_price = entry_price * (1 - effective_trailing_trigger)
 
             if not position.trailing_stop_active and current_price <= profit_target_price:
                 position.trailing_stop_active = True
@@ -1807,10 +1871,10 @@ Your estimate:"""
                     position.peak_price = current_price
                 else:
                     rise_from_trough = (current_price - position.peak_price) / position.peak_price
-                    if rise_from_trough >= TRAILING_BUFFER_PCT:
+                    if rise_from_trough >= effective_trailing_buffer:
                         current_profit_pct = (entry_price - current_price) / entry_price
-                        logger.info(f"{position.ticker}: TRAILING STOP HIT @ ${current_price:.4f} (trough=${position.peak_price:.4f}, rise={rise_from_trough:.1%}, locked={current_profit_pct:.1%})")
-                        return True, f"TRAILING STOP: locked in profits"
+                        logger.info(f"{position.ticker}: TRAILING STOP HIT [{ts_zone_label}] @ ${current_price:.4f} (trough=${position.peak_price:.4f}, rise={rise_from_trough:.1%}, locked={current_profit_pct:.1%})")
+                        return True, f"TRAILING STOP [{ts_zone_label}]: locked in profits"
 
         # === MAX HOLD TIME ===
         max_hold_minutes = 14  # Nerd's research: 14min max hold (was 12, was cutting winners short)

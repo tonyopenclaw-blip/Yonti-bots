@@ -4,10 +4,10 @@
   "starting_balance": 34.67,
   "ending_balance": 0.0,
   "total_pnl": -34.67,
-  "total_trades": 46,
-  "winning_trades": 24,
+  "total_trades": 47,
+  "winning_trades": 25,
   "losing_trades": 21,
-  "win_rate": 52.2,
+  "win_rate": 53.2,
   "largest_win": 0.6355,
   "largest_loss": -0.555,
   "open_positions": 0,
@@ -610,10 +610,36 @@
       "open_time": "2026-04-08 18:17:32 UTC",
       "close_time": "2026-04-08 18:29:13 UTC",
       "exit_reason": "Expiry: closing at $0.0050"
+    },
+    {
+      "ticker": "KXBTC15M-26APR081845-45",
+      "side": "no",
+      "entry_price": 0.765,
+      "exit_price": 0.9995,
+      "shares": 1,
+      "cost": 0.765,
+      "pnl": 0.23450000000000004,
+      "strategy": "first_cross",
+      "open_time": "2026-04-08 22:35:15 UTC",
+      "close_time": "2026-04-08 22:44:22 UTC",
+      "exit_reason": "Expiry: closing at $0.9995"
     }
   ],
   "last_10_open_trades": [],
   "last_10_closed_trades": [
+    {
+      "ticker": "KXBTC15M-26APR081845-45",
+      "side": "no",
+      "entry_price": 0.765,
+      "exit_price": 0.9995,
+      "shares": 1,
+      "cost": 0.765,
+      "pnl": 0.23450000000000004,
+      "strategy": "first_cross",
+      "open_time": "2026-04-08 22:35:15 UTC",
+      "close_time": "2026-04-08 22:44:22 UTC",
+      "exit_reason": "Expiry: closing at $0.9995"
+    },
     {
       "ticker": "KXHYPE15M-26APR081430-30",
       "side": "yes",
@@ -729,19 +755,6 @@
       "strategy": "first_cross",
       "open_time": "2026-04-08 17:50:03 UTC",
       "close_time": "2026-04-08 17:57:41 UTC",
-      "exit_reason": "TRAILING STOP: locked in profits"
-    },
-    {
-      "ticker": "KXDOGE15M-26APR081400-00",
-      "side": "yes",
-      "entry_price": 0.32999999999999996,
-      "exit_price": 0.31,
-      "shares": 1,
-      "cost": 0.32999999999999996,
-      "pnl": -0.019999999999999962,
-      "strategy": "first_cross",
-      "open_time": "2026-04-08 17:51:35 UTC",
-      "close_time": "2026-04-08 17:55:08 UTC",
       "exit_reason": "TRAILING STOP: locked in profits"
     }
   ]

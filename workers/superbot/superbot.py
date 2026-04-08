@@ -459,8 +459,7 @@ class CoinTrader:
             scale_in_size=0,  # FIX 3: Scale-in disabled
             unrealized_pnl=0.0,
             avg_price=signal.price,
-            use_time_scaling=getattr(signal, 'use_time_scaling', False),
-            entry_distance_pct=getattr(signal, 'entry_distance_pct', 0.0)
+            use_time_scaling=getattr(signal, 'use_time_scaling', False)
         )
         self.positions[ticker] = position
 

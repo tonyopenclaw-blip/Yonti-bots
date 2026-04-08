@@ -1,4 +1,5 @@
 import time
+import datetime
 # strategies.py - Superbot Trading Strategies
 # CONFIDENCE SCHEMA v1.0 - Size trades based on signal strength, let winners run
 
@@ -11,8 +12,31 @@ from typing import Optional, Tuple, Dict, List
 from collections import deque
 from enum import Enum
 
-# First Cross toggle
-FIRST_CROSS_DISABLED = True  # Disabled by Tony 2026-04-07
+# === STRATEGY TIME ROUTING ===
+# 00:00-07:59 UTC: Off-hours = MOMENTUM time (US night)
+# 08:00-23:59 UTC: US hours = FIRST_CROSS time
+
+def get_strategy_mode():
+    """Returns which strategy mode is active based on UTC time.
+    Returns 'momentum' for 00:00-07:59 UTC, 'first_cross' for 08:00-23:59 UTC.
+    """
+    current_hour_utc = datetime.datetime.utcnow().hour
+    is_off_hours = current_hour_utc < 8
+    mode = 'momentum' if is_off_hours else 'first_cross'
+    logger.info(f"[STRATEGY ROUTING] UTC={current_hour_utc:02d}:00 | Mode={mode.upper()} | {'Momentum ACTIVE, First_Cross DISABLED' if is_off_hours else 'First_Cross ACTIVE, Momentum DISABLED'}")
+    return mode
+
+def is_first_cross_enabled():
+    """Returns True if First Cross strategy should run (US hours 08-23 UTC)."""
+    return not is_off_hours()
+
+def is_off_hours():
+    """Returns True if current UTC hour is 0-7 (off-hours = momentum time)."""
+    return datetime.datetime.utcnow().hour < 8
+
+def is_momentum_enabled():
+    """Returns True if Momentum strategy should run (off-hours 00-07 UTC)."""
+    return datetime.datetime.utcnow().hour < 8
 
 from config import (
     MAX_BET, MIN_BET,
@@ -909,7 +933,8 @@ class StrategyEngine:
         # Coinbase bias: must be bullish or bearish (not neutral)
         # Price: trending in bias direction (not at extreme required)
         # MUST be at least 2 minutes into the series (grace period)
-        if bias != 'neutral' and (mid_price >= 0.20 and mid_price <= 0.80):
+        # ONLY run MOMENTUM during off-hours (00:00-07:59 UTC)
+        if is_momentum_enabled() and bias != 'neutral' and (mid_price >= 0.20 and mid_price <= 0.80):
             # Check if price is moving in the bias direction (above midpoint for bullish, below for bearish)
             if bias == 'bullish' and mid_price >= 0.50:
                 side = 'yes'
@@ -1012,8 +1037,8 @@ class StrategyEngine:
             if cross_event:
                 has_midpoint_cross = True
 
-        if FIRST_CROSS_DISABLED:
-            pass  # first_cross disabled
+        if not is_first_cross_enabled():
+            pass  # first_cross disabled (off-hours, momentum running)
         elif self.first_cross.should_wait(market.ticker, mid_price):
             logger.debug(f"FIRST_CROSS: {market.ticker} in dead zone (${mid_price:.4f}) - WAITING")
         elif has_midpoint_cross or (has_coin_cross == False and self.first_cross.get_preferred_side(market.ticker)):
@@ -1056,8 +1081,9 @@ class StrategyEngine:
                     )
 
         # === MOMENTUM_FORCE: Last resort - wait 60s, no cross, force entry ===
+        # ONLY run MOMENTUM_FORCE during off-hours (00:00-07:59 UTC)
         no_cross_yet = not has_coin_cross and not has_midpoint_cross
-        if no_cross_yet and market_age_sec >= 60 and bias != 'neutral' and (mid_price < 0.10 or mid_price > 0.90):
+        if is_momentum_enabled() and no_cross_yet and market_age_sec >= 60 and bias != 'neutral' and (mid_price < 0.10 or mid_price > 0.90):
             if bias == 'bullish' and mid_price < 0.10:
                 side = 'yes'
                 reason_suffix = 'bullish + price above midpoint'

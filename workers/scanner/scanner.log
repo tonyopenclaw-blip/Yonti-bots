@@ -10115,3 +10115,60 @@ Scanning all series...
 No tradeable markets found.
 
 Saved to /home/ubuntu/.openclaw/workspace/workers/scanner/../data/live_markets.json
+Kalshi Market Scanner starting...
+Current 15-min window: 09:00 - 09:15 UTC
+Checking tickers: ['26APR090900-00', '26APR090915-15', '26APR090930-30', '26APR090945-45']
+
+Scanning all series...
+
+No tradeable markets found.
+
+Saved to /home/ubuntu/.openclaw/workspace/workers/scanner/../data/live_markets.json
+Kalshi Market Scanner starting...
+Current 15-min window: 09:15 - 09:30 UTC
+Checking tickers: ['26APR090915-15', '26APR090930-30', '26APR090945-45', '26APR091000-00']
+
+Scanning all series...
+
+SCAN RESULTS - 2026-04-09 09:15 UTC
+============================================================
+
+BNB (KXBNB15M):
+  KXBNB15M-26APR090530-30 | active | YES: $0.76
+
+============================================================
+Total tradeable markets: 1
+
+Saved to /home/ubuntu/.openclaw/workspace/workers/scanner/../data/live_markets.json
+Kalshi Market Scanner starting...
+Current 15-min window: 09:30 - 09:45 UTC
+Checking tickers: ['26APR090930-30', '26APR090945-45', '26APR091000-00', '26APR091015-15']
+
+Scanning all series...
+
+SCAN RESULTS - 2026-04-09 09:30 UTC
+============================================================
+
+BNB (KXBNB15M):
+  KXBNB15M-26APR090545-45 | active | YES: $0.76
+
+============================================================
+Total tradeable markets: 1
+
+Saved to /home/ubuntu/.openclaw/workspace/workers/scanner/../data/live_markets.json
+Kalshi Market Scanner starting...
+Current 15-min window: 09:45 - 10:00 UTC
+Checking tickers: ['26APR090945-45', '26APR091000-00', '26APR091015-15', '26APR091030-30']
+
+Scanning all series...
+
+SCAN RESULTS - 2026-04-09 09:45 UTC
+============================================================
+
+BNB (KXBNB15M):
+  KXBNB15M-26APR090600-00 | active | YES: $0.76
+
+============================================================
+Total tradeable markets: 1
+
+Saved to /home/ubuntu/.openclaw/workspace/workers/scanner/../data/live_markets.json

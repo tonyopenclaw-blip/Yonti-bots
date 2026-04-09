@@ -1,14 +1,24 @@
 {
-  "updated_at": "2026-04-09T13:45:01.691461",
-  "market_count": 1,
+  "updated_at": "2026-04-09T14:45:01.844302",
+  "market_count": 2,
   "markets": {
+    "SOL": [
+      {
+        "ticker": "KXSOL15M-26APR091100-00",
+        "status": "active",
+        "yes_bid": 0.5,
+        "yes_ask": 0.55,
+        "close_time": "2026-04-09T15:00:00Z",
+        "resolution_time": ""
+      }
+    ],
     "BNB": [
       {
-        "ticker": "KXBNB15M-26APR091000-00",
+        "ticker": "KXBNB15M-26APR091100-00",
         "status": "active",
         "yes_bid": 0.2,
         "yes_ask": 0.76,
-        "close_time": "2026-04-09T14:00:00Z",
+        "close_time": "2026-04-09T15:00:00Z",
         "resolution_time": ""
       }
     ]

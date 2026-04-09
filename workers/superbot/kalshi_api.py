@@ -72,34 +72,60 @@ class KalshiAPI:
         headers = self.auth.get_auth_headers(method, path)
         return headers
         
-    def _get(self, endpoint: str, params: Dict = None) -> Dict:
-        """Make authenticated GET request."""
-        url = f"{BASE_URL}{endpoint}"
-        # Sign WITHOUT query params - they must be passed separately to requests
-        # Otherwise signature validation fails on the server
-        path_without_qs = endpoint.split('?')[0]
-        headers = self._get_auth_headers('GET', path_without_qs)
+    def _refresh_auth(self):
+        """Recreate the auth object to get fresh signatures."""
         try:
-            resp = requests.get(url, headers=headers, params=params, timeout=10)
-            resp.raise_for_status()
-            return resp.json()
-        except requests.exceptions.RequestException as e:
-            logger.error(f"GET {url} failed: {e}")
-            return {"error": str(e)}
+            from kalshi_py.auth import KalshiAuth
+            private_key_path = '/home/ubuntu/.openclaw/workspace/workers/superbot/kalshi_private_key.pem'
+            with open(private_key_path) as f:
+                private_key_data = f.read()
+            if self.access_key:
+                self.auth = KalshiAuth(access_key_id=self.access_key, private_key_pem=private_key_data)
+        except Exception as e:
+            logger.warning(f"Failed to refresh auth: {e}")
+
+    def _get(self, endpoint: str, params: Dict = None) -> Dict:
+        """Make authenticated GET request with auto-retry on 401."""
+        url = f"{BASE_URL}{endpoint}"
+        path_without_qs = endpoint.split('?')[0]
+        for attempt in range(3):
+            headers = self._get_auth_headers('GET', path_without_qs)
+            try:
+                resp = requests.get(url, headers=headers, params=params, timeout=10)
+                if resp.status_code == 401 and attempt < 2:
+                    logger.warning(f"GET {url} got 401 - refreshing auth and retrying...")
+                    self._refresh_auth()
+                    continue
+                resp.raise_for_status()
+                return resp.json()
+            except requests.exceptions.RequestException as e:
+                if attempt == 2:
+                    logger.error(f"GET {url} failed after 3 attempts: {e}")
+                    return {"error": str(e)}
+                continue
+        return {"error": "max retries exceeded"}
     
     def _post(self, endpoint: str, data: Dict) -> Dict:
-        """Make authenticated POST request."""
+        """Make authenticated POST request with auto-retry on 401."""
         url = f"{BASE_URL}{endpoint}"
-        headers = self._get_auth_headers('POST', endpoint)
-        headers["Content-Type"] = "application/json"
-        try:
-            resp = requests.post(url, headers=headers, json=data, timeout=10)
-            resp.raise_for_status()
-            return resp.json()
-        except requests.exceptions.RequestException as e:
-            error_detail = f"POST {url} failed: {e}"
-            logger.error(error_detail)
-            return {"error": error_detail}
+        for attempt in range(3):
+            headers = self._get_auth_headers('POST', endpoint)
+            headers["Content-Type"] = "application/json"
+            try:
+                resp = requests.post(url, headers=headers, json=data, timeout=10)
+                if resp.status_code == 401 and attempt < 2:
+                    logger.warning(f"POST {url} got 401 - refreshing auth and retrying...")
+                    self._refresh_auth()
+                    continue
+                resp.raise_for_status()
+                return resp.json()
+            except requests.exceptions.RequestException as e:
+                if attempt == 2:
+                    error_detail = f"POST {url} failed after 3 attempts: {e}"
+                    logger.error(error_detail)
+                    return {"error": error_detail}
+                continue
+        return {"error": "max retries exceeded"}
     
     def _delete(self, endpoint: str) -> Dict:
         """Make authenticated DELETE request."""

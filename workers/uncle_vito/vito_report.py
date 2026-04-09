@@ -3009,7 +3009,7 @@ __LEAGUE_SECTIONS__
             if sport_confidence_picks:
                 section += '                <div class="pick-group">\n'
                 section += '                    <div class="pick-group-header">'
-                section += '<span class="pick-group-icon">🏆</span>'
+                section += f'<span class="pick-group-icon">{sport_emoji.get(sport, "🏆")}</span>'
                 section += f'<span class="pick-group-title">Best Bets Parlay ({len(sport_confidence_picks)} picks)</span>'
                 # Calculate combined odds for these picks
                 conf_picks_formatted = [{"odds": p["pick"].odds} for p in sport_confidence_picks]

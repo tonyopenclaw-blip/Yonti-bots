@@ -467,12 +467,13 @@ class Position:
     trailing_stop_trigger_pct: float = 0.50  # 50% profit before trailing stop activates
     peak_price: float = 0.0              # Track peak price for longs, trough for shorts
     scale_in_count: int = 0              # Number of times we've scaled in
-    max_scale_ins: int = 0               # DISABLED - scale-ins averaging into losses
-    scale_in_size: float = 0.0           # Additional size per scale-in
+    max_scale_ins: int = 2               # Max 2 scale-ins allowed (max 3 contracts total)
+    scale_in_size: float = 0.0           # Additional size per scale-in (calculated on scale-in)
     unrealized_pnl: float = 0.0          # Running unrealized PnL
     avg_price: float = 0.0               # Weighted average entry price
     confidence: int = 50                 # Signal confidence 0-100 (for trailing stop logging)
     use_time_scaling: bool = False        # If True, use 80%->20% time-scaled stop
+    scaled_in: bool = False               # True if we've already scaled in (once per position)
 
     def __post_init__(self):
         """Initialize computed fields after dataclass init."""
@@ -598,30 +599,68 @@ class Position:
     def should_scale_in(self, current_price: float) -> bool:
         """
         Check if we should scale in (add to winning position).
-        Scale in every 10% increase in our direction, up to 2 scale-ins max.
+        
+        Conditions:
+        - Position has not yet scaled in (scaled_in flag is False)
+        - Position is profitable (market moving in our direction)
+        - Confidence >= 70% at current timeframe
+        - scale_in_count < max_scale_ins (max 2 scale-ins allowed)
+        
+        Returns True if should scale in, False otherwise.
         """
+        # Already scaled in - only scale once per position
+        if self.scaled_in:
+            return False
+
+        # Check if we've hit max scale-ins
         if self.scale_in_count >= self.max_scale_ins:
             return False
 
+        # Check if position is profitable (market moving in our direction)
         if self.side == "yes":
-            profit_pct = (current_price - self.entry_price) / self.entry_price
-            # Scale in every 10% gain (allow scaling at any profit level >= 10%)
-            if profit_pct >= 0.10:
-                return True
+            profit_pct = (current_price - self.entry_price) / self.entry_price if self.entry_price > 0 else 0
+            if profit_pct <= 0:
+                return False  # Not profitable, don't scale in
         else:
-            profit_pct = (self.entry_price - current_price) / self.entry_price
-            # Scale in every 10% gain
-            if profit_pct >= 0.10:
-                return True
-        return False
+            profit_pct = (self.entry_price - current_price) / self.entry_price if self.entry_price > 0 else 0
+            if profit_pct <= 0:
+                return False  # Not profitable, don't scale in
+
+        # Check confidence >= 70%
+        if self.confidence < 70:
+            return False
+
+        return True
+
+    def get_scale_in_size(self) -> float:
+        """
+        Calculate the scale-in size based on confidence tiers.
+        
+        Confidence tiers:
+        - 70-79%: scale in +1 contract
+        - 80-89%: scale in +2 contracts
+        - 90%+: scale in +2 contracts + increase position size by 50%
+        
+        Returns the number of contracts to add.
+        """
+        if self.confidence >= 90:
+            # 90%+: +2 contracts + 50% boost = effectively +3
+            return 2.0 + (self.size * 0.5)
+        elif self.confidence >= 80:
+            # 80-89%: +2 contracts
+            return 2.0
+        else:
+            # 70-79%: +1 contract
+            return 1.0
 
     def record_scale_in(self, new_price: float, additional_size: float):
-        """Record a scale-in: update average price and size."""
+        """Record a scale-in: update average price, size, and set scaled_in flag."""
         total_cost = (self.size * self.avg_price) + (additional_size * new_price)
         self.size += additional_size
         self.avg_price = total_cost / self.size
         self.scale_in_count += 1
-        logger.info(f"{self.ticker}: SCALED IN @ ${new_price:.4f} (+${additional_size:.2f}), new size=${self.size:.2f}, avg_price=${self.avg_price:.4f}, scale_ins={self.scale_in_count}")
+        self.scaled_in = True  # Mark as scaled in (only scale once per position)
+        logger.info(f"{self.ticker}: SCALED IN @ ${new_price:.4f} (+{additional_size:.1f} contracts), new_size={self.size:.1f}, avg_price=${self.avg_price:.4f}, CONF={self.confidence}")
 
 
 class StrategyEngine:

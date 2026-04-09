@@ -57,10 +57,9 @@ def run(sport_filter: list = None, discord_output: bool = False, channel: str = 
     if discord_output:
         try:
             import subprocess
-            import json as json_module
-            # Escape the message for JSON
-            escaped_output = output.replace('"', '\\"').replace('\n', '\\n')
-            payload = f'{{"content": "{escaped_output}"}}'
+            import json
+            # Use proper JSON encoding to preserve Unicode emoji
+            payload = json.dumps({"content": output})
             result = subprocess.run(
                 ["curl", "-s", "-X", "POST", "-H", "Content-Type: application/json",
                  "-d", payload, config.DISCORD_WEBHOOK_URL],

@@ -303,24 +303,41 @@ class CoinTrader:
                 positions_changed = True
                 continue
 
-            # === SCALE-IN LOGIC: Add to winning positions ===
+            # === SCALE-IN LOGIC: Add to winning positions (confidence-based) ===
             # Check if we should scale in (add more to position)
+            # Scale-in conditions:
+            # 1. Position is profitable (market moving in our direction)
+            # 2. Confidence >= 70% at current timeframe
+            # 3. Have not already scaled in (scaled_in flag)
+            # 4. scale_in_count < max_scale_ins
             if position.should_scale_in(mid_price):
-                scale_size = position.scale_in_size
+                # Get scale-in size based on confidence tiers
+                scale_size = position.get_scale_in_size()
+                
                 # Check if we have cash for scale-in
-                if scale_size <= self.cash:
-                    # For scale-in, we add to position size but don't create new Position
-                    # We update the existing position's fields
-                    if position.side == "yes":
-                        cost = mid_price * scale_size
-                    else:
-                        cost = (1 - mid_price) * scale_size
-
-                    position.record_scale_in(mid_price, scale_size)
-                    self.cash -= cost
-                    logger.info(f"[{self.coin}] SCALED IN {ticker}: +${scale_size:.2f} @ ${mid_price:.4f}, new_size=${position.size:.2f}")
+                # Calculate cost based on side
+                if position.side == "yes":
+                    cost = mid_price * scale_size
                 else:
-                    logger.debug(f"[{self.coin}] Insufficient cash for scale-in: ${self.cash:.2f} < ${scale_size:.2f}")
+                    cost = (1 - mid_price) * scale_size
+                    
+                if cost <= self.cash:
+                    # Execute scale-in: place additional order on Kalshi
+                    scale_side = position.side  # Same side as position
+                    scale_order = self.api.place_order(
+                        ticker=ticker,
+                        side=scale_side,
+                        price=mid_price,
+                        amount=cost
+                    )
+                    if "error" in scale_order:
+                        logger.warning(f"[{self.coin}] Scale-in order failed: {scale_order['error']}")
+                    else:
+                        position.record_scale_in(mid_price, scale_size)
+                        self.cash -= cost
+                        logger.info(f"[{self.coin}] SCALED IN {ticker}: +{scale_size:.1f} contracts @ ${mid_price:.4f}, cost=${cost:.2f}, new_size={position.size:.1f}, CONF={position.confidence}")
+                else:
+                    logger.debug(f"[{self.coin}] Insufficient cash for scale-in: ${self.cash:.2f} < ${cost:.2f}")
 
         return positions_changed
 
@@ -455,11 +472,12 @@ class CoinTrader:
             trailing_stop_trigger_pct=signal.trailing_stop_trigger_pct,
             peak_price=signal.price,
             scale_in_count=0,
-            max_scale_ins=0,  # FIX 3: DISABLED scale-in - was averaging into losing positions
-            scale_in_size=0,  # FIX 3: Scale-in disabled
+            max_scale_ins=2,  # Allow up to 2 scale-ins (max 3 contracts total)
+            scale_in_size=0,  # Calculated dynamically during scale-in
             unrealized_pnl=0.0,
             avg_price=signal.price,
-            use_time_scaling=getattr(signal, 'use_time_scaling', False)
+            use_time_scaling=getattr(signal, 'use_time_scaling', False),
+            confidence=signal.confidence  # Store entry confidence for scale-in decisions
         )
         self.positions[ticker] = position
 

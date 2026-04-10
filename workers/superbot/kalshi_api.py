@@ -36,6 +36,10 @@ class Market:
 class KalshiAPI:
     """Wrapper using kalshi_py SDK + direct requests for custom endpoints."""
     
+    # Class-level cache for auth timestamp (prevents replay/reuse issues)
+    _auth_timestamp_cache = 0
+    _auth_cached_headers: Optional[Dict[str, str]] = None
+    
     def __init__(self, access_key: str = ""):
         self.access_key = access_key
         self.session = requests.Session()
@@ -69,10 +73,25 @@ class KalshiAPI:
         self._refresh_auth()
         if not self.auth:
             return {}
+        
+        # Check if we already have valid headers for this second (avoid duplicate signing)
+        import time
+        current_ts = int(time.time() * 1000)
+        cache_key = f"{method}:{path}"
+        
+        # Reuse cached headers only within the same 500ms window to avoid replay detection
+        if (KalshiAPI._auth_cached_headers is not None and 
+            current_ts - KalshiAPI._auth_timestamp_cache < 500 and
+            getattr(KalshiAPI._auth_cached_headers, '_cache_key', None) == cache_key):
+            return KalshiAPI._auth_cached_headers.copy()
+        
         # KalshiAuth.get_auth_headers handles /trade-api/v2 prefix internally
         # Just pass the relative path (e.g., /portfolio/orders)
         headers = self.auth.get_auth_headers(method, path)
-        return headers
+        headers['_cache_key'] = cache_key
+        KalshiAPI._auth_timestamp_cache = current_ts
+        KalshiAPI._auth_cached_headers = headers
+        return headers.copy()
         
     def _refresh_auth(self):
         """Recreate the auth object to get fresh signatures."""
@@ -83,6 +102,8 @@ class KalshiAPI:
                 private_key_data = f.read()
             if self.access_key:
                 self.auth = KalshiAuth(access_key_id=self.access_key, private_key_pem=private_key_data)
+                # Clear cached headers on refresh
+                KalshiAPI._auth_cached_headers = None
         except Exception as e:
             logger.warning(f"Failed to refresh auth: {e}")
 
@@ -198,6 +219,14 @@ class KalshiAPI:
             )
         except:
             return None
+    
+    def get_market_result(self, ticker: str) -> Optional[str]:
+        """Get the settlement result for a market (only available after market is settled). Returns 'yes', 'no', or None."""
+        result = self._get(f"/markets/{ticker}")
+        if "error" in result:
+            return None
+        m = result.get("market", result)
+        return m.get("result")
     
     def get_open_markets(self, series_ticker: str) -> List[Market]:
         """Get only open/active markets."""

@@ -847,13 +847,17 @@ class Superbot:
             ts_str = signal_data.get("timestamp", "")
             if ts_str:
                 try:
-                    signal_time = datetime.fromisoformat(ts_str.replace("Z", ""))
-                    age = datetime.utcnow() - signal_time.replace(tzinfo=None)
+                    signal_time = datetime.fromisoformat(ts_str.replace('Z', '+00:00'))
+                    # Handle case where replace didn't help (no Z present)
+                    if signal_time.tzinfo is None:
+                        signal_time = signal_time.replace(tzinfo=None)
+                    age = datetime.utcnow() - signal_time
                     if age.total_seconds() > CANDLE_SIGNAL_MAX_AGE_SEC:
                         logger.debug(f"Candle signal stale ({age.total_seconds():.0f}s old), ignoring")
                         return None
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug(f"Error parsing candle signal timestamp '{ts_str}': {e}")
+                    return None
             return signal_data
         except Exception as e:
             logger.debug(f"Error reading candle signal file: {e}")

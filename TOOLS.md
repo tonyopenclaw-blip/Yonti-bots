@@ -67,4 +67,21 @@ Skills are shared. Your setup is yours. Keeping them apart means you can update 
 
 ---
 
+## Kalshi API Keys
+
+| Bot | Access Key ID | Type | Notes |
+|-----|-------------|------|-------|
+| **Real Superbot 3** (active) | `a0235926-8b18-4f93-81ab-e4383ba61ec9` | R/W | Current trading bot |
+| Cashsync | `12920c50-132b-4237-9575-7d5958a74830` | R/W | Used by CashSync |
+| Real Superbot 2 | `f085af89-0df7-44e2-9bb3-4af0435cbfda` | R/W | Backup |
+| RealSuperbot | `e275fa0a-90e0-4eaa-9fb1-d25c9f8ed804` | R/W | Backup |
+| Thermostat | `c5187b0e-785e-4749-b45b-70f9cd40bb0f` | R/W | Climate bot |
+| Flip | `e42b9849-e6e3-484e-b17c-48a078f38642` | R/W | NBA flip bot |
+| First cross tracker | `dd143eb9-ac4a-4cc2-bb17-11b47147a8fe` | Read only | Research only |
+| Recorder | `7528928b-a38e-46f2-906f-ccfa61743ad0` | R/W | Price recorder |
+
+**Private key file:** `/home/ubuntu/.openclaw/workspace/workers/superbot/kalshi_private_key.pem`
+
+---
+
 Add whatever helps you do your job. This is your cheat sheet.

@@ -306,6 +306,51 @@ class CoinTrader:
                 positions_changed = True
                 continue
 
+            # === LAST 3 MINUTE RULES: Lock in profits or cut losses at extremes ===
+            # If we're in the last 3 minutes and price is at extreme levels, exit immediately
+            if time_left <= 180:  # 3 minutes or less
+                if mid_price >= 0.97:
+                    self._close_position(ticker, "last3_tp_97", mid_price, side=side)
+                    positions_changed = True
+                    continue
+                if mid_price <= 0.01:
+                    self._close_position(ticker, "last3_sl_01", mid_price, side=side)
+                    positions_changed = True
+                    continue
+
+            # === EXTREME ZONE SCALE-IN: Add to winning positions at price extremes ===
+            # Extreme zones: price <= $0.30 OR price $0.70-$0.85
+            # Rules:
+            # 1. Position must be profitable (market moving in our direction)
+            # 2. Max 3 contracts per side per coin total
+            # 3. Only scale in once per zone (extreme_low_scaled / extreme_high_scaled flags)
+            should_extreme, zone = position.should_extreme_scale_in(mid_price)
+            if should_extreme:
+                scale_size = 1.0  # Extreme zone scale-in is always +1 contract
+                # Calculate cost based on side
+                if position.side == "yes":
+                    cost = mid_price * scale_size
+                else:
+                    cost = (1 - mid_price) * scale_size
+                
+                if cost <= self.cash:
+                    # Execute extreme zone scale-in
+                    scale_order = self.api.place_order(
+                        ticker=ticker,
+                        side=position.side,
+                        price=mid_price,
+                        amount=cost,
+                        action=position.direction
+                    )
+                    if "error" in scale_order:
+                        logger.warning(f"[{self.coin}] Extreme zone scale-in failed: {scale_order['error']}")
+                    else:
+                        position.record_extreme_scale_in(zone, mid_price)
+                        self.cash -= cost
+                        logger.info(f"[{self.coin}] EXTREME ZONE SCALED IN {position_key} ({zone.upper()}): +{scale_size:.1f} contracts @ ${mid_price:.4f}, cost=${cost:.2f}, new_size={position.size:.1f}")
+                else:
+                    logger.debug(f"[{self.coin}] Insufficient cash for extreme zone scale-in: ${self.cash:.2f} < ${cost:.2f}")
+
             # === SCALE-IN LOGIC: Add to winning positions (confidence-based) ===
             # Check if we should scale in (add more to position)
             # Scale-in conditions:

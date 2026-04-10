@@ -618,6 +618,8 @@ class Position:
     confidence: int = 50                 # Signal confidence 0-100 (for trailing stop logging)
     use_time_scaling: bool = False        # If True, use 80%->20% time-scaled stop
     scaled_in: bool = False               # True if we've already scaled in (once per position)
+    extreme_low_scaled: bool = False    # True if we've already scaled in at low extreme zone (<=$0.30)
+    extreme_high_scaled: bool = False   # True if we've already scaled in at high extreme zone ($0.70-$0.85)
 
     def __post_init__(self):
         """Initialize computed fields after dataclass init."""
@@ -805,6 +807,58 @@ class Position:
         self.scale_in_count += 1
         self.scaled_in = True  # Mark as scaled in (only scale once per position)
         logger.info(f"{self.ticker}: SCALED IN @ ${new_price:.4f} (+{additional_size:.1f} contracts), new_size={self.size:.1f}, avg_price=${self.avg_price:.4f}, CONF={self.confidence}")
+
+    def should_extreme_scale_in(self, current_price: float) -> tuple:
+        """
+        Check if we should scale in at extreme price zones.
+        
+        Returns: (should_scale: bool, zone: str) where zone is 'low', 'high', or ''
+        
+        Zones:
+        - Low extreme: price <= $0.30 (when YES is cheap, good value buy)
+        - High extreme: price $0.70-$0.85 (near resolution, high probability)
+        
+        Rules:
+        - Position must be profitable (market moving in our direction)
+        - Max 3 contracts per side per coin total
+        - Only scale in once per zone (extreme_low_scaled / extreme_high_scaled flags)
+        """
+        # Check max contracts per side (max 3 total)
+        if self.size >= 3.0:
+            return False, ""
+        
+        # Check if position is profitable (market moving in our direction)
+        if self.side == "yes":
+            profit_pct = (current_price - self.entry_price) / self.entry_price if self.entry_price > 0 else 0
+            if profit_pct <= 0:
+                return False, ""  # Not profitable, don't scale in
+        else:
+            profit_pct = (self.entry_price - current_price) / self.entry_price if self.entry_price > 0 else 0
+            if profit_pct <= 0:
+                return False, ""  # Not profitable, don't scale in
+        
+        # Low extreme zone: price <= $0.30
+        if current_price <= 0.30 and not self.extreme_low_scaled:
+            return True, "low"
+        
+        # High extreme zone: price $0.70-$0.85
+        if 0.70 <= current_price <= 0.85 and not self.extreme_high_scaled:
+            return True, "high"
+        
+        return False, ""
+
+    def record_extreme_scale_in(self, zone: str, new_price: float):
+        """Record an extreme zone scale-in: update average price, size, and set zone flag."""
+        additional_size = 1.0  # Scale in +1 contract for extreme zones
+        total_cost = (self.size * self.avg_price) + (additional_size * new_price)
+        self.size += additional_size
+        self.avg_price = total_cost / self.size
+        self.scale_in_count += 1
+        if zone == "low":
+            self.extreme_low_scaled = True
+        elif zone == "high":
+            self.extreme_high_scaled = True
+        logger.info(f"{self.ticker}: EXTREME ZONE SCALED IN ({zone.upper()}) @ ${new_price:.4f} (+{additional_size:.1f} contracts), new_size={self.size:.1f}, avg_price=${self.avg_price:.4f}")
 
 
 class StrategyEngine:

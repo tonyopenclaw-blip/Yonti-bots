@@ -99,6 +99,7 @@ class Strategy(Enum):
     MOMENTUM = "momentum"        # PRIMARY: Momentum + extreme = buy
     FIRST_CROSS = "first_cross"  # PRIMARY: Real cross through floor strike
     MOMENTUM_FORCE = "momentum_force"  # FALLBACK: Wait 60s, no cross, force entry
+    MEAN_REV = "mean_rev"          # NEW: Mean reversion - buy dip / sell rip
     NONE = "none"
 
 
@@ -340,6 +341,116 @@ class FirstCrossTracker:
             del self._crossings[ticker]
 
 
+class MeanRevTracker:
+    """
+    Tracks when price ENTERS extreme zones for mean-reversion entry.
+
+    Entry zones:
+    - YES zone: $0.15-$0.30 (price near bottom, expect bounce to $0.50)
+    - NO zone: $0.70-$0.85 (price near top, expect drop to $0.50)
+
+    Signal fires when price CROSSES INTO the zone (not just when already in zone).
+    Stores entry_price at the moment of zone entry.
+    """
+
+    # Extreme zones
+    YES_ZONE_MIN = 0.15
+    YES_ZONE_MAX = 0.30
+    NO_ZONE_MIN = 0.70
+    NO_ZONE_MAX = 0.85
+
+    # Exit targets
+    TP_PRICE = 0.50
+    SL_PRICE = 0.05  # Extreme adverse - exit if price goes against us this far
+
+    def __init__(self):
+        # Per-ticker state: ticker -> {in_zone: bool, zone_side: str, entry_price: float, prev_price: float}
+        self._zones: Dict[str, Dict] = {}
+
+    def update(self, ticker: str, current_price: float) -> Optional['TradeSignal']:
+        """
+        Update zone state for a ticker.
+        Returns a TradeSignal if price just crossed INTO a zone, else None.
+        """
+        if ticker not in self._zones:
+            self._zones[ticker] = {
+                'in_zone': False,
+                'zone_side': None,  # 'yes' or 'no'
+                'entry_price': 0.0,
+                'prev_price': current_price,
+                'signal_fired': False,  # Only fire once per zone entry
+            }
+            return None
+
+        state = self._zones[ticker]
+        prev_price = state['prev_price']
+        state['prev_price'] = current_price
+
+        # Check if already fired a signal for this zone entry
+        if state['signal_fired']:
+            return None
+
+        # Determine if price is in any extreme zone
+        in_yes_zone = self.YES_ZONE_MIN <= current_price <= self.YES_ZONE_MAX
+        in_no_zone = self.NO_ZONE_MIN <= current_price <= self.NO_ZONE_MAX
+        in_zone = in_yes_zone or in_no_zone
+
+        # Determine if prev price was in any zone
+        prev_in_yes_zone = self.YES_ZONE_MIN <= prev_price <= self.YES_ZONE_MAX
+        prev_in_no_zone = self.NO_ZONE_MIN <= prev_price <= self.NO_ZONE_MAX
+        prev_in_zone = prev_in_yes_zone or prev_in_no_zone
+
+        # FIRE SIGNAL: Price crossed INTO a zone (was outside, now inside)
+        if in_zone and not prev_in_zone:
+            zone_side = 'yes' if in_yes_zone else 'no'
+            state['in_zone'] = True
+            state['zone_side'] = zone_side
+            state['entry_price'] = current_price
+            state['signal_fired'] = True
+
+            logger.info(
+                f"MEAN_REV: {ticker} entered {'YES' if zone_side == 'yes' else 'NO'} zone "
+                f"@ ${current_price:.4f} (prev=${prev_price:.4f})"
+            )
+
+            # Create a placeholder TradeSignal - strategy engine will calculate size/confidence
+            # We return None here and let evaluate_market create the full signal
+            # because we need Kelly sizing which requires the market object
+            return None
+
+        # Update state if still in zone
+        if in_zone:
+            state['in_zone'] = True
+            state['zone_side'] = 'yes' if in_yes_zone else 'no'
+        else:
+            state['in_zone'] = False
+            state['zone_side'] = None
+            state['signal_fired'] = False  # Reset so we can fire again if price re-enters
+
+        return None
+
+    def in_zone(self, ticker: str) -> bool:
+        """Check if ticker is currently in an extreme zone."""
+        return self._zones.get(ticker, {}).get('in_zone', False)
+
+    def get_zone_side(self, ticker: str) -> Optional[str]:
+        """Get which zone ticker is in ('yes' or 'no'), or None if not in zone."""
+        return self._zones.get(ticker, {}).get('zone_side')
+
+    def get_entry_price(self, ticker: str) -> float:
+        """Get the entry price when ticker first entered the zone."""
+        return self._zones.get(ticker, {}).get('entry_price', 0.0)
+
+    def has_signal_fired(self, ticker: str) -> bool:
+        """Check if we've already fired a signal for current zone entry."""
+        return self._zones.get(ticker, {}).get('signal_fired', False)
+
+    def reset(self, ticker: str):
+        """Reset zone state for a ticker (e.g., when market expires)."""
+        if ticker in self._zones:
+            del self._zones[ticker]
+
+
 class StrategyTracker:
     """
     Tracks win rate and win/loss ratio per strategy over recent trades.
@@ -357,6 +468,7 @@ class StrategyTracker:
             Strategy.MOMENTUM: deque(maxlen=tracked_trades),
             Strategy.FIRST_CROSS: deque(maxlen=tracked_trades),
             Strategy.MOMENTUM_FORCE: deque(maxlen=tracked_trades),
+            Strategy.MEAN_REV: deque(maxlen=tracked_trades),
         }
 
     def record_trade(self, strategy: Strategy, pnl: float):
@@ -674,6 +786,7 @@ class StrategyEngine:
         self.tracker = StrategyTracker(KELLY_TRACKED_TRADES)
         self.first_cross = FirstCrossTracker()  # YES price midpoint crossing (existing)
         self.coin_first_cross = FirstCrossCoinTracker()  # Coin price vs target crossing (new)
+        self.mean_rev = MeanRevTracker()  # Mean reversion zone tracking
         self._floor_strikes: Dict[str, float] = {}  # Cache floor_strike per ticker
         self._market_open_times: Dict[str, float] = {}  # Track when each market opened (for grace period)
 
@@ -964,6 +1077,14 @@ class StrategyEngine:
         deep_buy_signal = self._check_deep_buy(market, mid_price, time_left)
         if deep_buy_signal:
             return deep_buy_signal
+
+        # === MEAN REVERSION: Buy dip / Sell rip in extreme zones ===
+        # PRIMARY STRATEGY: Fires when price crosses INTO extreme zones
+        # YES zone: $0.15-$0.30 (expect bounce to $0.50)
+        # NO zone: $0.70-$0.85 (expect drop to $0.50)
+        mean_rev_signal = self._check_mean_rev(market, mid_price, time_left)
+        if mean_rev_signal:
+            return mean_rev_signal
 
         # === Get Coinbase bias ===
         bias = get_coinbase_bias(coin)
@@ -1487,6 +1608,111 @@ Your estimate:"""
             confidence=confidence,
             trailing_stop_buffer=ts_buffer,
             max_hold_minutes=max_hold
+        )
+
+    def _check_mean_rev(self, market: Market, mid_price: float, time_left: int) -> Optional[TradeSignal]:
+        """
+        MEAN REVERSION: Buy dip / Sell rip in extreme zones.
+
+        Entry zones:
+        - YES at $0.15-$0.30 → price near bottom, expect bounce to $0.50
+        - NO at $0.70-$0.85 → price near top, expect drop to $0.50
+
+        Signal fires when price CROSSES INTO the zone (not just when already there).
+        Exit: TP at $0.50 (or +$0.10+), SL at $0.05 (extreme adverse move).
+
+        Confidence tiers for scale-in:
+        - 70-79%: scale in +1 contract
+        - 80-89%: scale in +2 contracts
+        - 90%+: scale in +2 contracts + 50% larger size
+
+        Scale-in rules:
+        - Only when position is already profitable
+        - Max 3 contracts per coin
+        - Only one scale-in per position (scaled_in flag)
+        """
+        ticker = market.ticker
+
+        # Update mean-rev tracker
+        self.mean_rev.update(ticker, mid_price)
+
+        # Check if price just entered a zone and we haven't fired yet
+        if not self.mean_rev.has_signal_fired(ticker):
+            return None
+
+        zone_side = self.mean_rev.get_zone_side(ticker)
+        if zone_side is None:
+            return None
+
+        entry_price = self.mean_rev.get_entry_price(ticker)
+
+        # Determine side and reason
+        if zone_side == 'yes':
+            side = 'yes'
+            reason_suffix = f'buydip: YES at ${mid_price:.4f} in $0.15-$0.30 zone, expect bounce to $0.50'
+            tp_price = 0.50
+            sl_price = 0.05
+        else:
+            side = 'no'
+            reason_suffix = f'sellrip: NO at ${mid_price:.4f} in $0.70-$0.85 zone, expect drop to $0.50'
+            tp_price = 0.50
+            sl_price = 0.05
+
+        # Calculate confidence based on how extreme the entry is
+        # Closer to zone edge = more extreme = higher confidence
+        if zone_side == 'yes':
+            # $0.15 = most extreme (higher confidence), $0.30 = less extreme
+            zone_center = (MeanRevTracker.YES_ZONE_MIN + MeanRevTracker.YES_ZONE_MAX) / 2
+            dist_from_center = abs(mid_price - zone_center)
+            max_zone_dist = (MeanRevTracker.YES_ZONE_MAX - MeanRevTracker.YES_ZONE_MIN) / 2
+            extremity = 1 - (dist_from_center / max_zone_dist)  # 0 to 1
+        else:
+            # $0.85 = most extreme (higher confidence), $0.70 = less extreme
+            zone_center = (MeanRevTracker.NO_ZONE_MIN + MeanRevTracker.NO_ZONE_MAX) / 2
+            dist_from_center = abs(mid_price - zone_center)
+            max_zone_dist = (MeanRevTracker.NO_ZONE_MAX - MeanRevTracker.NO_ZONE_MIN) / 2
+            extremity = 1 - (dist_from_center / max_zone_dist)  # 0 to 1
+
+        # Base confidence 60 + extremity bonus (up to +30)
+        confidence = int(60 + extremity * 30)
+        confidence = max(50, min(95, confidence))
+
+        # Calculate Kelly size
+        prob = mid_price if side == 'yes' else (1 - mid_price)
+        size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.MEAN_REV, prob, confidence, mid_price)
+
+        # Scale-in size based on confidence tiers
+        if confidence >= 90:
+            scale_in_size = int(size * 0.5) + 2  # +50% + 2 extra
+        elif confidence >= 80:
+            scale_in_size = 2
+        elif confidence >= 70:
+            scale_in_size = 1
+        else:
+            scale_in_size = 0
+
+        logger.info(
+            f"MEAN_REV SIGNAL: {ticker} | "
+            f"Side: {side} @ ${mid_price:.4f} | contracts={int(size):d} | "
+            f"CONF={confidence} | zone_entry=${entry_price:.4f} | TP=${tp_price:.2f} | SL=${sl_price:.2f}"
+        )
+
+        return TradeSignal(
+            strategy=Strategy.MEAN_REV,
+            ticker=ticker,
+            side=side,
+            price=mid_price,
+            size=size,
+            scale_in_size=scale_in_size,
+            reason=f"MEAN_REV: {reason_suffix}, CONF={confidence}, entry=${entry_price:.4f}, scale_in={scale_in_size}",
+            take_profit=tp_price,
+            stop_loss=sl_price,
+            trailing_stop_pct=0.40,
+            trailing_stop_trigger_pct=0.30,
+            confidence=confidence,
+            trailing_stop_buffer=0.40,
+            max_hold_minutes=15,
+            use_time_scaling=False  # No time scaling for mean-rev
         )
 
     def check_position_exit(self, position: Position, current_price: float, time_left: int) -> Tuple[bool, str]:

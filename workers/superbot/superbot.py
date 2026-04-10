@@ -341,6 +341,26 @@ class CoinTrader:
                 # Hold to expiry otherwise
                 continue
 
+            # CANDLE-DURATION STOP-LOSS: 50% stop in final 5 minutes
+            # YES: exit if current_price < entry_price * 0.50
+            # NO: exit if current_price > entry_price * 1.50
+            if position.is_candle_duration and time_left <= 300:
+                entry_price = position.entry_price
+                stop_price_yes = entry_price * 0.50
+                stop_price_no = entry_price * 1.50
+                if position.side == "yes" and mid_price < stop_price_yes:
+                    logger.warning(f"STOP LOSS: [{self.coin}] YES entry={entry_price:.4f} current={mid_price:.4f} stop={stop_price_yes:.4f}")
+                    self._close_position(ticker, "candle_stop_loss_yes", mid_price, side=side)
+                    positions_changed = True
+                    continue
+                elif position.side == "no" and mid_price > stop_price_no:
+                    logger.warning(f"STOP LOSS: [{self.coin}] NO entry={entry_price:.4f} current={mid_price:.4f} stop={stop_price_no:.4f}")
+                    self._close_position(ticker, "candle_stop_loss_no", mid_price, side=side)
+                    positions_changed = True
+                    continue
+            # Hold to expiry otherwise
+            continue
+
             # === SCALE-IN LOGIC: Add to positions as price moves in our favor ===
             # Check extreme zone scale-in first (higher priority)
             should_extreme, extreme_zone = position.should_extreme_scale_in(mid_price)

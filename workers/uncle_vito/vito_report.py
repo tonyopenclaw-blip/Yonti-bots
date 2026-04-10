@@ -2854,6 +2854,7 @@ class UncleVitoReport:
         .pick-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; background: var(--bg); border-radius: 6px; margin-bottom: 5px; font-size: 0.85rem; }
         .pick-item:last-child { margin-bottom: 0; }
         .pick-label { color: var(--text-dim); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; min-width: 55px; }
+        .pick-sport { font-size: 1rem; margin-right: 6px; }
         .pick-value { font-weight: 600; color: var(--text); flex: 1; text-align: center; padding: 0 8px; }
         .pick-direction { font-weight: 700; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; }
         .pick-direction.over { background: rgba(0,230,118,0.15); color: var(--win); }
@@ -2996,6 +2997,7 @@ __LEAGUE_SECTIONS__
                         label = "MONEYLINE"
                     section += f'''                    <div class="pick-card">
                         <div class="pick-item">
+                            <span class="pick-sport">{emoji}</span>
                             <span class="pick-label">{label}</span>
                             <span class="pick-value">{line_str}</span>
                             <span class="pick-line">{pick.odds}</span>

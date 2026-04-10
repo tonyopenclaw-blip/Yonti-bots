@@ -444,7 +444,7 @@ class MomentumTracker:
 
         # Create trade signal
         signal = TradeSignal(
-            strategy=Strategy.MEAN_REV,  # Reuse MEAN_REV enum (renamed conceptually to MOMENTUM)
+            strategy=Strategy.MOMENTUM,  # Primary strategy
             ticker=ticker,
             side=side,
             direction='buy',
@@ -1121,7 +1121,7 @@ class StrategyEngine:
             # Calculate Kelly size based on probability and confidence
             prob = mid_price if momentum_signal.side == 'yes' else (1 - mid_price)
             size, kelly_pct, confidence = self.calculate_kelly_size(
-                Strategy.MEAN_REV, prob, momentum_signal.confidence, mid_price
+                Strategy.MOMENTUM, prob, momentum_signal.confidence, mid_price
             )
             
             # Max 3 contracts per side per coin
@@ -1202,111 +1202,41 @@ class StrategyEngine:
                             use_time_scaling=True  # TIME SCALING: 80%->20%
                         )]
 
-        # === FIRST CROSS: Real cross through floor strike (not market open) ===
+        # === FIRST CROSS: DISABLED - MomentumTracker is now PRIMARY only ===
         # --- First Cross: Coin price vs target price ---
-        if market.ticker not in self._floor_strikes:
-            if self.api is not None:
-                floor_strike = self.coin_first_cross.get_floor_strike(market.ticker, self.api)
-                if floor_strike is not None:
-                    self._floor_strikes[market.ticker] = floor_strike
-                    logger.info(f"FIRST_CROSS: {market.ticker} target price set to ${floor_strike:,.2f}")
+        # DISABLED by Pixel 2026-04-10 - MOMENTUM is the only primary strategy
+        # if market.ticker not in self._floor_strikes:
+        #     if self.api is not None:
+        #         floor_strike = self.coin_first_cross.get_floor_strike(market.ticker, self.api)
+        #         if floor_strike is not None:
+        #             self._floor_strikes[market.ticker] = floor_strike
+        #             logger.info(f"FIRST_CROSS: {market.ticker} target price set to ${floor_strike:,.2f}")
 
         has_coin_cross = False
-        if market.ticker in self._floor_strikes and coin:
-            target_price = self._floor_strikes[market.ticker]
-            cross_direction = self.coin_first_cross.check_cross(market.ticker, coin, target_price, self.api)
-
-            if cross_direction:
-                has_coin_cross = True
-                if cross_direction == "up":
-                    side = "yes"
-                    reason_suffix = "coin crossed ABOVE target"
-                else:
-                    side = "no"
-                    reason_suffix = "coin crossed BELOW target"
-
-                # First cross requires Coinbase momentum (not neutral) for higher confidence
-                conf_boost = 10 if bias != 'neutral' else 0
-                confidence = self.calculate_confidence(Strategy.FIRST_CROSS, market, coin, mid_price, time_left) + conf_boost
-                prob = mid_price
-                size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.FIRST_CROSS, prob, confidence, prob)
-
-                if confidence >= 40:
-                    logger.info(
-                        f"FIRST_CROSS SIGNAL (coin): {market.ticker} | "
-                        f"Direction: {cross_direction} | Target: ${target_price:,.2f} | "
-                        f"Side: {side} @ ${mid_price:.4f} | contracts={int(size):d} | CONF={confidence} | Coinbase={bias}"
-                    )
-
-                    return [TradeSignal(
-                        strategy=Strategy.FIRST_CROSS,
-                        ticker=market.ticker,
-                        side=side,
-                        direction='buy',
-                        price=mid_price,
-                        size=size,
-                        scale_in_size=int(size * 0.5),  # Scale in: add 50% more when winning
-                        reason=f"FIRST_CROSS: {reason_suffix}, target=${target_price:,.2f}, Coinbase={bias}, Kelly={kelly_pct:.2%}, CONF={confidence}",
-                        take_profit=0.95 if side == "yes" else 0.05,
-                        stop_loss=None,
-                        trailing_stop_pct=0.40,
-                        trailing_stop_trigger_pct=0.30,
-                        confidence=confidence,
-                        trailing_stop_buffer=0.40,
-                        max_hold_minutes=10,
-                        use_time_scaling=False  # NO TIME SCALING for FIRST_CROSS
-                    )]
+        # if market.ticker in self._floor_strikes and coin:
+        #     target_price = self._floor_strikes[market.ticker]
+        #     cross_direction = self.coin_first_cross.check_cross(market.ticker, coin, target_price, self.api)
+        #
+        #     if cross_direction:
+        #         has_coin_cross = True
+        #         ... (rest of coin first cross logic - DISABLED)
 
         # --- First Cross: Midpoint crossing ---
-        has_midpoint_cross = self.first_cross.has_crossed(market.ticker)
-        if not has_coin_cross:
-            cross_event = self.first_cross.update(market.ticker, mid_price)
-            if cross_event:
-                has_midpoint_cross = True
+        has_midpoint_cross = False  # DISABLED - using MomentumTracker instead
+        # has_midpoint_cross = self.first_cross.has_crossed(market.ticker)
+        # if not has_coin_cross:
+        #     cross_event = self.first_cross.update(market.ticker, mid_price)
+        #     if cross_event:
+        #         has_midpoint_cross = True
 
-        if not is_first_cross_enabled():
+        # FIRST_CROSS fully disabled - MomentumTracker handles all midpoint crossings
+        if False and not is_first_cross_enabled():
             pass  # first_cross disabled (off-hours, momentum running)
-        elif self.first_cross.should_wait(market.ticker, mid_price):
+        elif False and self.first_cross.should_wait(market.ticker, mid_price):
             logger.debug(f"FIRST_CROSS: {market.ticker} in dead zone (${mid_price:.4f}) - WAITING")
-        elif has_midpoint_cross or (has_coin_cross == False and self.first_cross.get_preferred_side(market.ticker)):
-            preferred_side = self.first_cross.get_preferred_side(market.ticker)
-            if preferred_side:
-                side = 'yes' if preferred_side == 'yes' else 'no'
-                reason_suffix = 'crossed UP first' if preferred_side == 'yes' else 'crossed DOWN first'
-
-                # First cross requires Coinbase momentum (not neutral) for higher confidence
-                conf_boost = 10 if bias != 'neutral' else 0
-                confidence = self.calculate_confidence(Strategy.FIRST_CROSS, market, coin, mid_price, time_left) + conf_boost
-                prob = mid_price
-                size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.FIRST_CROSS, prob, confidence, prob)
-
-                if confidence >= 40:
-                    max_hold = 10
-
-                    logger.info(
-                        f"FIRST_CROSS SIGNAL (midpoint): {market.ticker} | "
-                        f"Direction: {preferred_side} | Side: {side} @ ${mid_price:.4f} | "
-                        f"contracts={int(size):d} | CONF={confidence} | TS=50%/40% | Coinbase={bias} | max_hold={max_hold}min"
-                    )
-
-                    return [TradeSignal(
-                        strategy=Strategy.FIRST_CROSS,
-                        ticker=market.ticker,
-                        side=side,
-                        direction='buy',
-                        price=mid_price,
-                        size=size,
-                        scale_in_size=int(size * 0.5),  # Scale in: add 50% more when winning
-                        reason=f"FIRST_CROSS: {reason_suffix}, Coinbase={bias}, CONF={confidence}, Kelly={kelly_pct:.2%}",
-                        take_profit=0.95 if side == "yes" else 0.05,
-                        stop_loss=None,
-                        trailing_stop_pct=0.40,
-                        trailing_stop_trigger_pct=0.30,
-                        confidence=confidence,
-                        trailing_stop_buffer=0.40,
-                        max_hold_minutes=max_hold,
-                        use_time_scaling=False  # NO TIME SCALING for FIRST_CROSS
-                    )]
+        elif False and (has_midpoint_cross or (has_coin_cross == False and self.first_cross.get_preferred_side(market.ticker))):
+            # All FIRST_CROSS logic disabled - using MomentumTracker instead
+            pass
 
         # === MOMENTUM_FORCE: Last resort - wait 60s, no cross, force entry ===
         # ONLY run MOMENTUM_FORCE during off-hours (00:00-07:59 UTC)

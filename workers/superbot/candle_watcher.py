@@ -45,8 +45,12 @@ COINBASE_PRODUCTS = {
 DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1486066262122430684/mLKWVlGJRyADWEnpDgx3n4QcI1B-JhAnDLyBHKwsK-BSmeo5lal5MYrrY_QiuOBqiNLy"
 
 # Signal thresholds
-BUY_YES_THRESHOLD = 0.90  # >90% of candle time above prev close → BUY YES (conf=95)
+BUY_YES_THRESHOLD = 0.90  # >90% of candle time above prev close → BUY YES (conf=97)
 BUY_NO_THRESHOLD = 0.30   # <30% → BUY NO (conf=99)
+
+# Regime filter: skip NO signals if 3 consecutive candles had >60% YES ratio
+REGIME_WINDOW = 3          # Rolling window of last 3 candles
+REGIME_YES_THRESHOLD = 0.60  # >60% YES ratio per candle to count as bullish regime
 
 # =============================================================================
 # LOGGING
@@ -115,6 +119,9 @@ class CandleTracker:
         self.time_above_prev: float = 0.0
         self.poll_count: int = 0
         self.last_price: Optional[float] = None
+        # Regime filter: rolling window of last 3 candles' YES/NO ratios
+        self.candle_ratios: list = []  # Each entry is ratio (1.0 = full YES, 0.0 = full NO)
+        self.regime_skip_this_cycle: bool = False  # Skip NO signals if in bullish regime
 
     def _get_utc_bucket(self) -> int:
         """Return current 15-min bucket: 0, 15, 30, or 45."""
@@ -209,9 +216,19 @@ class CandleTracker:
             logger.debug(f"[{self.coin}] Candle too short ({elapsed:.0f}s), skipping")
             return None
 
-        # BUY YES: >90% → conf=95
+        # BUY YES: >90% → conf=97
         if ratio > BUY_YES_THRESHOLD:
-            conf = 95
+            conf = 97
+            # Record this candle's ratio for regime tracking
+            self.candle_ratios.append(ratio)
+            if len(self.candle_ratios) > REGIME_WINDOW:
+                self.candle_ratios.pop(0)
+            # Check regime: if 3 consecutive candles >60% YES, set skip flag for NO
+            if len(self.candle_ratios) >= REGIME_WINDOW:
+                all_bullish = all(r > REGIME_YES_THRESHOLD for r in self.candle_ratios)
+                if all_bullish:
+                    self.regime_skip_this_cycle = True
+                    logger.info(f"[{self.coin}] ★ BULLISH REGIME ({len(self.candle_ratios)} candles >60% YES) - NO signals will be suppressed this cycle")
             logger.info(f"[{self.coin}] ★ BUY YES SIGNAL (conf={conf})")
             return {
                 "coin": self.coin,
@@ -221,10 +238,20 @@ class CandleTracker:
                 "timestamp": datetime.utcnow().isoformat(),
             }
 
-        # BUY NO: <30% → conf=99
+        # BUY NO: <30% → conf=99 (skip if in bullish regime)
         elif ratio < BUY_NO_THRESHOLD:
+            # Check regime filter: skip NO if 3 consecutive candles showed >60% YES
+            if self.regime_skip_this_cycle:
+                logger.info(f"[{self.coin}] ◆ NO SIGNAL SKIPPED - BULLISH REGIME (3 consecutive YES candles >60%)")
+                # Reset regime flag for next cycle
+                self.regime_skip_this_cycle = False
+                self.candle_ratios = []  # Reset regime tracking after suppression
+                return None
             conf = 99
             logger.info(f"[{self.coin}] ★ BUY NO SIGNAL (conf={conf})")
+            # Successful NO signal - reset regime tracking
+            self.regime_skip_this_cycle = False
+            self.candle_ratios = []
             return {
                 "coin": self.coin,
                 "side": "NO",
@@ -243,7 +270,7 @@ def main():
     logger.info("=" * 60)
     logger.info("CANDLE WATCHER STARTING - 24/7 Persistent Process")
     logger.info(f"Watching coins: {list(COINBASE_PRODUCTS.keys())}")
-    logger.info(f"YES threshold: >{BUY_YES_THRESHOLD:.0%} (conf=95)")
+    logger.info(f"YES threshold: >{BUY_YES_THRESHOLD:.0%} (conf=97)")
     logger.info(f"NO threshold: <{BUY_NO_THRESHOLD:.0%} (conf=99)")
     logger.info("=" * 60)
 

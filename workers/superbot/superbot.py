@@ -890,6 +890,9 @@ class Superbot:
         side = signal_data.get("side", "YES").lower()  # 'yes' or 'no'
         entry_max = signal_data.get("entry_price_max", 0.85)
 
+        # Nerd recommendation: Reject signals when entry price > $0.50
+        ENTRY_PRICE_LIMIT = 0.50
+
         # Find a suitable market
         for market in markets:
             try:
@@ -900,6 +903,10 @@ class Superbot:
                 continue
 
             mid = (market.yes_bid + market.yes_ask) / 2
+            # Skip if mid price > $0.50 (too expensive either way)
+            if mid > ENTRY_PRICE_LIMIT:
+                logger.info(f"[{coin}] CANDLE SKIP: entry price ${mid:.4f} > ${ENTRY_PRICE_LIMIT:.2f} ({side.upper()} signal)")
+                continue
             if mid <= 0 or mid > entry_max:
                 continue
 

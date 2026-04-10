@@ -42,7 +42,7 @@ COINBASE_PRODUCTS = {
     "ADA": "ADA-USD",
 }
 
-DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1486066262122430684/mLKWVlGJRyADWEnpDgx3n4QcI1B-JhAnDLyBHKwsK-BSmeo5lal5MYrrY_QiuOBqiNLY"
+DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1486066262122430684/mLKWVlGJRyADWEnpDgx3n4QcI1B-JhAnDLyBHKwsK-BSmeo5lal5MYrrY_QiuOBqiNLy"
 
 # Signal thresholds
 BUY_YES_THRESHOLD = 0.90  # >90% of candle time above prev close → BUY YES (conf=95)

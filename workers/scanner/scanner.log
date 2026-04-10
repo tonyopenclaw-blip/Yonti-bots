@@ -11842,3 +11842,63 @@ BNB (KXBNB15M):
 Total tradeable markets: 1
 
 Saved to /home/ubuntu/.openclaw/workspace/workers/scanner/../data/live_markets.json
+Kalshi Market Scanner starting...
+Current 15-min window: 15:00 - 15:15 UTC
+Checking tickers: ['26APR101500-00', '26APR101515-15', '26APR101530-30', '26APR101545-45']
+
+Scanning all series...
+
+No tradeable markets found.
+
+Saved to /home/ubuntu/.openclaw/workspace/workers/scanner/../data/live_markets.json
+Kalshi Market Scanner starting...
+Current 15-min window: 15:15 - 15:30 UTC
+Checking tickers: ['26APR101515-15', '26APR101530-30', '26APR101545-45', '26APR101600-00']
+
+Scanning all series...
+
+SCAN RESULTS - 2026-04-10 15:15 UTC
+============================================================
+
+BNB (KXBNB15M):
+  KXBNB15M-26APR101130-30 | active | YES: $0.76
+
+============================================================
+Total tradeable markets: 1
+
+Saved to /home/ubuntu/.openclaw/workspace/workers/scanner/../data/live_markets.json
+Kalshi Market Scanner starting...
+Current 15-min window: 15:30 - 15:45 UTC
+Checking tickers: ['26APR101530-30', '26APR101545-45', '26APR101600-00', '26APR101615-15']
+
+Scanning all series...
+
+SCAN RESULTS - 2026-04-10 15:30 UTC
+============================================================
+
+BNB (KXBNB15M):
+  KXBNB15M-26APR101145-45 | active | YES: $0.76
+
+============================================================
+Total tradeable markets: 1
+
+Saved to /home/ubuntu/.openclaw/workspace/workers/scanner/../data/live_markets.json
+Kalshi Market Scanner starting...
+Current 15-min window: 15:45 - 16:00 UTC
+Checking tickers: ['26APR101545-45', '26APR101600-00', '26APR101615-15', '26APR101630-30']
+
+Scanning all series...
+
+SCAN RESULTS - 2026-04-10 15:45 UTC
+============================================================
+
+SOL (KXSOL15M):
+  KXSOL15M-26APR101200-00 | active | YES: $0.66
+
+BNB (KXBNB15M):
+  KXBNB15M-26APR101200-00 | active | YES: $0.76
+
+============================================================
+Total tradeable markets: 2
+
+Saved to /home/ubuntu/.openclaw/workspace/workers/scanner/../data/live_markets.json

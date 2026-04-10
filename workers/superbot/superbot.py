@@ -415,13 +415,10 @@ class CoinTrader:
         position = self.positions[position_key]
         side = position.side
 
-        # Close action is opposite of open action
-        # If we BOUGHT to open, we SELL to close
-        # If we SOLD to open, we BUY to close (buy to cover)
+        # For two-way market making: close by taking the opposite side of our position
+        # If we BOUGHT YES, we SELL YES to close. If we SOLD YES (bought NO), we BUY YES to close.
         close_action = 'sell' if position.direction == 'buy' else 'buy'
-        
-        # For settlement on Kalshi, we take the opposite side
-        close_side = "no" if side == "yes" else "yes"
+        close_side = position.side  # Close by trading the SAME side as our position
         
         # Calculate cost to close
         if side == "yes":

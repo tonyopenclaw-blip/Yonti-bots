@@ -367,7 +367,7 @@ class MomentumTracker:
     MIDPOINT = 0.50
     TP_PRICE = 0.70  # Take profit at $0.70+
     SL_PRICE = 0.30  # Stop loss at $0.30
-    MAX_CONTRACTS_PER_SIDE = 3  # Max 3 contracts per side per coin
+    MAX_CONTRACTS_PER_SIDE = 2  # Max 2 contracts per side per coin (candle-duration only)
 
     def __init__(self):
         # Per-ticker state: ticker -> {
@@ -513,7 +513,7 @@ class CandleDurationTracker:
     """
 
     # Coin filter: only ETH and SOL for candle-duration
-    CANDLE_DURATION_COINS = {'ETH', 'SOL'}
+    CANDLE_DURATION_COINS = {'BTC', 'ETH', 'BNB', 'SOL', 'DOGE', 'XRP', 'HYPE', 'ADA'}
     
     # Entry price must be <= $0.85
     MAX_ENTRY_PRICE = 0.85
@@ -861,10 +861,11 @@ class Position:
     unrealized_pnl: float = 0.0          # Running unrealized PnL
     avg_price: float = 0.0               # Weighted average entry price
     confidence: int = 50                 # Signal confidence 0-100 (for trailing stop logging)
+    entry_confidence: int = 0            # Entry confidence 0-100 (stored for scale-in decisions)
     use_time_scaling: bool = False        # If True, use 80%->20% time-scaled stop
     scaled_in: bool = False               # True if we've already scaled in (once per position)
-    extreme_low_scaled: bool = False    # True if we've already scaled in at low extreme zone (<=$0.30)
-    extreme_high_scaled: bool = False   # True if we've already scaled in at high extreme zone ($0.70-$0.85)
+    extreme_low_scaled: bool = False    # True if we've already scaled in at low extreme zone (<=$0.40)
+    extreme_high_scaled: bool = False   # True if we've already scaled in at high extreme zone ($0.60-$0.80)
     is_candle_duration: bool = False    # True if this is a candle-duration position (no SL/TP)
 
     def __post_init__(self):
@@ -873,6 +874,8 @@ class Position:
             self.avg_price = self.entry_price
         if self.peak_price == 0.0:
             self.peak_price = self.entry_price
+        if self.entry_confidence == 0:
+            self.entry_confidence = self.confidence
 
     def current_value(self, current_price: float) -> float:
         """Calculate current value of position."""
@@ -992,16 +995,22 @@ class Position:
         """
         Check if we should scale in (add to winning position).
         
+        Confidence-based scale-in tiers (based on ENTRY confidence, not current):
+        | Entry Conf   | Scale 1 at   | Scale 2 at   |
+        | >95% (3 cts) | price >= $0.60 | price >= $0.70 |
+        | 90-95% (2 cts)| price >= $0.70 | skip         |
+        | 85-90% (1 ct) | price >= $0.80 | skip         |
+        
         Conditions:
-        - Position has not yet scaled in (scaled_in flag is False)
         - Position is profitable (market moving in our direction)
-        - Confidence >= 70% at current timeframe
-        - scale_in_count < max_scale_ins (max 2 scale-ins allowed)
+        - Total contracts < 3 (max per side)
+        - scale_in_count < max_scale_ins
+        - Price has reached the scale-in threshold for this entry confidence tier
         
         Returns True if should scale in, False otherwise.
         """
-        # Already scaled in - only scale once per position
-        if self.scaled_in:
+        # Max 3 contracts per side
+        if self.size >= 3.0:
             return False
 
         # Check if we've hit max scale-ins
@@ -1018,32 +1027,37 @@ class Position:
             if profit_pct <= 0:
                 return False  # Not profitable, don't scale in
 
-        # Check confidence >= 70%
-        if self.confidence < 70:
-            return False
+        # Determine scale-in price threshold based on ENTRY confidence (not current)
+        entry_conf = self.entry_confidence
+        scale_num = self.scale_in_count + 1  # 1-based: next scale-in number
 
-        return True
+        if entry_conf > 95:
+            # >95%: scale 1 at $0.60, scale 2 at $0.70
+            if scale_num == 1 and current_price >= 0.60:
+                return True
+            elif scale_num == 2 and current_price >= 0.70:
+                return True
+        elif entry_conf >= 90:
+            # 90-95%: scale 1 at $0.70, skip scale 2
+            if scale_num == 1 and current_price >= 0.70:
+                return True
+            # scale_num == 2: skip (no second scale-in)
+        elif entry_conf >= 85:
+            # 85-90%: scale 1 at $0.80, skip scale 2
+            if scale_num == 1 and current_price >= 0.80:
+                return True
+            # scale_num == 2: skip
+
+        return False
 
     def get_scale_in_size(self) -> float:
         """
-        Calculate the scale-in size based on confidence tiers.
-        
-        Confidence tiers:
-        - 70-79%: scale in +1 contract
-        - 80-89%: scale in +2 contracts
-        - 90%+: scale in +2 contracts + increase position size by 50%
+        Scale-in always adds 1 contract.
+        Entry sizing (via calculate_kelly_size) already set the right base size.
         
         Returns the number of contracts to add.
         """
-        if self.confidence >= 90:
-            # 90%+: +2 contracts + 50% boost = effectively +3
-            return 2.0 + (self.size * 0.5)
-        elif self.confidence >= 80:
-            # 80-89%: +2 contracts
-            return 2.0
-        else:
-            # 70-79%: +1 contract
-            return 1.0
+        return 1.0
 
     def record_scale_in(self, new_price: float, additional_size: float):
         """Record a scale-in: update average price, size, and set scaled_in flag."""
@@ -1060,13 +1074,17 @@ class Position:
         
         Returns: (should_scale: bool, zone: str) where zone is 'low', 'high', or ''
         
-        Zones:
-        - Low extreme: price <= $0.30 (when YES is cheap, good value buy)
-        - High extreme: price $0.70-$0.85 (near resolution, high probability)
+        High zones (when winning) - based on ENTRY confidence tiers:
+        - >95% entry: scale in at $0.60 (high), $0.70 (very_high)
+        - 90-95% entry: scale in at $0.70 (high)
+        - 85-90% entry: scale in at $0.80 (high)
+        
+        Low extreme (when winning) - for BUY NO direction:
+        - 60%+ entry confidence: scale in when price <= $0.40
         
         Rules:
         - Position must be profitable (market moving in our direction)
-        - Max 3 contracts per side per coin total
+        - Max 3 contracts per side total
         - Only scale in once per zone (extreme_low_scaled / extreme_high_scaled flags)
         """
         # Check max contracts per side (max 3 total)
@@ -1083,13 +1101,32 @@ class Position:
             if profit_pct <= 0:
                 return False, ""  # Not profitable, don't scale in
         
-        # Low extreme zone: price <= $0.30
-        if current_price <= 0.30 and not self.extreme_low_scaled:
+        # Low extreme zone: price <= $0.40 (60%+ entry confidence, for BUY NO)
+        if current_price <= 0.40 and self.entry_confidence >= 60 and not self.extreme_low_scaled:
             return True, "low"
         
-        # High extreme zone: price $0.70-$0.85
-        if 0.70 <= current_price <= 0.85 and not self.extreme_high_scaled:
-            return True, "high"
+        # High extreme zones by ENTRY confidence (when winning)
+        entry_conf = self.entry_confidence
+        if entry_conf > 95:
+            # >95%: scale in at $0.60 (high), then $0.70 (very_high)
+            if current_price >= 0.60 and not self.extreme_high_scaled:
+                return True, "high"
+            elif current_price >= 0.70 and self.extreme_high_scaled and not getattr(self, 'extreme_very_high_scaled', False):
+                # Second high scale-in at $0.70
+                self.extreme_very_high_scaled = False  # init guard
+                return True, "very_high"
+        elif entry_conf >= 90:
+            # 90-95%: scale in at $0.70 (high)
+            if current_price >= 0.70 and not self.extreme_high_scaled:
+                return True, "high"
+        elif entry_conf >= 85:
+            # 85-90%: scale in at $0.80 (high)
+            if current_price >= 0.80 and not self.extreme_high_scaled:
+                return True, "high"
+        elif entry_conf >= 60:
+            # 60-84%: scale in at $0.60 (high) - legacy low-confidence extreme
+            if current_price >= 0.60 and not self.extreme_high_scaled:
+                return True, "high"
         
         return False, ""
 
@@ -1100,10 +1137,12 @@ class Position:
         self.size += additional_size
         self.avg_price = total_cost / self.size
         self.scale_in_count += 1
-        if zone == "low":
-            self.extreme_low_scaled = True
-        elif zone == "high":
+        if zone == "very_high":
+            self.extreme_very_high_scaled = True
+        elif zone.startswith("high"):
             self.extreme_high_scaled = True
+        elif zone == "low":
+            self.extreme_low_scaled = True
         logger.info(f"{self.ticker}: EXTREME ZONE SCALED IN ({zone.upper()}) @ ${new_price:.4f} (+{additional_size:.1f} contracts), new_size={self.size:.1f}, avg_price=${self.avg_price:.4f}")
 
 
@@ -1216,8 +1255,8 @@ class StrategyEngine:
             max_contracts = MAX_BET / entry_price
             contracts = min(contracts, max_contracts)
 
-        # Cap at MAX_CONTRACTS (Tony fix: prevent excessive position size)
-        MAX_CONTRACTS = 20
+        # Cap at MAX_CONTRACTS (candle-duration: max 2 contracts per trade)
+        MAX_CONTRACTS = 2
         contracts = min(contracts, MAX_CONTRACTS)
 
         # Minimum 1 contract if there's a valid signal (Tony fix: was returning 0 and skipping trade)
@@ -1407,51 +1446,15 @@ class StrategyEngine:
         # === GRACE PERIOD: Only applies to MOMENTUM, not FIRST_CROSS ===
         # (Track market age for MOMENTUM check below)
 
-        # === DEEP BUY: Penny odds ($0.03-$0.15) - checked independently (no grace period) ===
-        deep_buy_signal = self._check_deep_buy(market, mid_price, time_left)
-        if deep_buy_signal:
-            return [deep_buy_signal]
+        # === DEEP BUY: DISABLED - Only candle-duration signals ===
+        # deep_buy_signal = self._check_deep_buy(market, mid_price, time_left)
+        # if deep_buy_signal:
+        #     return [deep_buy_signal]
 
-        # === MOMENTUM: Fire when price crosses midpoint ($0.50) with confirmation ===
-        # Tony's Momentum Strategy (replaces MeanRev):
-        # - YES: price crosses midpoint going UP → buy YES
-        # - NO: price crosses midpoint going DOWN → buy NO
-        # - TP at $0.70+, SL at $0.30
-        # - Confidence based on how far past midpoint
-        momentum_signal = self.momentum.update(market.ticker, mid_price)
-        if momentum_signal:
-            # Calculate Kelly size based on probability and confidence
-            prob = mid_price if momentum_signal.side == 'yes' else (1 - mid_price)
-            size, kelly_pct, confidence = self.calculate_kelly_size(
-                Strategy.MOMENTUM, prob, momentum_signal.confidence, mid_price
-            )
-            
-            # Max 3 contracts per side per coin
-            size = min(size, MomentumTracker.MAX_CONTRACTS_PER_SIDE)
-            
-            # Scale-in size based on confidence tiers (for winning trades only)
-            if momentum_signal.confidence >= 90:
-                scale_in_size = int(size * 0.5) + 2  # +50% + 2 extra
-            elif momentum_signal.confidence >= 80:
-                scale_in_size = 2
-            elif momentum_signal.confidence >= 70:
-                scale_in_size = 1
-            else:
-                scale_in_size = 0
-            
-            # Cap scale-in at max contracts
-            scale_in_size = min(scale_in_size, MomentumTracker.MAX_CONTRACTS_PER_SIDE - int(size))
-            
-            logger.info(
-                f"MOMENTUM SIGNAL: {market.ticker} | "
-                f"Side: {momentum_signal.side} @ ${mid_price:.4f} | "
-                f"contracts={int(size):d} | scale_in={int(scale_in_size):d} | "
-                f"CONF={momentum_signal.confidence} | TP=${MomentumTracker.TP_PRICE:.2f} | SL=${MomentumTracker.SL_PRICE:.2f}"
-            )
-            
-            momentum_signal.size = int(size)
-            momentum_signal.scale_in_size = int(scale_in_size)
-            return [momentum_signal]
+        # === MOMENTUM: DISABLED - Only candle-duration signals ===
+        # momentum_signal = self.momentum.update(market.ticker, mid_price)
+        # if momentum_signal:
+        #     ... (momentum disabled)
 
         # === CANDLE DURATION: Nerd's time-above-open signal (FIXED 2026-04-10) ===
         # FIRE ONLY at candle close (when new candle starts), based on COMPLETED candle's stats
@@ -1486,56 +1489,13 @@ class StrategyEngine:
             candle_signal.scale_in_size = int(scale_in_size)
             return [candle_signal]
 
-        # === Get Coinbase bias ===
-        bias = get_coinbase_bias(coin)
+        # === Get Coinbase bias - DISABLED (only candle-duration) ===
+        bias = 'neutral'  # get_coinbase_bias(coin)
 
-        # === MOMENTUM: Fire when Coinbase has strong bias AND price trending, AFTER grace period ===
-        # Coinbase bias: must be bullish or bearish (not neutral)
-        # Price: trending in bias direction (not at extreme required)
-        # MUST be at least 2 minutes into the series (grace period)
-        # ONLY run MOMENTUM during off-hours (00:00-07:59 UTC)
-        if is_momentum_enabled() and bias != 'neutral' and (mid_price >= 0.20 and mid_price <= 0.80):
-            # Check if price is moving in the bias direction (above midpoint for bullish, below for bearish)
-            if bias == 'bullish' and mid_price >= 0.50:
-                side = 'yes'
-                reason_suffix = 'momentum: bullish bias + price above midpoint'
-            elif bias == 'bearish' and mid_price <= 0.50:
-                side = 'no'
-                reason_suffix = 'momentum: bearish bias + price below midpoint'
-            else:
-                bias = None
-            
-            if bias is not None:
-                # GRACE PERIOD: Skip MOMENTUM in first 2 minutes
-                if market_age_sec >= self.GRACE_PERIOD_SEC:
-                    confidence = 60  # Momentum confidence
-                    size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.MOMENTUM, mid_price, confidence, mid_price)
-
-                    if confidence >= 40:
-                        logger.info(
-                            f"MOMENTUM SIGNAL: {market.ticker} | "
-                            f"Side: {side} @ ${mid_price:.4f} | contracts={int(size):d} | "
-                            f"CONF={confidence} | TS=30%/40% | Coinbase={bias} | age={market_age_sec:.0f}s"
-                        )
-
-                        return [TradeSignal(
-                            strategy=Strategy.MOMENTUM,
-                            ticker=market.ticker,
-                            side=side,
-                            direction='buy',
-                            price=mid_price,
-                            size=size,
-                            scale_in_size=int(size * 0.5),  # Scale in: add 50% more when winning
-                            reason=f"MOMENTUM: {reason_suffix}, Coinbase={bias}, CONF={confidence}, age={market_age_sec:.0f}s",
-                            take_profit=0.95 if side == "yes" else 0.05,
-                            stop_loss=None,
-                            trailing_stop_pct=0.40,
-                            trailing_stop_trigger_pct=0.30,
-                            confidence=confidence,
-                            trailing_stop_buffer=0.40,
-                            max_hold_minutes=10,
-                            use_time_scaling=True  # TIME SCALING: 80%->20%
-                        )]
+        # === MOMENTUM (Coinbase bias): DISABLED - Only candle-duration signals ===
+        # All Coinbase bias momentum disabled - only candle-duration strategy active
+        # if is_momentum_enabled() and bias != 'neutral' and (mid_price >= 0.20 and mid_price <= 0.80):
+        #     ... (momentum with Coinbase bias - disabled)
 
         # === FIRST CROSS: DISABLED - MomentumTracker is now PRIMARY only ===
         # --- First Cross: Coin price vs target price ---
@@ -1573,48 +1533,10 @@ class StrategyEngine:
             # All FIRST_CROSS logic disabled - using MomentumTracker instead
             pass
 
-        # === MOMENTUM_FORCE: Last resort - wait 60s, no cross, force entry ===
-        # ONLY run MOMENTUM_FORCE during off-hours (00:00-07:59 UTC)
-        no_cross_yet = not has_coin_cross and not has_midpoint_cross
-        if is_momentum_enabled() and no_cross_yet and market_age_sec >= 60 and bias != 'neutral' and (mid_price < 0.10 or mid_price > 0.90):
-            if bias == 'bullish' and mid_price < 0.10:
-                side = 'yes'
-                reason_suffix = 'bullish + price above midpoint'
-            elif bias == 'bearish' and mid_price <= 0.50:
-                side = 'no'
-                reason_suffix = 'bearish + price below midpoint'
-            else:
-                bias = None
-
-            if bias is not None:
-                confidence = 50
-                size, kelly_pct, confidence = self.calculate_kelly_size(Strategy.MOMENTUM_FORCE, mid_price, confidence, mid_price)
-
-                if confidence >= 40:
-                    logger.info(
-                        f"MOMENTUM_FORCE SIGNAL: {market.ticker} | "
-                        f"Side: {side} @ ${mid_price:.4f} | contracts={int(size):d} | "
-                        f"CONF={confidence} | TS=30%/40% | Coinbase={bias} | age={market_age_sec:.0f}s"
-                    )
-
-                    return [TradeSignal(
-                        strategy=Strategy.MOMENTUM_FORCE,
-                        ticker=market.ticker,
-                        side=side,
-                        direction='buy',
-                        price=mid_price,
-                        size=size,
-                        scale_in_size=int(size * 0.5),  # Scale in: add 50% more when winning
-                        reason=f"MOMENTUM_FORCE: {reason_suffix}, Coinbase={bias}, CONF={confidence}, age={market_age_sec:.0f}s",
-                        take_profit=0.95 if side == "yes" else 0.05,
-                        stop_loss=None,
-                        trailing_stop_pct=0.40,
-                        trailing_stop_trigger_pct=0.30,
-                        confidence=confidence,
-                        trailing_stop_buffer=0.40,
-                        max_hold_minutes=8,
-                        use_time_scaling=True  # TIME SCALING: 80%->20%
-                    )]
+        # === MOMENTUM_FORCE: DISABLED - Only candle-duration signals ===
+        # no_cross_yet = not has_coin_cross and not has_midpoint_cross
+        # if is_momentum_enabled() and no_cross_yet and market_age_sec >= 60 and bias != 'neutral' and (mid_price < 0.10 or mid_price > 0.90):
+        #     ... (momentum_force - disabled)
 
         return []
 

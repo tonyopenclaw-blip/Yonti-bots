@@ -71,7 +71,7 @@ Skills are shared. Your setup is yours. Keeping them apart means you can update 
 
 | Bot | Access Key ID | Type | Notes |
 |-----|-------------|------|-------|
-| **Real Superbot 3** (active) | `a0235926-8b18-4f93-81ab-e4383ba61ec9` | R/W | Current trading bot |
+| **Real Superbot 3** (active) | `2af9792d-cadd-4067-a861-b9bff4238248` | R/W | Current trading bot |
 | Cashsync | `12920c50-132b-4237-9575-7d5958a74830` | R/W | Used by CashSync |
 | Real Superbot 2 | `f085af89-0df7-44e2-9bb3-4af0435cbfda` | R/W | Backup |
 | RealSuperbot | `e275fa0a-90e0-4eaa-9fb1-d25c9f8ed804` | R/W | Backup |

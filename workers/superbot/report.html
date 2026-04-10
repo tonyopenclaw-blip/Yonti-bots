@@ -75,7 +75,7 @@
     <div class="container">
         <h1>Superbot Paper Trading Report — REEVAL v1 📊</h1>
         <div class="session-info">
-            Session: 2026-04-10 09:54:31 UTC to 2026-04-10 09:56:36 UTC
+            Session: 2026-04-10 10:20:04 UTC to 2026-04-10 10:56:33 UTC
         </div>
         
         <div class="summary">
@@ -85,36 +85,95 @@
             </div>
             <div class="stat-card">
                 <div class="label">Ending Balance</div>
-                <div class="value negative">$5.00</div>
+                <div class="value positive">$75.17</div>
             </div>
             <div class="stat-card">
                 <div class="label">Total P&L</div>
-                <div class="value positive">+$0.00</div>
+                <div class="value positive">+$0.27</div>
             </div>
             <div class="stat-card">
                 <div class="label">Total Trades</div>
-                <div class="value neutral">0</div>
+                <div class="value neutral">3</div>
             </div>
             <div class="stat-card">
                 <div class="label">Win Rate</div>
-                <div class="value neutral">0.0%</div>
+                <div class="value neutral">66.7%</div>
             </div>
             <div class="stat-card">
                 <div class="label">Wins / Losses</div>
-                <div class="value neutral">0 / 0</div>
+                <div class="value neutral">2 / 1</div>
             </div>
             <div class="stat-card">
                 <div class="label">Largest Win</div>
-                <div class="value positive">$0.00</div>
+                <div class="value positive">$0.44</div>
             </div>
             <div class="stat-card">
                 <div class="label">Largest Loss</div>
-                <div class="value negative">$0.00</div>
+                <div class="value negative">$-0.17</div>
             </div>
         </div>
         
         <h2 style="color: #c9d1d9; margin-bottom: 15px;">Trade History</h2>
-        <p>No trades in this session.</p>
+        
+        <table class="trades-table">
+            <thead>
+                <tr>
+                    <th>Ticker</th>
+                    <th>Side</th>
+                    <th>Strategy</th>
+                    <th>Entry</th>
+                    <th>Exit</th>
+                    <th>Size</th>
+                    <th>P&L</th>
+                    <th>Opened</th>
+                    <th>Closed</th>
+                    <th>Exit Reason</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            <tr>
+                <td>KXBTC15M-26APR100630-30</td>
+                <td>NO</td>
+                <td>momentum</td>
+                <td>$0.1750</td>
+                <td>$0.0000</td>
+                <td>$1.00</td>
+                <td class="negative">$-0.17</td>
+                <td>2026-04-10 10:24:11 UTC</td>
+                <td>2026-04-10 10:30:21 UTC</td>
+                <td>settled</td>
+            </tr>
+            
+            <tr>
+                <td>KXETH15M-26APR100645-45</td>
+                <td>NO</td>
+                <td>momentum</td>
+                <td>$0.5650</td>
+                <td>$1.0000</td>
+                <td>$1.00</td>
+                <td class="positive">$+0.44</td>
+                <td>2026-04-10 10:30:21 UTC</td>
+                <td>2026-04-10 10:45:15 UTC</td>
+                <td>settled</td>
+            </tr>
+            
+            <tr>
+                <td>KXBTC15M-26APR100700-00</td>
+                <td>NO</td>
+                <td>momentum</td>
+                <td>$0.4950</td>
+                <td>$0.5000</td>
+                <td>$1.00</td>
+                <td class="positive">$+0.01</td>
+                <td>2026-04-10 10:45:15 UTC</td>
+                <td>2026-04-10 10:56:33 UTC</td>
+                <td>shutdown</td>
+            </tr>
+            
+            </tbody>
+        </table>
+        
     </div>
 </body>
 </html>

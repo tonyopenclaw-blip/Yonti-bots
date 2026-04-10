@@ -30,7 +30,7 @@ from report import ReportGenerator, Trade
 
 # Candle watcher signals file
 CANDLE_SIGNALS_FILE = Path(__file__).parent / "candle_signals.json"
-CANDLE_SIGNAL_MAX_AGE_SEC = 300  # 5 minutes
+CANDLE_SIGNAL_MAX_AGE_SEC = 600  # 10 minutes (candle watcher fires every ~15 min)
 
 # =============================================================================
 # LOGGING SETUP
@@ -963,13 +963,23 @@ class Superbot:
         trader._check_existing_positions(market_dict)
 
         # === CANDLE SIGNALS: Check for fresh candle watcher signal ===
-        if not has_positions:  # Only trade candle signals if no existing position
-            candle_sig = self._read_candle_signal()
-            if candle_sig and candle_sig.get("coin") == coin:
-                logger.info(f"[{coin}] Found candle signal: {candle_sig}")
-                executed = self._execute_candle_signal(candle_sig, markets, coin, trader)
-                if executed:
-                    return True  # Candle signal executed, skip regular scanning
+        # Check EVERY cycle (not just when no positions) - candle signals can trigger new positions
+        candle_sig = self._read_candle_signal()
+        if candle_sig:
+            sig_coin = candle_sig.get("coin")
+            age = (datetime.utcnow() - datetime.fromisoformat(candle_sig.get('timestamp','').replace('Z','')).replace(tzinfo=None)).total_seconds()
+            logger.info(f"[{coin}] Checking candle signal (coin={sig_coin}, age={age:.0f}s): {candle_sig}")
+            executed = self._execute_candle_signal(candle_sig, markets, coin, trader)
+            if executed:
+                logger.info(f"[{coin}] CANDLE SIGNAL EXECUTED!")
+                return True  # Candle signal executed
+            else:
+                logger.warning(f"[{coin}] Candle signal found but NO SUITABLE MARKET (coin={sig_coin}, markets={len(markets)})")
+                for m in markets[:3]:
+                    mid = (m.yes_bid + m.yes_ask) / 2
+                    try: ttl=m.time_to_expiry_sec()
+                    except: ttl=900
+                    logger.warning(f"  Market {m.ticker}: mid={mid:.4f}, ttl={ttl:.0f}s, bid={m.yes_bid:.4f}, ask={m.yes_ask:.4f}")
 
         # === NERD v2: MAX_POSITIONS = 3 check ===
         total_positions = sum(len(t.positions) for t in self.coin_traders.values())

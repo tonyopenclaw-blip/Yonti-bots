@@ -82,7 +82,7 @@ class KalshiAPI:
         # Reuse cached headers only within the same 500ms window to avoid replay detection
         if (KalshiAPI._auth_cached_headers is not None and 
             current_ts - KalshiAPI._auth_timestamp_cache < 500 and
-            getattr(KalshiAPI._auth_cached_headers, '_cache_key', None) == cache_key):
+            KalshiAPI._auth_cached_headers.get('_cache_key') == cache_key):
             return KalshiAPI._auth_cached_headers.copy()
         
         # KalshiAuth.get_auth_headers handles /trade-api/v2 prefix internally

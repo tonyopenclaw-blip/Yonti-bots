@@ -1932,7 +1932,7 @@ class UncleVitoReport:
                 confidence_result = self.confidence_calc.calculate_real_confidence(
                     pick_team=pick_team_abbr,
                     opp_team=opp_team_abbr,
-                    sport=sport,
+                    sport=sport_key,
                     game_date=game.date
                 )
                 
@@ -1947,7 +1947,7 @@ class UncleVitoReport:
                     odds=odds,
                     source_signal=self._get_strongest_source(signal),
                     confidence=confidence_result["confidence"],
-                    sport=sport,
+                    sport=sport_key,
                     analysis=confidence_result["analysis"]
                 )
                 all_ml_picks.append(pick)
@@ -2985,6 +2985,7 @@ __LEAGUE_SECTIONS__
             if not game_picks:
                 section += '                    <div class="pick-card"><div class="pick-item"><span class="pick-label">No games available</span></div></div>\n'
             else:
+                sport_emoji_map = {"NBA": "🏀", "NHL": "🧊", "MLB": "⚾"}
                 for pick in game_picks[:3]:
                     if pick.pick_type == "spread":
                         line_str = f"{pick.team} ({pick.line})"
@@ -2995,9 +2996,10 @@ __LEAGUE_SECTIONS__
                     else:
                         line_str = f"{pick.team} ML"
                         label = "MONEYLINE"
+                    pick_emoji = sport_emoji_map.get(pick.sport, emoji)  # per-pick sport emoji
                     section += f'''                    <div class="pick-card">
                         <div class="pick-item">
-                            <span class="pick-sport">{emoji}</span>
+                            <span class="pick-sport">{pick_emoji}</span>
                             <span class="pick-label">{label}</span>
                             <span class="pick-value">{line_str}</span>
                             <span class="pick-line">{pick.odds}</span>
@@ -3074,8 +3076,9 @@ __LEAGUE_SECTIONS__
                 # Add sport emoji
                 sport_emoji_map = {"NBA": "🏀", "NHL": "🧊", "MLB": "⚾"}
                 emoji = sport_emoji_map.get(pick.sport, "🏆")
-                line_str = f"{emoji} {pick.team} v {pick.opponent} | <strong>{pick.team} ML</strong>"
+                line_str = f"{pick.team} v {pick.opponent} | <strong>{pick.team} ML</strong>"
                 ml_section += f'                        <div class="best-bet-item">'
+                ml_section += f'<span class="best-bet-sport">{emoji}</span>'
                 ml_section += f'<span class="best-bet-text">{line_str}</span>'
                 ml_section += f'<span class="best-bet-conf">{pick.confidence}%</span>'
                 ml_section += '</div>\n'

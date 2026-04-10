@@ -367,7 +367,7 @@ class MomentumTracker:
     MIDPOINT = 0.50
     TP_PRICE = 0.70  # Take profit at $0.70+
     SL_PRICE = 0.30  # Stop loss at $0.30
-    MAX_CONTRACTS_PER_SIDE = 2  # Max 2 contracts per side per coin (candle-duration only)
+    MAX_CONTRACTS_PER_SIDE = 2  # Max 2 contracts per side per coin (with scale-ins up to 3)
 
     def __init__(self):
         # Per-ticker state: ticker -> {
@@ -991,70 +991,54 @@ class Position:
 
     def should_scale_in(self, current_price: float) -> bool:
         """
-        Check if we should scale in (add to winning position).
+        Check if we should scale in based on price levels.
         
-        Confidence-based scale-in tiers (based on ENTRY confidence, not current):
-        | Entry Conf   | Scale 1 at   | Scale 2 at   |
-        | >95% (3 cts) | price >= $0.60 | price >= $0.70 |
-        | 90-95% (2 cts)| price >= $0.70 | skip         |
-        | 85-90% (1 ct) | price >= $0.80 | skip         |
+        Tony's price-level scale-ins:
+        - YES: scale in at $0.60, $0.70, $0.80 (when moving up)
+        - NO: scale in at $0.40, $0.30, $0.20 (when moving down)
         
         Conditions:
-        - Position is profitable (market moving in our direction)
-        - Total contracts < 3 (max per side)
-        - scale_in_count < max_scale_ins
-        - Price has reached the scale-in threshold for this entry confidence tier
-        
-        Returns True if should scale in, False otherwise.
+        - Position must be profitable (market moving in our direction)
+        - Price must have moved $0.10+ in our favor from entry
+        - Max 3 contracts per side total
+        - Scale in once per price level crossing
         """
-        # Max 3 contracts per side
+        # Check max contracts cap (3 per side)
         if self.size >= 3.0:
             return False
-
-        # Check if we've hit max scale-ins
-        if self.scale_in_count >= self.max_scale_ins:
-            return False
-
+        
         # Check if position is profitable (market moving in our direction)
         if self.side == "yes":
             profit_pct = (current_price - self.entry_price) / self.entry_price if self.entry_price > 0 else 0
             if profit_pct <= 0:
                 return False  # Not profitable, don't scale in
-        else:
+            # Scale in at price levels: $0.60, $0.70, $0.80
+            if current_price >= 0.60 and not self.extreme_high_scaled:
+                return True
+            if current_price >= 0.70 and self.extreme_high_scaled and not self.extreme_very_high_scaled:
+                return True
+            if current_price >= 0.80 and self.extreme_very_high_scaled and not self.extreme_high_scaled:
+                return True  # Third level
+        else:  # no side
             profit_pct = (self.entry_price - current_price) / self.entry_price if self.entry_price > 0 else 0
             if profit_pct <= 0:
                 return False  # Not profitable, don't scale in
-
-        # Determine scale-in price threshold based on ENTRY confidence (not current)
-        entry_conf = self.entry_confidence
-        scale_num = self.scale_in_count + 1  # 1-based: next scale-in number
-
-        if entry_conf > 95:
-            # >95%: scale 1 at $0.60, skip scale 2 (max 3 contracts, enter with 2)
-            if scale_num == 1 and current_price >= 0.60:
+            # Scale in at price levels: $0.40, $0.30, $0.20
+            if current_price <= 0.40 and not self.extreme_low_scaled:
                 return True
-            # scale_num == 2: skip (already at max 3 contracts after first scale)
-        elif entry_conf >= 90:
-            # 90-95%: scale 1 at $0.70, skip scale 2
-            if scale_num == 1 and current_price >= 0.70:
+            if current_price <= 0.30 and self.extreme_low_scaled and not self.extreme_high_scaled:
                 return True
-            # scale_num == 2: skip (no second scale-in)
-        elif entry_conf >= 85:
-            # 85-90%: scale 1 at $0.80, skip scale 2
-            if scale_num == 1 and current_price >= 0.80:
-                return True
-            # scale_num == 2: skip
-
+            if current_price <= 0.20 and self.extreme_high_scaled:
+                return True  # Third level
+        
         return False
 
     def get_scale_in_size(self) -> float:
         """
-        Scale-in always adds 1 contract.
-        Entry sizing (via calculate_kelly_size) already set the right base size.
-        
-        Returns the number of contracts to add.
+        Return the scale-in size: 50% of Kelly-derived initial size, minimum 1 contract.
         """
-        return 1.0
+        # Scale in with 1 contract (or 50% of initial Kelly size, min 1)
+        return max(1.0, self.size * 0.5)
 
     def record_scale_in(self, new_price: float, additional_size: float):
         """Record a scale-in: update average price, size, and set scaled_in flag."""
@@ -1184,23 +1168,22 @@ class StrategyEngine:
     def calculate_kelly_size(self, strategy: Strategy, prob: float, confidence: int = 50, entry_price: float = 0.50) -> Tuple[float, float, int]:
         """
         Calculate Kelly Criterion bet size using historical strategy performance,
-        then adjust based on CONFIDENCE MULTIPLIER (Nerd v2).
+        then apply 50% Kelly for entry + confidence tier sizing.
 
         Returns (contracts, kelly_pct, confidence) tuple.
-        - contracts: number of contracts to buy (whole, capped)
+        - contracts: number of contracts to buy (whole, capped at 3)
         - kelly_pct: the Kelly % used (for logging)
         - confidence: the confidence score (0-100)
 
-        CONFIDENCE MULTIPLIER (Nerd v2):
-        - CONF 80+: Kelly * 1.0 (full signal, full bet)
-        - CONF 60-79: Kelly * 0.75 (good signal, reduce)
-        - CONF 40-59: Kelly * 0.50 (moderate signal, half bet)
+        Tony's Kelly Compounding with Confidence Tiers:
+        - CONF 80-89: +2 contracts (base 1 + 2 = 3 total, or base 2 + 2 = 4 capped at 3)
+        - CONF 90+: +2 contracts + 50% size boost
         - CONF <40: Skip (weak signal, don't trade)
 
-        Hard caps: MAX_BET = $2, MIN_BET = $0.10
+        Entry at midpoint ($0.50): start with 50% Kelly sizing (half the recommended size).
+        Scale-ins at price levels ($0.60/$0.70/$0.80 for YES, $0.40/$0.30/$0.20 for NO).
 
-        Tony's Fix: Kelly outputs fraction of bankroll to risk (e.g., 0.05 = 5%).
-        We convert to contracts: dollar_amount / entry_price, rounded DOWN.
+        Hard caps: MAX_BET = $2, MIN_BET = $0.10, MAX 3 contracts per side.
         """
         import math
 
@@ -1214,13 +1197,26 @@ class StrategyEngine:
         # Get Kelly % from historical performance
         kelly_pct = self.tracker.get_kelly_pct(strategy)
 
-        # Tiered Kelly (Tony's update)
-        # Cash < $100 → 50% Kelly (half Kelly)
-        # Cash >= $100 → Full Kelly
-        if self.cash < 100:
-            effective_pct = kelly_pct * 0.5
+        # CONFIDENCE MULTIPLIER (Tony's update)
+        # CONF 90+: Kelly * 1.5 (boosted)
+        # CONF 80-89: Kelly * 1.0 (full)
+        # CONF 60-79: Kelly * 0.75 (reduced)
+        # CONF 40-59: Kelly * 0.50 (moderate)
+        if confidence >= 90:
+            conf_mult = 1.5
+        elif confidence >= 80:
+            conf_mult = 1.0
+        elif confidence >= 60:
+            conf_mult = 0.75
         else:
-            effective_pct = kelly_pct
+            conf_mult = 0.50
+
+        # Tony's 50% Kelly at entry (half the recommended size)
+        # 50% Kelly = half the calculated Kelly for compounding
+        entry_kelly_pct = kelly_pct * 0.5
+        
+        # Effective Kelly = entry_kelly_pct * confidence_multiplier
+        effective_pct = entry_kelly_pct * conf_mult
 
         # Convert to dollar amount to risk
         dollar_amount = self.cash * effective_pct
@@ -1228,8 +1224,7 @@ class StrategyEngine:
         # Clamp dollar amount to hard limits
         dollar_amount = max(MIN_BET, min(MAX_BET, dollar_amount))
 
-        # Convert dollar amount to contracts (Tony's Fix)
-        # contracts = dollar_amount / entry_price
+        # Convert dollar amount to contracts
         if entry_price > 0:
             contracts = dollar_amount / entry_price
         else:
@@ -1243,22 +1238,19 @@ class StrategyEngine:
             max_contracts = MAX_BET / entry_price
             contracts = min(contracts, max_contracts)
 
-        # Confidence-based contract sizing (Tony's new sizing: overrides Kelly cap)
-        # >95% (CONF=96-100) → 2 contracts (save 1 for scale)
-        # 90-95% (CONF=90-95) → 2 contracts (no scale, close to certainty)
-        # 85-90% (CONF=85-89) → 1 contract (scale +1 at price tier)
-        if confidence > 95:
-            conf_contracts = 2
-        elif confidence >= 90:  # 90-95%
-            conf_contracts = 2
-        elif confidence >= 85:  # 85-90%
-            conf_contracts = 1
-        else:
-            conf_contracts = 1  # fallback minimum
+        # CONFIDENCE TIER SIZING: Add contracts based on confidence
+        # CONF 80-89: +2 contracts (base + 2)
+        # CONF 90+: +2 contracts + 50% boost
+        if confidence >= 90:
+            contracts = contracts + 2  # +2 contracts
+            contracts = int(contracts * 1.5)  # 50% boost
+        elif confidence >= 80:
+            contracts = contracts + 2  # +2 contracts
 
-        contracts = min(contracts, conf_contracts)
+        # Cap at MAX 3 contracts per side (Tony's max)
+        contracts = min(contracts, 3)
 
-        # Minimum 1 contract if there's a valid signal (Tony fix: was returning 0 and skipping trade)
+        # Ensure minimum 1 contract
         contracts = max(1, contracts)
 
         # Log the Kelly sizing result for debugging
@@ -1469,11 +1461,8 @@ class StrategyEngine:
                 Strategy.MOMENTUM, prob, candle_signal.confidence, mid_price
             )
             
-            # Max 3 contracts per side per coin
-            size = min(size, MomentumTracker.MAX_CONTRACTS_PER_SIDE)
-            
-            # NO scale-ins for candle-duration (extreme zone only handled in superbot)
-            scale_in_size = 0
+            # Calculate scale-in size (50% of Kelly size, min 1)
+            scale_in_size = max(1, int(size * 0.5))
             
             above_pct = self.candle_duration.get_above_pct(market.ticker)
             logger.info(

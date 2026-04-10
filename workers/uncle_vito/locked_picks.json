@@ -1,97 +1,126 @@
 {
   "NBA": {
-    "locked_at": "2026-04-06T20:24:09.556634",
+    "locked_at": "2026-04-10T17:45:34.133760",
     "picks": {
-      "props": [],
+      "props": [
+        {
+          "type": "prop",
+          "player": "LaMelo Ball",
+          "team": "CHA",
+          "stat_type": "points",
+          "line": 23.5,
+          "direction": "over",
+          "odds": -110,
+          "confidence": 68
+        },
+        {
+          "type": "prop",
+          "player": "Miles Bridges",
+          "team": "CHA",
+          "stat_type": "rebounds",
+          "line": 5.5,
+          "direction": "over",
+          "odds": -110,
+          "confidence": 68
+        },
+        {
+          "type": "prop",
+          "player": "Cade Cunningham",
+          "team": "DET",
+          "stat_type": "points",
+          "line": 22.5,
+          "direction": "over",
+          "odds": -110,
+          "confidence": 68
+        }
+      ],
       "game_picks": [
         {
           "type": "spread",
-          "team": "NY",
-          "opponent": "ATL",
-          "line": -2.5,
+          "team": "CHA",
+          "opponent": "DET",
+          "line": -6.5,
           "odds": -110,
-          "confidence": 68
+          "confidence": 80
         },
         {
           "type": "total",
-          "team": "ORL",
-          "opponent": "DET",
-          "line": 240.5,
+          "team": "MIA",
+          "opponent": "WSH",
+          "line": 225.5,
           "odds": -110,
-          "confidence": 68
+          "confidence": 56
         },
         {
           "type": "moneyline",
-          "team": "MEM",
+          "team": "ATL",
           "opponent": "CLE",
           "line": 0,
           "odds": -150,
-          "confidence": 68
-        }
-      ]
-    },
-    "odds": -110
-  },
-  "NHL": {
-    "locked_at": "2026-04-06T20:24:09.724967",
-    "picks": {
-      "props": [],
-      "game_picks": [
-        {
-          "type": "spread",
-          "team": "TB",
-          "opponent": "BUF",
-          "line": 1.5,
-          "odds": -110,
-          "confidence": 68
-        },
-        {
-          "type": "total",
-          "team": "SEA",
-          "opponent": "WPG",
-          "line": 6.0,
-          "odds": -110,
-          "confidence": 68
-        },
-        {
-          "type": "moneyline",
-          "team": "SJ",
-          "opponent": "CHI",
-          "line": 0,
-          "odds": -140,
-          "confidence": 68
+          "confidence": 62
         }
       ]
     },
     "odds": -110
   },
   "MLB": {
-    "locked_at": "2026-04-06T20:24:09.782170",
+    "locked_at": "2026-04-10T17:45:35.629313",
     "picks": {
-      "props": [],
+      "props": [
+        {
+          "type": "prop",
+          "player": "Christopher Morel",
+          "team": "CHC",
+          "stat_type": "home_runs",
+          "line": 0.5,
+          "direction": "over",
+          "odds": -110,
+          "confidence": 68
+        },
+        {
+          "type": "prop",
+          "player": "Oneil Cruz",
+          "team": "PIT",
+          "stat_type": "home_runs",
+          "line": 0.5,
+          "direction": "over",
+          "odds": -110,
+          "confidence": 68
+        },
+        {
+          "type": "prop",
+          "player": "Kyle Schwarber",
+          "team": "PHI",
+          "stat_type": "home_runs",
+          "line": 0.5,
+          "direction": "under",
+          "odds": -110,
+          "confidence": 68
+        }
+      ],
       "game_picks": [
         {
           "type": "spread",
-          "team": "KC",
-          "opponent": "CLE",
-          "line": -1.5,
+          "team": "CHC",
+          "opponent": "PIT",
+          "line": 1.5,
           "odds": -110,
-          "confidence": 68
+          "confidence": 74
         },
         {
           "type": "total",
-          "team": "CIN",
-          "opponent": "MIA",
-          "line": 10.0,
+          "team": "PHI",
+          "opponent": "ARI",
+          "line": 8.5,
           "odds": -110,
-          "confidence": 68
+          "confidence": 74
         },
         {
           "type": "moneyline",
-          "team": "PIT",
-          "opponent": "SD",
+          "team": "MIA",
+          "opponent": "DET",
           "line": 0,
-          "odds": -160,
+          "odds": 140,
           "confidence": 68
         }
       ]

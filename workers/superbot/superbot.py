@@ -307,11 +307,83 @@ class CoinTrader:
                 positions_changed = True
                 continue
 
-            # CANDLE-DURATION POSITIONS: No SL/TP - hold to expiry only
-            # Skip trailing stop and 3-min rule for candle-duration positions
+            # CANDLE-DURATION POSITIONS: Last 5 min trailing stop from high/low
+            # If time_left <= 300s AND price in extreme zone -> trailing stop activates
+            # For YES: trailing_stop = high_price - 0.20, exit when price hits
+            # For NO: trailing_stop = low_price + 0.20, exit when price hits
             if position.is_candle_duration:
-                # Only exit on actual expiry or settlement
+                if time_left <= 300:
+                    # Track high/low for trailing stop
+                    if not hasattr(position, '_trail_high'):
+                        position._trail_high = mid_price
+                        position._trail_low = mid_price
+                    
+                    if position.side == "yes" and mid_price >= 0.80:
+                        # Update trailing high while price is in zone
+                        if mid_price > position._trail_high:
+                            position._trail_high = mid_price
+                        trailing_stop = position._trail_high - 0.20
+                        logger.debug(f"[{self.coin}] CANDLE trailing stop: YES high={position._trail_high:.4f}, stop={trailing_stop:.4f}, price={mid_price:.4f}, time_left={time_left}s")
+                        if mid_price <= trailing_stop:
+                            self._close_position(ticker, f"candle_trail_stop_yes", mid_price, side=side)
+                            positions_changed = True
+                            continue
+                    elif position.side == "no" and mid_price <= 0.20:
+                        # Update trailing low while price is in zone
+                        if mid_price < position._trail_low:
+                            position._trail_low = mid_price
+                        trailing_stop = position._trail_low + 0.20
+                        logger.debug(f"[{self.coin}] CANDLE trailing stop: NO low={position._trail_low:.4f}, stop={trailing_stop:.4f}, price={mid_price:.4f}, time_left={time_left}s")
+                        if mid_price >= trailing_stop:
+                            self._close_position(ticker, f"candle_trail_stop_no", mid_price, side=side)
+                            positions_changed = True
+                            continue
+                # Hold to expiry otherwise
                 continue
+
+            # === SCALE-IN LOGIC: Add to positions as price moves in our favor ===
+            # Check extreme zone scale-in first (higher priority)
+            should_extreme, extreme_zone = position.should_extreme_scale_in(mid_price)
+            if should_extreme:
+                # Extreme zone scale-in: +1 contract at extreme zones
+                scale_size = position.get_scale_in_size()
+                if position.size + scale_size <= 3.0:  # Cap at 3 contracts
+                    # Place scale-in order
+                    scale_cost = mid_price * scale_size if position.side == "yes" else (1 - mid_price) * scale_size
+                    scale_result = self.api.place_order(
+                        ticker=ticker,
+                        side=position.side,
+                        price=mid_price,
+                        amount=scale_cost,
+                        action='buy'
+                    )
+                    if "error" not in scale_result:
+                        position.record_extreme_scale_in(extreme_zone, mid_price)
+                        logger.info(f"[{self.coin}] EXTREME SCALE-IN: {position.side} {ticker} @ ${mid_price:.4f}, +{scale_size:.1f} contracts, new_size={position.size:.1f}")
+                    else:
+                        logger.warning(f"[{self.coin}] EXTREME SCALE-IN FAILED: {scale_result['error']}")
+                    positions_changed = True
+            
+            # Check regular price-level scale-in
+            # Scale in when price moves $0.10+ in our favor
+            elif position.should_scale_in(mid_price):
+                scale_size = position.get_scale_in_size()
+                if position.size + scale_size <= 3.0:  # Cap at 3 contracts
+                    # Place scale-in order
+                    scale_cost = mid_price * scale_size if position.side == "yes" else (1 - mid_price) * scale_size
+                    scale_result = self.api.place_order(
+                        ticker=ticker,
+                        side=position.side,
+                        price=mid_price,
+                        amount=scale_cost,
+                        action='buy'
+                    )
+                    if "error" not in scale_result:
+                        position.record_scale_in(mid_price, scale_size)
+                        logger.info(f"[{self.coin}] SCALE-IN: {position.side} {ticker} @ ${mid_price:.4f}, +{scale_size:.1f} contracts, new_size={position.size:.1f}")
+                    else:
+                        logger.warning(f"[{self.coin}] SCALE-IN FAILED: {scale_result['error']}")
+                    positions_changed = True
 
             # Check TP/SL for non-candle-duration positions (includes trailing stop logic)
             should_exit, reason = self.strategy_engine.check_position_exit(position, mid_price, time_left)
@@ -332,71 +404,6 @@ class CoinTrader:
                     self._close_position(ticker, "last3_sl_01", mid_price, side=side)
                     positions_changed = True
                     continue
-
-            # === EXTREME ZONE SCALE-IN: Scale in at extreme prices by confidence ===
-            should_extreme, zone = position.should_extreme_scale_in(mid_price)
-            if should_extreme:
-                # Scale in +1 contract for extreme zones
-                extreme_size = 1.0
-                if position.side == "yes":
-                    extreme_cost = mid_price * extreme_size
-                else:
-                    extreme_cost = (1 - mid_price) * extreme_size
-                    
-                if extreme_cost <= self.cash:
-                    extreme_order = self.api.place_order(
-                        ticker=ticker,
-                        side=position.side,
-                        price=mid_price,
-                        amount=extreme_cost,
-                        action=position.direction
-                    )
-                    if "error" in extreme_order:
-                        logger.warning(f"[{self.coin}] Extreme scale-in order failed: {extreme_order['error']}")
-                    else:
-                        position.record_extreme_scale_in(zone, mid_price)
-                        self.cash -= extreme_cost
-                        logger.info(f"[{self.coin}] EXTREME ZONE SCALED IN ({zone.upper()}) {position_key}: +{extreme_size:.1f} contracts @ ${mid_price:.4f}, cost=${extreme_cost:.2f}, new_size={position.size:.1f}, CONF={position.confidence}")
-                else:
-                    logger.debug(f"[{self.coin}] Insufficient cash for extreme scale-in: ${self.cash:.2f} < ${extreme_cost:.2f}")
-
-            # === SCALE-IN LOGIC: Add to winning positions (confidence-based) ===
-            # Check if we should scale in (add more to position)
-            # Scale-in conditions:
-            # 1. Position is profitable (market moving in our direction) - Tony's "RIP only, not DIP"
-            # 2. Confidence >= 70% at current timeframe
-            # 3. Have not already scaled in (scaled_in flag)
-            # 4. scale_in_count < max_scale_ins
-            # NOTE: CANDLE-DURATION positions skip this - only extreme zone scale-ins allowed
-            if not position.is_candle_duration and position.should_scale_in(mid_price):
-                # Get scale-in size based on confidence tiers
-                scale_size = position.get_scale_in_size()
-                
-                # Check if we have cash for scale-in
-                # Calculate cost based on side
-                if position.side == "yes":
-                    cost = mid_price * scale_size
-                else:
-                    cost = (1 - mid_price) * scale_size
-                    
-                if cost <= self.cash:
-                    # Execute scale-in: place additional order on Kalshi
-                    # Use same direction as original position
-                    scale_order = self.api.place_order(
-                        ticker=ticker,
-                        side=position.side,
-                        price=mid_price,
-                        amount=cost,
-                        action=position.direction  # Same direction as original position
-                    )
-                    if "error" in scale_order:
-                        logger.warning(f"[{self.coin}] Scale-in order failed: {scale_order['error']}")
-                    else:
-                        position.record_scale_in(mid_price, scale_size)
-                        self.cash -= cost
-                        logger.info(f"[{self.coin}] SCALED IN {position_key}: +{scale_size:.1f} contracts @ ${mid_price:.4f}, cost=${cost:.2f}, new_size={position.size:.1f}, CONF={position.confidence}")
-                else:
-                    logger.debug(f"[{self.coin}] Insufficient cash for scale-in: ${self.cash:.2f} < ${cost:.2f}")
 
         return positions_changed
 

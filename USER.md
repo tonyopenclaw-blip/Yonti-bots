@@ -3,7 +3,7 @@
 - **Name:** Tony
 - **What to call them:** Tony (or sir)
 - **Location:** Pittsburgh, PA
-- **Timezone:** EST (UTC-5) — 5:19am for him = 09:19 UTC
+- **Timezone:** EDT (UTC-4) — e.g., 3:12am EDT = 07:12 UTC
 
 ## Context
 

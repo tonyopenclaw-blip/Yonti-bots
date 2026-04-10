@@ -800,9 +800,6 @@ class StrategyTracker:
         # Kelly formula: Kelly % = (W * (R+1) - 1) / R
         kelly_pct = (W * (R + 1) - 1) / R
 
-        # Cap at maximum (never bet more than 50% of balance)
-        kelly_pct = min(kelly_pct, KELLY_MAX_CAP)
-
         # If Kelly is negative or zero (e.g. W=0.5, R=1.0 → edge case no edge),
         # fall back to FIXED_KELLY_PCT instead of betting nothing
         if kelly_pct <= 0:
@@ -866,6 +863,7 @@ class Position:
     scaled_in: bool = False               # True if we've already scaled in (once per position)
     extreme_low_scaled: bool = False    # True if we've already scaled in at low extreme zone (<=$0.40)
     extreme_high_scaled: bool = False   # True if we've already scaled in at high extreme zone ($0.60-$0.80)
+    extreme_very_high_scaled: bool = False  # True if we've scaled in at very high zone ($0.70+ for >95% entry)
     is_candle_duration: bool = False    # True if this is a candle-duration position (no SL/TP)
 
     def __post_init__(self):
@@ -1032,11 +1030,10 @@ class Position:
         scale_num = self.scale_in_count + 1  # 1-based: next scale-in number
 
         if entry_conf > 95:
-            # >95%: scale 1 at $0.60, scale 2 at $0.70
+            # >95%: scale 1 at $0.60, skip scale 2 (max 3 contracts, enter with 2)
             if scale_num == 1 and current_price >= 0.60:
                 return True
-            elif scale_num == 2 and current_price >= 0.70:
-                return True
+            # scale_num == 2: skip (already at max 3 contracts after first scale)
         elif entry_conf >= 90:
             # 90-95%: scale 1 at $0.70, skip scale 2
             if scale_num == 1 and current_price >= 0.70:
@@ -1111,9 +1108,7 @@ class Position:
             # >95%: scale in at $0.60 (high), then $0.70 (very_high)
             if current_price >= 0.60 and not self.extreme_high_scaled:
                 return True, "high"
-            elif current_price >= 0.70 and self.extreme_high_scaled and not getattr(self, 'extreme_very_high_scaled', False):
-                # Second high scale-in at $0.70
-                self.extreme_very_high_scaled = False  # init guard
+            elif current_price >= 0.70 and self.extreme_high_scaled and not self.extreme_very_high_scaled:
                 return True, "very_high"
         elif entry_conf >= 90:
             # 90-95%: scale in at $0.70 (high)
@@ -1219,20 +1214,13 @@ class StrategyEngine:
         # Get Kelly % from historical performance
         kelly_pct = self.tracker.get_kelly_pct(strategy)
 
-        # Apply confidence multiplier (Nerd v2)
-        if confidence >= 80:
-            conf_mult = 1.0   # Full Kelly
-        elif confidence >= 60:
-            conf_mult = 0.75  # Reduce by 25%
-        elif confidence >= 40:
-            conf_mult = 0.50  # Reduce by 50%
+        # Tiered Kelly (Tony's update)
+        # Cash < $100 → 50% Kelly (half Kelly)
+        # Cash >= $100 → Full Kelly
+        if self.cash < 100:
+            effective_pct = kelly_pct * 0.5
         else:
-            conf_mult = 0.0   # Skip
-
-        effective_pct = kelly_pct * conf_mult
-
-        # Cap at KELLY_MAX_CAP (never more than 20% of balance on one trade)
-        effective_pct = min(effective_pct, KELLY_MAX_CAP)
+            effective_pct = kelly_pct
 
         # Convert to dollar amount to risk
         dollar_amount = self.cash * effective_pct
@@ -1255,9 +1243,20 @@ class StrategyEngine:
             max_contracts = MAX_BET / entry_price
             contracts = min(contracts, max_contracts)
 
-        # Cap at MAX_CONTRACTS (candle-duration: max 2 contracts per trade)
-        MAX_CONTRACTS = 2
-        contracts = min(contracts, MAX_CONTRACTS)
+        # Confidence-based contract sizing (Tony's new sizing: overrides Kelly cap)
+        # >95% (CONF=96-100) → 2 contracts (save 1 for scale)
+        # 90-95% (CONF=90-95) → 2 contracts (no scale, close to certainty)
+        # 85-90% (CONF=85-89) → 1 contract (scale +1 at price tier)
+        if confidence > 95:
+            conf_contracts = 2
+        elif confidence >= 90:  # 90-95%
+            conf_contracts = 2
+        elif confidence >= 85:  # 85-90%
+            conf_contracts = 1
+        else:
+            conf_contracts = 1  # fallback minimum
+
+        contracts = min(contracts, conf_contracts)
 
         # Minimum 1 contract if there's a valid signal (Tony fix: was returning 0 and skipping trade)
         contracts = max(1, contracts)

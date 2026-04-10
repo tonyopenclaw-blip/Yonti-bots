@@ -64,7 +64,9 @@ class KalshiAPI:
             self.auth = None
     
     def _get_auth_headers(self, method: str, path: str) -> Dict[str, str]:
-        """Generate auth headers using KalshiAuth."""
+        """Generate auth headers using a freshly-signed JWT every call."""
+        # Always refresh auth first - JWT tokens expire quickly
+        self._refresh_auth()
         if not self.auth:
             return {}
         # KalshiAuth.get_auth_headers handles /trade-api/v2 prefix internally

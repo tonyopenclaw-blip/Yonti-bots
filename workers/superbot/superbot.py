@@ -28,6 +28,10 @@ from kalshi_api import KalshiAPI, Market
 from strategies import StrategyEngine, Strategy, Position, TradeSignal
 from report import ReportGenerator, Trade
 
+# Candle watcher signals file
+CANDLE_SIGNALS_FILE = Path(__file__).parent / "candle_signals.json"
+CANDLE_SIGNAL_MAX_AGE_SEC = 300  # 5 minutes
+
 # =============================================================================
 # LOGGING SETUP
 # =============================================================================
@@ -565,7 +569,8 @@ class CoinTrader:
             unrealized_pnl=0.0,
             avg_price=signal.price,
             use_time_scaling=getattr(signal, 'use_time_scaling', False),
-            confidence=signal.confidence,  # Store entry confidence for scale-in decisions
+            confidence=signal.confidence,  # Current confidence (for trailing stop)
+            entry_confidence=signal.confidence,  # Entry confidence for scale-in decisions
             is_candle_duration=getattr(signal, 'is_candle_duration', False)  # Candle-duration positions have no SL/TP
         )
         # Use ticker_side as key to allow both YES and NO positions simultaneously
@@ -831,6 +836,80 @@ class Superbot:
                 return coin
         return None
 
+    def _read_candle_signal(self) -> Optional[Dict]:
+        """Read a fresh candle signal from candle_watcher output file."""
+        if not CANDLE_SIGNALS_FILE.exists():
+            return None
+        try:
+            with open(CANDLE_SIGNALS_FILE, "r") as f:
+                signal_data = json.load(f)
+            # Check if signal is fresh (within 5 min)
+            ts_str = signal_data.get("timestamp", "")
+            if ts_str:
+                try:
+                    signal_time = datetime.fromisoformat(ts_str.replace("Z", ""))
+                    age = datetime.utcnow() - signal_time.replace(tzinfo=None)
+                    if age.total_seconds() > CANDLE_SIGNAL_MAX_AGE_SEC:
+                        logger.debug(f"Candle signal stale ({age.total_seconds():.0f}s old), ignoring")
+                        return None
+                except Exception:
+                    pass
+            return signal_data
+        except Exception as e:
+            logger.debug(f"Error reading candle signal file: {e}")
+            return None
+
+    def _clear_candle_signal(self):
+        """Clear the candle signal file after execution."""
+        try:
+            if CANDLE_SIGNALS_FILE.exists():
+                CANDLE_SIGNALS_FILE.unlink()
+                logger.info("Candle signal file cleared")
+        except Exception as e:
+            logger.warning(f"Failed to clear candle signal file: {e}")
+
+    def _execute_candle_signal(self, signal_data: Dict, markets: List[Market], coin: str, trader: 'CoinTrader') -> bool:
+        """Execute a candle signal: find best market and place order."""
+        side = signal_data.get("side", "YES").lower()  # 'yes' or 'no'
+        entry_max = signal_data.get("entry_price_max", 0.85)
+
+        # Find a suitable market
+        for market in markets:
+            try:
+                time_left = market.time_to_expiry_sec()
+            except (AttributeError, TypeError):
+                time_left = 900
+            if time_left < 60:
+                continue
+
+            mid = (market.yes_bid + market.yes_ask) / 2
+            if mid <= 0 or mid > entry_max:
+                continue
+
+            # Build TradeSignal for candle strategy
+            from strategies import TradeSignal
+            ts_signal = TradeSignal(
+                strategy=Strategy.MOMENTUM,
+                ticker=market.ticker,
+                side=side,
+                direction="buy",
+                price=mid,
+                size=1,  # Will be sized by _open_position
+                reason=f"CANDLE: {signal_data.get('coin')} {side} conf={signal_data.get('conf')}",
+                is_candle_duration=True,  # No SL/TP - hold to expiry
+                confidence=signal_data.get("conf", 50),
+            )
+
+            per_coin_cash = self.cash / len(COINS)
+            success, cost = trader._open_position(ts_signal, per_coin_cash)
+            if success:
+                self.cash -= cost
+                self.daily_trades += 1
+                logger.info(f"🚀 [{coin}] CANDLE TRADE: {side} {market.ticker} @ ${mid:.4f} (conf={signal_data.get('conf')})")
+                self._clear_candle_signal()
+                return True
+        return False
+
     def _check_and_trade_series(self, series_ticker: str) -> bool:
         """
         Check a single series for tradeable markets and execute trades if found.
@@ -878,6 +957,15 @@ class Superbot:
 
         # Check existing positions for exit conditions
         trader._check_existing_positions(market_dict)
+
+        # === CANDLE SIGNALS: Check for fresh candle watcher signal ===
+        if not has_positions:  # Only trade candle signals if no existing position
+            candle_sig = self._read_candle_signal()
+            if candle_sig and candle_sig.get("coin") == coin:
+                logger.info(f"[{coin}] Found candle signal: {candle_sig}")
+                executed = self._execute_candle_signal(candle_sig, markets, coin, trader)
+                if executed:
+                    return True  # Candle signal executed, skip regular scanning
 
         # === NERD v2: MAX_POSITIONS = 3 check ===
         total_positions = sum(len(t.positions) for t in self.coin_traders.values())

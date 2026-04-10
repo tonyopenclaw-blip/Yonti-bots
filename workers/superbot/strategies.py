@@ -483,48 +483,73 @@ class MomentumTracker:
 
 class CandleDurationTracker:
     """
-    Tracks candle time-above-open percentage for Nerd's signal.
+    Tracks candle time-above-prev-close percentage for Nerd's signal (FIXED).
     
-    Nerd's Analysis: if price is above the previous candle's close for >80% 
-    of the current 15-min candle → 90-99% chance of ending YES.
+    Nerd's Analysis: if price is above the previous candle's close for >90% 
+    of the current 15-min candle → 98.8% (ETH) or 98.7% (SOL) win rate.
     
-    Implementation:
+    FIXED Implementation (2026-04-10):
     1. Track the price at the START of each candle (open price)
     2. Continuously measure what % of the candle time the current price is ABOVE that candle's open
-    3. When a new candle starts (market expires and new one opens), calculate the completed candle's stats
-    4. For in-progress candle: measure % above/below open continuously
+    3. When a new candle STARTS (market ID changes), analyze the COMPLETED candle
+    4. Only fire signal at the START of a new candle (within 2 min), based on COMPLETED candle's stats
+    5. Entry price must be <= $0.85
     
-    Entry:
-    - BUY YES when >80% above candle open
-    - BUY NO when <40% above candle open (strong bearish)
+    Entry (only at candle CLOSE or within 2 min of new candle):
+    - BUY YES when >90% above previous close for the full candle AND entry price <= $0.85
+    - BUY NO when <40% above previous close
     
     Exit:
-    - TP at $0.70, SL at $0.30
+    - Hold to expiry - NO stop-loss, NO take-profit for candle-duration positions
+    - The 3-min rule ($0.97/$0.01) still applies ONLY for non-candle-duration positions
     
-    Confidence tiers:
-    - >80% above open: CONF=95 (strong momentum)
-    - 70-80%: CONF=80
-    - 60-70%: CONF=70
-    - <40%: CONF=80 (strong bearish)
+    Coin filter:
+    - Only trade ETH and SOL for candle-duration (98.8% and 98.7% win rates)
+    - All other coins: use regular momentum strategy with lower confidence
+    
+    Scale-ins:
+    - Only scale in on candle-duration positions at EXTREME zones (≤$0.30 or ≥$0.70) when winning
+    - Never scale in at midpoint
     """
 
-    TP_PRICE = 0.70  # Take profit at $0.70+
-    SL_PRICE = 0.30  # Stop loss at $0.30
+    # Coin filter: only ETH and SOL for candle-duration
+    CANDLE_DURATION_COINS = {'ETH', 'SOL'}
+    
+    # Entry price must be <= $0.85
+    MAX_ENTRY_PRICE = 0.85
+    
+    # Thresholds for completed candle analysis
+    BULLISH_THRESHOLD = 0.90  # >90% above previous close = BUY YES
+    BEARISH_THRESHOLD = 0.40  # <40% above previous close = BUY NO
 
     def __init__(self):
         # Per-ticker state: ticker -> {
         #   'candle_open_price': float,
         #   'candle_start_time': float,
+        #   'prev_close': float,  # Previous candle's close price
         #   'samples_above': list of (timestamp, price),
         #   'samples_below': list of (timestamp, price),
         #   'signal_fired': bool
         # }
         self._candles: Dict[str, Dict] = {}
         self._prev_ticker: Optional[str] = None
+        # Store completed candle analysis: ticker -> {above_pct, side, confidence}
+        self._completed_analysis: Dict[str, Dict] = {}
+        # Track if we've fired a pending signal for a completed candle
+        self._pending_signal_fired: Dict[str, bool] = {}
 
-    def update(self, ticker: str, current_price: float) -> Optional['TradeSignal']:
+    def update(self, ticker: str, current_price: float, coin: str = None) -> Optional['TradeSignal']:
         """
         Update candle tracking and check for signals.
+        
+        Signals only fire at the START of a new candle (when market ID changes),
+        based on the COMPLETED candle's stats.
+        
+        Args:
+            ticker: Current market ticker
+            current_price: Current market price
+            coin: Coin name (ETH, SOL, etc.) - required for coin filtering
+            
         Returns TradeSignal if crossing just happened, else None.
         """
         current_time = time.time()
@@ -532,13 +557,14 @@ class CandleDurationTracker:
         # Detect new candle (new ticker = new market = new candle started)
         if self._prev_ticker is not None and ticker != self._prev_ticker:
             # New candle started - analyze the COMPLETED candle
-            if self._prev_ticker in self._candles:
-                completed_signal = self._analyze_completed_candle(self._prev_ticker)
-                if completed_signal:
-                    logger.info(f"CANDLE_DURATION: Completed candle {self._prev_ticker} -> {completed_signal.side.upper()} signal (from completed candle analysis)")
-            # Reset for new candle
+            completed_ticker = self._prev_ticker
+            if completed_ticker in self._candles:
+                self._analyze_completed_candle(completed_ticker)
+            # Initialize new candle tracking
             if ticker in self._candles:
                 del self._candles[ticker]
+            # Reset pending signal fired for new candle
+            self._pending_signal_fired[ticker] = False
         
         self._prev_ticker = ticker
         
@@ -547,12 +573,49 @@ class CandleDurationTracker:
             self._candles[ticker] = {
                 'candle_open_price': current_price,
                 'candle_start_time': current_time,
+                'prev_close': current_price,  # Will be updated as we track
                 'samples_above': [],
                 'samples_below': [],
                 'signal_fired': False,
-                'last_above_pct': 0.0
             }
             logger.debug(f"CANDLE_DURATION: New candle started {ticker} @ ${current_price:.4f}")
+            
+            # Check if we have a pending signal from the completed candle
+            if ticker in self._completed_analysis and not self._pending_signal_fired.get(ticker, False):
+                analysis = self._completed_analysis[ticker]
+                # Only fire if entry price is <= $0.85
+                if current_price <= self.MAX_ENTRY_PRICE:
+                    # Check coin filter - only ETH and SOL for candle-duration
+                    if coin and coin.upper() in self.CANDLE_DURATION_COINS:
+                        self._pending_signal_fired[ticker] = True
+                        logger.info(
+                            f"CANDLE_DURATION: {ticker} @ ${current_price:.4f} | "
+                            f"Completed candle above_pct={analysis['above_pct']:.1%} -> "
+                            f"BUY {analysis['side'].upper()}, CONF={analysis['confidence']} "
+                            f"(from completed candle analysis)"
+                        )
+                        return TradeSignal(
+                            strategy=Strategy.MOMENTUM,
+                            ticker=ticker,
+                            side=analysis['side'],
+                            direction='buy',
+                            price=current_price,
+                            size=1.0,
+                            reason=f"CANDLE_DURATION: completed candle was above prev_close {analysis['above_pct']:.1%}, {analysis['side']}",
+                            take_profit=None,  # NO TP for candle-duration
+                            stop_loss=None,    # NO SL for candle-duration
+                            confidence=analysis['confidence'],
+                            trailing_stop_pct=0.40,
+                            trailing_stop_trigger_pct=0.30,
+                            trailing_stop_buffer=0.40,
+                            max_hold_minutes=15,
+                            use_time_scaling=False,
+                            is_candle_duration=True,  # Flag for superbot
+                        )
+                    else:
+                        logger.debug(f"CANDLE_DURATION: Skipping {coin} - not ETH/SOL (candle-duration requires ETH/SOL)")
+                else:
+                    logger.info(f"CANDLE_DURATION: Entry price ${current_price:.4f} > $0.85 - not firing candle-duration signal")
             return None
         
         candle = self._candles[ticker]
@@ -565,97 +628,23 @@ class CandleDurationTracker:
         else:
             candle['samples_below'].append((current_time, current_price))
         
-        # Already fired signal for this candle
-        if candle['signal_fired']:
-            return None
-        
-        # Calculate current % above candle open
-        elapsed = current_time - candle_start
-        if elapsed <= 0:
-            return None
-        
-        # Time above = time of last sample above - candle_start (simplified)
-        # Better: count samples and weight by time
-        above_count = len(candle['samples_above'])
-        below_count = len(candle['samples_below'])
-        total_samples = above_count + below_count
-        
-        if total_samples < 2:
-            return None
-        
-        # Calculate time-weighted percentage above open
-        # Use last sample time as proxy for "current" position
-        above_pct = above_count / total_samples
-        candle['last_above_pct'] = above_pct
-        
-        # Determine signal based on thresholds
-        # >80% above open: BUY YES (strong bullish momentum)
-        # <40% above open: BUY NO (strong bearish)
-        
-        if above_pct > 0.80:
-            # Strong bullish - BUY YES
-            confidence = self._get_confidence(above_pct)
-            logger.info(
-                f"CANDLE_DURATION: {ticker} @ ${current_price:.4f} | "
-                f"Above open {above_pct:.1%} (>80% threshold) -> BUY YES, CONF={confidence}"
-            )
-            candle['signal_fired'] = True
-            
-            return TradeSignal(
-                strategy=Strategy.MOMENTUM,  # Use MOMENTUM strategy
-                ticker=ticker,
-                side='yes',
-                direction='buy',
-                price=current_price,
-                size=1.0,  # Placeholder - StrategyEngine will calculate Kelly size
-                reason=f"CANDLE_DURATION: price above candle open {above_pct:.1%} (>80%), bullish momentum",
-                take_profit=self.TP_PRICE,
-                stop_loss=self.SL_PRICE,
-                confidence=confidence,
-                trailing_stop_pct=0.40,
-                trailing_stop_trigger_pct=0.30,
-                trailing_stop_buffer=0.40,
-                max_hold_minutes=15,
-                use_time_scaling=False,
-            )
-        
-        elif above_pct < 0.40:
-            # Strong bearish - BUY NO
-            confidence = 80  # Bearish confidence
-            logger.info(
-                f"CANDLE_DURATION: {ticker} @ ${current_price:.4f} | "
-                f"Above open {above_pct:.1%} (<40% threshold) -> BUY NO, CONF={confidence}"
-            )
-            candle['signal_fired'] = True
-            
-            return TradeSignal(
-                strategy=Strategy.MOMENTUM,  # Use MOMENTUM strategy
-                ticker=ticker,
-                side='no',
-                direction='buy',
-                price=current_price,
-                size=1.0,  # Placeholder - StrategyEngine will calculate Kelly size
-                reason=f"CANDLE_DURATION: price above candle open {above_pct:.1%} (<40%), bearish",
-                take_profit=self.TP_PRICE,
-                stop_loss=self.SL_PRICE,
-                confidence=confidence,
-                trailing_stop_pct=0.40,
-                trailing_stop_trigger_pct=0.30,
-                trailing_stop_buffer=0.40,
-                max_hold_minutes=15,
-                use_time_scaling=False,
-            )
+        # Update prev_close to be the last sample price (close of completed candle)
+        all_samples = candle['samples_above'] + candle['samples_below']
+        if all_samples:
+            candle['prev_close'] = all_samples[-1][1]
         
         return None
 
-    def _analyze_completed_candle(self, ticker: str) -> Optional['TradeSignal']:
+    def _analyze_completed_candle(self, ticker: str) -> None:
         """
         Analyze a completed candle when a new one starts.
-        This is Nerd's signal: if price was above candle open for >80% of the candle,
-        there's a 90-99% chance of ending YES.
+        Store the analysis for when the new candle starts (within 2 min).
+        
+        Nerd's signal: if price was above candle open for >90% of the candle,
+        there's a 98.8% (ETH) or 98.7% (SOL) chance of ending YES.
         """
         if ticker not in self._candles:
-            return None
+            return
         
         candle = self._candles[ticker]
         above_count = len(candle['samples_above'])
@@ -663,72 +652,53 @@ class CandleDurationTracker:
         total_samples = above_count + below_count
         
         if total_samples < 2:
-            return None
+            logger.debug(f"CANDLE_DURATION: {ticker} - insufficient samples ({total_samples}) for analysis")
+            return
         
         above_pct = above_count / total_samples
-        candle_open = candle['candle_open_price']
         
-        # Use last sample price as the "exit" price for the completed candle
-        all_samples = candle['samples_above'] + candle['samples_below']
-        all_samples.sort(key=lambda x: x[0])
-        last_price = all_samples[-1][1] if all_samples else candle_open
-        
-        # Fire signal based on completed candle analysis
-        if above_pct > 0.80:
+        # Determine signal based on thresholds
+        if above_pct > self.BULLISH_THRESHOLD:
             confidence = self._get_confidence(above_pct)
+            self._completed_analysis[ticker] = {
+                'above_pct': above_pct,
+                'side': 'yes',
+                'confidence': confidence
+            }
             logger.info(
                 f"CANDLE_DURATION COMPLETED: {ticker} | "
-                f"Was above open {above_pct:.1%} (>80%) -> BUY YES, CONF={confidence}"
+                f"Was above open {above_pct:.1%} (>90% threshold) -> PENDING BUY YES, CONF={confidence}"
             )
-            return TradeSignal(
-                strategy=Strategy.MOMENTUM,
-                ticker=ticker,
-                side='yes',
-                direction='buy',
-                price=last_price,
-                size=1.0,
-                reason=f"CANDLE_DURATION COMPLETED: was above candle open {above_pct:.1%}",
-                take_profit=self.TP_PRICE,
-                stop_loss=self.SL_PRICE,
-                confidence=confidence,
-                trailing_stop_pct=0.40,
-                trailing_stop_trigger_pct=0.30,
-                trailing_stop_buffer=0.40,
-                max_hold_minutes=15,
-                use_time_scaling=False,
-            )
-        elif above_pct < 0.40:
+        elif above_pct < self.BEARISH_THRESHOLD:
+            self._completed_analysis[ticker] = {
+                'above_pct': above_pct,
+                'side': 'no',
+                'confidence': 80  # Bearish confidence
+            }
             logger.info(
                 f"CANDLE_DURATION COMPLETED: {ticker} | "
-                f"Was above open {above_pct:.1%} (<40%) -> BUY NO, CONF=80"
+                f"Was above open {above_pct:.1%} (<40% threshold) -> PENDING BUY NO, CONF=80"
             )
-            return TradeSignal(
-                strategy=Strategy.MOMENTUM,
-                ticker=ticker,
-                side='no',
-                direction='buy',
-                price=last_price,
-                size=1.0,
-                reason=f"CANDLE_DURATION COMPLETED: was above candle open {above_pct:.1%} (<40%), bearish",
-                take_profit=self.TP_PRICE,
-                stop_loss=self.SL_PRICE,
-                confidence=80,
-                trailing_stop_pct=0.40,
-                trailing_stop_trigger_pct=0.30,
-                trailing_stop_buffer=0.40,
-                max_hold_minutes=15,
-                use_time_scaling=False,
+        else:
+            logger.debug(
+                f"CANDLE_DURATION COMPLETED: {ticker} | "
+                f"Above open {above_pct:.1%} - no signal (threshold not met)"
             )
-        
-        return None
 
     def _get_confidence(self, above_pct: float) -> int:
-        """Get confidence based on percentage above candle open."""
-        if above_pct > 0.80:
+        """Get confidence based on percentage above candle open.
+        
+        Nerd's analysis shows:
+        - ETH: 98.8% win rate when >90% above previous close
+        - SOL: 98.7% win rate when >90% above previous close
+        """
+        if above_pct > 0.95:
+            return 98  # Near-perfect - use ETH/SOL win rate
+        elif above_pct > 0.90:
             return 95  # Strong momentum
-        elif above_pct > 0.70:
+        elif above_pct > 0.80:
             return 80
-        elif above_pct > 0.60:
+        elif above_pct > 0.70:
             return 70
         else:
             return 50
@@ -749,6 +719,10 @@ class CandleDurationTracker:
         """Reset candle state for a ticker."""
         if ticker in self._candles:
             del self._candles[ticker]
+        if ticker in self._completed_analysis:
+            del self._completed_analysis[ticker]
+        if ticker in self._pending_signal_fired:
+            del self._pending_signal_fired[ticker]
 
 
 class StrategyTracker:
@@ -859,6 +833,7 @@ class TradeSignal:
     trailing_stop_buffer: float = 0.40    # 40% buffer (alias for clarity)
     max_hold_minutes: int = 10           # Dynamic based on entry zone
     use_time_scaling: bool = False        # If True, use 80%->20% time-scaled stop
+    is_candle_duration: bool = False      # True if this is a candle-duration signal (no SL/TP)
 
 
 @dataclass
@@ -890,6 +865,7 @@ class Position:
     scaled_in: bool = False               # True if we've already scaled in (once per position)
     extreme_low_scaled: bool = False    # True if we've already scaled in at low extreme zone (<=$0.30)
     extreme_high_scaled: bool = False   # True if we've already scaled in at high extreme zone ($0.70-$0.85)
+    is_candle_duration: bool = False    # True if this is a candle-duration position (no SL/TP)
 
     def __post_init__(self):
         """Initialize computed fields after dataclass init."""
@@ -1477,10 +1453,13 @@ class StrategyEngine:
             momentum_signal.scale_in_size = int(scale_in_size)
             return [momentum_signal]
 
-        # === CANDLE DURATION: Nerd's time-above-open signal ===
-        # Fire when price has been above candle open for >80% of the candle time
-        # Fire when price has been below candle open for <40% of the candle time
-        candle_signal = self.candle_duration.update(market.ticker, mid_price)
+        # === CANDLE DURATION: Nerd's time-above-open signal (FIXED 2026-04-10) ===
+        # FIRE ONLY at candle close (when new candle starts), based on COMPLETED candle's stats
+        # BUY YES when >90% above previous close for full candle AND entry price <= $0.85
+        # BUY NO when <40% above previous close
+        # ONLY for ETH and SOL (98.8% and 98.7% win rates)
+        # NO SL/TP for candle-duration positions (hold to expiry)
+        candle_signal = self.candle_duration.update(market.ticker, mid_price, coin)
         if candle_signal:
             # Calculate Kelly size based on probability and confidence
             prob = mid_price if candle_signal.side == 'yes' else (1 - mid_price)
@@ -1491,25 +1470,16 @@ class StrategyEngine:
             # Max 3 contracts per side per coin
             size = min(size, MomentumTracker.MAX_CONTRACTS_PER_SIDE)
             
-            # Scale-in size based on confidence tiers (for winning trades only)
-            if candle_signal.confidence >= 90:
-                scale_in_size = int(size * 0.5) + 2
-            elif candle_signal.confidence >= 80:
-                scale_in_size = 2
-            elif candle_signal.confidence >= 70:
-                scale_in_size = 1
-            else:
-                scale_in_size = 0
-            
-            scale_in_size = min(scale_in_size, MomentumTracker.MAX_CONTRACTS_PER_SIDE - int(size))
+            # NO scale-ins for candle-duration (extreme zone only handled in superbot)
+            scale_in_size = 0
             
             above_pct = self.candle_duration.get_above_pct(market.ticker)
             logger.info(
-                f"CANDLE_DURATION SIGNAL: {market.ticker} | "
+                f"CANDLE_DURATION SIGNAL: {market.ticker} ({coin}) | "
                 f"Side: {candle_signal.side} @ ${mid_price:.4f} | "
                 f"Above open: {above_pct:.1%} | "
                 f"contracts={int(size):d} | scale_in={int(scale_in_size):d} | "
-                f"CONF={candle_signal.confidence} | TP=${CandleDurationTracker.TP_PRICE:.2f} | SL=${CandleDurationTracker.SL_PRICE:.2f}"
+                f"CONF={candle_signal.confidence} | NO SL/TP (hold to expiry)"
             )
             
             candle_signal.size = int(size)

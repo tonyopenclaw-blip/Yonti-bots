@@ -299,7 +299,13 @@ class CoinTrader:
                 positions_changed = True
                 continue
 
-            # Check TP/SL for DRIFT strategies (now includes trailing stop logic)
+            # CANDLE-DURATION POSITIONS: No SL/TP - hold to expiry only
+            # Skip trailing stop and 3-min rule for candle-duration positions
+            if position.is_candle_duration:
+                # Only exit on actual expiry or settlement
+                continue
+
+            # Check TP/SL for non-candle-duration positions (includes trailing stop logic)
             should_exit, reason = self.strategy_engine.check_position_exit(position, mid_price, time_left)
             if should_exit:
                 self._close_position(ticker, reason, mid_price, side=side)
@@ -308,6 +314,7 @@ class CoinTrader:
 
             # === LAST 3 MINUTE RULES: Lock in profits or cut losses at extremes ===
             # If we're in the last 3 minutes and price is at extreme levels, exit immediately
+            # ONLY for non-candle-duration positions (candle-duration holds to expiry)
             if time_left <= 180:  # 3 minutes or less
                 if mid_price >= 0.97:
                     self._close_position(ticker, "last3_tp_97", mid_price, side=side)
@@ -358,7 +365,8 @@ class CoinTrader:
             # 2. Confidence >= 70% at current timeframe
             # 3. Have not already scaled in (scaled_in flag)
             # 4. scale_in_count < max_scale_ins
-            if position.should_scale_in(mid_price):
+            # NOTE: CANDLE-DURATION positions skip this - only extreme zone scale-ins allowed
+            if not position.is_candle_duration and position.should_scale_in(mid_price):
                 # Get scale-in size based on confidence tiers
                 scale_size = position.get_scale_in_size()
                 
@@ -563,7 +571,8 @@ class CoinTrader:
             unrealized_pnl=0.0,
             avg_price=signal.price,
             use_time_scaling=getattr(signal, 'use_time_scaling', False),
-            confidence=signal.confidence  # Store entry confidence for scale-in decisions
+            confidence=signal.confidence,  # Store entry confidence for scale-in decisions
+            is_candle_duration=getattr(signal, 'is_candle_duration', False)  # Candle-duration positions have no SL/TP
         )
         # Use ticker_side as key to allow both YES and NO positions simultaneously
         self.positions[position_key] = position

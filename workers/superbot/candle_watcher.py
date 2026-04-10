@@ -20,8 +20,15 @@ import requests
 # CONFIG
 # =============================================================================
 BASE_DIR = Path(__file__).parent
-SIGNALS_FILE = BASE_DIR / "candle_signals.json"
+SIGNALS_DIR = BASE_DIR / "candle_signals"
 LOG_FILE = BASE_DIR / "candle_watcher.log"
+
+# Ensure candle_signals directory exists
+SIGNALS_DIR.mkdir(exist_ok=True)
+
+def get_signal_file(coin: str) -> Path:
+    """Return the per-coin signal file path."""
+    return SIGNALS_DIR / f"{coin}.json"
 
 COINBASE_API = "https://api.exchange.coinbase.com"
 COINBASE_PRODUCTS = {
@@ -37,13 +44,9 @@ COINBASE_PRODUCTS = {
 
 DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1486066262122430684/mLKWVlGJRyADWEnpDgx3n4QcI1B-JhAnDLyBHKwsK-BSmeo5lal5MYrrY_QiuOBqiNLY"
 
-# Only apply tier-2 logic to these coins (BTC/ETH/SOL only per Tony)
-TIER2_COINS = {"BTC", "ETH", "SOL"}
-
 # Signal thresholds
-BUY_YES_THRESHOLD = 0.85  # >85% of candle time above prev close → Tier 1 BUY YES (conf=95)
-BUY_YES_TIER2 = 0.70       # 70-85% → Tier 2 BUY YES (conf=72)
-BUY_NO_THRESHOLD = 0.30   # <30% → BUY NO (tightened from 40%)
+BUY_YES_THRESHOLD = 0.90  # >90% of candle time above prev close → BUY YES (conf=95)
+BUY_NO_THRESHOLD = 0.30   # <30% → BUY NO (conf=99)
 
 # =============================================================================
 # LOGGING
@@ -65,12 +68,21 @@ logger = setup_logging()
 
 
 # =============================================================================
-# DISCORD NOTIFICATION
+# CANDLE TRACKER
 # =============================================================================
-def notify_discord(coin: str, side: str, conf: int, tier: int, entry_max: float):
+def notify_discord(coin: str, side: str, conf: int, entry_max: float):
     """Send signal notification to Discord."""
-    tier_emoji = "🔶" if tier == 2 else "🔔"
-    msg = f"{tier_emoji} CANDLE SIGNAL: {coin} {side} | TIER={tier} | CONF={conf} | Entry ≤${entry_max:.2f}"
+    msg = f"🔔 CANDLE SIGNAL: {coin} {side} | CONF={conf} | Entry ≤${entry_max:.2f}"
+    _post_discord(msg)
+
+
+def notify_discord_status(msg: str):
+    """Send a status update to Discord."""
+    _post_discord(msg)
+
+
+def _post_discord(msg: str):
+    """Post a message to the Discord webhook."""
     try:
         resp = requests.post(
             DISCORD_WEBHOOK,
@@ -78,48 +90,11 @@ def notify_discord(coin: str, side: str, conf: int, tier: int, entry_max: float)
             timeout=10,
         )
         if resp.status_code in (200, 204):
-            logger.info(f"Discord notified: {msg}")
+            logger.info(f"Discord posted: {msg}")
         else:
-            logger.warning(f"Discord notify failed: {resp.status_code} {resp.text}")
+            logger.warning(f"Discord post failed: {resp.status_code} {resp.text}")
     except Exception as e:
-        logger.error(f"Discord notify error: {e}")
-
-
-# =============================================================================
-# BTC TREND CHECKER
-# =============================================================================
-_btc_trend_cache = {"price": None, "ma": None, "timestamp": 0}
-
-
-def is_btc_trending_up() -> bool:
-    """Check if BTC is above its 1-hour moving average on Coinbase. Caches result for 60s."""
-    global _btc_trend_cache
-    now = time.time()
-    if now - _btc_trend_cache["timestamp"] < 60 and _btc_trend_cache["ma"] is not None:
-        return _btc_trend_cache["price"] > _btc_trend_cache["ma"]
-
-    try:
-        granularity = 60  # 1-min candles
-        end = datetime.utcnow()
-        start = end - timedelta(hours=2)
-        url = f"{COINBASE_API}/products/BTC-USD/candles"
-        params = {"start": start.isoformat(), "end": end.isoformat(), "granularity": granularity}
-        resp = requests.get(url, params=params, timeout=5)
-        resp.raise_for_status()
-        candles = resp.json()
-        if not candles or len(candles) < 60:
-            return False
-        # candles are newest-first: [time, low, high, open, close, volume]
-        closes = [c[4] for c in candles]
-        ma_1h = sum(closes[:60]) / 60  # last 60 x 1-min candles ≈ 1 hour
-        current_price = closes[0]
-        trending = current_price > ma_1h
-        _btc_trend_cache = {"price": current_price, "ma": ma_1h, "timestamp": now}
-        logger.debug(f"[BTC] price={current_price:.2f}, MA1h={ma_1h:.2f}, trending_up={trending}")
-        return trending
-    except Exception as e:
-        logger.debug(f"[BTC] MA check error: {e}")
-        return False
+        logger.error(f"Discord post error: {e}")
 
 
 # =============================================================================
@@ -234,55 +209,21 @@ class CandleTracker:
             logger.debug(f"[{self.coin}] Candle too short ({elapsed:.0f}s), skipping")
             return None
 
-        # Tier 1: >85% → BUY YES with conf=95
+        # BUY YES: >90% → conf=95
         if ratio > BUY_YES_THRESHOLD:
             conf = 95
-            tier = 1
-            logger.info(f"[{self.coin}] ★ BUY YES SIGNAL (Tier {tier}, conf={conf})")
+            logger.info(f"[{self.coin}] ★ BUY YES SIGNAL (conf={conf})")
             return {
                 "coin": self.coin,
                 "side": "YES",
                 "conf": conf,
-                "tier": tier,
                 "entry_price_max": 0.85,
                 "timestamp": datetime.utcnow().isoformat(),
             }
 
-        # Tier 2: 70-85% → BUY YES with conf=72 (only BTC/ETH/SOL)
-        elif ratio >= BUY_YES_TIER2 and ratio < BUY_YES_THRESHOLD and self.coin.upper() in TIER2_COINS:
-            conf = 72
-            tier = 2
-            logger.info(f"[{self.coin}] ★ BUY YES SIGNAL (Tier {tier}, conf={conf})")
-            return {
-                "coin": self.coin,
-                "side": "YES",
-                "conf": conf,
-                "tier": tier,
-                "entry_price_max": 0.85,
-                "timestamp": datetime.utcnow().isoformat(),
-            }
-
-        # BUY NO: ratio < 30%
+        # BUY NO: <30% → conf=99
         elif ratio < BUY_NO_THRESHOLD:
-            btc_trending_up = is_btc_trending_up()
-
-            # Skip NO entirely if BTC trending up AND ratio > 25%
-            if btc_trending_up and ratio > 0.25:
-                logger.info(f"[{self.coin}] Skipping NO - BTC trending up and ratio={ratio:.2%} > 25%")
-                return None
-
-            # Confidence: 99 only if <20%, cap at 85 for 20-30%
-            if ratio < 0.20:
-                conf = 99
-            elif ratio < 0.30:
-                conf = 85
-            else:
-                conf = int(min(85, 50 + (BUY_NO_THRESHOLD - ratio) * 500))
-
-            # Reduce conf by 20% if BTC trending up
-            if btc_trending_up:
-                conf = int(conf * 0.80)
-
+            conf = 99
             logger.info(f"[{self.coin}] ★ BUY NO SIGNAL (conf={conf})")
             return {
                 "coin": self.coin,
@@ -302,11 +243,13 @@ def main():
     logger.info("=" * 60)
     logger.info("CANDLE WATCHER STARTING - 24/7 Persistent Process")
     logger.info(f"Watching coins: {list(COINBASE_PRODUCTS.keys())}")
-    logger.info(f"Tier2 coins: {list(TIER2_COINS)}")
+    logger.info(f"YES threshold: >{BUY_YES_THRESHOLD:.0%} (conf=95)")
+    logger.info(f"NO threshold: <{BUY_NO_THRESHOLD:.0%} (conf=99)")
     logger.info("=" * 60)
 
     trackers = {coin: CandleTracker(coin) for coin in COINBASE_PRODUCTS}
     poll_interval = 10  # seconds
+    last_status_bucket: Optional[int] = None  # 0, 15, 30, or 45
 
     def shutdown_handler(signum, frame):
         logger.info("Shutdown signal received - exiting gracefully")
@@ -320,18 +263,31 @@ def main():
             try:
                 signal_data = tracker.update()
                 if signal_data:
-                    with open(SIGNALS_FILE, "w") as f:
+                    signal_file = get_signal_file(coin)
+                    with open(signal_file, "w") as f:
                         json.dump(signal_data, f, indent=2)
-                    logger.info(f"Signal saved to {SIGNALS_FILE}: {signal_data}")
+                    logger.info(f"Signal saved to {signal_file}: {signal_data}")
                     notify_discord(
                         signal_data["coin"],
                         signal_data["side"],
                         signal_data["conf"],
-                        signal_data.get("tier", 1),
                         signal_data["entry_price_max"],
                     )
             except Exception as e:
                 logger.error(f"[{coin}] Tracker error: {e}")
+
+        # Check if we hit a new 15-min boundary → post status
+        current_bucket = (datetime.utcnow().minute // 15) * 15
+        if last_status_bucket is not None and current_bucket != last_status_bucket:
+            # A new 15-min mark was crossed — determine which coins had signals this candle
+            coins_with_signal = []
+            for coin, tracker in trackers.items():
+                if tracker.last_price is not None:
+                    # We'll just report "Watching" unless there's a signal to report
+                    pass
+            notify_discord_status("Watching - no signals this candle")
+
+        last_status_bucket = current_bucket
 
         time.sleep(poll_interval)
 

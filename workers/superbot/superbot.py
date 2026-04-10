@@ -28,8 +28,12 @@ from kalshi_api import KalshiAPI, Market
 from strategies import StrategyEngine, Strategy, Position, TradeSignal
 from report import ReportGenerator, Trade
 
-# Candle watcher signals file
-CANDLE_SIGNALS_FILE = Path(__file__).parent / "candle_signals.json"
+# Candle watcher signals file - per-coin signal files to avoid collision
+def get_candle_signal_file(coin: str) -> Path:
+    d = Path(__file__).parent / "candle_signals"
+    d.mkdir(exist_ok=True)
+    return d / f"{coin}.json"
+
 CANDLE_SIGNAL_MAX_AGE_SEC = 600  # 10 minutes (candle watcher fires every ~15 min)
 
 # =============================================================================
@@ -836,12 +840,13 @@ class Superbot:
                 return coin
         return None
 
-    def _read_candle_signal(self) -> Optional[Dict]:
-        """Read a fresh candle signal from candle_watcher output file."""
-        if not CANDLE_SIGNALS_FILE.exists():
+    def _read_candle_signal(self, coin: str) -> Optional[Dict]:
+        """Read a fresh candle signal from candle_watcher output file for the given coin."""
+        signal_file = get_candle_signal_file(coin)
+        if not signal_file.exists():
             return None
         try:
-            with open(CANDLE_SIGNALS_FILE, "r") as f:
+            with open(signal_file, "r") as f:
                 signal_data = json.load(f)
             # Check if signal is fresh (within 5 min)
             ts_str = signal_data.get("timestamp", "")
@@ -863,12 +868,13 @@ class Superbot:
             logger.debug(f"Error reading candle signal file: {e}")
             return None
 
-    def _clear_candle_signal(self):
-        """Clear the candle signal file after execution."""
+    def _clear_candle_signal(self, coin: str):
+        """Clear the candle signal file for the given coin after execution."""
+        signal_file = get_candle_signal_file(coin)
         try:
-            if CANDLE_SIGNALS_FILE.exists():
-                CANDLE_SIGNALS_FILE.unlink()
-                logger.info("Candle signal file cleared")
+            if signal_file.exists():
+                signal_file.unlink()
+                logger.info(f"Candle signal file cleared for {coin}")
         except Exception as e:
             logger.warning(f"Failed to clear candle signal file: {e}")
 
@@ -910,7 +916,7 @@ class Superbot:
                 self.cash -= cost
                 self.daily_trades += 1
                 logger.info(f"🚀 [{coin}] CANDLE TRADE: {side} {market.ticker} @ ${mid:.4f} (conf={signal_data.get('conf')})")
-                self._clear_candle_signal()
+                self._clear_candle_signal(coin)
                 return True
         return False
 
@@ -964,7 +970,7 @@ class Superbot:
 
         # === CANDLE SIGNALS: Check for fresh candle watcher signal ===
         # Check EVERY cycle (not just when no positions) - candle signals can trigger new positions
-        candle_sig = self._read_candle_signal()
+        candle_sig = self._read_candle_signal(coin)
         if candle_sig:
             sig_coin = candle_sig.get("coin")
             age = (datetime.utcnow() - datetime.fromisoformat(candle_sig.get('timestamp','').replace('Z','')).replace(tzinfo=None)).total_seconds()

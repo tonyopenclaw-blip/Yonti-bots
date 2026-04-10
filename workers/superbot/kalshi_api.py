@@ -222,10 +222,11 @@ class KalshiAPI:
                 continue
         return markets
     
-    def place_order(self, ticker: str, side: str, price: float, amount: float) -> Dict[str, Any]:
+    def place_order(self, ticker: str, side: str, price: float, amount: float, action: str = "buy") -> Dict[str, Any]:
         """
         Place an order on Kalshi.
         side: 'yes' or 'no'
+        action: 'buy' or 'sell' (sell = sell existing position, expecting to buy back cheaper)
         price: probability price (e.g., 0.35 for 35 cents)
         amount: dollar amount to risk
         """
@@ -242,7 +243,7 @@ class KalshiAPI:
             
             if side == "yes":
                 order_data = {
-                    "action": "buy",
+                    "action": action,  # 'buy' or 'sell'
                     "side": "yes",
                     "ticker": ticker,
                     "type": "market",
@@ -251,7 +252,7 @@ class KalshiAPI:
                 }
             else:
                 order_data = {
-                    "action": "buy",
+                    "action": action,  # 'buy' or 'sell'
                     "side": "no",
                     "ticker": ticker,
                     "type": "market",

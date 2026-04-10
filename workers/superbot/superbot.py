@@ -239,7 +239,10 @@ class CoinTrader:
     def _check_existing_positions(self, markets: Dict[str, Market]) -> bool:
         """Check open positions for exit conditions. Returns True if positions changed."""
         positions_changed = False
-        for ticker, position in list(self.positions.items()):
+        for position_key, position in list(self.positions.items()):
+            # Extract ticker and side from position_key (format: "ticker_side")
+            ticker = position.ticker
+            side = position.side
             market = markets.get(ticker)
 
             # Market not in current series - check if it expired
@@ -249,7 +252,7 @@ class CoinTrader:
                 if market is None:
                     # Market not found at all - treat as expired at mid price 0.5
                     logger.warning(f"[{self.coin}] Market {ticker} not found - treating as expired")
-                    self._close_position(ticker, "expired", 0.5)
+                    self._close_position(ticker, "expired", 0.5, side=side)
                     positions_changed = True
                     continue
 
@@ -270,7 +273,7 @@ class CoinTrader:
                         # Fallback to mid-price if settlement not available
                         exit_price = (market.yes_bid + market.yes_ask) / 2 if market.yes_bid > 0 else 0.5
                         logger.info(f"[{self.coin}] Market {ticker} expired (status={market.status}) - closing at {exit_price:.4f}")
-                    self._close_position(ticker, "settled", exit_price)
+                    self._close_position(ticker, "settled", exit_price, side=side)
                     positions_changed = True
                     continue
                 else:
@@ -292,21 +295,21 @@ class CoinTrader:
                     exit_price = 1.0 if settlement_result == "yes" else 0.0
                 else:
                     exit_price = mid_price
-                self._close_position(ticker, "settled", exit_price)
+                self._close_position(ticker, "settled", exit_price, side=side)
                 positions_changed = True
                 continue
 
             # Check TP/SL for DRIFT strategies (now includes trailing stop logic)
             should_exit, reason = self.strategy_engine.check_position_exit(position, mid_price, time_left)
             if should_exit:
-                self._close_position(ticker, reason, mid_price)
+                self._close_position(ticker, reason, mid_price, side=side)
                 positions_changed = True
                 continue
 
             # === SCALE-IN LOGIC: Add to winning positions (confidence-based) ===
             # Check if we should scale in (add more to position)
             # Scale-in conditions:
-            # 1. Position is profitable (market moving in our direction)
+            # 1. Position is profitable (market moving in our direction) - Tony's "RIP only, not DIP"
             # 2. Confidence >= 70% at current timeframe
             # 3. Have not already scaled in (scaled_in flag)
             # 4. scale_in_count < max_scale_ins
@@ -323,35 +326,60 @@ class CoinTrader:
                     
                 if cost <= self.cash:
                     # Execute scale-in: place additional order on Kalshi
-                    scale_side = position.side  # Same side as position
+                    # Use same direction as original position
                     scale_order = self.api.place_order(
                         ticker=ticker,
-                        side=scale_side,
+                        side=position.side,
                         price=mid_price,
-                        amount=cost
+                        amount=cost,
+                        action=position.direction  # Same direction as original position
                     )
                     if "error" in scale_order:
                         logger.warning(f"[{self.coin}] Scale-in order failed: {scale_order['error']}")
                     else:
                         position.record_scale_in(mid_price, scale_size)
                         self.cash -= cost
-                        logger.info(f"[{self.coin}] SCALED IN {ticker}: +{scale_size:.1f} contracts @ ${mid_price:.4f}, cost=${cost:.2f}, new_size={position.size:.1f}, CONF={position.confidence}")
+                        logger.info(f"[{self.coin}] SCALED IN {position_key}: +{scale_size:.1f} contracts @ ${mid_price:.4f}, cost=${cost:.2f}, new_size={position.size:.1f}, CONF={position.confidence}")
                 else:
                     logger.debug(f"[{self.coin}] Insufficient cash for scale-in: ${self.cash:.2f} < ${cost:.2f}")
 
         return positions_changed
 
-    def _close_position(self, ticker: str, reason: str, exit_price: float):
-        """Close a position and return PnL."""
-        if ticker not in self.positions:
+    def _close_position(self, ticker: str, reason: str, exit_price: float, side: str = None):
+        """Close a position and return PnL.
+        
+        For two-way market making, we need to know which side to close.
+        If side is not provided, assumes the only position is for this ticker.
+        """
+        # Find the position key
+        if side:
+            position_key = f"{ticker}_{side}"
+        else:
+            # Try to find a position for this ticker (backwards compatibility)
+            position_key = None
+            for key in self.positions:
+                if key.startswith(f"{ticker}_"):
+                    position_key = key
+                    break
+            if position_key is None:
+                return 0.0, None
+
+        if position_key not in self.positions:
             return 0.0, None
 
-        position = self.positions[ticker]
+        position = self.positions[position_key]
+        side = position.side
 
-        # Actually close the position on Kalshi by placing opposite order
-        close_side = "no" if position.side == "yes" else "yes"
-        # Calculate cost to close: for YES use price*size, for NO use (1-price)*size
-        if close_side == "yes":
+        # Close action is opposite of open action
+        # If we BOUGHT to open, we SELL to close
+        # If we SOLD to open, we BUY to close (buy to cover)
+        close_action = 'sell' if position.direction == 'buy' else 'buy'
+        
+        # For settlement on Kalshi, we take the opposite side
+        close_side = "no" if side == "yes" else "yes"
+        
+        # Calculate cost to close
+        if side == "yes":
             close_cost = exit_price * position.size
         else:
             close_cost = (1 - exit_price) * position.size
@@ -360,7 +388,8 @@ class CoinTrader:
             ticker=ticker,
             side=close_side,
             price=exit_price,
-            amount=close_cost
+            amount=close_cost,
+            action=close_action  # 'buy' or 'sell'
         )
         if "error" in close_result:
             logger.error(f"[{self.coin}] REAL CLOSE ORDER FAILED: {close_result['error']}")
@@ -371,12 +400,16 @@ class CoinTrader:
         calc_price = position.avg_price if position.avg_price > 0 else position.entry_price
 
         # Tony's P&L formula: (exit - entry) × contracts (no fee multiplier)
-        pnl = (exit_price - calc_price) * position.size
+        # For SELL positions, PnL is reversed: (entry - exit) * size
+        if position.direction == 'buy':
+            pnl = (exit_price - calc_price) * position.size
+        else:  # sell position
+            pnl = (calc_price - exit_price) * position.size
 
         if pnl >= 0:
-            logger.info(f"[{self.coin}] Closed {ticker}: {reason}, PnL=${pnl:.2f}")
+            logger.info(f"[{self.coin}] Closed {position_key}: {reason}, PnL=${pnl:.2f}")
         else:
-            logger.info(f"[{self.coin}] Closed {ticker}: {reason}, PnL=${pnl:.2f}")
+            logger.info(f"[{self.coin}] Closed {position_key}: {reason}, PnL=${pnl:.2f}")
 
         # Apply net PnL to paper balance
         self.cash += pnl
@@ -408,27 +441,34 @@ class CoinTrader:
         self.cycles_since_close = 0
         logger.info(f"[{self.coin}] Position closed. Cooldown started: must wait {COOLDOWN_CYCLES} cycles before re-entering")
 
-        del self.positions[ticker]
+        del self.positions[position_key]
         return pnl, position.strategy
 
     def _open_position(self, signal: TradeSignal, available_cash: float) -> tuple[bool, float]:
         """
         Open a new position based on trading signal.
+        For two-way market making: track positions by ticker+side (allow both YES and NO simultaneously).
         Returns (success, cost).
         """
         ticker = signal.ticker
+        side = signal.side
+        direction = getattr(signal, 'direction', 'buy')  # 'buy' or 'sell' (Tony's two-way market making)
 
-        # Check if we already have a position in this ticker
-        if ticker in self.positions:
+        # Check if we already have a position on this specific side for this ticker
+        position_key = f"{ticker}_{side}"  # Unique key per side
+        if position_key in self.positions:
             return False, 0.0
 
         # Cancel any existing unfilled orders for this ticker before placing new one
         self._cancel_orders_for_ticker(ticker)
-        if len(self.positions) >= 1:  # One position per coin at a time
+        
+        # Check total position limit (allow up to 2 per side per coin = 4 total)
+        # But for now we allow 2 positions per coin max (1 YES, 1 NO)
+        if len(self.positions) >= 2:
             return False, 0.0
 
         # Calculate cost (signal.size is now contracts, not dollars)
-        if signal.side == "yes":
+        if side == "yes":
             cost = signal.price * signal.size
         else:
             cost = (1 - signal.price) * signal.size
@@ -442,23 +482,27 @@ class CoinTrader:
         first_cross_dir = self.strategy_engine.first_cross.get_direction(ticker) or ""
 
         # Actually place the order on Kalshi FIRST, before recording locally
+        # direction='sell' means we're selling an existing position (to close a short)
+        # direction='buy' means we're buying to open a new position
         order_result = self.api.place_order(
             ticker=ticker,
-            side=signal.side,
+            side=side,
             price=signal.price,
-            amount=cost  # amount = dollar cost
+            amount=cost,  # amount = dollar cost
+            action=direction  # 'buy' or 'sell'
         )
         if "error" in order_result:
             logger.error(f"[{self.coin}] REAL ORDER FAILED: {order_result['error']}")
             return False, 0.0
         else:
             logger.info(f"[{self.coin}] REAL ORDER PLACED: {order_result}")
-            logger.info(f"[{self.coin}] Opened {signal.strategy.value}: {signal.side} {ticker} @ ${signal.price:.4f}, contracts={int(signal.size):d}, cost=${cost:.2f}")
+            logger.info(f"[{self.coin}] Opened {signal.strategy.value}: {direction} {side} {ticker} @ ${signal.price:.4f}, contracts={int(signal.size):d}, cost=${cost:.2f}")
 
         # Only record position locally AFTER API call succeeds
         position = Position(
             ticker=ticker,
-            side=signal.side,
+            side=side,
+            direction=direction,  # Tony's two-way market making: 'buy' or 'sell'
             entry_price=signal.price,
             size=signal.size,
             open_time=time.time(),
@@ -479,7 +523,8 @@ class CoinTrader:
             use_time_scaling=getattr(signal, 'use_time_scaling', False),
             confidence=signal.confidence  # Store entry confidence for scale-in decisions
         )
-        self.positions[ticker] = position
+        # Use ticker_side as key to allow both YES and NO positions simultaneously
+        self.positions[position_key] = position
 
         return True, cost
 
@@ -522,10 +567,11 @@ class CoinTrader:
             if market_time_left < 60:
                 continue
 
-            signal = self.strategy_engine.evaluate_market(market, self.coin)
-            if signal:
+            # evaluate_market returns List[TradeSignal] (can be multiple for mean-rev)
+            trade_signals = self.strategy_engine.evaluate_market(market, self.coin)
+            if trade_signals:
                 # signal.size is already in contracts (capped at MAX_BET/entry_price in calculate_kelly_size)
-                signals.append(signal)
+                signals.extend(trade_signals)
 
         return signals, total_cost
 
@@ -540,9 +586,10 @@ class CoinTrader:
         """Get status string for this coin."""
         pos_count = len(self.positions)
         if pos_count > 0:
-            ticker = list(self.positions.keys())[0]
-            pos = self.positions[ticker]
-            return f"{self.coin}: {pos.strategy.value} {pos.side}@{pos.entry_price:.2f}"
+            pos_parts = []
+            for position_key, pos in self.positions.items():
+                pos_parts.append(f"{pos.side}@{pos.entry_price:.2f}")
+            return f"{self.coin}: {', '.join(pos_parts)}"
         return f"{self.coin}: idle"
 
 
@@ -793,10 +840,6 @@ class Superbot:
             logger.debug(f"MAX POSITIONS ({MAX_POSITIONS}) reached - not scanning for new signals")
             return True
 
-        # If we already have a position in this coin, skip new trades (we'll monitor it)
-        if trader.positions:
-            return True
-
         # Scan for NEW trading signals
         per_coin_cash = self.cash / len(COINS)
 
@@ -811,9 +854,16 @@ class Superbot:
             if market_time_left < 60:
                 continue
 
-            # Evaluate market for trading signal
-            signal = trader.strategy_engine.evaluate_market(market, coin)
-            if signal:
+            # Evaluate market for trading signal (returns List[TradeSignal] for mean-rev)
+            trade_signals = trader.strategy_engine.evaluate_market(market, coin)
+            
+            for signal in trade_signals:
+                # Skip if we already have a position on this side for this ticker
+                # (allow YES and NO positions simultaneously for two-way market making)
+                ticker_key = f"{signal.ticker}_{signal.side}"  # Unique key per side
+                if ticker_key in trader.positions:
+                    continue
+                
                 # Ensure max bet per coin is respected (AND apply sizing reduction if triggered)
                 # signal.size is contracts; max_size is dollars → convert to contracts first
                 max_dollar = MAX_BET
@@ -829,8 +879,8 @@ class Superbot:
                 if success:
                     self.cash -= cost
                     self.daily_trades += 1
-                    logger.info(f"🚀 [{coin}] TRADE EXECUTED: {signal.strategy.value} {signal.side} {signal.ticker} @ ${signal.price:.4f}, contracts={int(signal.size):d} (daily trades: {self.daily_trades}/{MAX_DAILY_TRADES})")
-                    return True
+                    logger.info(f"🚀 [{coin}] TRADE EXECUTED: {signal.strategy.value} {signal.direction} {signal.side} {signal.ticker} @ ${signal.price:.4f}, contracts={int(signal.size):d} (daily trades: {self.daily_trades}/{MAX_DAILY_TRADES})")
+                    # Don't return here - allow more trades from same market (two-way)
 
         return True
 
@@ -992,9 +1042,9 @@ class Superbot:
                     # Build position details for the report (with live prices)
                     positions_details = []
                     for trader in self.coin_traders.values():
-                        for ticker, pos in trader.positions.items():
+                        for position_key, pos in trader.positions.items():
                             # Fetch current price from Kalshi API
-                            mkt = self.api.get_market_by_ticker(ticker)
+                            mkt = self.api.get_market_by_ticker(pos.ticker)
                             if mkt and mkt.yes_bid and mkt.yes_ask:
                                 cur = (mkt.yes_bid + mkt.yes_ask) / 2
                             elif mkt:
@@ -1005,6 +1055,7 @@ class Superbot:
                             positions_details.append({
                                 "ticker": pos.ticker,
                                 "side": pos.side,
+                                "direction": pos.direction,
                                 "entry_price": pos.entry_price,
                                 "size": pos.size,
                                 "strategy": pos.strategy.value if hasattr(pos.strategy, 'value') else str(pos.strategy),
@@ -1036,9 +1087,9 @@ class Superbot:
 
         # Close all open positions at current prices
         for coin, trader in self.coin_traders.items():
-            for ticker in list(trader.positions.keys()):
-                logger.info(f"[{coin}] Closing position {ticker} on shutdown")
-                trader._close_position(ticker, "shutdown", 0.5)
+            for position_key, position in list(trader.positions.items()):
+                logger.info(f"[{coin}] Closing position {position_key} on shutdown")
+                trader._close_position(position.ticker, "shutdown", 0.5, side=position.side)
 
         # Save final report
         self.report.end_session(self.cash)

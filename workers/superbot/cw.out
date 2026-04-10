@@ -10,3 +10,116 @@
 2026-04-10 07:45:05 [INFO] [XRP] Initialized: price=1.34, bucket=45
 2026-04-10 07:45:05 [INFO] [HYPE] Initialized: price=40.26, bucket=45
 2026-04-10 07:45:05 [INFO] [ADA] Initialized: price=0.25, bucket=45
+2026-04-10 08:00:04 [INFO] [BTC] Candle done: prev_close=71677.99, ratio=3.34% (30s / 899s), current=71503.04
+2026-04-10 08:00:04 [INFO] [BTC] ★ BUY NO SIGNAL (conf=99)
+2026-04-10 08:00:04 [INFO] Signal saved to /home/ubuntu/.openclaw/workspace/workers/superbot/candle_signals.json: {'coin': 'BTC', 'side': 'NO', 'conf': 99, 'entry_price_max': 0.85, 'timestamp': '2026-04-10T08:00:04.174589'}
+2026-04-10 08:00:04 [WARNING] Discord notify failed: 401 {"message": "Invalid Webhook Token", "code": 50027}
+2026-04-10 08:00:04 [INFO] [ETH] Candle done: prev_close=2183.49, ratio=22.25% (200s / 899s), current=2179.38
+2026-04-10 08:00:04 [INFO] [ETH] ★ BUY NO SIGNAL (conf=99)
+2026-04-10 08:00:04 [INFO] Signal saved to /home/ubuntu/.openclaw/workspace/workers/superbot/candle_signals.json: {'coin': 'ETH', 'side': 'NO', 'conf': 99, 'entry_price_max': 0.85, 'timestamp': '2026-04-10T08:00:04.265273'}
+2026-04-10 08:00:04 [WARNING] Discord notify failed: 401 {"message": "Invalid Webhook Token", "code": 50027}
+2026-04-10 08:00:04 [INFO] [SOL] Candle done: prev_close=83.14, ratio=4.45% (40s / 899s), current=82.97
+2026-04-10 08:00:04 [INFO] [SOL] ★ BUY NO SIGNAL (conf=99)
+2026-04-10 08:00:04 [INFO] Signal saved to /home/ubuntu/.openclaw/workspace/workers/superbot/candle_signals.json: {'coin': 'SOL', 'side': 'NO', 'conf': 99, 'entry_price_max': 0.85, 'timestamp': '2026-04-10T08:00:04.404435'}
+2026-04-10 08:00:04 [WARNING] Discord notify failed: 401 {"message": "Invalid Webhook Token", "code": 50027}
+2026-04-10 08:00:04 [INFO] [BNB] Candle done: prev_close=600.82, ratio=0.00% (0s / 899s), current=599.19
+2026-04-10 08:00:04 [INFO] [BNB] ★ BUY NO SIGNAL (conf=99)
+2026-04-10 08:00:04 [INFO] Signal saved to /home/ubuntu/.openclaw/workspace/workers/superbot/candle_signals.json: {'coin': 'BNB', 'side': 'NO', 'conf': 99, 'entry_price_max': 0.85, 'timestamp': '2026-04-10T08:00:04.508452'}
+2026-04-10 08:00:04 [WARNING] Discord notify failed: 401 {"message": "Invalid Webhook Token", "code": 50027}
+2026-04-10 08:00:04 [INFO] [DOGE] Candle done: prev_close=0.09, ratio=10.01% (90s / 899s), current=0.09
+2026-04-10 08:00:04 [INFO] [DOGE] ★ BUY NO SIGNAL (conf=99)
+2026-04-10 08:00:04 [INFO] Signal saved to /home/ubuntu/.openclaw/workspace/workers/superbot/candle_signals.json: {'coin': 'DOGE', 'side': 'NO', 'conf': 99, 'entry_price_max': 0.85, 'timestamp': '2026-04-10T08:00:04.639317'}
+2026-04-10 08:00:04 [WARNING] Discord notify failed: 401 {"message": "Invalid Webhook Token", "code": 50027}
+2026-04-10 08:00:04 [INFO] [XRP] Candle done: prev_close=1.34, ratio=15.57% (140s / 899s), current=1.34
+2026-04-10 08:00:04 [INFO] [XRP] ★ BUY NO SIGNAL (conf=99)
+2026-04-10 08:00:04 [INFO] Signal saved to /home/ubuntu/.openclaw/workspace/workers/superbot/candle_signals.json: {'coin': 'XRP', 'side': 'NO', 'conf': 99, 'entry_price_max': 0.85, 'timestamp': '2026-04-10T08:00:04.742667'}
+2026-04-10 08:00:04 [WARNING] Discord notify failed: 401 {"message": "Invalid Webhook Token", "code": 50027}
+2026-04-10 08:00:04 [INFO] [HYPE] Candle done: prev_close=40.26, ratio=0.00% (0s / 899s), current=40.04
+2026-04-10 08:00:04 [INFO] [HYPE] ★ BUY NO SIGNAL (conf=99)
+2026-04-10 08:00:04 [INFO] Signal saved to /home/ubuntu/.openclaw/workspace/workers/superbot/candle_signals.json: {'coin': 'HYPE', 'side': 'NO', 'conf': 99, 'entry_price_max': 0.85, 'timestamp': '2026-04-10T08:00:04.897922'}
+2026-04-10 08:00:04 [WARNING] Discord notify failed: 429 {"message": "You are being rate limited.", "retry_after": 0.3, "global": false}
+2026-04-10 08:00:04 [INFO] [ADA] Candle done: prev_close=0.25, ratio=1.11% (10s / 899s), current=0.25
+2026-04-10 08:00:04 [INFO] [ADA] ★ BUY NO SIGNAL (conf=99)
+2026-04-10 08:00:04 [INFO] Signal saved to /home/ubuntu/.openclaw/workspace/workers/superbot/candle_signals.json: {'coin': 'ADA', 'side': 'NO', 'conf': 99, 'entry_price_max': 0.85, 'timestamp': '2026-04-10T08:00:04.968920'}
+2026-04-10 08:00:05 [WARNING] Discord notify failed: 429 {"message": "You are being rate limited.", "retry_after": 0.3, "global": false}
+2026-04-10 08:15:07 [INFO] [BTC] Candle done: prev_close=71487.54, ratio=78.58% (710s / 904s), current=71610.95
+2026-04-10 08:15:07 [INFO] [BTC] ★ BUY YES SIGNAL (Tier 2, conf=72)
+2026-04-10 08:15:07 [INFO] Signal saved to /home/ubuntu/.openclaw/workspace/workers/superbot/candle_signals.json: {'coin': 'BTC', 'side': 'YES', 'conf': 72, 'tier': 2, 'entry_price_max': 0.85, 'timestamp': '2026-04-10T08:15:07.693332'}
+2026-04-10 08:15:07 [WARNING] Discord notify failed: 401 {"message": "Invalid Webhook Token", "code": 50027}
+2026-04-10 08:15:07 [INFO] [ETH] Candle done: prev_close=2179.18, ratio=59.77% (540s / 904s), current=2180.91
+2026-04-10 08:15:07 [INFO] [SOL] Candle done: prev_close=82.95, ratio=58.67% (530s / 903s), current=83.01
+2026-04-10 08:15:07 [INFO] [BNB] Candle done: prev_close=599.19, ratio=22.14% (200s / 903s), current=598.99
+2026-04-10 08:15:07 [INFO] [BNB] ★ BUY NO SIGNAL (conf=99)
+2026-04-10 08:15:07 [INFO] Signal saved to /home/ubuntu/.openclaw/workspace/workers/superbot/candle_signals.json: {'coin': 'BNB', 'side': 'NO', 'conf': 99, 'entry_price_max': 0.85, 'timestamp': '2026-04-10T08:15:07.834142'}
+2026-04-10 08:15:07 [WARNING] Discord notify failed: 401 {"message": "Invalid Webhook Token", "code": 50027}
+2026-04-10 08:15:07 [INFO] [DOGE] Candle done: prev_close=0.09, ratio=0.00% (0s / 903s), current=0.09
+2026-04-10 08:15:07 [INFO] [DOGE] ★ BUY NO SIGNAL (conf=99)
+2026-04-10 08:15:07 [INFO] Signal saved to /home/ubuntu/.openclaw/workspace/workers/superbot/candle_signals.json: {'coin': 'DOGE', 'side': 'NO', 'conf': 99, 'entry_price_max': 0.85, 'timestamp': '2026-04-10T08:15:07.962627'}
+2026-04-10 08:15:08 [WARNING] Discord notify failed: 401 {"message": "Invalid Webhook Token", "code": 50027}
+2026-04-10 08:15:08 [INFO] [XRP] Candle done: prev_close=1.34, ratio=33.21% (300s / 903s), current=1.34
+2026-04-10 08:15:08 [INFO] [XRP] ★ BUY NO SIGNAL (conf=83)
+2026-04-10 08:15:08 [INFO] Signal saved to /home/ubuntu/.openclaw/workspace/workers/superbot/candle_signals.json: {'coin': 'XRP', 'side': 'NO', 'conf': 83, 'entry_price_max': 0.85, 'timestamp': '2026-04-10T08:15:08.085743'}
+2026-04-10 08:15:08 [WARNING] Discord notify failed: 401 {"message": "Invalid Webhook Token", "code": 50027}
+2026-04-10 08:15:08 [INFO] [HYPE] Candle done: prev_close=40.04, ratio=96.31% (870s / 903s), current=40.19
+2026-04-10 08:15:08 [INFO] [HYPE] ★ BUY YES SIGNAL (Tier 1, conf=95)
+2026-04-10 08:15:08 [INFO] Signal saved to /home/ubuntu/.openclaw/workspace/workers/superbot/candle_signals.json: {'coin': 'HYPE', 'side': 'YES', 'conf': 95, 'tier': 1, 'entry_price_max': 0.85, 'timestamp': '2026-04-10T08:15:08.219291'}
+2026-04-10 08:15:08 [WARNING] Discord notify failed: 401 {"message": "Invalid Webhook Token", "code": 50027}
+2026-04-10 08:15:08 [INFO] [ADA] Candle done: prev_close=0.25, ratio=0.00% (0s / 903s), current=0.25
+2026-04-10 08:15:08 [INFO] [ADA] ★ BUY NO SIGNAL (conf=99)
+2026-04-10 08:15:08 [INFO] Signal saved to /home/ubuntu/.openclaw/workspace/workers/superbot/candle_signals.json: {'coin': 'ADA', 'side': 'NO', 'conf': 99, 'entry_price_max': 0.85, 'timestamp': '2026-04-10T08:15:08.304280'}
+2026-04-10 08:15:08 [WARNING] Discord notify failed: 401 {"message": "Invalid Webhook Token", "code": 50027}
+2026-04-10 08:30:05 [INFO] [BTC] Candle done: prev_close=71610.96, ratio=80.18% (720s / 898s), current=71634.01
+2026-04-10 08:30:05 [INFO] [BTC] ★ BUY YES SIGNAL (Tier 2, conf=72)
+2026-04-10 08:30:05 [INFO] Signal saved to /home/ubuntu/.openclaw/workspace/workers/superbot/candle_signals.json: {'coin': 'BTC', 'side': 'YES', 'conf': 72, 'tier': 2, 'entry_price_max': 0.85, 'timestamp': '2026-04-10T08:30:05.675766'}
+2026-04-10 08:30:05 [WARNING] Discord notify failed: 401 {"message": "Invalid Webhook Token", "code": 50027}
+2026-04-10 08:30:05 [INFO] [ETH] Candle done: prev_close=2180.69, ratio=87.98% (790s / 898s), current=2183.33
+2026-04-10 08:30:05 [INFO] [ETH] ★ BUY YES SIGNAL (Tier 2, conf=72)
+2026-04-10 08:30:05 [INFO] Signal saved to /home/ubuntu/.openclaw/workspace/workers/superbot/candle_signals.json: {'coin': 'ETH', 'side': 'YES', 'conf': 72, 'tier': 2, 'entry_price_max': 0.85, 'timestamp': '2026-04-10T08:30:05.756005'}
+2026-04-10 08:30:05 [WARNING] Discord notify failed: 401 {"message": "Invalid Webhook Token", "code": 50027}
+2026-04-10 08:30:05 [INFO] [SOL] Candle done: prev_close=83.00, ratio=8.91% (80s / 898s), current=82.94
+2026-04-10 08:30:05 [INFO] [SOL] ★ BUY NO SIGNAL (conf=99)
+2026-04-10 08:30:05 [INFO] Signal saved to /home/ubuntu/.openclaw/workspace/workers/superbot/candle_signals.json: {'coin': 'SOL', 'side': 'NO', 'conf': 99, 'entry_price_max': 0.85, 'timestamp': '2026-04-10T08:30:05.837685'}
+2026-04-10 08:30:05 [WARNING] Discord notify failed: 401 {"message": "Invalid Webhook Token", "code": 50027}
+2026-04-10 08:30:05 [INFO] [BNB] Candle done: prev_close=599.32, ratio=59.01% (530s / 898s), current=599.31
+2026-04-10 08:30:05 [INFO] [DOGE] Candle done: prev_close=0.09, ratio=72.38% (650s / 898s), current=0.09
+2026-04-10 08:30:05 [INFO] [DOGE] ★ BUY YES SIGNAL (Tier 2, conf=72)
+2026-04-10 08:30:05 [INFO] Signal saved to /home/ubuntu/.openclaw/workspace/workers/superbot/candle_signals.json: {'coin': 'DOGE', 'side': 'YES', 'conf': 72, 'tier': 2, 'entry_price_max': 0.85, 'timestamp': '2026-04-10T08:30:05.946985'}
+2026-04-10 08:30:06 [WARNING] Discord notify failed: 401 {"message": "Invalid Webhook Token", "code": 50027}
+2026-04-10 08:30:06 [INFO] [XRP] Candle done: prev_close=1.34, ratio=85.75% (770s / 898s), current=1.34
+2026-04-10 08:30:06 [INFO] [HYPE] Candle done: prev_close=40.18, ratio=13.36% (120s / 898s), current=40.11
+2026-04-10 08:30:06 [INFO] [HYPE] ★ BUY NO SIGNAL (conf=99)
+2026-04-10 08:30:06 [INFO] Signal saved to /home/ubuntu/.openclaw/workspace/workers/superbot/candle_signals.json: {'coin': 'HYPE', 'side': 'NO', 'conf': 99, 'entry_price_max': 0.85, 'timestamp': '2026-04-10T08:30:06.099820'}
+2026-04-10 08:30:06 [WARNING] Discord notify failed: 401 {"message": "Invalid Webhook Token", "code": 50027}
+2026-04-10 08:30:06 [INFO] [ADA] Candle done: prev_close=0.25, ratio=52.34% (470s / 898s), current=0.25
+2026-04-10 08:45:03 [INFO] [BTC] Candle done: prev_close=71651.02, ratio=80.16% (720s / 898s), current=71709.80
+2026-04-10 08:45:03 [INFO] [BTC] ★ BUY YES SIGNAL (Tier 2, conf=72)
+2026-04-10 08:45:03 [INFO] Signal saved to /home/ubuntu/.openclaw/workspace/workers/superbot/candle_signals.json: {'coin': 'BTC', 'side': 'YES', 'conf': 72, 'tier': 2, 'entry_price_max': 0.85, 'timestamp': '2026-04-10T08:45:03.851409'}
+2026-04-10 08:45:04 [WARNING] Discord notify failed: 401 {"message": "Invalid Webhook Token", "code": 50027}
+2026-04-10 08:45:04 [INFO] [ETH] Candle done: prev_close=2184.00, ratio=92.34% (830s / 899s), current=2186.81
+2026-04-10 08:45:04 [INFO] [ETH] ★ BUY YES SIGNAL (Tier 1, conf=95)
+2026-04-10 08:45:04 [INFO] Signal saved to /home/ubuntu/.openclaw/workspace/workers/superbot/candle_signals.json: {'coin': 'ETH', 'side': 'YES', 'conf': 95, 'tier': 1, 'entry_price_max': 0.85, 'timestamp': '2026-04-10T08:45:04.648253'}
+2026-04-10 08:45:04 [WARNING] Discord notify failed: 401 {"message": "Invalid Webhook Token", "code": 50027}
+2026-04-10 08:45:04 [INFO] [SOL] Candle done: prev_close=82.95, ratio=91.22% (820s / 899s), current=82.97
+2026-04-10 08:45:04 [INFO] [SOL] ★ BUY YES SIGNAL (Tier 1, conf=95)
+2026-04-10 08:45:04 [INFO] Signal saved to /home/ubuntu/.openclaw/workspace/workers/superbot/candle_signals.json: {'coin': 'SOL', 'side': 'YES', 'conf': 95, 'tier': 1, 'entry_price_max': 0.85, 'timestamp': '2026-04-10T08:45:04.737684'}
+2026-04-10 08:45:04 [WARNING] Discord notify failed: 401 {"message": "Invalid Webhook Token", "code": 50027}
+2026-04-10 08:45:04 [INFO] [BNB] Candle done: prev_close=599.31, ratio=90.10% (810s / 899s), current=600.66
+2026-04-10 08:45:04 [INFO] [BNB] ★ BUY YES SIGNAL (Tier 1, conf=95)
+2026-04-10 08:45:04 [INFO] Signal saved to /home/ubuntu/.openclaw/workspace/workers/superbot/candle_signals.json: {'coin': 'BNB', 'side': 'YES', 'conf': 95, 'tier': 1, 'entry_price_max': 0.85, 'timestamp': '2026-04-10T08:45:04.937540'}
+2026-04-10 08:45:04 [WARNING] Discord notify failed: 401 {"message": "Invalid Webhook Token", "code": 50027}
+2026-04-10 08:45:05 [INFO] [DOGE] Candle done: prev_close=0.09, ratio=90.09% (810s / 899s), current=0.09
+2026-04-10 08:45:05 [INFO] [DOGE] ★ BUY YES SIGNAL (Tier 1, conf=95)
+2026-04-10 08:45:05 [INFO] Signal saved to /home/ubuntu/.openclaw/workspace/workers/superbot/candle_signals.json: {'coin': 'DOGE', 'side': 'YES', 'conf': 95, 'tier': 1, 'entry_price_max': 0.85, 'timestamp': '2026-04-10T08:45:05.014952'}
+2026-04-10 08:45:05 [WARNING] Discord notify failed: 401 {"message": "Invalid Webhook Token", "code": 50027}
+2026-04-10 08:45:05 [INFO] [XRP] Candle done: prev_close=1.34, ratio=95.59% (860s / 900s), current=1.34
+2026-04-10 08:45:05 [INFO] [XRP] ★ BUY YES SIGNAL (Tier 1, conf=95)
+2026-04-10 08:45:05 [INFO] Signal saved to /home/ubuntu/.openclaw/workspace/workers/superbot/candle_signals.json: {'coin': 'XRP', 'side': 'YES', 'conf': 95, 'tier': 1, 'entry_price_max': 0.85, 'timestamp': '2026-04-10T08:45:05.733144'}
+2026-04-10 08:45:05 [WARNING] Discord notify failed: 401 {"message": "Invalid Webhook Token", "code": 50027}
+2026-04-10 08:45:05 [INFO] [HYPE] Candle done: prev_close=40.11, ratio=93.36% (840s / 900s), current=40.35
+2026-04-10 08:45:05 [INFO] [HYPE] ★ BUY YES SIGNAL (Tier 1, conf=95)
+2026-04-10 08:45:05 [INFO] Signal saved to /home/ubuntu/.openclaw/workspace/workers/superbot/candle_signals.json: {'coin': 'HYPE', 'side': 'YES', 'conf': 95, 'tier': 1, 'entry_price_max': 0.85, 'timestamp': '2026-04-10T08:45:05.845099'}
+2026-04-10 08:45:05 [WARNING] Discord notify failed: 401 {"message": "Invalid Webhook Token", "code": 50027}
+2026-04-10 08:45:05 [INFO] [ADA] Candle done: prev_close=0.25, ratio=71.14% (640s / 900s), current=0.25
+2026-04-10 08:45:05 [INFO] [ADA] ★ BUY YES SIGNAL (Tier 2, conf=72)
+2026-04-10 08:45:05 [INFO] Signal saved to /home/ubuntu/.openclaw/workspace/workers/superbot/candle_signals.json: {'coin': 'ADA', 'side': 'YES', 'conf': 72, 'tier': 2, 'entry_price_max': 0.85, 'timestamp': '2026-04-10T08:45:05.929220'}
+2026-04-10 08:45:05 [WARNING] Discord notify failed: 401 {"message": "Invalid Webhook Token", "code": 50027}

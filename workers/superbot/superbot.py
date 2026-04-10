@@ -905,24 +905,31 @@ class Superbot:
 
             # Build TradeSignal for candle strategy
             from strategies import TradeSignal
+            # Calculate Kelly-based size using confidence (same as evaluate_market path)
+            prob = mid if side == "yes" else (1 - mid)
+            confidence = signal_data.get("conf", 50)
+            size, kelly_pct, _ = trader.strategy_engine.calculate_kelly_size(
+                Strategy.MOMENTUM, prob, confidence, mid, cash_override=self.cash
+            )
             ts_signal = TradeSignal(
                 strategy=Strategy.MOMENTUM,
                 ticker=market.ticker,
                 side=side,
                 direction="buy",
                 price=mid,
-                size=1,  # Will be sized by _open_position
-                reason=f"CANDLE: {signal_data.get('coin')} {side} conf={signal_data.get('conf')}",
+                size=int(size),
+                reason=f"CANDLE: {signal_data.get('coin')} {side} conf={confidence} kelly={kelly_pct:.1%}",
                 is_candle_duration=True,  # No SL/TP - hold to expiry
-                confidence=signal_data.get("conf", 50),
+                confidence=confidence,
             )
 
-            per_coin_cash = self.cash / len(COINS)
-            success, cost = trader._open_position(ts_signal, per_coin_cash)
+            # Use Bot's full cash for Kelly sizing (not per-coin split) since we only take 1 position per coin
+            available_cash = self.cash  # Full cash for Kelly calculation
+            success, cost = trader._open_position(ts_signal, available_cash)
             if success:
                 self.cash -= cost
                 self.daily_trades += 1
-                logger.info(f"🚀 [{coin}] CANDLE TRADE: {side} {market.ticker} @ ${mid:.4f} (conf={signal_data.get('conf')})")
+                logger.info(f"🚀 [{coin}] CANDLE TRADE: {side} {market.ticker} @ ${mid:.4f} (conf={confidence}) contracts={int(size):d}")
                 self._clear_candle_signal(coin)
                 return True
         return False

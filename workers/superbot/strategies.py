@@ -1165,7 +1165,7 @@ class StrategyEngine:
         kelly_pct = self.tracker.get_kelly_pct(strategy)
         logger.info(f"Strategy {strategy.value} stats: W={W:.2%}, R={R:.2f}x, Kelly={kelly_pct:.2%}")
 
-    def calculate_kelly_size(self, strategy: Strategy, prob: float, confidence: int = 50, entry_price: float = 0.50) -> Tuple[float, float, int]:
+    def calculate_kelly_size(self, strategy: Strategy, prob: float, confidence: int = 50, entry_price: float = 0.50, cash_override: float = None) -> Tuple[float, float, int]:
         """
         Calculate Kelly Criterion bet size using historical strategy performance,
         then apply 50% Kelly for entry + confidence tier sizing.
@@ -1219,7 +1219,8 @@ class StrategyEngine:
         effective_pct = entry_kelly_pct * conf_mult
 
         # Convert to dollar amount to risk
-        dollar_amount = self.cash * effective_pct
+        cash_for_kelly = cash_override if cash_override is not None else self.cash
+        dollar_amount = cash_for_kelly * effective_pct
 
         # Clamp dollar amount to hard limits
         dollar_amount = max(MIN_BET, min(MAX_BET, dollar_amount))

@@ -891,6 +891,9 @@ class Superbot:
         # Coinbase pre-filter (Nerd v2)
         self.coinbase_filter = CoinbasePreFilter()
         
+        # CashSync state - track last known real balance for conservative estimates
+        self._last_known_real_balance = 0.0
+        
         # TIER 1: Orderbook monitor for imbalance tracking
         self.orderbook_monitor = OrderbookMonitor(self.api)
 
@@ -1030,10 +1033,14 @@ class Superbot:
             if abs(real_balance - self.cash) > 0.50:
                 logger.info(f"[CashSync] Synced cash from ${self.cash:.2f} to real balance ${real_balance:.2f}")
             self.cash = real_balance
+            self._last_known_real_balance = real_balance  # Track last known good balance
         else:
-            # FIX 4: API failed (likely 401 auth error) - don't trust cached balance
-            # Use a conservative estimate (10% of paper balance) until API recovers
-            conservative_estimate = self.cash * 0.2  # Only trust 20% of cached value
+            # FIX 4: API failed (likely 401 auth error) - use last known real balance
+            # If no known balance, fall back to conservative estimate based on last known good
+            if self._last_known_real_balance > 0:
+                conservative_estimate = max(10.0, self._last_known_real_balance * 0.5)  # $10 floor, 50% of last known
+            else:
+                conservative_estimate = self.cash * 0.2  # Only trust 20% of cached value
             if conservative_estimate < 5.0:
                 conservative_estimate = 5.0  # Floor at $5 to avoid division issues
             logger.warning(f"[CashSync] API balance failed (auth error?) - using conservative estimate ${conservative_estimate:.2f} (was ${self.cash:.2f})")

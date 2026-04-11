@@ -1,14 +1,24 @@
 {
-  "updated_at": "2026-04-11T03:45:02.107273",
-  "market_count": 1,
+  "updated_at": "2026-04-11T04:45:01.564497",
+  "market_count": 2,
   "markets": {
+    "BTC": [
+      {
+        "ticker": "KXBTC15M-26APR110100-00",
+        "status": "active",
+        "yes_bid": 0.48,
+        "yes_ask": 0.5,
+        "close_time": "2026-04-11T05:00:00Z",
+        "resolution_time": ""
+      }
+    ],
     "BNB": [
       {
-        "ticker": "KXBNB15M-26APR110000-00",
+        "ticker": "KXBNB15M-26APR110100-00",
         "status": "active",
         "yes_bid": 0.25,
         "yes_ask": 0.75,
-        "close_time": "2026-04-11T04:00:00Z",
+        "close_time": "2026-04-11T05:00:00Z",
         "resolution_time": ""
       }
     ]

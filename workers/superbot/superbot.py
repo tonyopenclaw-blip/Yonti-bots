@@ -1100,6 +1100,12 @@ class Superbot:
     def _execute_candle_signal(self, signal_data: Dict, markets: List[Market], coin: str, trader: 'CoinTrader') -> bool:
         """Execute a candle signal: find best market and place order."""
         side = signal_data.get("side", "YES").lower()  # 'yes' or 'no'
+
+        # Block ALL NO entries from candle signals — historical 21:30 candle NO entries (BTC, ETH, XRP, BNB, DOGE) all lost
+        if side == "no":
+            logger.info(f"[{coin}] CANDLE NO BLOCKED: candle NO signals are unprofitable")
+            return False
+
         entry_max = signal_data.get("entry_price_max", 0.85)
 
         # Nerd recommendation: Reject signals when entry price > $0.50

@@ -2059,3 +2059,25 @@ Matrix Cell       | Trades | Wins | Losses | Win%  | Total P&L
 4. Tony: Consider adding capital — $34.67 too thin for $2 max bets
 
 _Analyzed: 2026-04-06 23:01 UTC (nerd-matrix-review subagent)_
+
+### Order Book API (April 2026 Update)
+**REST API (Snapshots):**
+- Single market: `GET /trade-api/v2/markets/{ticker}/orderbook`
+- Multiple markets: `GET /trade-api/v2/markets/orderbooks`
+- Note: Response only returns bids for both YES and NO sides. YES Bid @ $0.40 = NO Ask @ $0.60 (equivalent)
+
+**WebSocket API (Real-Time):**
+- `orderbook_snapshot`: Full starting state on subscription
+- `orderbook_delta`: Live changes to price levels
+
+**Fixed-Point Representation (April 2026):**
+- Prices: fields ending in `_dollars` (e.g., "0.4200")
+- Quantities: fields ending in `_fp` (fixed-point strings for fractional units)
+
+**Historical Data:**
+- Settled markets/old orders: `GET /historical/orders`
+
+**Python SDK:**
+```python
+api_response = client.get_market_orderbook(ticker, depth=10)
+```

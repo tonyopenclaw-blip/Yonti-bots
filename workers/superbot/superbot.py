@@ -34,7 +34,7 @@ def get_candle_signal_file(coin: str) -> Path:
     d.mkdir(exist_ok=True)
     return d / f"{coin}.json"
 
-CANDLE_SIGNAL_MAX_AGE_SEC = 600  # 10 minutes (candle watcher fires every ~15 min)
+CANDLE_SIGNAL_MAX_AGE_SEC = 120  # 2 minutes (signals stale after 2 min in fast markets)
 
 # =============================================================================
 # LOGGING SETUP
@@ -1115,15 +1115,15 @@ class Superbot:
 
             mid = (market.yes_bid + market.yes_ask) / 2
 
+            # For YES signals, block expensive entries. For NO, allow — mid > $0.50 means YES is overpriced
+            if side == "yes" and mid > 0.50:
+                logger.info(f"[{coin}] ENTRY SKIP: YES entry ${mid:.4f} > $0.50 (too expensive)")
+                continue
+
             # === ENTRY PRICE GUARD: Block entries below $0.35 (0% win rate zone) ===
             # Nerd's backtest: entry price <$0.35 has 0% win rate, 100% cut-loss rate
             if mid < 0.35:
                 logger.info(f"[{coin}] ENTRY SKIP: entry price ${mid:.4f} < $0.35 (0% win zone)")
-                continue
-
-            # Skip if mid price > $0.50 (too expensive either way)
-            if mid > ENTRY_PRICE_LIMIT:
-                logger.info(f"[{coin}] CANDLE SKIP: entry price ${mid:.4f} > ${ENTRY_PRICE_LIMIT:.2f} ({side.upper()} signal)")
                 continue
             if mid <= 0 or mid > entry_max:
                 continue

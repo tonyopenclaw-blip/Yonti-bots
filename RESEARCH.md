@@ -74,6 +74,107 @@ From Nerd's analysis:
 | Dynamic sizing (price-based) | ❌ | ✅ 2 contracts if price ≤$0.35 |
 | Real Coinbase price feed | ❌ | ✅ Polls Coinbase every 2s |
 
+
+
+## Backtest Findings (2026-04-11)
+
+### Market Characteristics
+- **Overall YES win rate**: 52.1%
+- **Avg return when YES wins**: 0.1727%
+- **Avg return when NO wins**: -0.1758%
+
+### YES Win Rate by Coin
+- **BNB**: 50.3% (176/350 windows)
+- **BTC**: 53.1% (186/350 windows)
+- **DOGE**: 51.1% (179/350 windows)
+- **ETH**: 52.3% (183/350 windows)
+- **HYPE**: 53.7% (188/350 windows)
+- **SOL**: 52.9% (185/350 windows)
+- **XRP**: 51.1% (179/350 windows)
+
+### Strategy Performance
+| Strategy | Trades | Win Rate | Total P&L | Avg P&L | Sharpe | Max DD |
+|----------|--------|----------|-----------|---------|--------|--------|
+| Strategy_A_Naive | 2450 | 52.1% | $51.00 | $0.0208 | 0.41 | $9.50 |
+| Strategy_B_PriceVsStrike | 2450 | 52.1% | $51.00 | $0.0208 | 0.41 | $9.50 |
+| Strategy_C_Timing | 2450 | 52.1% | $520.60 | $0.2125 | 6.94 | $0.80 |
+| Strategy_D_DynamicNO | 1174 | 100.0% | $587.00 | $0.5000 | 0.00 | $0.00 |
+| Strategy_E_BotLogic | 0 | 0.0% | $0.00 | $0.0000 | 0.00 | $0.00 |
+| Strategy_E_NoFilter | 0 | 0.0% | $0.00 | $0.0000 | 0.00 | $0.00 |
+
+**Best Strategy**: Strategy_D_DynamicNO with $587.00 total P&L
+
+### Key Insights
+- **Strategy_D_DynamicNO**: High win rate (100.0%) but avg trade is $0.5000
+
+
+
+## Backtest Findings (2026-04-11)
+
+### Market Characteristics
+- **Overall YES win rate**: 52.1%
+- **Avg return when YES wins**: 0.1727%
+- **Avg return when NO wins**: -0.1758%
+
+### YES Win Rate by Coin
+- **BNB**: 50.3% (176/350 windows)
+- **BTC**: 53.1% (186/350 windows)
+- **DOGE**: 51.1% (179/350 windows)
+- **ETH**: 52.3% (183/350 windows)
+- **HYPE**: 53.7% (188/350 windows)
+- **SOL**: 52.9% (185/350 windows)
+- **XRP**: 51.1% (179/350 windows)
+
+### Strategy Performance
+| Strategy | Trades | Win Rate | Total P&L | Avg P&L | Sharpe | Max DD |
+|----------|--------|----------|-----------|---------|--------|--------|
+| Strategy_A_Naive | 2450 | 52.1% | $51.00 | $0.0208 | 0.41 | $9.50 |
+| Strategy_B_PriceVsStrike | 2450 | 52.1% | $51.00 | $0.0208 | 0.41 | $9.50 |
+| Strategy_C_Timing | 2450 | 52.1% | $520.60 | $0.2125 | 6.94 | $0.80 |
+| Strategy_D_DynamicNO | 1006 | 100.0% | $503.00 | $0.5000 | 0.00 | $0.00 |
+| Strategy_E_BotLogic | 843 | 98.3% | $556.15 | $0.6597 | 51.48 | $0.20 |
+| Strategy_E_NoFilter | 1708 | 49.0% | $474.67 | $0.2779 | 6.99 | $0.80 |
+
+**Best Strategy**: Strategy_E_BotLogic with $556.15 total P&L
+
+### Key Insights
+- **Strategy_D_DynamicNO**: High win rate (100.0%) but avg trade is $0.5000
+- **Strategy_E_BotLogic**: High win rate (98.3%) but avg trade is $0.6597
+
+
+
+## Backtest Findings (2026-04-11)
+
+### Market Characteristics
+- **Overall YES win rate**: 52.1%
+- **Avg return when YES wins**: 0.1727%
+- **Avg return when NO wins**: -0.1758%
+
+### YES Win Rate by Coin
+- **BNB**: 50.3% (176/350 windows)
+- **BTC**: 53.1% (186/350 windows)
+- **DOGE**: 51.1% (179/350 windows)
+- **ETH**: 52.3% (183/350 windows)
+- **HYPE**: 53.7% (188/350 windows)
+- **SOL**: 52.9% (185/350 windows)
+- **XRP**: 51.1% (179/350 windows)
+
+### Strategy Performance
+| Strategy | Trades | Win Rate | Total P&L | Avg P&L | Sharpe | Max DD |
+|----------|--------|----------|-----------|---------|--------|--------|
+| Strategy_A_Naive | 2450 | 52.1% | $51.00 | $0.0208 | 0.41 | $9.50 |
+| Strategy_B_PriceVsStrike | 2450 | 52.1% | $51.00 | $0.0208 | 0.41 | $9.50 |
+| Strategy_C_Timing | 2450 | 44.8% | $1015.00 | $0.4143 | 19.33 | $35.00 |
+| Strategy_D_DynamicNO | 1006 | 100.0% | $503.00 | $0.5000 | 0.00 | $0.00 |
+| Strategy_E_BotLogic | 1100 | 45.6% | $274.09 | $0.2492 | 6.34 | $0.80 |
+| Strategy_E_NoFilter | 2176 | 50.5% | $631.38 | $0.2902 | 7.28 | $0.70 |
+
+**Best Strategy**: Strategy_C_Timing with $1015.00 total P&L
+
+### Key Insights
+- **Strategy_C_Timing**: Low win rate (44.8%), profitable ($1015.00)
+- **Strategy_D_DynamicNO**: High win rate (100.0%) but avg trade is $0.5000
+
 ## Strategic Recommendations
 
 ### Tier 1: Quick Wins (Easy to Add)

@@ -1,0 +1,157 @@
+{
+  "timestamp": "2026-04-11T21:15:57.752943",
+  "market_analysis": {
+    "total_windows": 2450,
+    "yes_win_pct": 52.08163265306123,
+    "avg_return_pct": 0.005717057913797705,
+    "avg_yes_win_magnitude": 0.17274673487804282,
+    "avg_no_win_magnitude": -0.17582456713422287,
+    "by_coin": {
+      "BTC": {
+        "yes": 186,
+        "total": 350,
+        "yes_rate": 53.142857142857146
+      },
+      "ETH": {
+        "yes": 183,
+        "total": 350,
+        "yes_rate": 52.28571428571429
+      },
+      "SOL": {
+        "yes": 185,
+        "total": 350,
+        "yes_rate": 52.85714285714286
+      },
+      "BNB": {
+        "yes": 176,
+        "total": 350,
+        "yes_rate": 50.28571428571429
+      },
+      "DOGE": {
+        "yes": 179,
+        "total": 350,
+        "yes_rate": 51.142857142857146
+      },
+      "XRP": {
+        "yes": 179,
+        "total": 350,
+        "yes_rate": 51.142857142857146
+      },
+      "HYPE": {
+        "yes": 188,
+        "total": 350,
+        "yes_rate": 53.714285714285715
+      }
+    }
+  },
+  "strategies": {
+    "Strategy_A_Naive": {
+      "metrics": {
+        "name": "Strategy_A_Naive",
+        "total_trades": 2450,
+        "wins": 1276,
+        "losses": 1174,
+        "total_pnl": 51.0,
+        "avg_win": 0.5,
+        "avg_loss": -0.5,
+        "sharpe": 0.4081856730947326,
+        "max_drawdown": 9.5,
+        "win_rate": 52.08163265306123,
+        "avg_pnl": 0.020816326530612245,
+        "largest_win": 0.5,
+        "largest_loss": -0.5
+      },
+      "num_trades": 2450
+    },
+    "Strategy_B_PriceVsStrike": {
+      "metrics": {
+        "name": "Strategy_B_PriceVsStrike",
+        "total_trades": 2450,
+        "wins": 1276,
+        "losses": 1174,
+        "total_pnl": 51.0,
+        "avg_win": 0.5,
+        "avg_loss": -0.5,
+        "sharpe": 0.4081856730947326,
+        "max_drawdown": 9.5,
+        "win_rate": 52.08163265306123,
+        "avg_pnl": 0.020816326530612245,
+        "largest_win": 0.5,
+        "largest_loss": -0.5
+      },
+      "num_trades": 2450
+    },
+    "Strategy_C_Timing": {
+      "metrics": {
+        "name": "Strategy_C_Timing",
+        "total_trades": 2450,
+        "wins": 1097,
+        "losses": 1353,
+        "total_pnl": 1014.999999999992,
+        "avg_win": 0.5,
+        "avg_loss": 0.34478935698447305,
+        "sharpe": 19.32938735240954,
+        "max_drawdown": 35.00000000000796,
+        "win_rate": 44.775510204081634,
+        "avg_pnl": 0.41428571428571104,
+        "largest_win": 0.5,
+        "largest_loss": -0.1
+      },
+      "num_trades": 2450
+    },
+    "Strategy_D_DynamicNO": {
+      "metrics": {
+        "name": "Strategy_D_DynamicNO",
+        "total_trades": 1006,
+        "wins": 1006,
+        "losses": 0,
+        "total_pnl": 503.0,
+        "avg_win": 0.5,
+        "avg_loss": 0.0,
+        "sharpe": 0.0,
+        "max_drawdown": 0.0,
+        "win_rate": 100.0,
+        "avg_pnl": 0.5,
+        "largest_win": 0.5,
+        "largest_loss": 0.0
+      },
+      "num_trades": 1006
+    },
+    "Strategy_E_BotLogic": {
+      "metrics": {
+        "name": "Strategy_E_BotLogic",
+        "total_trades": 1100,
+        "wins": 502,
+        "losses": 598,
+        "total_pnl": 274.0900000000015,
+        "avg_win": 0.6651195219123504,
+        "avg_loss": -0.10000000000000096,
+        "sharpe": 6.338715714702968,
+        "max_drawdown": 0.7999999999999545,
+        "win_rate": 45.63636363636363,
+        "avg_pnl": 0.24917272727272866,
+        "largest_win": 0.8,
+        "largest_loss": -0.1
+      },
+      "num_trades": 1100
+    },
+    "Strategy_E_NoFilter": {
+      "metrics": {
+        "name": "Strategy_E_NoFilter",
+        "total_trades": 2176,
+        "wins": 1099,
+        "losses": 1077,
+        "total_pnl": 631.3799999999868,
+        "avg_win": 0.6725022747952679,
+        "avg_loss": -0.09999999999999828,
+        "sharpe": 7.282756673490291,
+        "max_drawdown": 0.6999999999999602,
+        "win_rate": 50.50551470588235,
+        "avg_pnl": 0.29015624999999395,
+        "largest_win": 0.8,
+        "largest_loss": -0.1
+      },
+      "num_trades": 2176
+    }
+  }
+}

@@ -307,6 +307,32 @@ class CoinTrader:
                 positions_changed = True
                 continue
 
+            # === NEW: PRICE-LEVEL SCALE-IN & CUT-LOSS ===
+            # SCALE-IN: If price >= $0.70 and we hold that side, buy $5 more (once per position)
+            if mid_price >= 0.70 and not position.scaled_in:
+                scale_cost = 5.0  # Fixed $5 notional
+                scale_result = self.api.place_order(
+                    ticker=ticker,
+                    side=position.side,
+                    price=mid_price,
+                    amount=scale_cost,
+                    action='buy'
+                )
+                if "error" not in scale_result:
+                    position.scaled_in = True
+                    logger.info(f"SCALE IN: [{self.coin}] {position.side.upper()} {ticker} added $5 at ${mid_price:.4f}")
+                    positions_changed = True
+                else:
+                    logger.warning(f"SCALE IN FAILED: [{self.coin}] {scale_result['error']}")
+
+            # CUT-LOSS: If price <= $0.30, close entire position immediately
+            elif mid_price <= 0.30:
+                entry_price = position.avg_price if position.avg_price > 0 else position.entry_price
+                logger.warning(f"CUT LOSS: [{self.coin}] {position.side.upper()} {ticker} exited at ${mid_price:.4f} (was ${entry_price:.4f} entry)")
+                self._close_position(ticker, "cut_loss_30", mid_price, side=side)
+                positions_changed = True
+                continue
+
             # CANDLE-DURATION POSITIONS: Last 5 min trailing stop from high/low
             # If time_left <= 300s AND price in extreme zone -> trailing stop activates
             # For YES: trailing_stop = high_price - 0.20, exit when price hits

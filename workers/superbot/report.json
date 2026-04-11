@@ -4,14 +4,14 @@
   "starting_balance": 34.67,
   "ending_balance": 0.0,
   "total_pnl": -34.67,
-  "total_trades": 9,
-  "winning_trades": 5,
-  "losing_trades": 4,
-  "win_rate": 55.6,
+  "total_trades": 13,
+  "winning_trades": 6,
+  "losing_trades": 7,
+  "win_rate": 46.2,
   "largest_win": 1.9185000000000003,
-  "largest_loss": -0.99,
-  "open_positions": 2,
-  "thermostat": 25,
+  "largest_loss": -1.416,
+  "open_positions": 5,
+  "thermostat": 62,
   "trades": [
     {
       "ticker": "KXDOGE15M-26APR110930-30",
@@ -129,33 +129,170 @@
       "open_time": "2026-04-11 13:30:38 UTC",
       "close_time": "2026-04-11 13:45:05 UTC",
       "exit_reason": "settled"
-    }
-  ],
-  "last_10_open_trades": [
+    },
     {
       "ticker": "KXDOGE15M-26APR111000-00",
       "side": "no",
       "entry_price": 0.45999999999999996,
+      "exit_price": 0.9995,
       "shares": 3,
       "cost": 1.38,
-      "pnl": 0.0,
+      "pnl": 1.6185000000000003,
       "strategy": "momentum",
       "open_time": "2026-04-11 13:47:08 UTC",
-      "current_price": 0.9995
+      "close_time": "2026-04-11 14:00:01 UTC",
+      "exit_reason": "settled"
     },
     {
       "ticker": "KXHYPE15M-26APR111000-00",
       "side": "yes",
       "entry_price": 0.5,
+      "exit_price": 0.028,
+      "shares": 3,
+      "cost": 1.5,
+      "pnl": -1.416,
+      "strategy": "momentum",
+      "open_time": "2026-04-11 13:46:07 UTC",
+      "close_time": "2026-04-11 14:00:01 UTC",
+      "exit_reason": "settled"
+    },
+    {
+      "ticker": "KXXRP15M-26APR111045-45",
+      "side": "no",
+      "entry_price": 0.395,
+      "exit_price": 0.073,
+      "shares": 3,
+      "cost": 1.185,
+      "pnl": -0.966,
+      "strategy": "momentum",
+      "open_time": "2026-04-11 14:30:45 UTC",
+      "close_time": "2026-04-11 14:37:58 UTC",
+      "exit_reason": "cut_loss_30"
+    },
+    {
+      "ticker": "KXHYPE15M-26APR111045-45",
+      "side": "no",
+      "entry_price": 0.485,
+      "exit_price": 0.045,
+      "shares": 3,
+      "cost": 1.455,
+      "pnl": -1.32,
+      "strategy": "momentum",
+      "open_time": "2026-04-11 14:31:16 UTC",
+      "close_time": "2026-04-11 14:37:58 UTC",
+      "exit_reason": "cut_loss_30"
+    }
+  ],
+  "last_10_open_trades": [
+    {
+      "ticker": "KXBTC15M-26APR111100-00",
+      "side": "no",
+      "entry_price": 0.495,
+      "shares": 3,
+      "cost": 1.4849999999999999,
+      "pnl": 0.0,
+      "strategy": "momentum",
+      "open_time": "2026-04-11 14:45:39 UTC",
+      "current_price": 0.9995
+    },
+    {
+      "ticker": "KXBNB15M-26APR111100-00",
+      "side": "no",
+      "entry_price": 0.5,
       "shares": 3,
       "cost": 1.5,
       "pnl": 0.0,
       "strategy": "momentum",
-      "open_time": "2026-04-11 13:46:07 UTC",
-      "current_price": 0.375
+      "open_time": "2026-04-11 14:45:39 UTC",
+      "current_price": 0.85
+    },
+    {
+      "ticker": "KXDOGE15M-26APR111100-00",
+      "side": "no",
+      "entry_price": 0.495,
+      "shares": 3,
+      "cost": 1.4849999999999999,
+      "pnl": 0.0,
+      "strategy": "momentum",
+      "open_time": "2026-04-11 14:47:43 UTC",
+      "current_price": 0.998
+    },
+    {
+      "ticker": "KXXRP15M-26APR111100-00",
+      "side": "no",
+      "entry_price": 0.5,
+      "shares": 3,
+      "cost": 1.5,
+      "pnl": 0.0,
+      "strategy": "momentum",
+      "open_time": "2026-04-11 14:46:10 UTC",
+      "current_price": 0.9955
+    },
+    {
+      "ticker": "KXHYPE15M-26APR111100-00",
+      "side": "no",
+      "entry_price": 0.46,
+      "shares": 3,
+      "cost": 1.3800000000000001,
+      "pnl": 0.0,
+      "strategy": "momentum",
+      "open_time": "2026-04-11 14:49:17 UTC",
+      "current_price": 0.955
     }
   ],
   "last_10_closed_trades": [
+    {
+      "ticker": "KXHYPE15M-26APR111045-45",
+      "side": "no",
+      "entry_price": 0.485,
+      "exit_price": 0.045,
+      "shares": 3,
+      "cost": 1.455,
+      "pnl": -1.32,
+      "strategy": "momentum",
+      "open_time": "2026-04-11 14:31:16 UTC",
+      "close_time": "2026-04-11 14:37:58 UTC",
+      "exit_reason": "cut_loss_30"
+    },
+    {
+      "ticker": "KXXRP15M-26APR111045-45",
+      "side": "no",
+      "entry_price": 0.395,
+      "exit_price": 0.073,
+      "shares": 3,
+      "cost": 1.185,
+      "pnl": -0.966,
+      "strategy": "momentum",
+      "open_time": "2026-04-11 14:30:45 UTC",
+      "close_time": "2026-04-11 14:37:58 UTC",
+      "exit_reason": "cut_loss_30"
+    },
+    {
+      "ticker": "KXHYPE15M-26APR111000-00",
+      "side": "yes",
+      "entry_price": 0.5,
+      "exit_price": 0.028,
+      "shares": 3,
+      "cost": 1.5,
+      "pnl": -1.416,
+      "strategy": "momentum",
+      "open_time": "2026-04-11 13:46:07 UTC",
+      "close_time": "2026-04-11 14:00:01 UTC",
+      "exit_reason": "settled"
+    },
+    {
+      "ticker": "KXDOGE15M-26APR111000-00",
+      "side": "no",
+      "entry_price": 0.45999999999999996,
+      "exit_price": 0.9995,
+      "shares": 3,
+      "cost": 1.38,
+      "pnl": 1.6185000000000003,
+      "strategy": "momentum",
+      "open_time": "2026-04-11 13:47:08 UTC",
+      "close_time": "2026-04-11 14:00:01 UTC",
+      "exit_reason": "settled"
+    },
     {
       "ticker": "KXSOL15M-26APR110945-45",
       "side": "yes",
@@ -233,45 +370,6 @@
       "open_time": "2026-04-11 13:15:36 UTC",
       "close_time": "2026-04-11 13:30:06 UTC",
       "exit_reason": "settled"
-    },
-    {
-      "ticker": "KXBNB15M-26APR110930-30",
-      "side": "no",
-      "entry_price": 0.5,
-      "exit_price": 0.353,
-      "shares": 3,
-      "cost": 1.5,
-      "pnl": -0.44100000000000006,
-      "strategy": "momentum",
-      "open_time": "2026-04-11 13:15:36 UTC",
-      "close_time": "2026-04-11 13:30:06 UTC",
-      "exit_reason": "settled"
-    },
-    {
-      "ticker": "KXETH15M-26APR110930-30",
-      "side": "no",
-      "entry_price": 0.365,
-      "exit_price": 0.9995,
-      "shares": 3,
-      "cost": 1.095,
-      "pnl": 1.9035000000000002,
-      "strategy": "momentum",
-      "open_time": "2026-04-11 13:18:42 UTC",
-      "close_time": "2026-04-11 13:30:06 UTC",
-      "exit_reason": "settled"
-    },
-    {
-      "ticker": "KXDOGE15M-26APR110930-30",
-      "side": "no",
-      "entry_price": 0.5,
-      "exit_price": 0.16999999999999998,
-      "shares": 3,
-      "cost": 1.5,
-      "pnl": -0.99,
-      "strategy": "momentum",
-      "open_time": "2026-04-11 13:18:11 UTC",
-      "close_time": "2026-04-11 13:24:55 UTC",
-      "exit_reason": "cut_loss_30"
     }
   ]
 }

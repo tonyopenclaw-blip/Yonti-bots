@@ -271,3 +271,153 @@ Entry prices that triggered cut_loss:
 3. **Add duration tracking** to correlate signals with actual time_remaining at signal fire
 4. **Consider tightening entry zone** to $0.45-$0.50 only
 
+
+---
+
+## Loss Analysis (2026-04-11) - Superbot Paper Trading
+
+### Executive Summary
+Balance dropped from $34.67 to ~$25-27 over ~40 minutes of trading. Win rate: 28.6% (2/7 trades won). The bot lost $5.86 on 7 trades with massive cut-loss bleeding.
+
+---
+
+### Top 5 Loss Root Causes
+
+#### 1. 🔴 CUT-LOSS IS CUTTING WINNERS (Estimated Cost: ~$5.50 of $5.86 lost)
+
+**This is the #1 killer.** The cut_loss_30 logic fires at `$0.10` on YES positions, closing them BEFORE they can win.
+
+Evidence from report.json:
+| Ticker | Entry | Cut-Loss Exit | Would Have Settled At | Winner? | Lost |
+|--------|-------|---------------|----------------------|---------|------|
+| KXBNB YES | $0.50 | $0.04 | $1.00 | YES | -$1.38 |
+| KXXRP YES | $0.355 | $0.0545 | $0.0545? | ??? | -$0.90 |
+| KXSOL YES | $0.455 | $0.09 | settlement hit | YES | -$1.10 |
+| KXHYPE YES | $0.50 | $0.10 | settlement hit | YES | -$1.20 |
+| KXBTC YES | $0.435 | $0.0495 | settlement hit | YES | -$1.16 |
+| KXDOGE YES | $0.46 | **survived** | $0.996 | YES | **+$1.61** |
+
+**Key insight**: DOGE is the ONLY trade that survived to settlement. It won +$1.61. Every other YES position was cut at $0.04-$0.10 and lost. The cut-loss is specifically targeting YES positions at $0.10 (30% of entry at $0.50).
+
+**The cut-loss code** in `_check_existing_positions`:
+```python
+elif mid_price <= 0.10 and time_left <= 450:
+    self._close_position(ticker, "cut_loss_30", mid_price, side=side)
+```
+
+**This fires on candle-duration positions when it shouldn't.** The candle-duration positions are supposed to hold to expiry with NO cut-loss. But the cut-loss check doesn't check `is_candle_duration`.
+
+---
+
+#### 2. 🔴 SIGNAL CONFLICT: Candle Watcher Says NO, Bot Trades YES
+
+The CandleWatcher is generating NO signals (all 8 coins with conf=99), but the bot's `_execute_candle_signal` has a hard block on YES entries when `mid > 0.50`:
+
+```python
+if side == "yes" and mid > 0.50:
+    logger.info(f"[{coin}] ENTRY SKIP: YES entry ${mid:.4f} > $0.50 (too expensive)")
+    continue
+```
+
+**Result**: YES signals are blocked at $0.50+. The bot enters at $0.50 exactly (midpoint) for YES signals. But the candle watcher NO signals (conf=99) ARE getting through and executing as YES positions because of how the candle completion analysis works.
+
+Looking at the log at 19:15:35:
+- BTC candle signal: NO, conf=99, market mid=$0.6050 → SKIPPED (correct, NO not valid at $0.60)
+- BNB candle signal: NO, conf=99, market mid=$0.5000 → **EXECUTED AS YES POSITION** ← this is wrong
+
+The logic is backwards. The candle watcher says NO but the bot enters YES at $0.50. These two things are contradictory.
+
+---
+
+#### 3. 🟡 KELLY SIZING IS BROKEN (Estimated Impact: Over-sizing losers)
+
+Kelly tracker shows: `W=0.00%, R=0.83-0.91x, Kelly=4.00%`
+
+With 0% win rate and negative R, the Kelly formula should return near 0 (don't bet). But it falls back to `FIXED_KELLY_PCT = 4%` baseline. Then:
+- `entry_kelly_pct = 0.04 * 0.5 = 2%` (50% Kelly at entry)
+- `effective_pct = 2% * 1.5 (CONF>=90) = 3%`
+- `dollar_amount = $40.66 * 3% = $1.22`  
+- `contracts = $1.22 / $0.50 = 2.4 → ceil → 3 contracts`
+
+**Problem**: Kelly has 0 history with wins. Using 4% fixed Kelly with 1.5x confidence boost for a 0% win-rate strategy is dangerous. The bot is betting 3 contracts (~$1.50) on every trade regardless of track record.
+
+**Fix needed**: When W=0%, Kelly should be near 0 (skip the trade) not fallback to 4%.
+
+---
+
+#### 4. 🟡 SCALE-IN AT $0.80 AMPLIFIES LOSING POSITIONS
+
+The scale-in code:
+```python
+if mid_price >= 0.80 and not position.scaled_in and time_left <= 300:
+    scale_cost = 5.0  # Fixed $5 notional
+```
+
+This adds $5 more when price reaches $0.80. But if the position is already losing and price is at $0.80, adding more exposure at a bad price compounds losses. The scale-in should ONLY happen when the position is already profitable.
+
+---
+
+#### 5. 🟠 ENTRY AT $0.50 MIDPOINT = MAXIMUM UNCERTAINTY
+
+Every trade in the session was entered at $0.50 (midpoint). This is the worst possible entry price because:
+- The market has no directional conviction at $0.50
+- 50/50 odds = maximum variance
+- The bot has no edge at the midpoint
+
+The $0.35-$0.50 "sweet spot" mentioned in Nerd's analysis wasn't being used. Instead all entries were at exactly $0.50.
+
+---
+
+### Fee Impact
+Looking at trade confirmations:
+- BNB NO win: taker_fee=$0.04 on $0.99 cost = ~4%
+- DOGE YES win: taker_fee=$0.04 on $0.84 cost = ~4.8%
+- XRP YES loss: taker_fee=$0.04 on $0.80 cost = ~5%
+
+**Fees are ~4-5% of trade cost, which is massive.** On a $1.50 trade, a $0.04 fee is 2.7%. To break even after fees, you need to win more than you lose by enough to offset.
+
+With a 28.6% win rate and ~4% fees, the math is unfavorable. 
+
+---
+
+### YES vs NO Analysis
+From report.json:
+- **NO positions**: 2 trades (1 win, 1 pending) 
+- **YES positions**: 5 trades (1 win, 4 closed via cut_loss)
+- **YES cut-loss rate**: 4/5 YES positions = 80% cut-loss rate
+
+The bot is heavily shorting YES (which means betting YES will go DOWN). But the markets are resolving YES more often than not. The DOGE, BNB, SOL, HYPE, BTC all settled YES, proving the bot was on the wrong side.
+
+---
+
+### The 12-Min NO Lock-In Issue
+The log shows markets were entered at 19:45-19:46 (15 min into session). With 14+ min remaining, these aren't being affected by the 12-min lock-in. But the `BLACKOUT 10-11 MINUTE` window (300-360 seconds remaining) should be skipping entries. 
+
+Looking at entries at 19:45 (~864 seconds remaining = 14.4 min), these are NOT in the blackout window. The blackout only covers 5-6 min remaining, but the bot is entering with 14+ min left. The blackout isn't protecting against bad entries early in the candle.
+
+---
+
+### Recommendations (Priority Order)
+
+1. **FIX CUT-LOSS FOR CANDLE-DURATION**: Add `and not position.is_candle_duration` to the cut-loss condition. Candle-duration positions should NEVER have cut-loss. Let them ride to settlement.
+
+2. **FIX SIGNAL MISMATCH**: The CandleWatcher NO signals should not result in YES positions. Either block all entries at $0.50 or fix the signal interpretation.
+
+3. **FIX KELLY FALLBACK**: When strategy has W=0% (no wins), don't bet. Return 0 contracts instead of falling back to FIXED_KELLY_PCT.
+
+4. **RAISE CUT-LOSS THRESHOLD**: If cut-loss must exist, raise from $0.10 to $0.05 for YES. At $0.50 entry, 10% drop = $0.45, which still has 90% probability of winning. Only cut if price drops below $0.05.
+
+5. **ADD ENTRY PRICE DISCIPLINE**: Only enter at $0.35-$0.50 (sweet spot per Nerd). Don't enter at exactly $0.50.
+
+6. **REDUCE FEES**: Consider maker orders instead of taker. On $1.50 trades, even $0.01 fee savings matters.
+
+---
+
+### Estimated P&L Impact by Issue
+| Issue | Estimated Cost | % of Total Loss |
+|-------|---------------|-----------------|
+| Cut-loss cutting winners | ~$5.50 | 94% |
+| Kelly over-sizing | ~$0.20 | 3% |
+| Fees | ~$0.15 | 2% |
+| Other | ~$0.01 | <1% |
+| **TOTAL** | **~$5.86** | 100% |

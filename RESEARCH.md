@@ -120,3 +120,154 @@ From Nerd's analysis:
 4. Cross-asset filter (BTC+ETH+SOL+XRP momentum aligned)
 5. Dynamic sizing by contract price
 6. ML model (future)
+
+---
+
+## Backtest Results: Tier 1 Signals (2026-04-11)
+
+**Data Source:** superbot_live.log + report.json (2026-04-11 13:06-16:01 UTC)  
+**Total Trades Analyzed:** 33  
+**Win Rate:** 57.6%  
+**Total PnL:** $17.74  
+
+---
+
+### 1. Entry Blackout 10-11 Minute Window (300-360 seconds remaining)
+
+**Finding: UNCERTAIN - No direct evidence for or against**
+
+The 10-11 minute blackout was NOT triggered in today's trading because:
+- Candle signals fire at the START of new candles (time_remaining ~900s)
+- The blackout (300-360s) only affects signals that fire mid-candle
+- Current candle strategy doesn't generate signals in that window
+
+**However, duration analysis shows:**
+| Duration | Trades | Wins | Win Rate | PnL |
+|----------|--------|------|----------|-----|
+| < 8 min  | 6      | 1    | 16.7%    | -$4.39 |
+| 8-10 min | ?      | ?    | ?        | ?     |
+| >= 10 min| 23     | 18   | 78.3%    | +$25.07 |
+
+**Key Insight:** Short-duration trades (forced exits via cut_loss_30) have catastrophic win rate (16.7%). The 10-11 minute window may be catching trades RIGHT BEFORE they get cut, but we don't have direct evidence.
+
+**Recommendation:** Keep the blackout. Even without direct evidence, the concept makes sense (competitors found this window historically bad). The blackout only skips signals, it doesn't affect existing positions.
+
+---
+
+### 2. price_vs_strike_pct
+
+**Finding: NOT DEPLOYED - No historical data available**
+
+The `price_vs_strike_pct` feature was just implemented but NOT deployed to production. No live data exists in logs.
+
+**However, related analysis shows:**
+- When Coinbase BTC is above floor_strike → YES bias is correct
+- When Coinbase BTC is below floor_strike → NO bias is correct
+- The correlation exists conceptually but requires live deployment to measure
+
+**Recommendation:** Deploy and collect data. The external research (kapelame) strongly supports this signal.
+
+---
+
+### 3. ob_imbalance
+
+**Finding: NOT DEPLOYED - No historical data available**
+
+Same as price_vs_strike_pct - implemented but not in production.
+
+**Recommendation:** Deploy alongside price_vs_strike_pct. Both are Tier 1 signals from external research.
+
+---
+
+### 4. Signal Integration (Boost/Penalty)
+
+**Finding: +5 boost for aligned, -15 penalty for conflicting - REASONABLE**
+
+Based on the trade analysis:
+- **Aligned signals** (candle above_pct matches entry side): 85.7% win rate on settled trades
+- **Conflicting signals**: Harder to measure without Tier 1 data
+
+**Current boost/penalty logic:**
+```
+Aligned: +5 conf
+Conflicting: -15 conf  
+Skip if adjusted conf < 50
+```
+
+**Analysis:** The -15 penalty for conflict is aggressive. Consider:
+- -10 might be sufficient (less likely to skip valid signals)
+- The 50 threshold is good (filters weak signals)
+
+---
+
+### 5. Cut Loss Analysis (Critical Finding)
+
+**Cut_loss_30 is DESTROYING our win rate:**
+
+| Metric | Value |
+|--------|-------|
+| Cut loss trades | 11 (33% of all trades) |
+| Cut loss win rate | 0% |
+| Total loss from cut loss | -$8.99 |
+| Settled win rate | 85.7% |
+| Settled PnL | +$26.71 |
+
+**Cut loss is responsible for 50%+ of our losses despite being only 33% of trades.**
+
+Entry prices that triggered cut_loss:
+| Entry Price | Trades | Cut Loss Rate |
+|-------------|--------|---------------|
+| < $0.35     | 2      | 100%          |
+| $0.35-$0.45 | 9      | 55.6%         |
+| $0.45-$0.50 | 12     | 25.0%         |
+| >= $0.50    | 10     | 10.0%         |
+
+**Insight:** Cheaper entries get cut more often because they're already near the stop-loss zone.
+
+---
+
+### 6. Entry Price Zone Analysis
+
+| Zone | Trades | Win Rate | PnL | Cut Loss Rate |
+|------|--------|----------|-----|---------------|
+| Deep cheap (< $0.35) | 2 | 0% | -$1.01 | 100% |
+| Cheap ($0.35-$0.45) | 9 | 44.4% | +$3.34 | 55.6% |
+| Mid ($0.45-$0.50) | 12 | 75.0% | +$9.30 | 25.0% |
+| Expensive (>= $0.50) | 10 | 60.0% | +$6.12 | 10.0% |
+
+**Best zone:** $0.45-$0.50 has highest win rate (75%) with moderate cut loss rate (25%)
+
+---
+
+### 7. Side Analysis (YES vs NO)
+
+| Side | Trades | Wins | Win Rate |
+|------|--------|------|----------|
+| YES | 12 | 7 | 58.3% |
+| NO | 21 | 12 | 57.1% |
+
+**Even split.** Side choice is not the differentiator.
+
+---
+
+### Recommendations Summary
+
+| Feature | Status | Recommendation |
+|---------|--------|----------------|
+| **Blackout 10-11 min** | Not triggered | KEEP - low risk, may help |
+| **price_vs_strike_pct** | Not deployed | DEPLOY - external research strong |
+| **ob_imbalance** | Not deployed | DEPLOY - external research strong |
+| **+5 aligned boost** | Implemented | KEEP - reasonable |
+| **-15 conflict penalty** | Implemented | CONSIDER reducing to -10 |
+| **Cut loss 30** | HURTING | REVIEW - 0% win rate on cut trades |
+| **Entry zone $0.45-$0.50** | Best results | PRIORITIZE this zone |
+
+---
+
+### Priority Actions
+
+1. **Deploy Tier 1 signals** (price_vs_strike_pct + ob_imbalance) to collect live data
+2. **Review cut_loss_30 logic** - it's killing 33% of trades with 0% win rate
+3. **Add duration tracking** to correlate signals with actual time_remaining at signal fire
+4. **Consider tightening entry zone** to $0.45-$0.50 only
+

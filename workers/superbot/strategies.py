@@ -1,3 +1,4 @@
+from pathlib import Path
 import time
 import datetime
 # strategies.py - Superbot Trading Strategies
@@ -348,7 +349,7 @@ class MomentumTracker:
 
     Entry:
     - YES: price crosses midpoint ($0.50) going UP → buy YES
-    - NO: price crosses midpoint ($0.50) going DOWN → buy NO
+    - NO: price crosses midpoint ($0.50) going DOWN → buy NO (ONLY if candle signal agrees)
     - Only enter when momentum is confirmed, not at extremes
 
     Exit:
@@ -362,8 +363,15 @@ class MomentumTracker:
     - 90%+: +2 contracts + 50% size boost
 
     Max 3 contracts per side per coin.
+
+    FIX 2026-04-11: Momentum NO entries now REQUIRE candle signal confirmation.
+    A momentum NO will only fire if there was a recent (<120s) candle NO signal.
+    This prevents momentum NO entries that contradict candle YES direction.
     """
 
+    # Signal fresh window (2 min - must match candle_watcher max age)
+    CANDLE_SIGNAL_FRESH_SEC = 120
+    CANDLE_SIGNALS_DIR = Path(__file__).parent / "candle_signals"
     MIDPOINT = 0.50
     TP_PRICE = 0.70  # Take profit at $0.70+
     SL_PRICE = 0.30  # Stop loss at $0.30
@@ -418,6 +426,21 @@ class MomentumTracker:
             side = 'no'
             reason = f"momentum: crossed DOWN through ${self.MIDPOINT:.2f}"
 
+        # FIX 2026-04-11: Momentum NO entries REQUIRE candle signal confirmation
+        # If this is a NO momentum entry, check for recent candle NO signal
+        # If there's no recent candle NO signal, skip the momentum NO entry entirely
+        if side == 'no':
+            coin = ticker.replace('KX', '').replace('15M', '')
+            if not self._has_candle_no_signal(coin):
+                logger.info(f"MOMENTUM: {ticker} crossed DOWN but BLOCKED - no recent candle NO signal for {coin} (momentum NO requires candle confirmation)")
+                # Mark as crossed so we don't re-check this candle
+                state['crossed'] = True
+                state['direction'] = direction
+                state['entry_price'] = current_price
+                return None
+            else:
+                logger.info(f"MOMENTUM: {ticker} crossed DOWN - candle NO signal confirmed for {coin}, allowing NO entry")
+
         # Mark as crossed (only fire once per direction)
         state['crossed'] = True
         state['direction'] = direction
@@ -462,6 +485,41 @@ class MomentumTracker:
         )
         
         return signal
+
+    def _has_candle_no_signal(self, coin: str) -> bool:
+        """
+        Check if there's a fresh (<120s) candle NO signal for the given coin.
+        This is used to confirm momentum NO entries - momentum NO should only fire
+        when the candle watcher has also generated a NO signal for the same coin.
+        """
+        try:
+            import json
+            from datetime import datetime
+            signal_file = self.CANDLE_SIGNALS_DIR / f"{coin.upper()}.json"
+            if not signal_file.exists():
+                return False
+            with open(signal_file, 'r') as f:
+                signal_data = json.load(f)
+            
+            # Check if it's a NO signal
+            side = signal_data.get('side', '').upper()
+            if side != 'NO':
+                return False
+            
+            # Check timestamp is fresh (within CANDLE_SIGNAL_FRESH_SEC)
+            ts_str = signal_data.get('timestamp', '')
+            if ts_str:
+                signal_time = datetime.fromisoformat(ts_str.replace('Z', '+00:00'))
+                if signal_time.tzinfo is None:
+                    signal_time = signal_time.replace(tzinfo=None)
+                age_sec = (datetime.utcnow() - signal_time).total_seconds()
+                if age_sec > self.CANDLE_SIGNAL_FRESH_SEC:
+                    return False
+            
+            return True
+        except Exception as e:
+            logger.debug(f"Error checking candle NO signal for {coin}: {e}")
+            return False
 
     def has_crossed(self, ticker: str) -> bool:
         """Check if ticker has crossed the midpoint."""

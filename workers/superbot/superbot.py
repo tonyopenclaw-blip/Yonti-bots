@@ -308,8 +308,8 @@ class CoinTrader:
                 continue
 
             # === NEW: PRICE-LEVEL SCALE-IN & CUT-LOSS ===
-            # SCALE-IN: If price >= $0.70 and we hold that side, buy $5 more (once per position)
-            if mid_price >= 0.70 and not position.scaled_in and time_left <= 300:
+            # SCALE-IN: If price >= $0.80 and we hold that side, buy $5 more (once per position)
+            if mid_price >= 0.80 and not position.scaled_in and time_left <= 300:
                 scale_cost = 5.0  # Fixed $5 notional
                 scale_result = self.api.place_order(
                     ticker=ticker,
@@ -325,8 +325,8 @@ class CoinTrader:
                 else:
                     logger.warning(f"SCALE IN FAILED: [{self.coin}] {scale_result['error']}")
 
-            # CUT-LOSS: If price <= $0.30 AND time_remaining <= 7.5 min, close entire position immediately
-            elif mid_price <= 0.30 and time_left <= 450:
+            # CUT-LOSS: If price <= $0.20 AND time_remaining <= 7.5 min, close entire position immediately
+            elif mid_price <= 0.20 and time_left <= 450:
                 entry_price = position.avg_price if position.avg_price > 0 else position.entry_price
                 logger.warning(f"CUT LOSS: [{self.coin}] {position.side.upper()} {ticker} exited at ${mid_price:.4f} (was ${entry_price:.4f} entry, time_left={time_left}s)")
                 self._close_position(ticker, "cut_loss_30", mid_price, side=side)

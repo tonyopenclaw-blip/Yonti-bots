@@ -483,7 +483,8 @@ class CoinTrader:
 
             # CUT-LOSS: If price <= $0.10 AND time_remaining <= 7.5 min, close entire position immediately
             # Nerd fix: raised from $0.20 to $0.10 - $0.20 was cutting winners prematurely (33% cut-loss rate, 0% win rate)
-            elif mid_price <= 0.10 and time_left <= 450:
+            # EXCEPTION: candle-duration positions hold to expiry - they would have won (BNB, SOL, HYPE, BTC, XRP all won)
+            elif mid_price <= 0.10 and time_left <= 450 and not position.is_candle_duration:
                 entry_price = position.avg_price if position.avg_price > 0 else position.entry_price
                 logger.warning(f"CUT LOSS: [{self.coin}] {position.side.upper()} {ticker} exited at ${mid_price:.4f} (was ${entry_price:.4f} entry, time_left={time_left}s)")
                 self._close_position(ticker, "cut_loss_30", mid_price, side=side)

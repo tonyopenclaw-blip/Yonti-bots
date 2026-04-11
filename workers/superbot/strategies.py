@@ -1440,6 +1440,12 @@ class StrategyEngine:
             logger.debug(f"{market.ticker}: Entry price ${mid_price:.4f} outside ${MIN_ENTRY_PRICE}-${MAX_ENTRY_PRICE} range - SKIPPING")
             return []
 
+        # === ENTRY PRICE GUARD: Block entries below $0.35 (0% win rate zone) ===
+        # Nerd's backtest: entry price <$0.35 has 0% win rate, 100% cut-loss rate
+        if mid_price < 0.35:
+            logger.info(f"{market.ticker}: ENTRY SKIP: entry price ${mid_price:.4f} < $0.35 (0% win zone)")
+            return []
+
         # === TIER 1: ENTRY BLACKOUT 10-11 MINUTE WINDOW ===
         # Skip ALL signals when time_remaining is between 300-360 seconds (10-11 min into candle)
         # Based on competitor data showing this window has poor win rates
@@ -1519,6 +1525,12 @@ class StrategyEngine:
                 else:
                     tier1_conflict = True
                     logger.debug(f"{market.ticker}: TIER 1 ob_imbalance conflict (heavy NO imbalance but signal is YES)")
+            
+            # === SWEET SPOT ENTRY ZONE BOOST: +3 conf for $0.45-$0.50 entries ===
+            # Nerd's backtest: entry zone $0.45-$0.50 has 75% win rate (best zone)
+            if 0.45 <= mid_price <= 0.50:
+                tier1_boost += 3
+                logger.debug(f"{market.ticker}: SWEET SPOT ENTRY +3 boost (${mid_price:.4f} in $0.45-$0.50 zone)")
             
             # If there's a conflict, reduce confidence significantly or skip
             if tier1_conflict:

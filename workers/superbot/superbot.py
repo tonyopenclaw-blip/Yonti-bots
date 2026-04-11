@@ -481,8 +481,9 @@ class CoinTrader:
                 else:
                     logger.warning(f"SCALE IN FAILED: [{self.coin}] {scale_result['error']}")
 
-            # CUT-LOSS: If price <= $0.20 AND time_remaining <= 7.5 min, close entire position immediately
-            elif mid_price <= 0.20 and time_left <= 450:
+            # CUT-LOSS: If price <= $0.10 AND time_remaining <= 7.5 min, close entire position immediately
+            # Nerd fix: raised from $0.20 to $0.10 - $0.20 was cutting winners prematurely (33% cut-loss rate, 0% win rate)
+            elif mid_price <= 0.10 and time_left <= 450:
                 entry_price = position.avg_price if position.avg_price > 0 else position.entry_price
                 logger.warning(f"CUT LOSS: [{self.coin}] {position.side.upper()} {ticker} exited at ${mid_price:.4f} (was ${entry_price:.4f} entry, time_left={time_left}s)")
                 self._close_position(ticker, "cut_loss_30", mid_price, side=side)
@@ -1106,6 +1107,13 @@ class Superbot:
                 continue
 
             mid = (market.yes_bid + market.yes_ask) / 2
+
+            # === ENTRY PRICE GUARD: Block entries below $0.35 (0% win rate zone) ===
+            # Nerd's backtest: entry price <$0.35 has 0% win rate, 100% cut-loss rate
+            if mid < 0.35:
+                logger.info(f"[{coin}] ENTRY SKIP: entry price ${mid:.4f} < $0.35 (0% win zone)")
+                continue
+
             # Skip if mid price > $0.50 (too expensive either way)
             if mid > ENTRY_PRICE_LIMIT:
                 logger.info(f"[{coin}] CANDLE SKIP: entry price ${mid:.4f} > ${ENTRY_PRICE_LIMIT:.2f} ({side.upper()} signal)")

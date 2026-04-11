@@ -12415,3 +12415,73 @@ BNB (KXBNB15M):
 Total tradeable markets: 1
 
 Saved to /home/ubuntu/.openclaw/workspace/workers/scanner/../data/live_markets.json
+Kalshi Market Scanner starting...
+Current 15-min window: 00:00 - 00:15 UTC
+Checking tickers: ['26APR110000-00', '26APR110015-15', '26APR110030-30', '26APR110045-45']
+
+Scanning all series...
+
+SCAN RESULTS - 2026-04-11 00:00 UTC
+============================================================
+
+BNB (KXBNB15M):
+  KXBNB15M-26APR102015-15 | active | YES: $0.76
+
+============================================================
+Total tradeable markets: 1
+
+Saved to /home/ubuntu/.openclaw/workspace/workers/scanner/../data/live_markets.json
+Kalshi Market Scanner starting...
+Current 15-min window: 00:15 - 00:30 UTC
+Checking tickers: ['26APR110015-15', '26APR110030-30', '26APR110045-45', '26APR110100-00']
+
+Scanning all series...
+
+SCAN RESULTS - 2026-04-11 00:15 UTC
+============================================================
+
+XRP (KXXRP15M):
+  KXXRP15M-26APR102030-30 | active | YES: $0.67
+
+BNB (KXBNB15M):
+  KXBNB15M-26APR102030-30 | active | YES: $0.76
+
+============================================================
+Total tradeable markets: 2
+
+Saved to /home/ubuntu/.openclaw/workspace/workers/scanner/../data/live_markets.json
+Kalshi Market Scanner starting...
+Current 15-min window: 00:30 - 00:45 UTC
+Checking tickers: ['26APR110030-30', '26APR110045-45', '26APR110100-00', '26APR110115-15']
+
+Scanning all series...
+
+SCAN RESULTS - 2026-04-11 00:30 UTC
+============================================================
+
+BNB (KXBNB15M):
+  KXBNB15M-26APR102045-45 | active | YES: $0.76
+
+============================================================
+Total tradeable markets: 1
+
+Saved to /home/ubuntu/.openclaw/workspace/workers/scanner/../data/live_markets.json
+Kalshi Market Scanner starting...
+Current 15-min window: 00:45 - 01:00 UTC
+Checking tickers: ['26APR110045-45', '26APR110100-00', '26APR110115-15', '26APR110130-30']
+
+Scanning all series...
+
+SCAN RESULTS - 2026-04-11 00:45 UTC
+============================================================
+
+XRP (KXXRP15M):
+  KXXRP15M-26APR102100-00 | active | YES: $0.67
+
+BNB (KXBNB15M):
+  KXBNB15M-26APR102100-00 | active | YES: $0.76
+
+============================================================
+Total tradeable markets: 2
+
+Saved to /home/ubuntu/.openclaw/workspace/workers/scanner/../data/live_markets.json

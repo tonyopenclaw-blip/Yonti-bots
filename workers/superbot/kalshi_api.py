@@ -21,6 +21,7 @@ class Market:
     open_time: str
     close_time: str
     series_ticker: str = ""
+    floor_strike: Optional[float] = None  # Reference price at candle open (from API)
 
     def time_to_expiry_sec(self) -> float:
         """Calculate seconds until market closes."""
@@ -181,6 +182,15 @@ class KalshiAPI:
         markets = []
         for m in result.get("markets", []):
             try:
+                # Parse floor_strike from market data (set at candle open)
+                floor_strike_raw = m.get("floor_strike")
+                floor_strike = None
+                if floor_strike_raw is not None:
+                    try:
+                        floor_strike = float(floor_strike_raw)
+                    except (ValueError, TypeError):
+                        pass
+                
                 markets.append(Market(
                     ticker=m.get("ticker", ""),
                     yes_bid=float(m.get("yes_bid_dollars", 0) or 0),
@@ -191,7 +201,8 @@ class KalshiAPI:
                     status=m.get("status", ""),
                     result=m.get("result"),
                     open_time=m.get("open_time", ""),
-                    close_time=m.get("close_time", "")
+                    close_time=m.get("close_time", ""),
+                    floor_strike=floor_strike
                 ))
             except (ValueError, TypeError) as e:
                 logger.warning(f"Error parsing market: {e}")
@@ -205,6 +216,15 @@ class KalshiAPI:
             return None
         m = result.get("market", result)
         try:
+            # Parse floor_strike from market data (set at candle open)
+            floor_strike_raw = m.get("floor_strike")
+            floor_strike = None
+            if floor_strike_raw is not None:
+                try:
+                    floor_strike = float(floor_strike_raw)
+                except (ValueError, TypeError):
+                    pass
+            
             return Market(
                 ticker=m.get("ticker", ""),
                 yes_bid=float(m.get("yes_bid_dollars", 0) or 0),
@@ -215,7 +235,8 @@ class KalshiAPI:
                 status=m.get("status", ""),
                 result=m.get("result"),
                 open_time=m.get("open_time", ""),
-                close_time=m.get("close_time", "")
+                close_time=m.get("close_time", ""),
+                floor_strike=floor_strike
             )
         except:
             return None
@@ -236,6 +257,15 @@ class KalshiAPI:
         markets = []
         for m in result.get("markets", []):
             try:
+                # Parse floor_strike from market data (set at candle open)
+                floor_strike_raw = m.get("floor_strike")
+                floor_strike = None
+                if floor_strike_raw is not None:
+                    try:
+                        floor_strike = float(floor_strike_raw)
+                    except (ValueError, TypeError):
+                        pass
+                
                 markets.append(Market(
                     ticker=m.get("ticker", ""),
                     yes_bid=float(m.get("yes_bid_dollars", 0) or 0),
@@ -247,7 +277,8 @@ class KalshiAPI:
                     result=m.get("result"),
                     open_time=m.get("open_time", ""),
                     close_time=m.get("close_time", ""),
-                    series_ticker=series_ticker
+                    series_ticker=series_ticker,
+                    floor_strike=floor_strike
                 ))
             except (ValueError, TypeError):
                 continue
@@ -306,3 +337,18 @@ class KalshiAPI:
     def cancel_order(self, order_id: str) -> Dict:
         """Cancel a specific order by ID."""
         return self._delete(f"/portfolio/orders/{order_id}")
+    
+    def get_orderbook(self, ticker: str) -> Optional[Dict]:
+        """
+        Get the orderbook for a market (no auth needed for market data).
+        Returns dict with 'yes_bids', 'yes_asks', 'no_bids', 'no_asks' keys.
+        Each is a list of [price, size] tuples.
+        
+        ob_imbalance = (yes_qty - no_qty) / (yes_qty + no_qty)
+        where yes_qty = sum of all YES bid sizes, no_qty = sum of all NO bid sizes
+        """
+        result = self._get(f"/markets/{ticker}/orderbook")
+        if "error" in result:
+            logger.debug(f"get_orderbook error for {ticker}: {result['error']}")
+            return None
+        return result

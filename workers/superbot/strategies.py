@@ -1399,7 +1399,7 @@ class StrategyEngine:
 
         return confidence
 
-    def evaluate_market(self, market: Market, coin: str = None) -> List[TradeSignal]:
+    def evaluate_market(self, market: Market, coin: str = None, price_vs_strike_pct: float = 0.0, ob_imbalance: float = 0.0) -> List[TradeSignal]:
         """
         NEW SERIES STRATEGY - Grace Period Only:
 
@@ -1410,6 +1410,17 @@ class StrategyEngine:
            - At least 2 minutes into the series
            - Has actual Coinbase momentum (not neutral)
            - For MOMENTUM: price at extreme ($0.10 or $0.90) AND clear Coinbase bias
+
+        TIER 1 FEATURES:
+        - price_vs_strike_pct: Coinbase price deviation from floor_strike in %
+          If > 0 (above strike) → YES bias, If < 0 (below strike) → NO bias
+        - ob_imbalance: Orderbook imbalance (-1 to +1)
+          Heavy YES imbalance (>0.3) + our signal = stronger YES entry
+          Heavy NO imbalance (<-0.3) + our signal = stronger NO entry
+        
+        TIER 1: Entry Blackout 10-11 minute window
+        - Skip ALL signals when time_remaining is between 300-360 seconds (10-11 min into candle)
+        - Based on competitor data showing this window has poor win rates
 
         Trailing Stop: Trigger 50%, Buffer 40%
         """
@@ -1428,6 +1439,21 @@ class StrategyEngine:
         if not (MIN_ENTRY_PRICE <= mid_price <= MAX_ENTRY_PRICE):
             logger.debug(f"{market.ticker}: Entry price ${mid_price:.4f} outside ${MIN_ENTRY_PRICE}-${MAX_ENTRY_PRICE} range - SKIPPING")
             return []
+
+        # === TIER 1: ENTRY BLACKOUT 10-11 MINUTE WINDOW ===
+        # Skip ALL signals when time_remaining is between 300-360 seconds (10-11 min into candle)
+        # Based on competitor data showing this window has poor win rates
+        if 300 <= time_left <= 360:
+            logger.debug(f"{market.ticker}: TIER 1 BLACKOUT - in 10-11 min window (time_left={time_left}s) - SKIPPING")
+            return []
+
+        # === TIER 1: Log price_vs_strike_pct and ob_imbalance for context ===
+        if abs(price_vs_strike_pct) > 0.05:
+            bias = "YES" if price_vs_strike_pct > 0 else "NO"
+            logger.debug(f"{market.ticker}: TIER 1 price_vs_strike={price_vs_strike_pct:.3f}% ({bias} bias)")
+        if abs(ob_imbalance) > 0.15:
+            bias = "YES" if ob_imbalance > 0 else "NO"
+            logger.debug(f"{market.ticker}: TIER 1 ob_imbalance={ob_imbalance:.3f} ({bias} heavy)")
 
         # === TRACK MARKET OPEN TIME for grace period ===
         if market.ticker not in self._market_open_times:
@@ -1456,26 +1482,81 @@ class StrategyEngine:
         # NO SL/TP for candle-duration positions (hold to expiry)
         candle_signal = self.candle_duration.update(market.ticker, mid_price, coin)
         if candle_signal:
-            # Calculate Kelly size based on probability and confidence
+            # === TIER 1: Integrate price_vs_strike_pct and ob_imbalance signals ===
+            # Adjust confidence based on Tier 1 signals
+            adj_confidence = candle_signal.confidence
+            tier1_boost = 0
+            tier1_conflict = False
+            
+            # Check price_vs_strike alignment
+            if price_vs_strike_pct > 0.05:  # Above strike → YES bias
+                if candle_signal.side == 'yes':
+                    tier1_boost += 5
+                    logger.debug(f"{market.ticker}: TIER 1 price_vs_strike YES alignment +5 boost")
+                else:
+                    tier1_conflict = True
+                    logger.debug(f"{market.ticker}: TIER 1 price_vs_strike conflict (coin above strike but signal is NO)")
+            elif price_vs_strike_pct < -0.05:  # Below strike → NO bias
+                if candle_signal.side == 'no':
+                    tier1_boost += 5
+                    logger.debug(f"{market.ticker}: TIER 1 price_vs_strike NO alignment +5 boost")
+                else:
+                    tier1_conflict = True
+                    logger.debug(f"{market.ticker}: TIER 1 price_vs_strike conflict (coin below strike but signal is YES)")
+            
+            # Check ob_imbalance alignment
+            if ob_imbalance > 0.3:  # Heavy YES imbalance
+                if candle_signal.side == 'yes':
+                    tier1_boost += 5
+                    logger.debug(f"{market.ticker}: TIER 1 ob_imbalance YES alignment +5 boost")
+                else:
+                    tier1_conflict = True
+                    logger.debug(f"{market.ticker}: TIER 1 ob_imbalance conflict (heavy YES imbalance but signal is NO)")
+            elif ob_imbalance < -0.3:  # Heavy NO imbalance
+                if candle_signal.side == 'no':
+                    tier1_boost += 5
+                    logger.debug(f"{market.ticker}: TIER 1 ob_imbalance NO alignment +5 boost")
+                else:
+                    tier1_conflict = True
+                    logger.debug(f"{market.ticker}: TIER 1 ob_imbalance conflict (heavy NO imbalance but signal is YES)")
+            
+            # If there's a conflict, reduce confidence significantly or skip
+            if tier1_conflict:
+                adj_confidence = max(40, candle_signal.confidence - 15)  # At least reduce to skip threshold
+                logger.info(f"{market.ticker}: TIER 1 CONFLICT detected - reduced confidence to {adj_confidence}")
+            else:
+                adj_confidence = candle_signal.confidence + tier1_boost
+            
+            # Skip if confidence drops below threshold after adjustment
+            if adj_confidence < 50:
+                logger.info(f"{market.ticker}: TIER 1 signal filtered - adjusted confidence {adj_confidence} below threshold")
+                return []
+            
+            # Calculate Kelly size based on adjusted probability and confidence
             prob = mid_price if candle_signal.side == 'yes' else (1 - mid_price)
             size, kelly_pct, confidence = self.calculate_kelly_size(
-                Strategy.MOMENTUM, prob, candle_signal.confidence, mid_price
+                Strategy.MOMENTUM, prob, adj_confidence, mid_price
             )
             
             # Calculate scale-in size (50% of Kelly size, min 1)
             scale_in_size = max(1, int(size * 0.5))
             
             above_pct = self.candle_duration.get_above_pct(market.ticker)
+            
+            # Log with Tier 1 context
             logger.info(
                 f"CANDLE_DURATION SIGNAL: {market.ticker} ({coin}) | "
                 f"Side: {candle_signal.side} @ ${mid_price:.4f} | "
                 f"Above open: {above_pct:.1%} | "
                 f"contracts={int(size):d} | scale_in={int(scale_in_size):d} | "
-                f"CONF={candle_signal.confidence} | NO SL/TP (hold to expiry)"
+                f"CONF={adj_confidence} (base={candle_signal.confidence}, tier1_boost={tier1_boost}) | "
+                f"price_vs_strike={price_vs_strike_pct:.3f}% | ob_imbalance={ob_imbalance:.3f} | "
+                f"NO SL/TP (hold to expiry)"
             )
             
             candle_signal.size = int(size)
             candle_signal.scale_in_size = int(scale_in_size)
+            candle_signal.confidence = adj_confidence
             return [candle_signal]
 
         # === Get Coinbase bias - DISABLED (only candle-duration) ===

@@ -73,6 +73,8 @@ class CoinbasePreFilter:
     Only calls Kalshi when a cross is detected.
 
     This dramatically reduces Kalshi API calls (from 200+ to ~50 per hour).
+    
+    TIER 1 FEATURE: Also tracks price_vs_strike_pct for signal confirmation.
     """
 
     def __init__(self):
@@ -82,6 +84,9 @@ class CoinbasePreFilter:
         self.last_poll = 0
         self.cross_detected: Dict[str, Optional[str]] = {}  # coin -> 'up', 'down', or None
         self._coinbase_products = COINBASE_PRODUCTS
+        # TIER 1: price_vs_strike tracking
+        self.price_vs_strike_pct: Dict[str, float] = {}  # coin -> deviation from floor_strike in %
+        self.floor_strikes: Dict[str, float] = {}  # coin -> floor_strike price
 
     def check_cross(self, coin: str) -> Optional[str]:
         """
@@ -128,6 +133,47 @@ class CoinbasePreFilter:
             logger.debug(f"COINBASE PRE-FILTER: Error fetching {coin}: {e}")
             return None
 
+    def update_price_vs_strike(self, coin: str, floor_strike: float):
+        """
+        TIER 1: Update price_vs_strike_pct for a coin.
+        
+        price_vs_strike_pct = (coinbase_price - floor_strike) / floor_strike * 100
+        
+        If > 0 (BTC above strike) → YES bias
+        If < 0 (BTC below strike) → NO bias
+        """
+        if floor_strike is None or floor_strike <= 0:
+            self.price_vs_strike_pct[coin] = 0.0
+            return
+        
+        self.floor_strikes[coin] = floor_strike
+        coin_price = self.last_prices.get(coin)
+        
+        if coin_price is not None:
+            pct = (coin_price - floor_strike) / floor_strike * 100
+            self.price_vs_strike_pct[coin] = pct
+            
+            # Log significant deviations (>0.1%)
+            if abs(pct) > 0.1:
+                bias = "YES" if pct > 0 else "NO"
+                logger.debug(f"PRICE_VS_STRIKE: {coin} {pct:.3f}% ({bias} bias) - coinbase=${coin_price:.2f} vs strike=${floor_strike:.2f}")
+
+    def get_price_vs_strike_pct(self, coin: str) -> float:
+        """Get the price_vs_strike_pct for a coin (0.0 if unknown)."""
+        return self.price_vs_strike_pct.get(coin, 0.0)
+
+    def get_price_vs_strike_bias(self, coin: str) -> str:
+        """
+        TIER 1: Get directional bias based on price_vs_strike_pct.
+        Returns 'yes', 'no', or 'neutral'.
+        """
+        pct = self.price_vs_strike_pct.get(coin, 0.0)
+        if pct > 0.05:  # >0.05% above strike → YES bias
+            return 'yes'
+        elif pct < -0.05:  # >0.05% below strike → NO bias
+            return 'no'
+        return 'neutral'
+
     def get_price(self, coin: str) -> Optional[float]:
         """Get the last known Coinbase price for a coin."""
         return self.last_prices.get(coin)
@@ -135,6 +181,116 @@ class CoinbasePreFilter:
     def reset_cross(self, coin: str):
         """Reset the cross detection for a coin (when market expires)."""
         self.cross_detected[coin] = None
+
+
+class OrderbookMonitor:
+    """
+    TIER 1 FEATURE: Monitors orderbook imbalance every 10 seconds.
+    
+    ob_imbalance = (yes_qty - no_qty) / (yes_qty + no_qty)
+    
+    Heavy YES imbalance (>0.3) + our signal = stronger YES entry
+    Heavy NO imbalance (<-0.3) + our signal = stronger NO entry
+    
+    API: GET /trade-api/v2/markets/{ticker}/orderbook (no auth needed)
+    """
+
+    def __init__(self, api: KalshiAPI):
+        self.api = api
+        self.poll_interval = 10  # seconds
+        self.last_poll: Dict[str, float] = {}  # ticker -> last poll timestamp
+        self.ob_imbalance: Dict[str, float] = {}  # ticker -> imbalance (-1 to +1)
+        self.yes_qty: Dict[str, float] = {}  # ticker -> total YES bid qty
+        self.no_qty: Dict[str, float] = {}  # ticker -> total NO bid qty
+
+    def update_orderbook(self, ticker: str) -> Optional[float]:
+        """
+        Poll orderbook for a ticker and calculate imbalance.
+        Returns the ob_imbalance value or None if failed.
+        """
+        # Rate limit: only poll every poll_interval seconds per ticker
+        last = self.last_poll.get(ticker, 0)
+        if time.time() - last < self.poll_interval:
+            return self.ob_imbalance.get(ticker)
+        
+        try:
+            orderbook = self.api.get_orderbook(ticker)
+            if orderbook is None:
+                return self.ob_imbalance.get(ticker)
+            
+            self.last_poll[ticker] = time.time()
+            
+            # Extract YES and NO bid quantities
+            # Orderbook structure: {yes_bids: [[price, size], ...], no_bids: [[price, size], ...]}
+            yes_bids = orderbook.get('yes_bids', [])
+            no_bids = orderbook.get('no_bids', [])
+            
+            # Sum up all YES and NO bid sizes
+            yes_total = sum(float(bid[1]) for bid in yes_bids if len(bid) >= 2)
+            no_total = sum(float(bid[1]) for bid in no_bids if len(bid) >= 2)
+            
+            self.yes_qty[ticker] = yes_total
+            self.no_qty[ticker] = no_total
+            
+            # Calculate imbalance: (yes - no) / (yes + no)
+            total = yes_total + no_total
+            if total > 0:
+                imbalance = (yes_total - no_total) / total
+            else:
+                imbalance = 0.0
+            
+            self.ob_imbalance[ticker] = imbalance
+            
+            # Log significant imbalances
+            if abs(imbalance) > 0.15:
+                side = "YES" if imbalance > 0 else "NO"
+                logger.debug(f"OB_IMBALANCE: {ticker} {imbalance:.3f} ({side} heavy) - yes_qty={yes_total:.0f}, no_qty={no_total:.0f}")
+            
+            return imbalance
+            
+        except Exception as e:
+            logger.debug(f"OB_IMBALANCE: Error fetching orderbook for {ticker}: {e}")
+            return self.ob_imbalance.get(ticker)
+
+    def get_imbalance(self, ticker: str) -> float:
+        """Get the last known ob_imbalance for a ticker (0.0 if unknown)."""
+        return self.ob_imbalance.get(ticker, 0.0)
+
+    def get_imbalance_bias(self, ticker: str) -> str:
+        """
+        Get directional bias based on ob_imbalance.
+        Returns 'yes', 'no', or 'neutral'.
+        
+        Heavy YES imbalance (>0.3) → YES bias
+        Heavy NO imbalance (<-0.3) → NO bias
+        Otherwise → neutral
+        """
+        imbalance = self.ob_imbalance.get(ticker, 0.0)
+        if imbalance > 0.3:
+            return 'yes'
+        elif imbalance < -0.3:
+            return 'no'
+        return 'neutral'
+
+    def get_imbalance_strength(self, ticker: str) -> float:
+        """
+        Get the strength of the imbalance signal.
+        Returns a multiplier: 1.0 = neutral, >1.0 = stronger signal
+        
+        For YES: if imbalance > 0.3, strength = 1 + imbalance
+        For NO: if imbalance < -0.3, strength = 1 + abs(imbalance)
+        """
+        imbalance = self.ob_imbalance.get(ticker, 0.0)
+        if imbalance > 0.3:
+            return 1.0 + imbalance  # e.g., 0.5 imbalance → 1.5x strength
+        elif imbalance < -0.3:
+            return 1.0 + abs(imbalance)
+        return 1.0  # neutral
+
+    def update_tickers(self, tickers: List[str]):
+        """Update orderbooks for a list of tickers."""
+        for ticker in tickers:
+            self.update_orderbook(ticker)
 
 
 class CoinTrader:
@@ -733,6 +889,9 @@ class Superbot:
 
         # Coinbase pre-filter (Nerd v2)
         self.coinbase_filter = CoinbasePreFilter()
+        
+        # TIER 1: Orderbook monitor for imbalance tracking
+        self.orderbook_monitor = OrderbookMonitor(self.api)
 
         # Daily stop-loss tracking (Nerd v2)
         self.day_start_balance = PAPER_BALANCE  # Balance at start of day
@@ -761,6 +920,10 @@ class Superbot:
         logger.info(f"Coinbase pre-filter: poll every 10s (FREE)")
         logger.info(f"Kalshi polling: every 30s (was 2s)")
         logger.info("STRATEGY: First Cross + Momentum BOTH (let them compete)")
+        logger.info("TIER 1 FEATURES:")
+        logger.info("  - price_vs_strike_pct: Coinbase vs floor_strike deviation (YES bias if >0)")
+        logger.info("  - ob_imbalance: Orderbook imbalance (-1 to +1, heavy >0.3 or <-0.3)")
+        logger.info("  - Entry blackout: Skip signals between 300-360s (10-11 min window)")
         logger.info("=" * 60)
 
     def _signal_handler(self, signum, frame):
@@ -1026,6 +1189,15 @@ class Superbot:
         # Index markets by ticker
         market_dict = {m.ticker: m for m in markets}
 
+        # === TIER 1: Update Coinbase price_vs_strike_pct and orderbook imbalance ===
+        # Update Coinbase price_vs_strike_pct using market's floor_strike
+        for market in markets:
+            if market.floor_strike is not None and market.floor_strike > 0:
+                self.coinbase_filter.update_price_vs_strike(coin, market.floor_strike)
+        
+        # Update orderbook imbalance for all markets in this series
+        self.orderbook_monitor.update_tickers([m.ticker for m in markets])
+
         # Check existing positions for exit conditions
         trader._check_existing_positions(market_dict)
 
@@ -1069,7 +1241,14 @@ class Superbot:
                 continue
 
             # Evaluate market for trading signal (returns List[TradeSignal] for mean-rev)
-            trade_signals = trader.strategy_engine.evaluate_market(market, coin)
+            # TIER 1: Pass price_vs_strike_pct and ob_imbalance signals
+            price_vs_strike_pct = self.coinbase_filter.get_price_vs_strike_pct(coin)
+            ob_imbalance = self.orderbook_monitor.get_imbalance(market.ticker)
+            trade_signals = trader.strategy_engine.evaluate_market(
+                market, coin,
+                price_vs_strike_pct=price_vs_strike_pct,
+                ob_imbalance=ob_imbalance
+            )
             
             for signal in trade_signals:
                 # Skip if we already have a position on this side for this ticker

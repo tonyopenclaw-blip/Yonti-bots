@@ -1384,31 +1384,37 @@ class Superbot:
                 self.twelvemin_checked_windows[coin].add(ticker_key)
 
                 # Place NO at market price
-                mid = (market.yes_bid + market.yes_ask) / 2
-                if mid <= 0 or mid >= 1.0:
-                    mid = 0.50  # Fallback
+                # For NO contracts, price = (1 - yes_mid) since YES + NO = $1.00
+                yes_mid = (market.yes_bid + market.yes_ask) / 2
+                if yes_mid <= 0 or yes_mid >= 1.0:
+                    yes_mid = 0.50  # Fallback
+                no_price = 1 - yes_mid  # Actual NO market price
 
-                # Calculate Kelly size (same as other entries)
+                # Ensure minimum tick size ($0.01)
+                if no_price < 0.01:
+                    no_price = 0.01
+
+                # Calculate Kelly size using NO probability (1 - yes_mid) and NO price
                 from strategies import Strategy
-                prob = 1 - mid
+                prob = 1 - yes_mid  # NO probability
                 confidence = 55  # Conservative confidence for lock-in
                 size, kelly_pct, _ = trader.strategy_engine.calculate_kelly_size(
-                    Strategy.MOMENTUM, prob, confidence, mid, cash_override=self.cash
+                    Strategy.MOMENTUM, prob, confidence, no_price, cash_override=self.cash
                 )
 
                 # Apply max bet constraint
                 max_dollar = MAX_BET
                 if self.sizing_reduced:
                     max_dollar *= 0.5
-                if mid > 0:
-                    size = math.ceil(min(size, max_dollar / mid))
+                if no_price > 0:
+                    size = math.ceil(min(size, max_dollar / no_price))
 
                 ts_signal = TradeSignal(
                     strategy=Strategy.MOMENTUM,
                     ticker=ticker,
                     side="no",
                     direction="buy",
-                    price=mid,
+                    price=no_price,
                     size=int(size),
                     reason=f"12MIN_LOCKIN: {coin} NO coinbase={coinbase_price:.2f} <= prev_close={prev_close:.2f}",
                     is_candle_duration=True,  # HOLD TO SETTLEMENT — exempt from cut-loss
@@ -1419,7 +1425,7 @@ class Superbot:
                 if success:
                     self.cash -= cost
                     self.daily_trades += 1
-                    logger.info(f"🔒 [{coin}] 12MIN NO LOCK-IN: {ticker} @ ${mid:.4f} (coinbase={coinbase_price:.2f} <= prev_close={prev_close:.2f}, kelly={kelly_pct:.1%}) contracts={int(size):d}")
+                    logger.info(f"🔒 [{coin}] 12MIN NO LOCK-IN: {ticker} @ ${no_price:.4f} (coinbase={coinbase_price:.2f} <= prev_close={prev_close:.2f}, kelly={kelly_pct:.1%}) contracts={int(size):d}")
                 else:
                     logger.warning(f"[12MIN] {coin} NO LOCK-IN order failed")
             else:

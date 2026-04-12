@@ -1198,6 +1198,7 @@ class StrategyEngine:
         self.candle_duration = CandleDurationTracker()  # Nerd's candle time-above-open tracker
         self._floor_strikes: Dict[str, float] = {}  # Cache floor_strike per ticker
         self._market_open_times: Dict[str, float] = {}  # Track when each market opened (for grace period)
+        self._standalone_cooldown: Dict[str, float] = {}  # Track when we last fired a standalone TIER1 signal
 
     def reset_cross_tracker(self, ticker: str):
         """Reset the first cross tracker for a ticker (when market expires/closes)."""
@@ -1677,7 +1678,86 @@ class StrategyEngine:
         # if is_momentum_enabled() and no_cross_yet and market_age_sec >= 60 and bias != 'neutral' and (mid_price < 0.10 or mid_price > 0.90):
         #     ... (momentum_force - disabled)
 
-        return []
+        # === STANDALONE TIER-1 SIGNALS: Fire when candle watcher is silent ===
+        # These use price_vs_strike_pct and ob_imbalance as independent entry triggers
+        # Skip if in blackout window (10-11 min has poor win rates)
+        if 300 <= time_left <= 360:
+            return []
+
+        # Skip if we fired a standalone signal on this ticker recently (60s cooldown)
+        if market.ticker in self._standalone_cooldown and time.time() - self._standalone_cooldown[market.ticker] < 60:
+            return []
+
+        # Need meaningful deviation in price_vs_strike OR extreme ob_imbalance to fire standalone
+        has_pvs_signal = abs(price_vs_strike_pct) > 0.3  # >0.3% deviation from strike
+        has_obi_signal = abs(ob_imbalance) > 0.5  # extreme imbalance
+
+        if not (has_pvs_signal or has_obi_signal):
+            return []
+
+        # Determine direction from TIER1 signals
+        side = None
+        tier1_confidence = 55  # Base confidence for standalone TIER1
+
+        # Price vs strike: coinbase price vs floor_strike
+        if price_vs_strike_pct > 0.3:
+            # Coinbase above strike → YES bias (price trending up)
+            side = 'yes'
+            tier1_confidence = 60
+        elif price_vs_strike_pct < -0.3:
+            # Coinbase below strike → NO bias (price trending down)
+            side = 'no'
+            tier1_confidence = 60
+
+        # ob_imbalance confirmation/override
+        if has_obi_signal:
+            if ob_imbalance > 0.5 and side == 'yes':
+                tier1_confidence = 65  # Both agree → stronger YES
+            elif ob_imbalance < -0.5 and side == 'no':
+                tier1_confidence = 65  # Both agree → stronger NO
+            elif ob_imbalance > 0.5 and side == 'no':
+                tier1_confidence = 50  # Conflict → reduce confidence
+            elif ob_imbalance < -0.5 and side == 'yes':
+                tier1_confidence = 50  # Conflict → reduce confidence
+
+        if side is None:
+            return []
+
+        # Entry price must be in reasonable range ($0.30-$0.80)
+        if not (0.30 <= mid_price <= 0.80):
+            return []
+
+        # Calculate Kelly size
+        prob = mid_price if side == 'yes' else (1 - mid_price)
+        size, kelly_pct, confidence = self.calculate_kelly_size(
+            Strategy.MOMENTUM, prob, tier1_confidence, mid_price
+        )
+
+        # Cap size at reasonable amount
+        size = min(int(size), 10)
+
+        signal = TradeSignal(
+            strategy=Strategy.MOMENTUM,
+            ticker=market.ticker,
+            side=side,
+            direction='buy',
+            price=mid_price,
+            size=int(size),
+            reason=f'STEALTH_TIER1: pvs={price_vs_strike_pct:.2f}%, obi={ob_imbalance:.2f}',
+            is_candle_duration=False,  # Not a candle signal
+            confidence=tier1_confidence,
+        )
+
+        # Record cooldown
+        self._standalone_cooldown[market.ticker] = time.time()
+
+        logger.info(
+            f"STEALTH_TIER1: {market.ticker} ({coin}) | "
+            f"Side: {side} @ ${mid_price:.4f} | "
+            f"pvs={price_vs_strike_pct:.3f}% | obi={ob_imbalance:.3f} | "
+            f"CONF={tier1_confidence} | contracts={int(size)}"
+        )
+        return [signal]
 
     def _estimate_ai_probability(self, market: Market, mid_price: float) -> Optional[float]:
         """

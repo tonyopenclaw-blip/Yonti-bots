@@ -300,19 +300,6 @@
     "ticker": "KXBTC15M-26APR120830-30"
   },
   {
-    "timestamp": "2026-04-12T12:15:02.045570",
-    "coin": "ETH",
-    "signal_type": "candle_NO",
-    "side": "NO",
-    "conf": 99,
-    "entry_price_max": 0.85,
-    "market_mid_at_signal": null,
-    "action": "BLOCKED",
-    "block_reason": "candle NO signals are unprofitable",
-    "settlement_result": null,
-    "won": null
-  },
-  {
     "timestamp": "2026-04-12T12:15:02.878654",
     "coin": "SOL",
     "signal_type": "candle_NO",
@@ -396,32 +383,6 @@
     "ticker": "KXETH15M-26APR120845-45"
   },
   {
-    "timestamp": "2026-04-12T12:30:01.398944",
-    "coin": "SOL",
-    "signal_type": "candle_YES",
-    "side": "YES",
-    "conf": 97,
-    "entry_price_max": 0.85,
-    "market_mid_at_signal": null,
-    "action": "BLOCKED",
-    "block_reason": "no suitable market",
-    "settlement_result": null,
-    "won": null
-  },
-  {
-    "timestamp": "2026-04-12T12:30:01.640241",
-    "coin": "XRP",
-    "signal_type": "candle_NO",
-    "side": "NO",
-    "conf": 99,
-    "entry_price_max": 0.85,
-    "market_mid_at_signal": null,
-    "action": "BLOCKED",
-    "block_reason": "candle NO signals are unprofitable",
-    "settlement_result": null,
-    "won": null
-  },
-  {
     "timestamp": "2026-04-12T12:30:02.967946",
     "coin": "ADA",
     "signal_type": "candle_NO",
@@ -431,32 +392,6 @@
     "market_mid_at_signal": null,
     "action": "PENDING",
     "block_reason": null,
-    "settlement_result": null,
-    "won": null
-  },
-  {
-    "timestamp": "2026-04-12T12:45:00.075471",
-    "coin": "DOGE",
-    "signal_type": "candle_NO",
-    "side": "NO",
-    "conf": 99,
-    "entry_price_max": 0.85,
-    "market_mid_at_signal": null,
-    "action": "BLOCKED",
-    "block_reason": "candle NO signals are unprofitable",
-    "settlement_result": null,
-    "won": null
-  },
-  {
-    "timestamp": "2026-04-12T12:45:00.310564",
-    "coin": "HYPE",
-    "signal_type": "candle_NO",
-    "side": "NO",
-    "conf": 99,
-    "entry_price_max": 0.85,
-    "market_mid_at_signal": null,
-    "action": "BLOCKED",
-    "block_reason": "candle NO signals are unprofitable",
     "settlement_result": null,
     "won": null
   },
@@ -502,32 +437,6 @@
     "won": null
   },
   {
-    "timestamp": "2026-04-12T13:00:10.835018",
-    "coin": "BTC",
-    "signal_type": "candle_NO",
-    "side": "NO",
-    "conf": 99,
-    "entry_price_max": 0.85,
-    "market_mid_at_signal": null,
-    "action": "BLOCKED",
-    "block_reason": "candle NO signals are unprofitable",
-    "settlement_result": null,
-    "won": null
-  },
-  {
-    "timestamp": "2026-04-12T13:00:10.994586",
-    "coin": "ETH",
-    "signal_type": "candle_NO",
-    "side": "NO",
-    "conf": 99,
-    "entry_price_max": 0.85,
-    "market_mid_at_signal": null,
-    "action": "BLOCKED",
-    "block_reason": "candle NO signals are unprofitable",
-    "settlement_result": null,
-    "won": null
-  },
-  {
     "timestamp": "2026-04-12T13:00:11.134590",
     "coin": "SOL",
     "signal_type": "candle_NO",
@@ -540,32 +449,6 @@
     "settlement_result": 0.0,
     "won": false,
     "ticker": "KXSOL15M-26APR120915-15"
-  },
-  {
-    "timestamp": "2026-04-12T13:00:11.464485",
-    "coin": "BNB",
-    "signal_type": "candle_NO",
-    "side": "NO",
-    "conf": 99,
-    "entry_price_max": 0.85,
-    "market_mid_at_signal": null,
-    "action": "BLOCKED",
-    "block_reason": "candle NO signals are unprofitable",
-    "settlement_result": null,
-    "won": null
-  },
-  {
-    "timestamp": "2026-04-12T13:00:11.913190",
-    "coin": "DOGE",
-    "signal_type": "candle_NO",
-    "side": "NO",
-    "conf": 99,
-    "entry_price_max": 0.85,
-    "market_mid_at_signal": null,
-    "action": "BLOCKED",
-    "block_reason": "candle NO signals are unprofitable",
-    "settlement_result": null,
-    "won": null
   },
   {
     "timestamp": "2026-04-12T13:15:08.089106",
@@ -608,19 +491,6 @@
     "settlement_result": 1.0,
     "won": true,
     "ticker": "KXSOL15M-26APR120930-30"
-  },
-  {
-    "timestamp": "2026-04-12T13:15:08.688254",
-    "coin": "BNB",
-    "signal_type": "candle_NO",
-    "side": "NO",
-    "conf": 99,
-    "entry_price_max": 0.85,
-    "market_mid_at_signal": null,
-    "action": "BLOCKED",
-    "block_reason": "candle NO signals are unprofitable",
-    "settlement_result": null,
-    "won": null
   },
   {
     "timestamp": "2026-04-12T13:15:08.799366",
@@ -678,58 +548,6 @@
     "won": null
   },
   {
-    "timestamp": "2026-04-12T15:45:00.443061",
-    "coin": "ETH",
-    "signal_type": "candle_YES",
-    "side": "YES",
-    "conf": 97,
-    "entry_price_max": 0.85,
-    "market_mid_at_signal": null,
-    "action": "BLOCKED",
-    "block_reason": "no suitable market",
-    "settlement_result": null,
-    "won": null
-  },
-  {
-    "timestamp": "2026-04-12T15:45:00.577915",
-    "coin": "SOL",
-    "signal_type": "candle_YES",
-    "side": "YES",
-    "conf": 97,
-    "entry_price_max": 0.85,
-    "market_mid_at_signal": null,
-    "action": "BLOCKED",
-    "block_reason": "no suitable market",
-    "settlement_result": null,
-    "won": null
-  },
-  {
-    "timestamp": "2026-04-12T15:45:00.721149",
-    "coin": "DOGE",
-    "signal_type": "candle_YES",
-    "side": "YES",
-    "conf": 97,
-    "entry_price_max": 0.85,
-    "market_mid_at_signal": null,
-    "action": "BLOCKED",
-    "block_reason": "no suitable market",
-    "settlement_result": null,
-    "won": null
-  },
-  {
-    "timestamp": "2026-04-12T16:00:00.902769",
-    "coin": "BTC",
-    "signal_type": "candle_YES",
-    "side": "YES",
-    "conf": 97,
-    "entry_price_max": 0.85,
-    "market_mid_at_signal": null,
-    "action": "BLOCKED",
-    "block_reason": "no suitable market",
-    "settlement_result": null,
-    "won": null
-  },
-  {
     "timestamp": "2026-04-12T16:00:01.137374",
     "coin": "ETH",
     "signal_type": "candle_YES",
@@ -744,21 +562,8 @@
     "ticker": "KXETH15M-26APR121215-15"
   },
   {
-    "timestamp": "2026-04-12T16:00:02.207815",
-    "coin": "DOGE",
-    "signal_type": "candle_YES",
-    "side": "YES",
-    "conf": 97,
-    "entry_price_max": 0.85,
-    "market_mid_at_signal": null,
-    "action": "BLOCKED",
-    "block_reason": "no suitable market",
-    "settlement_result": null,
-    "won": null
-  },
-  {
-    "timestamp": "2026-04-12T16:00:02.479124",
-    "coin": "HYPE",
+    "timestamp": "2026-04-12T19:15:02.781879",
+    "coin": "BTC",
     "signal_type": "candle_YES",
     "side": "YES",
     "conf": 97,

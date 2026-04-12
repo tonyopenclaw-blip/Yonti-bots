@@ -2991,7 +2991,8 @@ __LEAGUE_SECTIONS__
                         line_str = f"{pick.team} ({pick.line})"
                         label = "SPREAD"
                     elif pick.pick_type == "total":
-                        line_str = f"{pick.team} vs {pick.opponent} O/U {pick.line}"
+                        direction_tag = f'<span class="pick-direction {getattr(pick, "direction", "over")}">{getattr(pick, "direction", "OVER").upper()}</span>'
+                        line_str = f"{pick.team} vs {pick.opponent} {direction_tag} {pick.line}"
                         label = "TOTAL"
                     else:
                         line_str = f"{pick.team} ML"

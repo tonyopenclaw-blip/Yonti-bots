@@ -1,18 +1,46 @@
 {
-  "start_time": "2026-04-12 18:51:15 UTC",
+  "start_time": "2026-04-12 19:02:02 UTC",
   "end_time": "",
   "starting_balance": 34.67,
   "ending_balance": 0.0,
   "total_pnl": -34.67,
-  "total_trades": 0,
+  "total_trades": 1,
   "winning_trades": 0,
-  "losing_trades": 0,
-  "win_rate": 0,
+  "losing_trades": 1,
+  "win_rate": 0.0,
   "largest_win": 0.0,
-  "largest_loss": 0.0,
+  "largest_loss": -0.9119999999999999,
   "open_positions": 0,
   "thermostat": 0,
-  "trades": [],
+  "trades": [
+    {
+      "ticker": "KXBTC15M-26APR121530-30",
+      "side": "yes",
+      "entry_price": 0.305,
+      "exit_price": 0.001,
+      "shares": 3,
+      "cost": 0.915,
+      "pnl": -0.9119999999999999,
+      "strategy": "momentum",
+      "open_time": "2026-04-12 19:15:35 UTC",
+      "close_time": "2026-04-12 19:30:12 UTC",
+      "exit_reason": "settled"
+    }
+  ],
   "last_10_open_trades": [],
-  "last_10_closed_trades": []
+  "last_10_closed_trades": [
+    {
+      "ticker": "KXBTC15M-26APR121530-30",
+      "side": "yes",
+      "entry_price": 0.305,
+      "exit_price": 0.001,
+      "shares": 3,
+      "cost": 0.915,
+      "pnl": -0.9119999999999999,
+      "strategy": "momentum",
+      "open_time": "2026-04-12 19:15:35 UTC",
+      "close_time": "2026-04-12 19:30:12 UTC",
+      "exit_reason": "settled"
+    }
+  ]
 }

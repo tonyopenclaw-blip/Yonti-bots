@@ -1,98 +1,34 @@
 {
   "NBA": {
-    "locked_at": "2026-04-10T17:45:34.133760",
+    "locked_at": "2026-04-12T19:23:31.685211",
     "picks": {
       "props": [
         {
           "type": "prop",
-          "player": "LaMelo Ball",
-          "team": "CHA",
+          "player": "Jayson Tatum",
+          "team": "BOS",
           "stat_type": "points",
-          "line": 23.5,
+          "line": 27.5,
           "direction": "over",
           "odds": -110,
           "confidence": 68
         },
         {
           "type": "prop",
-          "player": "Miles Bridges",
-          "team": "CHA",
-          "stat_type": "rebounds",
-          "line": 5.5,
+          "player": "Jaylen Brown",
+          "team": "BOS",
+          "stat_type": "threes",
+          "line": 3.5,
           "direction": "over",
           "odds": -110,
           "confidence": 68
         },
         {
           "type": "prop",
-          "player": "Cade Cunningham",
-          "team": "DET",
+          "player": "Paolo Banchero",
+          "team": "ORL",
           "stat_type": "points",
           "line": 22.5,
-          "direction": "over",
-          "odds": -110,
-          "confidence": 68
-        }
-      ],
-      "game_picks": [
-        {
-          "type": "spread",
-          "team": "CHA",
-          "opponent": "DET",
-          "line": -6.5,
-          "odds": -110,
-          "confidence": 80
-        },
-        {
-          "type": "total",
-          "team": "MIA",
-          "opponent": "WSH",
-          "line": 225.5,
-          "odds": -110,
-          "confidence": 56
-        },
-        {
-          "type": "moneyline",
-          "team": "ATL",
-          "opponent": "CLE",
-          "line": 0,
-          "odds": -150,
-          "confidence": 62
-        }
-      ]
-    },
-    "odds": -110
-  },
-  "MLB": {
-    "locked_at": "2026-04-10T17:45:35.629313",
-    "picks": {
-      "props": [
-        {
-          "type": "prop",
-          "player": "Christopher Morel",
-          "team": "CHC",
-          "stat_type": "home_runs",
-          "line": 0.5,
-          "direction": "over",
-          "odds": -110,
-          "confidence": 68
-        },
-        {
-          "type": "prop",
-          "player": "Oneil Cruz",
-          "team": "PIT",
-          "stat_type": "home_runs",
-          "line": 0.5,
-          "direction": "over",
-          "odds": -110,
-          "confidence": 68
-        },
-        {
-          "type": "prop",
-          "player": "Kyle Schwarber",
-          "team": "PHI",
-          "stat_type": "home_runs",
-          "line": 0.5,
           "direction": "under",
           "odds": -110,
           "confidence": 68
@@ -101,26 +37,154 @@
       "game_picks": [
         {
           "type": "spread",
-          "team": "CHC",
-          "opponent": "PIT",
-          "line": 1.5,
+          "team": "BOS",
+          "opponent": "ORL",
+          "line": -6.5,
           "odds": -110,
-          "confidence": 74
+          "confidence": 60
         },
         {
           "type": "total",
-          "team": "PHI",
-          "opponent": "ARI",
-          "line": 8.5,
+          "team": "WSH",
+          "opponent": "CLE",
+          "line": 235.5,
           "odds": -110,
-          "confidence": 74
+          "confidence": 65
         },
         {
           "type": "moneyline",
-          "team": "MIA",
+          "team": "IND",
           "opponent": "DET",
           "line": 0,
-          "odds": 140,
+          "odds": -150,
+          "confidence": 63
+        }
+      ]
+    },
+    "odds": -110
+  },
+  "NHL": {
+    "locked_at": "2026-04-12T19:23:32.569690",
+    "picks": {
+      "props": [
+        {
+          "type": "prop",
+          "player": "Alex Ovechkin",
+          "team": "WSH",
+          "stat_type": "goals",
+          "line": 0.5,
+          "direction": "over",
+          "odds": -110,
+          "confidence": 68
+        },
+        {
+          "type": "prop",
+          "player": "Sidney Crosby",
+          "team": "PIT",
+          "stat_type": "points",
+          "line": 1.5,
+          "direction": "under",
+          "odds": -110,
+          "confidence": 68
+        },
+        {
+          "type": "prop",
+          "player": "Bo Horvat",
+          "team": "NYI",
+          "stat_type": "goals",
+          "line": 0.5,
+          "direction": "over",
+          "odds": -110,
+          "confidence": 68
+        }
+      ],
+      "game_picks": [
+        {
+          "type": "spread",
+          "team": "MTL",
+          "opponent": "NYI",
+          "line": 1.5,
+          "odds": -110,
+          "confidence": 78
+        },
+        {
+          "type": "total",
+          "team": "BOS",
+          "opponent": "CBJ",
+          "line": 7.0,
+          "odds": -110,
+          "confidence": 69
+        },
+        {
+          "type": "moneyline",
+          "team": "NJ",
+          "opponent": "OTT",
+          "line": 0,
+          "odds": -140,
+          "confidence": 81
+        }
+      ]
+    },
+    "odds": -110
+  },
+  "MLB": {
+    "locked_at": "2026-04-12T19:23:33.820542",
+    "picks": {
+      "props": [
+        {
+          "type": "prop",
+          "player": "Kyle Schwarber",
+          "team": "PHI",
+          "stat_type": "home_runs",
+          "line": 0.5,
+          "direction": "over",
+          "odds": -110,
+          "confidence": 68
+        },
+        {
+          "type": "prop",
+          "player": "Gunnar Henderson",
+          "team": "BAL",
+          "stat_type": "runs",
+          "line": 0.5,
+          "direction": "over",
+          "odds": -110,
+          "confidence": 68
+        },
+        {
+          "type": "prop",
+          "player": "Logan Webb",
+          "team": "SF",
+          "stat_type": "strikeouts",
+          "line": 6.5,
+          "direction": "under",
+          "odds": -110,
+          "confidence": 68
+        }
+      ],
+      "game_picks": [
+        {
+          "type": "spread",
+          "team": "COL",
+          "opponent": "SD",
+          "line": -1.5,
+          "odds": -110,
+          "confidence": 77
+        },
+        {
+          "type": "total",
+          "team": "HOU",
+          "opponent": "SEA",
+          "line": 8.5,
+          "odds": -110,
+          "confidence": 82
+        },
+        {
+          "type": "moneyline",
+          "team": "LAD",
+          "opponent": "TEX",
+          "line": 0,
+          "odds": -160,
           "confidence": 68
         }
       ]

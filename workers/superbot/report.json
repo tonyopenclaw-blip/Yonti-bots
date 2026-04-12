@@ -10,8 +10,8 @@
   "win_rate": 0.0,
   "largest_win": 0.0,
   "largest_loss": -0.9119999999999999,
-  "open_positions": 0,
-  "thermostat": 0,
+  "open_positions": 1,
+  "thermostat": 12,
   "trades": [
     {
       "ticker": "KXBTC15M-26APR121530-30",
@@ -27,7 +27,19 @@
       "exit_reason": "settled"
     }
   ],
-  "last_10_open_trades": [],
+  "last_10_open_trades": [
+    {
+      "ticker": "KXBTC15M-26APR121700-00",
+      "side": "yes",
+      "entry_price": 0.485,
+      "shares": 3,
+      "cost": 1.455,
+      "pnl": 0.0,
+      "strategy": "momentum",
+      "open_time": "2026-04-12 20:45:42 UTC",
+      "current_price": 0.001
+    }
+  ],
   "last_10_closed_trades": [
     {
       "ticker": "KXBTC15M-26APR121530-30",

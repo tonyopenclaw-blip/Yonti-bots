@@ -573,5 +573,31 @@
     "block_reason": "no suitable market",
     "settlement_result": null,
     "won": null
+  },
+  {
+    "timestamp": "2026-04-12T20:15:07.647233",
+    "coin": "ADA",
+    "signal_type": "candle_YES",
+    "side": "YES",
+    "conf": 97,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "PENDING",
+    "block_reason": null,
+    "settlement_result": null,
+    "won": null
+  },
+  {
+    "timestamp": "2026-04-12T20:45:01.916120",
+    "coin": "BTC",
+    "signal_type": "candle_YES",
+    "side": "YES",
+    "conf": 97,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "BLOCKED",
+    "block_reason": "no suitable market",
+    "settlement_result": null,
+    "won": null
   }
 ]

@@ -1,14 +1,24 @@
 {
-  "updated_at": "2026-04-12T20:45:01.307237",
-  "market_count": 1,
+  "updated_at": "2026-04-12T21:45:01.720877",
+  "market_count": 2,
   "markets": {
+    "XRP": [
+      {
+        "ticker": "KXXRP15M-26APR121800-00",
+        "status": "active",
+        "yes_bid": 0.3,
+        "yes_ask": 0.7,
+        "close_time": "2026-04-12T22:00:00Z",
+        "resolution_time": ""
+      }
+    ],
     "BNB": [
       {
-        "ticker": "KXBNB15M-26APR121700-00",
+        "ticker": "KXBNB15M-26APR121800-00",
         "status": "active",
-        "yes_bid": 0.1,
-        "yes_ask": 0.92,
-        "close_time": "2026-04-12T21:00:00Z",
+        "yes_bid": 0.25,
+        "yes_ask": 0.75,
+        "close_time": "2026-04-12T22:00:00Z",
         "resolution_time": ""
       }
     ]

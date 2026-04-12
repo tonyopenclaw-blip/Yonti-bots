@@ -1223,6 +1223,8 @@ class Superbot:
     def _execute_candle_signal(self, signal_data: Dict, markets: List[Market], coin: str, trader: 'CoinTrader') -> bool:
         """Execute a candle signal: find best market and place order."""
         side = signal_data.get("side", "YES").lower()  # 'yes' or 'no'
+        signal_type = signal_data.get("signal_type", "CANDLE")  # CANDLE or MACRO_FADE
+        is_candle_duration = signal_data.get("is_candle_duration", True)
 
         sig_timestamp = signal_data.get("timestamp", "")
         entry_max = signal_data.get("entry_price_max", 0.85)
@@ -1257,10 +1259,18 @@ class Superbot:
                 logger.info(f"[{coin}] ENTRY SKIP: NO entry ${mid:.4f} (YES=${mid:.4f} < $0.45, NO overpriced)")
                 continue
 
-            # === ENTRY PRICE GUARD: Block entries below $0.20 (below minimum) ===
+            # === ENTRY PRICE GUARD: Block entries below $0.20 or above $0.80 ===
             if mid < 0.20:
                 logger.info(f"[{coin}] ENTRY SKIP: entry price ${mid:.4f} < $0.20 (below minimum)")
                 continue
+            if mid > 0.80:
+                logger.info(f"[{coin}] ENTRY SKIP: entry price ${mid:.4f} > $0.80 (above maximum)")
+                continue
+
+            # MACRO_FADE entry guard: also check mid is within sane range
+            if signal_type == "MACRO_FADE":
+                logger.info(f"[{coin}] MACRO_FADE: {signal_data.get('reason', 'N/A')}")
+
             if mid <= 0 or mid > entry_max:
                 continue
 
@@ -1268,7 +1278,7 @@ class Superbot:
             from strategies import TradeSignal
             # Calculate Kelly-based size using confidence (same as evaluate_market path)
             prob = mid if side == "yes" else (1 - mid)
-            confidence = signal_data.get("conf", 50)
+            confidence = signal_data.get("conf", signal_data.get("confidence", 50))
             size, kelly_pct, _ = trader.strategy_engine.calculate_kelly_size(
                 Strategy.MOMENTUM, prob, confidence, mid, cash_override=self.cash
             )
@@ -1279,8 +1289,8 @@ class Superbot:
                 direction="buy",
                 price=mid,
                 size=int(size),
-                reason=f"CANDLE: {signal_data.get('coin')} {side} conf={confidence} kelly={kelly_pct:.1%}",
-                is_candle_duration=True,  # No SL/TP - hold to expiry
+                reason=f"{signal_type}: {signal_data.get('coin', coin)} {side} conf={confidence} kelly={kelly_pct:.1%}",
+                is_candle_duration=is_candle_duration,  # MACRO_FADE uses False = normal SL/TP
                 confidence=confidence,
             )
 
@@ -1290,7 +1300,7 @@ class Superbot:
             if success:
                 self.cash -= cost
                 self.daily_trades += 1
-                logger.info(f"🚀 [{coin}] CANDLE TRADE: {side} {market.ticker} @ ${mid:.4f} (conf={confidence}) contracts={int(size):d}")
+                logger.info(f"🚀 [{coin}] {signal_type} TRADE: {side} {market.ticker} @ ${mid:.4f} (conf={confidence}) contracts={int(size):d}")
                 _update_signal_log(coin, sig_timestamp, "TAKEN", ticker=market.ticker)
                 self._clear_candle_signal(coin)
                 return True

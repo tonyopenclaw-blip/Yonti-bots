@@ -12,7 +12,7 @@ import sys
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, List, Optional
 
 import requests
 
@@ -48,6 +48,10 @@ DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1486066262122430684/mLKWVlGJ
 # Signal thresholds
 BUY_YES_THRESHOLD = 0.90  # >90% of candle time above prev close → BUY YES (conf=97)
 BUY_NO_THRESHOLD = -1.0  # DISABLED: candle NO signals structurally unprofitable (Nerd analysis 2026-04-12)
+
+# Macro Correlation Detector params
+MACRO_WINDOW_SEC = 30      # Cluster window: 3+ coins same direction within 30s
+MACRO_MIN_CLUSTER = 3     # Minimum coins to trigger macro fade
 
 # Regime filter: skip NO signals if 3 consecutive candles had >60% YES ratio
 REGIME_WINDOW = 3          # Rolling window of last 3 candles
@@ -122,9 +126,10 @@ def _get_market_mid_at_signal(coin: str) -> Optional[float]:
     return None
 
 
-def notify_discord(coin: str, side: str, conf: int, entry_max: float):
+def notify_discord(coin: str, side: str, conf: int, entry_max: float, signal_type: str = "CANDLE"):
     """Send signal notification to Discord."""
-    msg = f"🔔 CANDLE SIGNAL: {coin} {side} | CONF={conf} | Entry ≤${entry_max:.2f}"
+    emoji = "🔔" if signal_type == "CANDLE" else "⚠️"
+    msg = f"{emoji} {signal_type} SIGNAL: {coin} {side} | CONF={conf} | Entry ≤${entry_max:.2f}"
     _post_discord(msg)
 
 
@@ -388,8 +393,129 @@ class CandleTracker:
 
 
 # =============================================================================
+# MACRO CORRELATION DETECTOR
+# =============================================================================
+class MacroCorrelationDetector:
+    """
+    Detects when 3+ coins fire the same direction signal within 30 seconds.
+    When a macro cluster is detected, emits a MACRO_FADE signal (opposite direction)
+    for all clustered coins.
+
+    Example: BTC+ETH+SOL all emit YES within 30s → emit MACRO_FADE NO for BTC, ETH, SOL
+    """
+
+    def __init__(self, window_sec: int = MACRO_WINDOW_SEC, min_cluster: int = MACRO_MIN_CLUSTER):
+        self.window_sec = window_sec
+        self.min_cluster = min_cluster
+        # signal_history: list of {"coin", "side", "timestamp"} sorted by time
+        self.signal_history: list = []
+
+    def record_signal(self, coin: str, side: str):
+        """Record a signal (YES or NO) for a coin with current timestamp."""
+        self.signal_history.append({
+            "coin": coin,
+            "side": side,
+            "timestamp": time.time()
+        })
+        # Prune old entries outside the window
+        cutoff = time.time() - self.window_sec
+        self.signal_history = [s for s in self.signal_history if s["timestamp"] >= cutoff]
+
+    def detect_macro_cluster(self) -> Optional[Dict]:
+        """
+        Check if there's a cluster of 3+ coins firing the same direction within window.
+        Returns dict with cluster info if detected, None otherwise:
+        {
+            "coins": ["BTC", "ETH", "SOL"],
+            "side": "YES",          # direction that clustered
+            "fade_side": "NO",       # opposite direction for fade
+            "window": 25,            # actual window size in seconds
+            "count": 3
+        }
+        """
+        if len(self.signal_history) < self.min_cluster:
+            return None
+
+        cutoff = time.time() - self.window_sec
+        recent = [s for s in self.signal_history if s["timestamp"] >= cutoff]
+
+        # Group by side
+        yes_coins = list({s["coin"] for s in recent if s["side"].upper() == "YES"})
+        no_coins = list({s["coin"] for s in recent if s["side"].upper() == "NO"})
+
+        if len(yes_coins) >= self.min_cluster:
+            window_size = max(s["timestamp"] for s in recent if s["coin"] in yes_coins) - \
+                          min(s["timestamp"] for s in recent if s["coin"] in yes_coins)
+            return {
+                "coins": yes_coins,
+                "side": "YES",
+                "fade_side": "NO",
+                "window": int(window_size),
+                "count": len(yes_coins)
+            }
+
+        if len(no_coins) >= self.min_cluster:
+            window_size = max(s["timestamp"] for s in recent if s["coin"] in no_coins) - \
+                          min(s["timestamp"] for s in recent if s["coin"] in no_coins)
+            return {
+                "coins": no_coins,
+                "side": "NO",
+                "fade_side": "YES",
+                "window": int(window_size),
+                "count": len(no_coins)
+            }
+
+        return None
+
+    def emit_macro_fade_signals(self, cluster_info: Dict) -> List[Dict]:
+        """
+        Generate MACRO_FADE signals for all coins in the cluster.
+        Returns list of signal dicts (one per coin).
+        """
+        signals = []
+        for coin in cluster_info["coins"]:
+            mid = _get_market_mid_at_signal(coin)
+            signal = {
+                "signal_type": "MACRO_FADE",
+                "coin": coin,
+                "side": cluster_info["fade_side"],
+                "confidence": 60,
+                "entry_price": mid,
+                "market_mid_at_signal": mid,
+                "is_candle_duration": False,
+                "reason": f"MACRO FADE: {cluster_info['count']} coins {cluster_info['side']} in {cluster_info['window']}s",
+                "timestamp": datetime.utcnow().isoformat(),
+                "cluster_coins": cluster_info["coins"],
+                "cluster_side": cluster_info["side"],
+            }
+            signals.append(signal)
+
+            # Log to signal_log.json
+            log_entry = {
+                "timestamp": signal["timestamp"],
+                "coin": coin,
+                "signal_type": "MACRO_FADE",
+                "side": signal["side"],
+                "conf": signal["confidence"],
+                "entry_price": signal["entry_price"],
+                "market_mid_at_signal": mid,
+                "action": "PENDING",
+                "block_reason": None,
+                "settlement_result": None,
+                "won": None,
+                "cluster_coins": cluster_info["coins"],
+                "cluster_side": cluster_info["side"],
+                "reason": signal["reason"]
+            }
+            _append_signal_log(log_entry)
+
+        return signals
+
+
+# =============================================================================
 # MAIN LOOP
 # =============================================================================
+macro_detector = MacroCorrelationDetector()
 def main():
     logger.info("=" * 60)
     logger.info("CANDLE WATCHER STARTING - 24/7 Persistent Process")
@@ -414,6 +540,29 @@ def main():
             try:
                 signal_data = tracker.update()
                 if signal_data:
+                    # Record in macro detector
+                    macro_detector.record_signal(signal_data["coin"], signal_data["side"])
+
+                    # Check for macro cluster BEFORE writing to file
+                    cluster = macro_detector.detect_macro_cluster()
+                    if cluster:
+                        logger.info(f"⚠️ MACRO CLUSTER DETECTED: {cluster['count']} coins {cluster['side']} in {cluster['window']}s → FADE {cluster['fade_side']}")
+                        macro_signals = macro_detector.emit_macro_fade_signals(cluster)
+                        for msig in macro_signals:
+                            # Write each macro fade signal to its coin's signal file
+                            macro_file = get_signal_file(msig["coin"])
+                            with open(macro_file, "w") as f:
+                                json.dump(msig, f, indent=2)
+                            logger.info(f"MACRO FADE signal saved to {macro_file}: {msig}")
+                            notify_discord(
+                                msig["coin"],
+                                msig["side"],
+                                msig["confidence"],
+                                0.85,  # entry_price_max not in macro signal, use default
+                                "MACRO_FADE"
+                            )
+
+                    # Write normal signal
                     signal_file = get_signal_file(coin)
                     with open(signal_file, "w") as f:
                         json.dump(signal_data, f, indent=2)
@@ -423,6 +572,7 @@ def main():
                         signal_data["side"],
                         signal_data["conf"],
                         signal_data["entry_price_max"],
+                        "CANDLE"
                     )
             except Exception as e:
                 logger.error(f"[{coin}] Tracker error: {e}")

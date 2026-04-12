@@ -683,5 +683,18 @@
     "settlement_result": 1.0,
     "won": true,
     "ticker": "KXXRP15M-26APR121745-45"
+  },
+  {
+    "timestamp": "2026-04-12T23:00:00.987237",
+    "coin": "HYPE",
+    "signal_type": "candle_YES",
+    "side": "YES",
+    "conf": 97,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "PENDING",
+    "block_reason": null,
+    "settlement_result": null,
+    "won": null
   }
 ]

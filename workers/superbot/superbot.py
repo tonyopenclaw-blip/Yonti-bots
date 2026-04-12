@@ -909,6 +909,12 @@ class Superbot:
         self.daily_trades = 0
         self.daily_trade_limit = MAX_DAILY_TRADES  # 30 trades per day
 
+        # === 12-MIN NO LOCK-IN: Track window open prices per coin ===
+        # window_open_prices[coin][ticker] = floor_strike at window start
+        self.window_open_prices: Dict[str, Dict[str, float]] = {coin: {} for coin in COINS}
+        # 12min_checked_windows[coin] = set of ticker keys already checked for 12-min entry
+        self.twelvemin_checked_windows: Dict[str, set] = {coin: set() for coin in COINS}
+
         # Setup signal handlers
         signal.signal(signal.SIGINT, self._signal_handler)
         signal.signal(signal.SIGTERM, self._signal_handler)
@@ -1242,6 +1248,10 @@ class Superbot:
                     except: ttl=900
                     logger.warning(f"  Market {m.ticker}: mid={mid:.4f}, ttl={ttl:.0f}s, bid={m.yes_bid:.4f}, ask={m.yes_ask:.4f}")
 
+        # === 12-MIN NO LOCK-IN: Check at 12 min mark (3 min remaining) ===
+        # This fires once per window when time_remaining <= 180s
+        self._check_12min_no_lockin(series_ticker, markets, coin, trader)
+
         # === NERD v2: MAX_POSITIONS = 3 check ===
         total_positions = sum(len(t.positions) for t in self.coin_traders.values())
         if total_positions >= MAX_POSITIONS:
@@ -1298,6 +1308,122 @@ class Superbot:
                     # Don't return here - allow more trades from same market (two-way)
 
         return True
+
+    def _check_12min_no_lockin(self, series_ticker: str, markets: List[Market], coin: str, trader: 'CoinTrader'):
+        """
+        12-MIN NO LOCK-IN ENTRY:
+        At ~12 min into a 15-min window (3 min remaining), check if Coinbase price
+        is at or below the window's open price (prev_close/floor_strike).
+        If price <= prev_close and no existing position → enter NO at market price.
+
+        12-min NO positions are exempt from cut-loss (hold to settlement).
+        Only fires once per window (tracked in self.twelvemin_checked_windows).
+        """
+        # Prune closed windows: remove tickers that are no longer in markets
+        current_tickers = {m.ticker for m in markets}
+        stale_tickers = [
+            t for t in list(self.window_open_prices[coin].keys())
+            if t not in current_tickers
+        ]
+        for t in stale_tickers:
+            del self.window_open_prices[coin][t]
+            self.twelvemin_checked_windows[coin].discard(t)
+
+        # Get Coinbase product for this coin
+        product_id = COINBASE_PRODUCTS.get(coin.upper())
+        if not product_id:
+            return
+
+        for market in markets:
+            try:
+                time_left = market.time_to_expiry_sec()
+            except (AttributeError, TypeError):
+                time_left = 900
+
+            # Fire at 12-min mark: ~180s remaining (allow 150-210s window)
+            if time_left > 210 or time_left < 150:
+                continue
+
+            ticker = market.ticker
+            ticker_key = ticker  # unique per market
+
+            # Skip if already checked this window
+            if ticker_key in self.twelvemin_checked_windows.get(coin, set()):
+                continue
+
+            # Skip if we already have a position in this coin (allow both YES+NO per coin)
+            if trader.positions:
+                continue
+
+            # Track window open prices: store floor_strike when we first see a new window
+            if ticker not in self.window_open_prices[coin]:
+                if market.floor_strike is not None and market.floor_strike > 0:
+                    self.window_open_prices[coin][ticker] = market.floor_strike
+                    logger.info(f"[12MIN] {coin} {ticker} window_open_price={market.floor_strike:.2f} (floor_strike)")
+                else:
+                    # No floor_strike yet — skip this market
+                    continue
+
+            prev_close = self.window_open_prices[coin].get(ticker)
+            if prev_close is None:
+                continue
+
+            # Get current Coinbase price
+            try:
+                url = f"{COINBASE_API}/products/{product_id}/ticker"
+                resp = requests.get(url, timeout=5)
+                resp.raise_for_status()
+                coinbase_price = float(resp.json().get("price", 0))
+            except Exception as e:
+                logger.debug(f"[12MIN] {coin} Coinbase price fetch failed: {e}")
+                continue
+
+            # If price <= prev_close → enter NO
+            if coinbase_price <= prev_close:
+                # Mark as checked so we don't re-enter
+                self.twelvemin_checked_windows[coin].add(ticker_key)
+
+                # Place NO at market price
+                mid = (market.yes_bid + market.yes_ask) / 2
+                if mid <= 0 or mid >= 1.0:
+                    mid = 0.50  # Fallback
+
+                # Calculate Kelly size (same as other entries)
+                from strategies import Strategy
+                prob = 1 - mid
+                confidence = 55  # Conservative confidence for lock-in
+                size, kelly_pct, _ = trader.strategy_engine.calculate_kelly_size(
+                    Strategy.MOMENTUM, prob, confidence, mid, cash_override=self.cash
+                )
+
+                # Apply max bet constraint
+                max_dollar = MAX_BET
+                if self.sizing_reduced:
+                    max_dollar *= 0.5
+                if mid > 0:
+                    size = math.ceil(min(size, max_dollar / mid))
+
+                ts_signal = TradeSignal(
+                    strategy=Strategy.MOMENTUM,
+                    ticker=ticker,
+                    side="no",
+                    direction="buy",
+                    price=mid,
+                    size=int(size),
+                    reason=f"12MIN_LOCKIN: {coin} NO coinbase={coinbase_price:.2f} <= prev_close={prev_close:.2f}",
+                    is_candle_duration=True,  # HOLD TO SETTLEMENT — exempt from cut-loss
+                    confidence=confidence,
+                )
+
+                success, cost = trader._open_position(ts_signal, self.cash)
+                if success:
+                    self.cash -= cost
+                    self.daily_trades += 1
+                    logger.info(f"🔒 [{coin}] 12MIN NO LOCK-IN: {ticker} @ ${mid:.4f} (coinbase={coinbase_price:.2f} <= prev_close={prev_close:.2f}, kelly={kelly_pct:.1%}) contracts={int(size):d}")
+                else:
+                    logger.warning(f"[12MIN] {coin} NO LOCK-IN order failed")
+            else:
+                logger.debug(f"[12MIN] {coin} {ticker} price={coinbase_price:.2f} > prev_close={prev_close:.2f} — no entry")
 
     def _cancel_orders_for_ticker(self, ticker: str):
         """Cancel all unfilled orders for a given ticker to avoid double exposure."""

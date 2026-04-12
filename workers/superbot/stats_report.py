@@ -5,6 +5,8 @@ import subprocess
 import re
 from kalshi_py.auth import KalshiAuth
 
+DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1492688796938932267/O1rP8V0V0QntVzLV9HE8hT8Bew-4GofQStjz7Kd2FLZ_h0N5ntaKR_ehGzIeNQzeBDFC"
+
 ACCESS_KEY = '2af9792d-cadd-4067-a861-b9bff4238248'
 PRIVATE_KEY_PATH = '/home/ubuntu/.openclaw/workspace/workers/superbot/kalshi_private_key.pem'
 LOG_FILE = '/home/ubuntu/.openclaw/workspace/workers/superbot/superbot_live.log'
@@ -111,3 +113,8 @@ if __name__ == '__main__':
     s = get_stats()
     msg = format_message(s)
     print(msg)
+    # Send to Discord webhook
+    try:
+        requests.post(DISCORD_WEBHOOK, json={"content": msg}, timeout=10)
+    except Exception as e:
+        print(f"Discord webhook error: {e}")

@@ -1,1 +1,67 @@
-[]
+[
+  {
+    "timestamp": "2026-04-12T03:30:08.331732",
+    "coin": "ETH",
+    "signal_type": "candle_NO",
+    "side": "NO",
+    "conf": 99,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "BLOCKED",
+    "block_reason": "candle NO signals are unprofitable",
+    "settlement_result": null,
+    "won": null
+  },
+  {
+    "timestamp": "2026-04-12T03:30:08.487562",
+    "coin": "SOL",
+    "signal_type": "candle_NO",
+    "side": "NO",
+    "conf": 99,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "BLOCKED",
+    "block_reason": "candle NO signals are unprofitable",
+    "settlement_result": null,
+    "won": null
+  },
+  {
+    "timestamp": "2026-04-12T03:30:08.874776",
+    "coin": "DOGE",
+    "signal_type": "candle_NO",
+    "side": "NO",
+    "conf": 99,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "BLOCKED",
+    "block_reason": "candle NO signals are unprofitable",
+    "settlement_result": null,
+    "won": null
+  },
+  {
+    "timestamp": "2026-04-12T03:30:09.088583",
+    "coin": "XRP",
+    "signal_type": "candle_NO",
+    "side": "NO",
+    "conf": 99,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "BLOCKED",
+    "block_reason": "candle NO signals are unprofitable",
+    "settlement_result": null,
+    "won": null
+  },
+  {
+    "timestamp": "2026-04-12T03:30:10.981279",
+    "coin": "ADA",
+    "signal_type": "candle_NO",
+    "side": "NO",
+    "conf": 99,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "PENDING",
+    "block_reason": null,
+    "settlement_result": null,
+    "won": null
+  }
+]

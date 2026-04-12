@@ -1,0 +1,161 @@
+{
+  "version": 1,
+  "updatedAt": "2026-04-12T03:37:56.658Z",
+  "entries": {
+    "memory:memory/2026-04-01.md:141:162": {
+      "key": "memory:memory/2026-04-01.md:141:162",
+      "path": "memory/2026-04-01.md",
+      "startLine": 141,
+      "endLine": 162,
+      "source": "memory",
+      "snippet": "- List markets: GET `https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&limit=20` - Auth header: `KALSHI-ACCESS-KEY: 0ebe781e-ce07-4e19-98eb-0d2d8e0ea20b` - Note: Markets close 4 hours AFTER resolution time ## API Reference - Check single market: GET `https://api.elections.kalshi.com/trade-api/v2/markets/KXBTC15M-26APR010700-00` - List markets: GET `https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXBTC15M&limit=20` - Note: Markets close 4 hours AFTER resolution time ## Superbot Test - COMPLETE ✅ - Ran in paper mode: $100 balance, $3 floor - Fetched 20 markets every 10 sec - Correctly sat out (no markets in tradeable ranges) - Safety rules worki",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.00000197779004946141,
+      "maxScore": 0.00000197779004946141,
+      "firstRecalledAt": "2026-04-12T03:37:56.658Z",
+      "lastRecalledAt": "2026-04-12T03:37:56.658Z",
+      "queryHashes": [
+        "247e1566a7e6"
+      ],
+      "recallDays": [
+        "2026-04-12"
+      ],
+      "conceptTags": [
+        "series-ticker",
+        "kalshi-access-key",
+        "list",
+        "markets",
+        "get",
+        "https",
+        "api.elections.kalshi.com",
+        "trade"
+      ]
+    },
+    "memory:memory/2026-04-01.md:116:146": {
+      "key": "memory:memory/2026-04-01.md:116:146",
+      "path": "memory/2026-04-01.md",
+      "startLine": 116,
+      "endLine": 146,
+      "source": "memory",
+      "snippet": "- Script paths: /home/ubuntu/.openclaw/workspace/workers/vito/*.sh - Logs: /home/ubuntu/.openclaw/workspace/workers/superbot/report.log - Logs: /home/ubuntu/.openclaw/workspace/workers/vito/vito.log ## Vito & Reports System - Vito runs on cron: `*/15 * * * *` (every 15 minutes) - Two separate reports posting to Discord webhook: 1. Superbot Paper Report (Kelly Mode, balance/positions/P&L) 2. Vito's Betting Report (🍝 sports picks, NBA props, parlays) - Report format: Discord embed with stats, positions, recommendations - Vito handles scheduling, error logging, and report generation ## Technical Analysis Requested - Nerd should look at: coin patterns, historical patterns, MACD, RSI - Sha",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.0000019138486957741194,
+      "maxScore": 0.0000019138486957741194,
+      "firstRecalledAt": "2026-04-12T03:37:56.658Z",
+      "lastRecalledAt": "2026-04-12T03:37:56.658Z",
+      "queryHashes": [
+        "247e1566a7e6"
+      ],
+      "recallDays": [
+        "2026-04-12"
+      ],
+      "conceptTags": [
+        "home/ubuntu",
+        "openclaw/workspace/workers/vito",
+        "balance/positions/p",
+        "script",
+        "paths",
+        "home",
+        "ubuntu",
+        "openclaw"
+      ]
+    },
+    "memory:memory/2026-04-03.md:1:38": {
+      "key": "memory:memory/2026-04-03.md:1:38",
+      "path": "memory/2026-04-03.md",
+      "startLine": 1,
+      "endLine": 38,
+      "source": "memory",
+      "snippet": "# Memory — April 3, 2026 ## Project State ### Yonti Trading Operation - Superbot: trading crypto 15-min binary options on Kalshi - Uncle Vito: NBA/NHL/MLB sports betting report (🍝) - First Cross Tracker: tracking coin price vs target, YES $0.50 cross - GitHub Pages site: https://tonyopenclaw-blip.github.io/Yonti-bots/ ### Key Files - Superbot: /home/ubuntu/.openclaw/workspace/workers/superbot/ - Vito: /home/ubuntu/.openclaw/workspace/workers/uncle_vito/ - Tracker: /home/ubuntu/.openclaw/workspace/workers/superbot/first_cross_tracker.py - Dashboard repo: tonyopenclaw-blip/Yonti-bots (GitHub Pages) ### Bot Status (end of day) - Superbot: running but struggling — avg win ($0.076) < avg los",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.0000017586643176307618,
+      "maxScore": 0.0000017586643176307618,
+      "firstRecalledAt": "2026-04-12T03:37:56.658Z",
+      "lastRecalledAt": "2026-04-12T03:37:56.658Z",
+      "queryHashes": [
+        "247e1566a7e6"
+      ],
+      "recallDays": [
+        "2026-04-12"
+      ],
+      "conceptTags": [
+        "15-min",
+        "nba/nhl/mlb",
+        "0.50",
+        "home/ubuntu",
+        "tonyopenclaw-blip/yonti-bots",
+        "0.076",
+        "april",
+        "project"
+      ]
+    },
+    "memory:memory/2026-04-03.md:61:66": {
+      "key": "memory:memory/2026-04-03.md:61:66",
+      "path": "memory/2026-04-03.md",
+      "startLine": 61,
+      "endLine": 66,
+      "source": "memory",
+      "snippet": "- Tony wants me to coordinate, not code or research - Kalshi API keys: main key for Superbot, read-only key dd143eb9-ac4a-4cc2-bb17-11b47147a8fe for tracker - Tony's insight: first cross through $0.50 mid / coin price crossing target is predictive - Tony's insight: loosen trailing stop, let winners ride, tighter entries - Coin prices on Kalshi: floor_strike = target price (opening BRTI average)",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.0000017161938269855739,
+      "maxScore": 0.0000017161938269855739,
+      "firstRecalledAt": "2026-04-12T03:37:56.658Z",
+      "lastRecalledAt": "2026-04-12T03:37:56.658Z",
+      "queryHashes": [
+        "247e1566a7e6"
+      ],
+      "recallDays": [
+        "2026-04-12"
+      ],
+      "conceptTags": [
+        "read-only",
+        "0.50",
+        "floor-strike",
+        "tony",
+        "wants",
+        "coordinate",
+        "not",
+        "code"
+      ]
+    },
+    "memory:memory/2026-04-01.md:63:96": {
+      "key": "memory:memory/2026-04-01.md:63:96",
+      "path": "memory/2026-04-01.md",
+      "startLine": 63,
+      "endLine": 96,
+      "source": "memory",
+      "snippet": "✅ Test report posted to Discord successfully ✅ Nerd research complete - 392 lines at workers/nerd/research.md ✅ Pixel Superbot engine built - 1072 lines at workers/superbot/ ✅ Code pushed to GitHub: tonyopenclaw-blip/Yonti-bots ## Current Status - Cron jobs running every 15 min - Superbot trading engine ready (needs testing) - Research document complete with actionable strategies ## GitHub Backup Protocol - ALWAYS push to GitHub after any significant commit - Remote already set: origin = https://github.com/tonyopenclaw-blip/Yonti-bots - Run: `git push origin master` after every commit - Keep Yonti-bots repo as the source of truth ## Uncle Vito - COMPLETE ✅ - ESPN API for game data - 4-leg",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.0000016746770171009917,
+      "maxScore": 0.0000016746770171009917,
+      "firstRecalledAt": "2026-04-12T03:37:56.658Z",
+      "lastRecalledAt": "2026-04-12T03:37:56.658Z",
+      "queryHashes": [
+        "247e1566a7e6"
+      ],
+      "recallDays": [
+        "2026-04-12"
+      ],
+      "conceptTags": [
+        "backup",
+        "workers/nerd/research.md",
+        "workers/superbot",
+        "tonyopenclaw-blip/yonti-bots",
+        "yonti-bots",
+        "4-leg",
+        "test",
+        "report"
+      ]
+    }
+  }
+}

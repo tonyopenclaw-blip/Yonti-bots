@@ -1,5 +1,5 @@
 {
-  "start_time": "2026-04-12 01:45:27 UTC",
+  "start_time": "2026-04-12 02:33:27 UTC",
   "end_time": "",
   "starting_balance": 34.67,
   "ending_balance": 0.0,
@@ -10,87 +10,9 @@
   "win_rate": 0,
   "largest_win": 0.0,
   "largest_loss": 0.0,
-  "open_positions": 7,
-  "thermostat": 87,
+  "open_positions": 0,
+  "thermostat": 0,
   "trades": [],
-  "last_10_open_trades": [
-    {
-      "ticker": "KXBTC15M-26APR112200-00",
-      "side": "no",
-      "entry_price": 0.9279999999999999,
-      "shares": 1,
-      "cost": 0.9279999999999999,
-      "pnl": 0.0,
-      "strategy": "momentum",
-      "open_time": "2026-04-12 01:56:55 UTC",
-      "current_price": 0.0025
-    },
-    {
-      "ticker": "KXETH15M-26APR112200-00",
-      "side": "no",
-      "entry_price": 0.9925,
-      "shares": 1,
-      "cost": 0.9925,
-      "pnl": 0.0,
-      "strategy": "momentum",
-      "open_time": "2026-04-12 01:56:55 UTC",
-      "current_price": 0.0015
-    },
-    {
-      "ticker": "KXBNB15M-26APR112200-00",
-      "side": "no",
-      "entry_price": 0.977,
-      "shares": 1,
-      "cost": 0.977,
-      "pnl": 0.0,
-      "strategy": "momentum",
-      "open_time": "2026-04-12 01:56:55 UTC",
-      "current_price": 0.003
-    },
-    {
-      "ticker": "KXSOL15M-26APR112200-00",
-      "side": "no",
-      "entry_price": 0.9945,
-      "shares": 1,
-      "cost": 0.9945,
-      "pnl": 0.0,
-      "strategy": "momentum",
-      "open_time": "2026-04-12 01:56:55 UTC",
-      "current_price": 0.0045000000000000005
-    },
-    {
-      "ticker": "KXDOGE15M-26APR112200-00",
-      "side": "no",
-      "entry_price": 0.71,
-      "shares": 1,
-      "cost": 0.71,
-      "pnl": 0.0,
-      "strategy": "momentum",
-      "open_time": "2026-04-12 01:56:56 UTC",
-      "current_price": 0.008
-    },
-    {
-      "ticker": "KXXRP15M-26APR112200-00",
-      "side": "no",
-      "entry_price": 0.9895,
-      "shares": 1,
-      "cost": 0.9895,
-      "pnl": 0.0,
-      "strategy": "momentum",
-      "open_time": "2026-04-12 01:56:56 UTC",
-      "current_price": 0.002
-    },
-    {
-      "ticker": "KXHYPE15M-26APR112200-00",
-      "side": "no",
-      "entry_price": 0.9785,
-      "shares": 1,
-      "cost": 0.9785,
-      "pnl": 0.0,
-      "strategy": "momentum",
-      "open_time": "2026-04-12 01:56:56 UTC",
-      "current_price": 0.003
-    }
-  ],
+  "last_10_open_trades": [],
   "last_10_closed_trades": []
 }

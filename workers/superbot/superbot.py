@@ -36,6 +36,9 @@ def get_candle_signal_file(coin: str) -> Path:
 
 CANDLE_SIGNAL_MAX_AGE_SEC = 120  # 2 minutes (signals stale after 2 min in fast markets)
 
+SIGNAL_LOG_FILE = BASE_DIR / "signal_log.json"
+SETTLEMENT_CHECK_INTERVAL_SEC = 300  # 5 minutes
+
 # =============================================================================
 # LOGGING SETUP
 # =============================================================================
@@ -1101,6 +1104,96 @@ class Superbot:
             logger.debug(f"Error reading candle signal file: {e}")
             return None
 
+def _get_signal_log() -> list:
+    """Load existing signal log or empty list."""
+    if SIGNAL_LOG_FILE.exists():
+        try:
+            with open(SIGNAL_LOG_FILE, "r") as f:
+                data = json.load(f)
+                return data if isinstance(data, list) else []
+        except (json.JSONDecodeError, IOError):
+            return []
+    return []
+
+def _save_signal_log(log: list):
+    """Save signal log to file."""
+    try:
+        with open(SIGNAL_LOG_FILE, "w") as f:
+            json.dump(log, f, indent=2)
+    except IOError as e:
+        logger.warning(f"Failed to save signal log: {e}")
+
+
+
+def _update_signal_log(coin: str, timestamp: str, action: str, block_reason: str = None):
+    """
+    Update action and block_reason for a pending candle signal from this coin.
+    Matches by coin + timestamp (PENDING → TAKEN or BLOCKED).
+    """
+    log = _get_signal_log()
+    updated = False
+    for entry in log:
+        if entry.get("coin") == coin and entry.get("timestamp") == timestamp and entry.get("action") == "PENDING":
+            entry["action"] = action
+            if block_reason:
+                entry["block_reason"] = block_reason
+            updated = True
+            break
+    if updated:
+        _save_signal_log(log)
+
+
+def _update_settled_signals(ticker: str, settlement_result: float):
+    """
+    Update all pending/active signals for a ticker with settlement result.
+    settlement_result: 0.0 (NO won) or 1.0 (YES won)
+    """
+    log = _get_signal_log()
+    updated = False
+    for entry in log:
+        if entry.get("ticker") == ticker and entry.get("settlement_result") is None:
+            entry["settlement_result"] = settlement_result
+            # Determine if signal "won"
+            side = entry.get("side", "").upper()
+            if side == "YES":
+                entry["won"] = (settlement_result == 1.0)
+            elif side == "NO":
+                entry["won"] = (settlement_result == 0.0)
+            else:
+                entry["won"] = None
+            updated = True
+    if updated:
+        _save_signal_log(log)
+        logger.info(f"SIGNAL LOG: Updated settlement for ticker {ticker}: result={settlement_result}, won={entry.get('won')}")
+
+
+def _check_and_update_settled_markets():
+    """
+    Check for settled markets and update their signal log entries.
+    Runs periodically in the trading loop.
+    """
+    try:
+        for coin in COINS:
+            series = SERIES_TICKERS.get(coin)
+            if not series:
+                continue
+            markets = self.api.get_open_markets(series_ticker=series)
+            for m in markets:
+                try:
+                    time_left = m.time_to_expiry_sec()
+                except:
+                    time_left = 900
+                # Skip if market has lots of time or is open
+                if time_left > 60:
+                    continue
+                # Market settled or about to settle - check settlement
+                result = self.api.get_market_result(m.ticker)
+                if result:
+                    settlement_val = 1.0 if result == "yes" else 0.0
+                    _update_settled_signals(m.ticker, settlement_val)
+    except Exception as e:
+        logger.debug(f"Settlement check error: {e}")
+
     def _clear_candle_signal(self, coin: str):
         """Clear the candle signal file for the given coin after execution."""
         signal_file = get_candle_signal_file(coin)
@@ -1114,10 +1207,12 @@ class Superbot:
     def _execute_candle_signal(self, signal_data: Dict, markets: List[Market], coin: str, trader: 'CoinTrader') -> bool:
         """Execute a candle signal: find best market and place order."""
         side = signal_data.get("side", "YES").lower()  # 'yes' or 'no'
+        sig_timestamp = signal_data.get("timestamp", "")
 
         # Block ALL NO entries from candle signals — historical 21:30 candle NO entries (BTC, ETH, XRP, BNB, DOGE) all lost
         if side == "no":
             logger.info(f"[{coin}] CANDLE NO BLOCKED: candle NO signals are unprofitable")
+            _update_signal_log(coin, sig_timestamp, "BLOCKED", "candle NO signals are unprofitable")
             return False
 
         entry_max = signal_data.get("entry_price_max", 0.85)
@@ -1175,6 +1270,93 @@ class Superbot:
                 self.cash -= cost
                 self.daily_trades += 1
                 logger.info(f"🚀 [{coin}] CANDLE TRADE: {side} {market.ticker} @ ${mid:.4f} (conf={confidence}) contracts={int(size):d}")
+                # Update signal log with ticker and mark as TAKEN
+                _update_signal_log(coin, sig_timestamp, "TAKEN")
+                # Also store ticker on the signal entry for settlement tracking
+                log = _get_signal_log()
+                for entry in log:
+                    if entry.get("coin") == coin and entry.get("timestamp") == sig_timestamp:
+                        entry["ticker"] = market.ticker
+                        _save_signal_log(log)
+                        break
+                self._clear_candle_signal(coin)
+                return True
+        return False
+    def _execute_candle_signal(self, signal_data: Dict, markets: List[Market], coin: str, trader: 'CoinTrader') -> bool:
+        """Execute a candle signal: find best market and place order."""
+        side = signal_data.get("side", "YES").lower()  # 'yes' or 'no'
+        sig_timestamp = signal_data.get("timestamp", "")
+
+        # Block ALL NO entries from candle signals — historical 21:30 candle NO entries (BTC, ETH, XRP, BNB, DOGE) all lost
+        if side == "no":
+            logger.info(f"[{coin}] CANDLE NO BLOCKED: candle NO signals are unprofitable")
+            _update_signal_log(coin, sig_timestamp, "BLOCKED", "candle NO signals are unprofitable")
+            return False
+
+        entry_max = signal_data.get("entry_price_max", 0.85)
+
+        # Nerd recommendation: Reject signals when entry price > $0.50
+        ENTRY_PRICE_LIMIT = 0.50
+
+        # Find a suitable market
+        for market in markets:
+            try:
+                time_left = market.time_to_expiry_sec()
+            except (AttributeError, TypeError):
+                time_left = 900
+            if time_left < 60:
+                continue
+
+            mid = (market.yes_bid + market.yes_ask) / 2
+
+            # For YES signals, block expensive entries. For NO, allow — mid > $0.50 means YES is overpriced
+            if side == "yes" and mid > 0.60:
+                logger.info(f"[{coin}] ENTRY SKIP: YES entry ${mid:.4f} > $0.60 (too expensive)")
+                continue
+
+            # === ENTRY PRICE GUARD: Block entries below $0.20 (below minimum) ===
+            if mid < 0.20:
+                logger.info(f"[{coin}] ENTRY SKIP: entry price ${mid:.4f} < $0.20 (below minimum)")
+                continue
+            if mid <= 0 or mid > entry_max:
+                continue
+
+            # Build TradeSignal for candle strategy
+            from strategies import TradeSignal
+            # Calculate Kelly-based size using confidence (same as evaluate_market path)
+            prob = mid if side == "yes" else (1 - mid)
+            confidence = signal_data.get("conf", 50)
+            size, kelly_pct, _ = trader.strategy_engine.calculate_kelly_size(
+                Strategy.MOMENTUM, prob, confidence, mid, cash_override=self.cash
+            )
+            ts_signal = TradeSignal(
+                strategy=Strategy.MOMENTUM,
+                ticker=market.ticker,
+                side=side,
+                direction="buy",
+                price=mid,
+                size=int(size),
+                reason=f"CANDLE: {signal_data.get('coin')} {side} conf={confidence} kelly={kelly_pct:.1%}",
+                is_candle_duration=True,  # No SL/TP - hold to expiry
+                confidence=confidence,
+            )
+
+            # Use Bot's full cash for Kelly sizing (not per-coin split) since we only take 1 position per coin
+            available_cash = self.cash  # Full cash for Kelly calculation
+            success, cost = trader._open_position(ts_signal, available_cash)
+            if success:
+                self.cash -= cost
+                self.daily_trades += 1
+                logger.info(f"🚀 [{coin}] CANDLE TRADE: {side} {market.ticker} @ ${mid:.4f} (conf={confidence}) contracts={int(size):d}")
+                # Update signal log with ticker and mark as TAKEN
+                _update_signal_log(coin, sig_timestamp, "TAKEN")
+                # Also store ticker on the signal entry for settlement tracking
+                log = _get_signal_log()
+                for entry in log:
+                    if entry.get("coin") == coin and entry.get("timestamp") == sig_timestamp:
+                        entry["ticker"] = market.ticker
+                        _save_signal_log(log)
+                        break
                 self._clear_candle_signal(coin)
                 return True
         return False
@@ -1570,6 +1752,11 @@ class Superbot:
                     for trader in self.coin_traders.values():
                         trader.increment_cooldown()
                     last_cooldown_tick = time.time()
+
+                # Check for settled markets and update signal log every 5 minutes
+                if not hasattr(self, "_last_settlement_check") or time.time() - self._last_settlement_check >= SETTLEMENT_CHECK_INTERVAL_SEC:
+                    self._check_and_update_settled_markets()
+                    self._last_settlement_check = time.time()
 
                 if self.active_series:
                     # ACTIVE MODE: Poll all active series every 30s (was 3s)

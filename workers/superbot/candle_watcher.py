@@ -22,6 +22,7 @@ import requests
 BASE_DIR = Path(__file__).parent
 SIGNALS_DIR = BASE_DIR / "candle_signals"
 LOG_FILE = BASE_DIR / "candle_watcher.log"
+SIGNAL_LOG_FILE = BASE_DIR / "signal_log.json"
 
 # Ensure candle_signals directory exists
 SIGNALS_DIR.mkdir(exist_ok=True)
@@ -74,6 +75,53 @@ logger = setup_logging()
 # =============================================================================
 # CANDLE TRACKER
 # =============================================================================
+def _load_signal_log() -> list:
+    """Load existing signal log or empty list."""
+    if SIGNAL_LOG_FILE.exists():
+        try:
+            with open(SIGNAL_LOG_FILE, "r") as f:
+                data = json.load(f)
+                return data if isinstance(data, list) else []
+        except (json.JSONDecodeError, IOError):
+            return []
+    return []
+
+
+def _append_signal_log(entry: dict):
+    """Append a signal entry to the signal log file."""
+    log = _load_signal_log()
+    log.append(entry)
+    try:
+        with open(SIGNAL_LOG_FILE, "w") as f:
+            json.dump(log, f, indent=2)
+    except IOError as e:
+        logger.warning(f"Failed to write signal log: {e}")
+
+
+
+def _get_market_mid_at_signal(coin: str) -> Optional[float]:
+    """Fetch the current Kalshi market mid price for a coin."""
+    try:
+        from config import KALSHI_ACCESS_KEY
+        import KalshiAPI
+        api = KalshiAPI.KalshiAPI(KALSHI_ACCESS_KEY)
+        series_map = {
+            "BTC": "KXBTC15M", "ETH": "KXETH15M", "SOL": "KXSOL15M",
+            "BNB": "KXBNB15M", "DOGE": "KXDOGE15M", "XRP": "KXXRP15M",
+            "HYPE": "KXXRP15M", "ADA": "KXADA15M",
+        }
+        series = series_map.get(coin.upper())
+        if not series:
+            return None
+        markets = api.get_open_markets(series_ticker=series)
+        if markets:
+            m = markets[0]
+            return (m.yes_bid + m.yes_ask) / 2 if m.yes_bid and m.yes_ask else None
+    except Exception:
+        pass
+    return None
+
+
 def notify_discord(coin: str, side: str, conf: int, entry_max: float):
     """Send signal notification to Discord."""
     msg = f"🔔 CANDLE SIGNAL: {coin} {side} | CONF={conf} | Entry ≤${entry_max:.2f}"
@@ -230,19 +278,53 @@ class CandleTracker:
                     self.regime_skip_this_cycle = True
                     logger.info(f"[{self.coin}] ★ BULLISH REGIME ({len(self.candle_ratios)} candles >60% YES) - NO signals will be suppressed this cycle")
             logger.info(f"[{self.coin}] ★ BUY YES SIGNAL (conf={conf})")
-            return {
+            sig = {
                 "coin": self.coin,
                 "side": "YES",
                 "conf": conf,
                 "entry_price_max": 0.85,
                 "timestamp": datetime.utcnow().isoformat(),
             }
+            # Log to signal tracking - PENDING until superbot processes it
+            mid = _get_market_mid_at_signal(self.coin)
+            log_entry = {
+                "timestamp": sig["timestamp"],
+                "coin": self.coin,
+                "signal_type": "candle_YES",
+                "side": "YES",
+                "conf": conf,
+                "entry_price_max": 0.85,
+                "market_mid_at_signal": mid,
+                "action": "PENDING",
+                "block_reason": None,
+                "settlement_result": None,
+                "won": None,
+            }
+            _append_signal_log(log_entry)
+            return sig
 
         # BUY NO: <30% → conf=99 (skip if in bullish regime)
         elif ratio < BUY_NO_THRESHOLD:
             # Check regime filter: skip NO if 3 consecutive candles showed >60% YES
             if self.regime_skip_this_cycle:
                 logger.info(f"[{self.coin}] ◆ NO SIGNAL SKIPPED - BULLISH REGIME (3 consecutive YES candles >60%)")
+                # Log blocked signal
+                now_ts = datetime.utcnow().isoformat()
+                mid = _get_market_mid_at_signal(self.coin)
+                log_entry = {
+                    "timestamp": now_ts,
+                    "coin": self.coin,
+                    "signal_type": "candle_NO",
+                    "side": "NO",
+                    "conf": 99,
+                    "entry_price_max": 0.85,
+                    "market_mid_at_signal": mid,
+                    "action": "BLOCKED",
+                    "block_reason": "bullish regime (3 consecutive YES candles >60%)",
+                    "settlement_result": None,
+                    "won": None,
+                }
+                _append_signal_log(log_entry)
                 # Reset regime flag for next cycle
                 self.regime_skip_this_cycle = False
                 self.candle_ratios = []  # Reset regime tracking after suppression
@@ -252,13 +334,30 @@ class CandleTracker:
             # Successful NO signal - reset regime tracking
             self.regime_skip_this_cycle = False
             self.candle_ratios = []
-            return {
+            sig = {
                 "coin": self.coin,
                 "side": "NO",
                 "conf": conf,
                 "entry_price_max": 0.85,
                 "timestamp": datetime.utcnow().isoformat(),
             }
+            # Log to signal tracking - PENDING until superbot processes it
+            mid = _get_market_mid_at_signal(self.coin)
+            log_entry = {
+                "timestamp": sig["timestamp"],
+                "coin": self.coin,
+                "signal_type": "candle_NO",
+                "side": "NO",
+                "conf": conf,
+                "entry_price_max": 0.85,
+                "market_mid_at_signal": mid,
+                "action": "PENDING",
+                "block_reason": None,
+                "settlement_result": None,
+                "won": None,
+            }
+            _append_signal_log(log_entry)
+            return sig
 
         return None
 

@@ -10,9 +10,21 @@
   "win_rate": 0,
   "largest_win": 0.0,
   "largest_loss": 0.0,
-  "open_positions": 0,
-  "thermostat": 0,
+  "open_positions": 1,
+  "thermostat": 12,
   "trades": [],
-  "last_10_open_trades": [],
+  "last_10_open_trades": [
+    {
+      "ticker": "KXXRP15M-26APR120500-00",
+      "side": "yes",
+      "entry_price": 0.455,
+      "shares": 3,
+      "cost": 1.365,
+      "pnl": 0.0,
+      "strategy": "momentum",
+      "open_time": "2026-04-12 08:45:36 UTC",
+      "current_price": 0.001
+    }
+  ],
   "last_10_closed_trades": []
 }

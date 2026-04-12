@@ -481,6 +481,14 @@ class CoinTrader:
                 else:
                     logger.warning(f"SCALE IN FAILED: [{self.coin}] {scale_result['error']}")
 
+            # 12-MIN NO CUT-LOSS: For 12-min NO positions, cut at $0.05 (higher conviction = tighter stop)
+            if position.get('is_12min_no') and mid_price <= 0.05 and side == "no":
+                entry_price = position.avg_price if position.avg_price > 0 else position.entry_price
+                logger.warning(f"12MIN CUT LOSS: [{self.coin}] NO {ticker} exited at ${mid_price:.4f} (was ${entry_price:.4f} entry)")
+                self._close_position(ticker, "12min_cut_loss_no", mid_price, side=side)
+                positions_changed = True
+                continue
+
             # CUT-LOSS: If price <= $0.10 AND time_remaining <= 7.5 min, close entire position immediately
             # Nerd fix: raised from $0.20 to $0.10 - $0.20 was cutting winners prematurely (33% cut-loss rate, 0% win rate)
             # EXCEPTION: candle-duration positions hold to expiry - they would have won (BNB, SOL, HYPE, BTC, XRP all won)
@@ -1129,14 +1137,13 @@ class Superbot:
             mid = (market.yes_bid + market.yes_ask) / 2
 
             # For YES signals, block expensive entries. For NO, allow — mid > $0.50 means YES is overpriced
-            if side == "yes" and mid > 0.50:
-                logger.info(f"[{coin}] ENTRY SKIP: YES entry ${mid:.4f} > $0.50 (too expensive)")
+            if side == "yes" and mid > 0.60:
+                logger.info(f"[{coin}] ENTRY SKIP: YES entry ${mid:.4f} > $0.60 (too expensive)")
                 continue
 
-            # === ENTRY PRICE GUARD: Block entries below $0.35 (0% win rate zone) ===
-            # Nerd's backtest: entry price <$0.35 has 0% win rate, 100% cut-loss rate
-            if mid < 0.35:
-                logger.info(f"[{coin}] ENTRY SKIP: entry price ${mid:.4f} < $0.35 (0% win zone)")
+            # === ENTRY PRICE GUARD: Block entries below $0.20 (below minimum) ===
+            if mid < 0.20:
+                logger.info(f"[{coin}] ENTRY SKIP: entry price ${mid:.4f} < $0.20 (below minimum)")
                 continue
             if mid <= 0 or mid > entry_max:
                 continue
@@ -1378,6 +1385,12 @@ class Superbot:
                 logger.debug(f"[12MIN] {coin} Coinbase price fetch failed: {e}")
                 continue
 
+            # Require significant pullback (>3%) before entering NO
+            pullback_pct = (prev_close - coinbase_price) / prev_close
+            if pullback_pct < 0.03:  # less than 3% pullback
+                logger.info(f"[{coin}] 12MIN: pullback {pullback_pct*100:.1f}% < 3%, skipping NO")
+                continue
+
             # If price <= prev_close → enter NO
             if coinbase_price <= prev_close:
                 # Mark as checked so we don't re-enter
@@ -1417,7 +1430,8 @@ class Superbot:
                     price=no_price,
                     size=int(size),
                     reason=f"12MIN_LOCKIN: {coin} NO coinbase={coinbase_price:.2f} <= prev_close={prev_close:.2f}",
-                    is_candle_duration=True,  # HOLD TO SETTLEMENT — exempt from cut-loss
+                    is_candle_duration=True,  # HOLD TO SETTLEMENT
+                    is_12min_no=True,  # Mark as 12-min NO for cut-loss tracking
                     confidence=confidence,
                 )
 

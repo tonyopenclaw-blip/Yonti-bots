@@ -3,11 +3,13 @@
 Sharp Scanner Module for Uncle Vito 🍝
 Scrapes X (Twitter) sharp bettor accounts to weight Vito's picks.
 
-Uses Apify API to fetch tweets from 4 sharp bettor accounts:
+Uses Apify API to fetch tweets from 6 sharp bettor accounts:
 - dangambleai
-- codybrownbets  
-- harrylockpicks
+- codybrownbets
 - cookitup31
+- harrylockpicks
+- BetTheBoard (Brad Powers)
+- wheatonbrando (Brandon Anderson)
 
 Calculates "sharp consensus" - how many sharps mention each player.
 """
@@ -37,16 +39,21 @@ APIFY_ACTOR = "apify/twitter-scraper"
 SHARP_ACCOUNTS = [
     "dangambleai",
     "codybrownbets",
-    "harrylockpicks",
     "cookitup31",
+    "harrylockpicks",
+    "BetTheBoard",       # Brad Powers - Betstamp trackable
+    "wheatonbrando",     # Brandon Anderson - Action Network NBA/NFL
 ]
 
 # Account weights (can be tuned based on historical accuracy)
+# Note: weights normalized to sum to 1.0
 ACCOUNT_WEIGHTS = {
-    "dangambleai": 0.30,
-    "codybrownbets": 0.25,
-    "harrylockpicks": 0.20,
-    "cookitup31": 0.25,
+    "dangambleai": 0.20,      # 0.35/1.75 normalized
+    "codybrownbets": 0.17,    # 0.30/1.75 normalized
+    "cookitup31": 0.14,       # 0.25/1.75 normalized
+    "harrylockpicks": 0.06,   # 0.10/1.75 normalized - UK/soccer focus misaligned
+    "BetTheBoard": 0.23,      # 0.40/1.75 normalized - Brad Powers, Betstamp trackable
+    "wheatonbrando": 0.20,    # 0.35/1.75 normalized - Brandon Anderson, Action Network
 }
 
 # Confidence boost per sharp consensus (added per account mentioning)

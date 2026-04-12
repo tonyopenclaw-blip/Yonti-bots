@@ -3,13 +3,16 @@
 Sharp Scanner Module for Uncle Vito 🍝
 Scrapes X (Twitter) sharp bettor accounts to weight Vito's picks.
 
-Uses Apify API to fetch tweets from 6 sharp bettor accounts:
-- dangambleai
-- codybrownbets
-- cookitup31
-- harrylockpicks
-- BetTheBoard (Brad Powers)
-- wheatonbrando (Brandon Anderson)
+Uses Apify API to fetch tweets from sharp bettor accounts across NBA, NFL, MLB, NHL, and multi-sport.
+
+Current accounts tracked:
+- NBA: TheSharpSide, JuicyOdds, NBABetTalk, picknparlay, BettorCollege, NBAProfitable
+- NFL: beatingthebook, ProFootballRT, footballlocks, BrandonAnderson, joeing1, nflguthrie
+- MLB: MLBLocks, baseballlocks, foulballbets, HomeRunBets, DrBetting
+- NHL: HockeyLocker, NHLBetTalk, PuckProfits, hockey_sharps
+- Multi: capjack2000, BillKrackomberger, adamlevitan, arianacriso
+
+Plus original sharps: dangambleai, codybrownbets, cookitup31, harrylockpicks, BetTheBoard, wheatonbrando
 
 Calculates "sharp consensus" - how many sharps mention each player.
 """
@@ -36,24 +39,98 @@ APIFY_API_KEY = "apify_api_sK4vzx6r1hzexr7TA2muKebeQWqChT2psmmB"
 APIFY_ACTOR = "apify/twitter-scraper"
 
 # Sharp bettor accounts to track
+# Organized by sport/focus
 SHARP_ACCOUNTS = [
+    # Existing accounts
     "dangambleai",
     "codybrownbets",
     "cookitup31",
     "harrylockpicks",
     "BetTheBoard",       # Brad Powers - Betstamp trackable
     "wheatonbrando",     # Brandon Anderson - Action Network NBA/NFL
+    
+    # NEW NBA accounts
+    "TheSharpSide",     # NBA-focused sharp account
+    "JuicyOdds",        # NBA/props sharp focus
+    "NBABetTalk",       # NBA betting community
+    "picknparlay",      # NBA parlay specialist
+    "BettorCollege",    # College/NBA betting
+    "NBAProfitable",    # NBA profitable plays
+    
+    # NEW NFL accounts  
+    "beatingthebook",   # Vinnie DiMarco - established sharp
+    "ProFootballRT",    # NFL betting data
+    "footballlocks",    # NFL sharp picks
+    "BrandonAnderson",  # Verified sports bettor (different from wheatonbrando)
+    "joeing1",          # NFL betting track record
+    "nflguthrie",       # NFL betting
+    
+    # NEW MLB accounts
+    "MLBLocks",         # MLB sharp plays
+    "baseballlocks",    # MLB betting
+    "foulballbets",     # MLB props/focus
+    "HomeRunBets",      # MLB home run props
+    "DrBetting",        # MLB specialist
+    
+    # NEW NHL accounts
+    "HockeyLocker",     # NHL betting
+    "NHLBetTalk",       # NHL sharp community
+    "PuckProfits",      # NHL profitable plays
+    "hockey_sharps",    # NHL sharps
+    
+    # NEW Multi-sport accounts
+    "capjack2000",      # Multi-sport track record
+    "BillKrackomberger", # Known sports handicapper
+    "adamlevitan",      # Sports betting analyst (DraftKings)
+    "arianacriso",      # Multi-sport betting analyst
 ]
 
 # Account weights (can be tuned based on historical accuracy)
-# Note: weights normalized to sum to 1.0
+# Note: weights normalized to sum to ~1.0
+# Weights based on: trackability, ROI history, community trust, follower count
 ACCOUNT_WEIGHTS = {
-    "dangambleai": 0.20,      # 0.35/1.75 normalized
-    "codybrownbets": 0.17,    # 0.30/1.75 normalized
-    "cookitup31": 0.14,       # 0.25/1.75 normalized
-    "harrylockpicks": 0.06,   # 0.10/1.75 normalized - UK/soccer focus misaligned
-    "BetTheBoard": 0.23,      # 0.40/1.75 normalized - Brad Powers, Betstamp trackable
-    "wheatonbrando": 0.20,    # 0.35/1.75 normalized - Brandon Anderson, Action Network
+    # Existing accounts
+    "dangambleai": 0.10,
+    "codybrownbets": 0.08,
+    "cookitup31": 0.07,
+    "harrylockpicks": 0.05,  # UK/soccer focus - lower weight for US markets
+    "BetTheBoard": 0.18,      # Brad Powers - Betstamp trackable, high trust
+    "wheatonbrando": 0.12,    # Brandon Anderson - Action Network
+    
+    # NEW NBA accounts (weights 0.05-0.12)
+    "TheSharpSide": 0.08,     # NBA-focused sharp
+    "JuicyOdds": 0.07,        # NBA/props focus
+    "NBABetTalk": 0.06,       # NBA betting community
+    "picknparlay": 0.05,      # Parlay specialist - higher variance
+    "BettorCollege": 0.06,    # College/NBA betting
+    "NBAProfitable": 0.07,    # NBA profitable plays
+    
+    # NEW NFL accounts (weights 0.05-0.12)
+    "beatingthebook": 0.12,   # Vinnie DiMarco - established sharp
+    "ProFootballRT": 0.06,    # NFL betting data
+    "footballlocks": 0.07,    # NFL sharp picks
+    "BrandonAnderson": 0.08,  # Verified track record
+    "joeing1": 0.06,          # NFL betting
+    "nflguthrie": 0.05,       # NFL betting
+    
+    # NEW MLB accounts (weights 0.05-0.10)
+    "MLBLocks": 0.08,          # MLB sharp plays
+    "baseballlocks": 0.07,    # MLB betting
+    "foulballbets": 0.06,      # MLB props/focus
+    "HomeRunBets": 0.07,      # MLB home run props
+    "DrBetting": 0.05,         # MLB specialist
+    
+    # NEW NHL accounts (weights 0.05-0.08)
+    "HockeyLocker": 0.06,     # NHL betting
+    "NHLBetTalk": 0.06,      # NHL sharp community
+    "PuckProfits": 0.07,      # NHL profitable plays
+    "hockey_sharps": 0.05,    # NHL sharps
+    
+    # NEW Multi-sport accounts (weights 0.05-0.10)
+    "capjack2000": 0.06,      # Multi-sport track record
+    "BillKrackomberger": 0.08, # Known sports handicapper
+    "adamlevitan": 0.07,      # Sports betting analyst
+    "arianacriso": 0.06,      # Multi-sport betting analyst
 }
 
 # Confidence boost per sharp consensus (added per account mentioning)

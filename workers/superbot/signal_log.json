@@ -676,5 +676,83 @@
     "block_reason": null,
     "settlement_result": null,
     "won": null
+  },
+  {
+    "timestamp": "2026-04-12T15:45:00.443061",
+    "coin": "ETH",
+    "signal_type": "candle_YES",
+    "side": "YES",
+    "conf": 97,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "BLOCKED",
+    "block_reason": "no suitable market",
+    "settlement_result": null,
+    "won": null
+  },
+  {
+    "timestamp": "2026-04-12T15:45:00.577915",
+    "coin": "SOL",
+    "signal_type": "candle_YES",
+    "side": "YES",
+    "conf": 97,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "BLOCKED",
+    "block_reason": "no suitable market",
+    "settlement_result": null,
+    "won": null
+  },
+  {
+    "timestamp": "2026-04-12T15:45:00.721149",
+    "coin": "DOGE",
+    "signal_type": "candle_YES",
+    "side": "YES",
+    "conf": 97,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "BLOCKED",
+    "block_reason": "no suitable market",
+    "settlement_result": null,
+    "won": null
+  },
+  {
+    "timestamp": "2026-04-12T16:00:00.902769",
+    "coin": "BTC",
+    "signal_type": "candle_YES",
+    "side": "YES",
+    "conf": 97,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "PENDING",
+    "block_reason": null,
+    "settlement_result": null,
+    "won": null
+  },
+  {
+    "timestamp": "2026-04-12T16:00:01.137374",
+    "coin": "ETH",
+    "signal_type": "candle_YES",
+    "side": "YES",
+    "conf": 97,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "PENDING",
+    "block_reason": null,
+    "settlement_result": null,
+    "won": null
+  },
+  {
+    "timestamp": "2026-04-12T16:00:02.207815",
+    "coin": "DOGE",
+    "signal_type": "candle_YES",
+    "side": "YES",
+    "conf": 97,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "PENDING",
+    "block_reason": null,
+    "settlement_result": null,
+    "won": null
   }
 ]

@@ -304,13 +304,36 @@ class CandleTracker:
             return sig
 
         # BUY NO: <30% → conf=99 (skip if in bullish regime)
+        # NO works like YES: only fire when market is extended (mid > $0.55 = YES expensive = NO is cheap)
+        # If mid <= $0.55, market isn't extended enough for NO — block signal
         elif ratio < BUY_NO_THRESHOLD:
+            # Check mid price: only emit NO if market is extended (YES expensive)
+            mid = _get_market_mid_at_signal(self.coin)
+            if mid is None or mid <= 0.55:
+                logger.info(f"[{self.coin}] ◆ NO SIGNAL SKIPPED - mid ${mid or 'N/A':.4f} <= $0.55 (market not extended, NO expensive)")
+                # Log blocked signal
+                now_ts = datetime.utcnow().isoformat()
+                log_entry = {
+                    "timestamp": now_ts,
+                    "coin": self.coin,
+                    "signal_type": "candle_NO",
+                    "side": "NO",
+                    "conf": 99,
+                    "entry_price_max": 0.85,
+                    "market_mid_at_signal": mid,
+                    "action": "BLOCKED",
+                    "block_reason": f"mid {mid or 'N/A'} <= $0.55 (market not extended)",
+                    "settlement_result": None,
+                    "won": None,
+                }
+                _append_signal_log(log_entry)
+                self.candle_ratios = []
+                return None
             # Check regime filter: skip NO if 3 consecutive candles showed >60% YES
             if self.regime_skip_this_cycle:
                 logger.info(f"[{self.coin}] ◆ NO SIGNAL SKIPPED - BULLISH REGIME (3 consecutive YES candles >60%)")
                 # Log blocked signal
                 now_ts = datetime.utcnow().isoformat()
-                mid = _get_market_mid_at_signal(self.coin)
                 log_entry = {
                     "timestamp": now_ts,
                     "coin": self.coin,
@@ -330,7 +353,7 @@ class CandleTracker:
                 self.candle_ratios = []  # Reset regime tracking after suppression
                 return None
             conf = 99
-            logger.info(f"[{self.coin}] ★ BUY NO SIGNAL (conf={conf})")
+            logger.info(f"[{self.coin}] ★ BUY NO SIGNAL (conf={conf}) [mid={mid:.4f} > $0.55 - market extended]")
             # Successful NO signal - reset regime tracking
             self.regime_skip_this_cycle = False
             self.candle_ratios = []

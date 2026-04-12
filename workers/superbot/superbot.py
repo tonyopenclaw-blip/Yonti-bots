@@ -1252,6 +1252,16 @@ class Superbot:
                 logger.info(f"[{coin}] ENTRY SKIP: YES entry ${mid:.4f} > $0.55 (too expensive)")
                 continue
 
+            # For NO signals, block when YES is cheap (YES < $0.45 means market thinks YES unlikely = NO overpriced)
+            if side == "no" and mid < 0.45:
+                logger.info(f"[{coin}] ENTRY SKIP: NO entry ${mid:.4f} (YES=${mid:.4f} < $0.45, NO overpriced)")
+                continue
+
+            # For NO signals, block when YES is very expensive (YES > $0.55 = NO too cheap = false signal)
+            if side == "no" and mid > 0.55:
+                logger.info(f"[{coin}] ENTRY SKIP: NO entry ${mid:.4f} (YES=${mid:.4f} > $0.55, pump too far)")
+                continue
+
             # === ENTRY PRICE GUARD: Block entries below $0.20 (below minimum) ===
             if mid < 0.20:
                 logger.info(f"[{coin}] ENTRY SKIP: entry price ${mid:.4f} < $0.20 (below minimum)")
@@ -1531,6 +1541,19 @@ class Superbot:
                 # Ensure minimum tick size ($0.01)
                 if no_price < 0.01:
                     no_price = 0.01
+
+                # 12-MIN NO GUARD: Only enter NO when market is extended (YES expensive = NO cheap)
+                # NO works like YES: only enter when market has already moved
+                # Block if no_price > $0.55 (NO too expensive — paying $0.55 to win $0.45)
+                if no_price > 0.55:
+                    logger.info(f"[12MIN] {coin} {ticker} SKIP: NO price ${no_price:.4f} > $0.55 (NO too expensive)")
+                    continue
+
+                # Require pump context: YES must be > $0.50 (market has moved up, we're fading it)
+                # If yes_mid <= $0.50, no meaningful pump to fade
+                if yes_mid <= 0.50:
+                    logger.info(f"[12MIN] {coin} {ticker} SKIP: YES ${yes_mid:.4f} <= $0.50 (no pump to fade)")
+                    continue
 
                 # Calculate Kelly size using NO probability (1 - yes_mid) and NO price
                 from strategies import Strategy

@@ -549,7 +549,7 @@ class CoinTrader:
                     logger.warning(f"SCALE IN FAILED: [{self.coin}] {scale_result['error']}")
 
             # 12-MIN NO CUT-LOSS: For 12-min NO positions, cut at $0.05 (higher conviction = tighter stop)
-            if position.is_12min_no and mid_price <= 0.05 and side == "no":
+            if getattr(position, 'is_12min_no', False) and mid_price <= 0.05 and side == "no":
                 entry_price = position.avg_price if position.avg_price > 0 else position.entry_price
                 logger.warning(f"12MIN CUT LOSS: [{self.coin}] NO {ticker} exited at ${mid_price:.4f} (was ${entry_price:.4f} entry)")
                 self._close_position(ticker, "12min_cut_loss_no", mid_price, side=side)

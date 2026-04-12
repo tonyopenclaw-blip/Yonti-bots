@@ -1041,6 +1041,8 @@ class Superbot:
                         _update_settled_signals(m.ticker, settlement_val)
         except Exception as e:
             logger.debug(f"Settlement check error: {e}")
+
+    def _check_balance_reset(self):
         """Check if balance fell below floor and reset if needed."""
         if self.cash < BALANCE_FLOOR:
             logger.warning(f"Balance ${self.cash:.2f} below floor ${BALANCE_FLOOR:.2f}!")

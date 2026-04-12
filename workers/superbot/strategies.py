@@ -1498,10 +1498,9 @@ class StrategyEngine:
             logger.debug(f"{market.ticker}: Entry price ${mid_price:.4f} outside ${MIN_ENTRY_PRICE}-${MAX_ENTRY_PRICE} range - SKIPPING")
             return []
 
-        # === ENTRY PRICE GUARD: Block entries below $0.35 (0% win rate zone) ===
-        # Nerd's backtest: entry price <$0.35 has 0% win rate, 100% cut-loss rate
-        if mid_price < 0.35:
-            logger.info(f"{market.ticker}: ENTRY SKIP: entry price ${mid_price:.4f} < $0.35 (0% win zone)")
+        # === ENTRY PRICE GUARD: Block entries below $0.20 (below minimum tick) ===
+        if mid_price < 0.20:
+            logger.info(f"{market.ticker}: ENTRY SKIP: entry price ${mid_price:.4f} < $0.20 (below minimum)")
             return []
 
         # === TIER 1: ENTRY BLACKOUT 10-11 MINUTE WINDOW ===

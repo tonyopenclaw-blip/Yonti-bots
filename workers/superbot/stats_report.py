@@ -3,6 +3,8 @@
 import requests
 import subprocess
 import re
+import json
+from pathlib import Path
 from kalshi_py.auth import KalshiAuth
 
 DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1492688796938932267/O1rP8V0V0QntVzLV9HE8hT8Bew-4GofQStjz7Kd2FLZ_h0N5ntaKR_ehGzIeNQzeBDFC"
@@ -10,6 +12,40 @@ DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1492688796938932267/O1rP8V0V
 ACCESS_KEY = '2af9792d-cadd-4067-a861-b9bff4238248'
 PRIVATE_KEY_PATH = '/home/ubuntu/.openclaw/workspace/workers/superbot/kalshi_private_key.pem'
 LOG_FILE = '/home/ubuntu/.openclaw/workspace/workers/superbot/superbot_live.log'
+
+def get_signal_stats():
+    """Get signal outcome stats from signal_log.json."""
+    signal_file = Path(__file__).parent / "signal_log.json"
+    if not signal_file.exists():
+        return None
+
+    with open(signal_file) as f:
+        signals = json.load(f)
+
+    taken = [s for s in signals if s.get('action') == 'TAKEN']
+    blocked = [s for s in signals if s.get('action') == 'BLOCKED']
+
+    taken_settled = [s for s in taken if s.get('won') is not None]
+    taken_won = [s for s in taken_settled if s.get('won') == True]
+    taken_lost = [s for s in taken_settled if s.get('won') == False]
+
+    blocked_settled = [s for s in blocked if s.get('won') is not None]
+    blocked_won = [s for s in blocked_settled if s.get('won') == True]
+    blocked_lost = [s for s in blocked_settled if s.get('won') == False]
+
+    return {
+        'taken': len(taken),
+        'taken_settled': len(taken_settled),
+        'taken_won': len(taken_won),
+        'taken_lost': len(taken_lost),
+        'taken_pending': len(taken) - len(taken_settled),
+        'blocked': len(blocked),
+        'blocked_settled': len(blocked_settled),
+        'blocked_won': len(blocked_won),
+        'blocked_lost': len(blocked_lost),
+        'blocked_pending': len(blocked) - len(blocked_settled),
+    }
+
 
 def get_stats():
     with open(PRIVATE_KEY_PATH) as f:
@@ -88,6 +124,7 @@ def get_stats():
         'cash': cash,
         'portfolio': portfolio,
         'open_pos': open_pos,
+        'signals': get_signal_stats(),
     }
 
 def format_message(s):
@@ -107,6 +144,22 @@ def format_message(s):
         for t in last:
             e = "✅" if t['pnl'] > 0 else "❌"
             lines.append(f"  {e} {t['time']} | {t['coin']} | ${t['pnl']:+.2f}")
+
+    # Signal outcomes
+    sig = s.get('signals')
+    if sig:
+        lines.append("")
+        lines.append(f"📡 SIGNAL OUTCOMES")
+        lines.append(f"  TAKEN: {sig['taken']} | {sig['taken_settled']} settled | {sig['taken_pending']} pending")
+        if sig['taken_settled'] > 0:
+            wr = sig['taken_won'] / sig['taken_settled'] * 100
+            lines.append(f"    Win rate: {sig['taken_won']}W / {sig['taken_lost']}L = **{wr:.0f}%**")
+        if sig['blocked'] > 0:
+            lines.append(f"  BLOCKED: {sig['blocked']} | {sig['blocked_settled']} settled | {sig['blocked_pending']} pending")
+            if sig['blocked_settled'] > 0:
+                wr = sig['blocked_won'] / sig['blocked_settled'] * 100
+                lines.append(f"    Would have won: {sig['blocked_won']} | Would have lost: {sig['blocked_lost']} (**{wr:.0f}%** WR)")
+
     return '\n'.join(lines)
 
 if __name__ == '__main__':

@@ -1021,24 +1021,41 @@ class Superbot:
         """
         Check for settled markets and update their signal log entries.
         Runs periodically in the trading loop.
+        Fix: Check pending signals directly (not just open markets) so we can
+        update settlements for markets that have already dropped off the open list.
         """
         try:
-            for coin in COINS:
-                series = SERIES_TICKERS.get(coin)
-                if not series:
+            signal_file = Path(__file__).parent / "signal_log.json"
+            if not signal_file.exists():
+                return
+
+            with open(signal_file) as f:
+                signals = json.load(f)
+
+            updated = False
+            for sig in signals:
+                # Only process TAKEN/BLOCKED signals that haven't settled yet
+                if sig.get("settlement_result") is not None:
                     continue
-                markets = self.api.get_open_markets(series_ticker=series)
-                for m in markets:
-                    try:
-                        time_left = m.time_to_expiry_sec()
-                    except:
-                        time_left = 900
-                    if time_left > 60:
-                        continue
-                    result = self.api.get_market_result(m.ticker)
-                    if result:
-                        settlement_val = 1.0 if result == "yes" else 0.0
-                        _update_settled_signals(m.ticker, settlement_val)
+                if sig.get("action") not in ("TAKEN", "BLOCKED"):
+                    continue
+
+                ticker = sig.get("ticker")
+                if not ticker:
+                    continue
+
+                # Try to get settlement result for this ticker
+                result = self.api.get_market_result(ticker)
+                if result:
+                    settlement_val = 1.0 if result == "yes" else 0.0
+                    sig["settlement_result"] = settlement_val
+                    sig["won"] = True if result == "yes" else False
+                    logger.info(f"SIGNAL SETTLED: {sig.get('coin')} {sig.get('side')} {ticker} -> {result} (signal was {sig.get('action')})")
+                    updated = True
+
+            if updated:
+                with open(signal_file, "w") as f:
+                    json.dump(signals, f, indent=2)
         except Exception as e:
             logger.debug(f"Settlement check error: {e}")
 
@@ -1207,17 +1224,12 @@ class Superbot:
         """Execute a candle signal: find best market and place order."""
         side = signal_data.get("side", "YES").lower()  # 'yes' or 'no'
 
-        # Block ALL NO entries from candle signals — historical 21:30 candle NO entries (BTC, ETH, XRP, BNB, DOGE) all lost
         sig_timestamp = signal_data.get("timestamp", "")
-        if side == "no":
-            logger.info(f"[{coin}] CANDLE NO BLOCKED: candle NO signals are unprofitable")
-            _update_signal_log(coin, sig_timestamp, "BLOCKED", "candle NO signals are unprofitable")
-            return False
-
         entry_max = signal_data.get("entry_price_max", 0.85)
 
-        # Nerd recommendation: Reject signals when entry price > $0.50
-        ENTRY_PRICE_LIMIT = 0.50
+        # Track first viable market for block logging (so we can track outcome)
+        first_viable_ticker = None
+        first_viable_mid = None
 
         # Find a suitable market
         for market in markets:
@@ -1230,9 +1242,14 @@ class Superbot:
 
             mid = (market.yes_bid + market.yes_ask) / 2
 
-            # For YES signals, block expensive entries. For NO, allow — mid > $0.50 means YES is overpriced
-            if side == "yes" and mid > 0.60:
-                logger.info(f"[{coin}] ENTRY SKIP: YES entry ${mid:.4f} > $0.60 (too expensive)")
+            # Capture first market that passes time filter (for block tracking)
+            if first_viable_ticker is None:
+                first_viable_ticker = market.ticker
+                first_viable_mid = mid
+
+            # For YES signals, block expensive entries
+            if side == "yes" and mid > 0.55:
+                logger.info(f"[{coin}] ENTRY SKIP: YES entry ${mid:.4f} > $0.55 (too expensive)")
                 continue
 
             # === ENTRY PRICE GUARD: Block entries below $0.20 (below minimum) ===
@@ -1272,6 +1289,19 @@ class Superbot:
                 _update_signal_log(coin, sig_timestamp, "TAKEN", ticker=market.ticker)
                 self._clear_candle_signal(coin)
                 return True
+
+        # === Signal was blocked — log with ticker so we can track outcome ===
+        if side == "no":
+            # Block ALL NO entries from candle signals
+            block_reason = "candle NO signals are unprofitable"
+        elif first_viable_ticker is None:
+            block_reason = "no suitable market"
+        else:
+            block_reason = f"entry guard skipped (mid ${first_viable_mid:.4f})"
+
+        _update_signal_log(coin, sig_timestamp, "BLOCKED", block_reason, ticker=first_viable_ticker)
+        if side == "no":
+            logger.info(f"[{coin}] CANDLE NO BLOCKED: {block_reason}")
         return False
 
     def _check_and_trade_series(self, series_ticker: str) -> bool:

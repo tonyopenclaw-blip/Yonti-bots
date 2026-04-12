@@ -1257,11 +1257,6 @@ class Superbot:
                 logger.info(f"[{coin}] ENTRY SKIP: NO entry ${mid:.4f} (YES=${mid:.4f} < $0.45, NO overpriced)")
                 continue
 
-            # For NO signals, block when YES is very expensive (YES > $0.55 = NO too cheap = false signal)
-            if side == "no" and mid > 0.55:
-                logger.info(f"[{coin}] ENTRY SKIP: NO entry ${mid:.4f} (YES=${mid:.4f} > $0.55, pump too far)")
-                continue
-
             # === ENTRY PRICE GUARD: Block entries below $0.20 (below minimum) ===
             if mid < 0.20:
                 logger.info(f"[{coin}] ENTRY SKIP: entry price ${mid:.4f} < $0.20 (below minimum)")
@@ -1301,17 +1296,14 @@ class Superbot:
                 return True
 
         # === Signal was blocked — log with ticker so we can track outcome ===
-        if side == "no":
-            # Block ALL NO entries from candle signals
-            block_reason = "candle NO signals are unprofitable"
-        elif first_viable_ticker is None:
+        # NOTE: NO signals now go through the same entry guard evaluation as YES
+        # The blanket block on NO was hiding profitable signals (4 blocked NO signals would have won)
+        if first_viable_ticker is None:
             block_reason = "no suitable market"
         else:
             block_reason = f"entry guard skipped (mid ${first_viable_mid:.4f})"
 
         _update_signal_log(coin, sig_timestamp, "BLOCKED", block_reason, ticker=first_viable_ticker)
-        if side == "no":
-            logger.info(f"[{coin}] CANDLE NO BLOCKED: {block_reason}")
         return False
 
     def _check_and_trade_series(self, series_ticker: str) -> bool:

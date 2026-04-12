@@ -278,6 +278,7 @@ class CandleTracker:
                     self.regime_skip_this_cycle = True
                     logger.info(f"[{self.coin}] ★ BULLISH REGIME ({len(self.candle_ratios)} candles >60% YES) - NO signals will be suppressed this cycle")
             logger.info(f"[{self.coin}] ★ BUY YES SIGNAL (conf={conf})")
+            mid = _get_market_mid_at_signal(self.coin)
             sig = {
                 "coin": self.coin,
                 "side": "YES",
@@ -287,7 +288,6 @@ class CandleTracker:
                 "market_mid_at_signal": mid,
             }
             # Log to signal tracking - PENDING until superbot processes it
-            mid = _get_market_mid_at_signal(self.coin)
             log_entry = {
                 "timestamp": sig["timestamp"],
                 "coin": self.coin,

@@ -47,7 +47,7 @@ DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1486066262122430684/mLKWVlGJ
 
 # Signal thresholds
 BUY_YES_THRESHOLD = 0.90  # >90% of candle time above prev close → BUY YES (conf=97)
-BUY_NO_THRESHOLD = 0.30   # <30% → BUY NO (conf=99)
+BUY_NO_THRESHOLD = -1.0  # DISABLED: candle NO signals structurally unprofitable (Nerd analysis 2026-04-12)
 
 # Regime filter: skip NO signals if 3 consecutive candles had >60% YES ratio
 REGIME_WINDOW = 3          # Rolling window of last 3 candles
@@ -284,6 +284,7 @@ class CandleTracker:
                 "conf": conf,
                 "entry_price_max": 0.85,
                 "timestamp": datetime.utcnow().isoformat(),
+                "market_mid_at_signal": mid,
             }
             # Log to signal tracking - PENDING until superbot processes it
             mid = _get_market_mid_at_signal(self.coin)
@@ -352,6 +353,8 @@ class CandleTracker:
                 self.regime_skip_this_cycle = False
                 self.candle_ratios = []  # Reset regime tracking after suppression
                 return None
+            # Fetch mid for logging and include in signal
+            mid = _get_market_mid_at_signal(self.coin)
             conf = 99
             logger.info(f"[{self.coin}] ★ BUY NO SIGNAL (conf={conf}) [mid={mid:.4f} > $0.55 - market extended]")
             # Successful NO signal - reset regime tracking
@@ -363,9 +366,8 @@ class CandleTracker:
                 "conf": conf,
                 "entry_price_max": 0.85,
                 "timestamp": datetime.utcnow().isoformat(),
+                "market_mid_at_signal": mid,
             }
-            # Log to signal tracking - PENDING until superbot processes it
-            mid = _get_market_mid_at_signal(self.coin)
             log_entry = {
                 "timestamp": sig["timestamp"],
                 "coin": self.coin,

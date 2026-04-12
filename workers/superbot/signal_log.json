@@ -724,8 +724,8 @@
     "conf": 97,
     "entry_price_max": 0.85,
     "market_mid_at_signal": null,
-    "action": "PENDING",
-    "block_reason": null,
+    "action": "BLOCKED",
+    "block_reason": "no suitable market",
     "settlement_result": null,
     "won": null
   },
@@ -737,10 +737,11 @@
     "conf": 97,
     "entry_price_max": 0.85,
     "market_mid_at_signal": null,
-    "action": "PENDING",
+    "action": "TAKEN",
     "block_reason": null,
-    "settlement_result": null,
-    "won": null
+    "settlement_result": 1.0,
+    "won": true,
+    "ticker": "KXETH15M-26APR121215-15"
   },
   {
     "timestamp": "2026-04-12T16:00:02.207815",
@@ -750,8 +751,21 @@
     "conf": 97,
     "entry_price_max": 0.85,
     "market_mid_at_signal": null,
-    "action": "PENDING",
-    "block_reason": null,
+    "action": "BLOCKED",
+    "block_reason": "no suitable market",
+    "settlement_result": null,
+    "won": null
+  },
+  {
+    "timestamp": "2026-04-12T16:00:02.479124",
+    "coin": "HYPE",
+    "signal_type": "candle_YES",
+    "side": "YES",
+    "conf": 97,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "BLOCKED",
+    "block_reason": "no suitable market",
     "settlement_result": null,
     "won": null
   }

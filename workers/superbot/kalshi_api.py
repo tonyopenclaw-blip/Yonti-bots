@@ -37,9 +37,6 @@ class Market:
 class KalshiAPI:
     """Wrapper using kalshi_py SDK + direct requests for custom endpoints."""
     
-    # Class-level cache for auth timestamp (prevents replay/reuse issues)
-    _auth_timestamp_cache = 0
-    _auth_cached_headers: Optional[Dict[str, str]] = None
     
     def __init__(self, access_key: str = ""):
         self.access_key = access_key
@@ -75,25 +72,10 @@ class KalshiAPI:
         if not self.auth:
             return {}
         
-        # Check if we already have valid headers for this second (avoid duplicate signing)
-        import time
-        current_ts = int(time.time() * 1000)
-        cache_key = f"{method}:{path}"
-        
-        # Reuse cached headers only within the same 500ms window to avoid replay detection
-        if (KalshiAPI._auth_cached_headers is not None and 
-            current_ts - KalshiAPI._auth_timestamp_cache < 50 and
-            KalshiAPI._auth_cached_headers.get('_cache_key') == cache_key):
-            return KalshiAPI._auth_cached_headers.copy()
-        
-        # KalshiAuth.get_auth_headers handles /trade-api/v2 prefix internally
-        # Just pass the relative path (e.g., /portfolio/orders)
+        # Get fresh headers every time - no caching ( Kalshi rejects replayed signatures)
         headers = self.auth.get_auth_headers(method, path)
-        headers['_cache_key'] = cache_key
-        KalshiAPI._auth_timestamp_cache = current_ts
-        KalshiAPI._auth_cached_headers = headers
-        return headers.copy()
-        
+        return headers
+
     def _refresh_auth(self):
         """Recreate the auth object to get fresh signatures."""
         try:

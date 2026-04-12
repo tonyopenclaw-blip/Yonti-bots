@@ -1520,10 +1520,10 @@ class Superbot:
                 logger.debug(f"[12MIN] {coin} Coinbase price fetch failed: {e}")
                 continue
 
-            # Require significant pullback (>3%) before entering NO
+            # Require significant pullback (>5%) before entering NO
             pullback_pct = (prev_close - coinbase_price) / prev_close
-            if pullback_pct < 0.03:  # less than 3% pullback
-                logger.info(f"[{coin}] 12MIN: pullback {pullback_pct*100:.1f}% < 3%, skipping NO")
+            if pullback_pct < 0.05:  # less than 5% pullback - crypto pumps are persistent
+                logger.info(f"[{coin}] 12MIN: pullback {pullback_pct*100:.1f}% < 5%, skipping NO")
                 continue
 
             # If price <= prev_close → enter NO
@@ -1544,15 +1544,53 @@ class Superbot:
 
                 # 12-MIN NO GUARD: Only enter NO when market is extended (YES expensive = NO cheap)
                 # NO works like YES: only enter when market has already moved
-                # Block if no_price > $0.55 (NO too expensive — paying $0.55 to win $0.45)
-                if no_price > 0.55:
-                    logger.info(f"[12MIN] {coin} {ticker} SKIP: NO price ${no_price:.4f} > $0.55 (NO too expensive)")
+                # Block if no_price > $0.50 (NO too expensive — paying $0.50 to win $0.50)
+                if no_price > 0.50:
+                    logger.info(f"[12MIN] {coin} {ticker} SKIP: NO price ${no_price:.4f} > $0.50 (NO too expensive)")
                     continue
 
-                # Require pump context: YES must be > $0.50 (market has moved up, we're fading it)
-                # If yes_mid <= $0.50, no meaningful pump to fade
-                if yes_mid <= 0.50:
-                    logger.info(f"[12MIN] {coin} {ticker} SKIP: YES ${yes_mid:.4f} <= $0.50 (no pump to fade)")
+                # Require pump context: YES must be > $0.52 (market has moved up, we're fading it)
+                # If yes_mid <= $0.52, no meaningful pump to fade
+                if yes_mid <= 0.52:
+                    logger.info(f"[12MIN] {coin} {ticker} SKIP: YES ${yes_mid:.4f} <= $0.52 (no pump to fade)")
+                    continue
+
+                # Correlation check: block if 3+ coins showing simultaneous pullback (macro event, not reversal)
+                # Count other coins where coinbase_price < prev_close (same pullback condition)
+                import json as _json
+                correlation_blocked = False
+                try:
+                    from kalshi_api import KalshiAPI
+                    corr_api = KalshiAPI()
+                    correlation_count = 1  # include this coin
+                    for other_coin in COINS:
+                        if other_coin == coin:
+                            continue
+                        # Check if other coin is also in pullback
+                        corr_series = SERIES_TICKERS.get(other_coin, f"KX{other_coin}15M")
+                        corr_markets = corr_api.get_markets(corr_series, limit=3)
+                        for m in corr_markets:
+                            if m.status == 'open' and m.time_to_expiry_sec() > 180:
+                                try:
+                                    from coinbase import get_coinbase_price
+                                    other_cp = get_coinbase_price(other_coin)
+                                    # Load prev_close from state
+                                    other_state_file = BASE_DIR / "state" / f"{other_coin}_state.json"
+                                    if other_state_file.exists():
+                                        with open(other_state_file) as f:
+                                            other_state = _json.load(f)
+                                            other_prev_close = other_state.get('prev_close', 0)
+                                            if other_prev_close > 0 and other_cp < other_prev_close:
+                                                correlation_count += 1
+                                except:
+                                    pass
+                                break
+                    if correlation_count >= 3:
+                        logger.warning(f"[12MIN] {coin} SKIP: {correlation_count} coins in simultaneous pullback (macro wobble, skip all)")
+                        correlation_blocked = True
+                except Exception as e:
+                    logger.debug(f"[12MIN] {coin} correlation check failed: {e}")
+                if correlation_blocked:
                     continue
 
                 # Calculate Kelly size using NO probability (1 - yes_mid) and NO price

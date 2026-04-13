@@ -8,6 +8,7 @@ import json
 import math
 import random
 import logging
+import uuid
 from datetime import datetime, date, timedelta
 from typing import Optional, List, Dict, Any, Set
 from dataclasses import dataclass, field
@@ -50,47 +51,121 @@ logging.basicConfig(
 logger = logging.getLogger("uncle_vito")
 
 
-class Scoreboard:
+class LegScoreboard:
     """
-    Tracks Vito's locked picks record (W-L) across all sports.
+    Tracks every individual leg of every parlay.
+    Each leg is settled against real ESPN game data.
     """
+    SCOREBOARD_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "scoreboard.json")
     
-    def __init__(self, scoreboard_file: str = SCOREBOARD_FILE):
-        self.scoreboard_file = scoreboard_file
-        self.record: Dict[str, Dict[str, int]] = {}  # sport -> {"wins": X, "losses": Y}
+    def __init__(self):
+        self.file = self.SCOREBOARD_FILE
+        self.data = {"legs": [], "parlays": []}
         self._load()
     
     def _load(self):
         """Load scoreboard from file."""
-        if os.path.exists(self.scoreboard_file):
+        if os.path.exists(self.file):
             try:
-                with open(self.scoreboard_file, 'r') as f:
-                    self.record = json.load(f)
+                with open(self.file, 'r') as f:
+                    self.data = json.load(f)
             except Exception:
-                self.record = {}
+                self.data = {"legs": [], "parlays": []}
         else:
-            self.record = {}
+            self.data = {"legs": [], "parlays": []}
     
     def _save(self):
         """Save scoreboard to file."""
         try:
-            with open(self.scoreboard_file, 'w') as f:
-                json.dump(self.record, f, indent=2)
+            with open(self.file, 'w') as f:
+                json.dump(self.data, f, indent=2)
         except Exception as e:
             logger.warning(f"Failed to save scoreboard: {e}")
     
+    def add_leg(self, leg_data: Dict) -> str:
+        """Add a new leg and return its UUID."""
+        leg_id = str(uuid.uuid4())[:8]
+        leg_data["id"] = leg_id
+        leg_data["result"] = "pending"
+        leg_data["actual_value"] = None
+        leg_data["settled_at"] = None
+        self.data.setdefault("legs", []).append(leg_data)
+        self._save()
+        return leg_id
+    
+    def add_parlay(self, parlay_data: Dict) -> str:
+        """Add a new parlay and return its UUID."""
+        parlay_id = str(uuid.uuid4())[:8]
+        parlay_data["id"] = parlay_id
+        parlay_data["result"] = "pending"
+        self.data.setdefault("parlays", []).append(parlay_data)
+        self._save()
+        return parlay_id
+    
+    def get_leg(self, leg_id: str) -> Optional[Dict]:
+        """Get a leg by ID."""
+        for leg in self.data.get("legs", []):
+            if leg.get("id") == leg_id:
+                return leg
+        return None
+    
+    def get_pending_legs(self, sport: str = None) -> List[Dict]:
+        """Get all pending legs, optionally filtered by sport."""
+        pending = []
+        for leg in self.data.get("legs", []):
+            if leg.get("result") == "pending":
+                if sport is None or leg.get("sport") == sport:
+                    pending.append(leg)
+        return pending
+    
+    def settle_leg(self, leg_id: str, result: str, actual_value: Any = None):
+        """Settle a leg as win/loss/pending."""
+        for leg in self.data.get("legs", []):
+            if leg.get("id") == leg_id:
+                leg["result"] = result
+                leg["actual_value"] = actual_value
+                leg["settled_at"] = datetime.now().isoformat()
+                logger.info(f"Settled leg {leg_id}: {result} (actual: {actual_value})")
+                break
+        self._save()
+        self._settle_parlay_for_leg(leg_id)
+    
+    def _settle_parlay_for_leg(self, leg_id: str):
+        """Settle a parlay if all its legs are settled."""
+        for parlay in self.data.get("parlays", []):
+            if leg_id in parlay.get("legs", []):
+                # Check if all legs are settled
+                all_settled = True
+                for l_id in parlay.get("legs", []):
+                    leg = self.get_leg(l_id)
+                    if leg and leg.get("result") == "pending":
+                        all_settled = False
+                        break
+                
+                if all_settled:
+                    # Parlay wins only if ALL legs win
+                    all_wins = all(
+                        self.get_leg(l_id).get("result") == "win"
+                        for l_id in parlay.get("legs", [])
+                    )
+                    parlay["result"] = "win" if all_wins else "loss"
+                    logger.info(f"Settled parlay {parlay.get('id')}: {parlay['result']}")
+                    self._save()
+    
     def get_record(self, sport: str = None) -> Dict[str, int]:
-        """
-        Get record for a sport or all sports combined.
-        Returns dict with wins, losses, total, win_pct.
-        """
-        if sport:
-            data = self.record.get(sport, {"wins": 0, "losses": 0})
-        else:
-            total_wins = sum(d.get("wins", 0) for d in self.record.values())
-            total_losses = sum(d.get("losses", 0) for d in self.record.values())
-            return {"wins": total_wins, "losses": total_losses}
-        return data
+        """Get W-L record for a sport or overall."""
+        wins = 0
+        losses = 0
+        
+        for leg in self.data.get("legs", []):
+            if leg.get("result") in ("win", "loss"):
+                if sport is None or leg.get("sport") == sport:
+                    if leg["result"] == "win":
+                        wins += 1
+                    else:
+                        losses += 1
+        
+        return {"wins": wins, "losses": losses}
     
     def get_win_pct(self, sport: str = None) -> float:
         """Get win percentage for a sport or overall."""
@@ -100,19 +175,44 @@ class Scoreboard:
             return 0.0
         return (data.get("wins", 0) / total) * 100
     
-    def add_win(self, sport: str):
-        """Record a win for a sport."""
-        if sport not in self.record:
-            self.record[sport] = {"wins": 0, "losses": 0}
-        self.record[sport]["wins"] = self.record[sport].get("wins", 0) + 1
-        self._save()
+    def get_moneyline_stats(self) -> Dict[str, Any]:
+        """Get moneyline-specific hit rate stats."""
+        ml_legs = [l for l in self.data.get("legs", []) 
+                   if l.get("type") == "moneyline" and l.get("result") in ("win", "loss")]
+        if not ml_legs:
+            return {"total": 0, "wins": 0, "losses": 0, "hit_rate": 0.0}
+        
+        wins = sum(1 for l in ml_legs if l.get("result") == "win")
+        total = len(ml_legs)
+        hit_rate = (wins / total) * 100 if total > 0 else 0.0
+        
+        return {
+            "total": total,
+            "wins": wins,
+            "losses": total - wins,
+            "hit_rate": hit_rate
+        }
     
-    def add_loss(self, sport: str):
-        """Record a loss for a sport."""
-        if sport not in self.record:
-            self.record[sport] = {"wins": 0, "losses": 0}
-        self.record[sport]["losses"] = self.record[sport].get("losses", 0) + 1
-        self._save()
+    def get_sport_records(self) -> Dict[str, Dict[str, int]]:
+        """Get W-L records per sport."""
+        records = {}
+        for leg in self.data.get("legs", []):
+            if leg.get("result") in ("win", "loss"):
+                sport = leg.get("sport", "UNKNOWN")
+                if sport not in records:
+                    records[sport] = {"wins": 0, "losses": 0}
+                if leg["result"] == "win":
+                    records[sport]["wins"] += 1
+                else:
+                    records[sport]["losses"] += 1
+        return records
+    
+    def get_recent_legs(self, limit: int = 20) -> List[Dict]:
+        """Get most recently settled legs."""
+        settled = [l for l in self.data.get("legs", []) 
+                   if l.get("result") in ("win", "loss")]
+        settled.sort(key=lambda x: x.get("settled_at", ""), reverse=True)
+        return settled[:limit]
     
     def format_record_str(self, sport: str = None) -> str:
         """Format record as string like '14-8 (63.5%)'."""
@@ -121,17 +221,39 @@ class Scoreboard:
         losses = data.get("losses", 0)
         pct = self.get_win_pct(sport)
         return f"{wins}-{losses} ({pct:.1f}%)"
+    
+    # Backward compatibility delegates
+    def add_win(self, sport: str = None):
+        """Legacy method - delegate to leg-based system."""
+        pass  # No longer used directly
+    
+    def add_loss(self, sport: str = None):
+        """Legacy method - delegate to leg-based system."""
+        pass  # No longer used directly
+
+
+class Scoreboard(LegScoreboard):
+    """
+    Backward-compatible Scoreboard class.
+    Now delegates to LegScoreboard for all operations.
+    """
+    
+    def __init__(self, scoreboard_file: str = SCOREBOARD_FILE):
+        # LegScoreboard uses its own SCOREBOARD_FILE constant
+        # So we just call parent init which loads from that path
+        super().__init__()
 
 
 class LockedPicks:
     """
     Manages locked picks per sport.
     Once a sport is locked, picks are immutable and stored with timestamp.
+    Tracks leg IDs for settlement tracking.
     """
     
     def __init__(self, locked_picks_file: str = LOCKED_PICKS_FILE):
         self.locked_picks_file = locked_picks_file
-        self.picks: Dict[str, Dict] = {}  # sport -> {locked_at, picks}
+        self.picks: Dict[str, Dict] = {}  # sport -> {locked_at, leg_ids, picks}
         self._load()
     
     def _load(self):
@@ -163,16 +285,22 @@ class LockedPicks:
             return self.picks[sport].get("locked_at")
         return None
     
+    def get_leg_ids(self, sport: str) -> List[str]:
+        """Get leg IDs for a locked sport."""
+        if sport in self.picks:
+            return self.picks[sport].get("leg_ids", [])
+        return []
+    
     def get_picks(self, sport: str) -> List[Dict]:
         """Get locked picks for a sport."""
         if sport in self.picks:
             return self.picks[sport].get("picks", [])
         return []
     
-    def lock(self, sport: str, picks: List[Dict], odds: int = -110):
+    def lock(self, sport: str, picks: List[Dict], odds: int = -110, leg_ids: List[str] = None):
         """
         Lock picks for a sport. Once locked, cannot be overwritten.
-        Stores picks with timestamp.
+        Stores picks with timestamp and leg IDs for settlement tracking.
         """
         if self.is_locked(sport):
             logger.info(f"{sport} already locked, skipping")
@@ -181,12 +309,19 @@ class LockedPicks:
         locked_at = datetime.now().isoformat()
         self.picks[sport] = {
             "locked_at": locked_at,
+            "leg_ids": leg_ids or [],
             "picks": picks,
             "odds": odds,
         }
         self._save()
-        logger.info(f"🔒 LOCKED {sport} at {locked_at}")
+        logger.info(f"🔒 LOCKED {sport} at {locked_at} with {len(leg_ids or [])} legs")
         return True
+    
+    def update_leg_ids(self, sport: str, leg_ids: List[str]):
+        """Update leg IDs for an already-locked sport."""
+        if sport in self.picks:
+            self.picks[sport]["leg_ids"] = leg_ids
+            self._save()
     
     def clear_sport(self, sport: str):
         """Clear locked picks for a sport (for new day reset)."""
@@ -1585,6 +1720,16 @@ class ESPNClient:
                 elif event.get("status", {}).get("type", {}).get("state") == "post":
                     status = "final"
 
+                # Parse actual scores (available for live/final games)
+                home_score = 0
+                away_score = 0
+                if status in ("live", "final"):
+                    try:
+                        home_score = int(home_data.get("score", "0"))
+                        away_score = int(away_data.get("score", "0"))
+                    except (ValueError, TypeError):
+                        pass
+
                 game = Game(
                     id=event["id"],
                     name=event.get("name", f"{away_team.abbreviation} @ {home_team.abbreviation}"),
@@ -1594,6 +1739,8 @@ class ESPNClient:
                     venue=comp.get("venue", {}).get("fullName", ""),
                     home_team=home_team,
                     away_team=away_team,
+                    home_score=home_score,
+                    away_score=away_score,
                     status=status,
                 )
 
@@ -1716,6 +1863,7 @@ class UncleVitoReport:
     def lock_sport_picks(self, sport: str) -> bool:
         """
         Lock the current picks for a sport.
+        Generates leg IDs for settlement tracking.
         Returns True if locked successfully.
         """
         if self.locked_picks.is_locked(sport):
@@ -1757,7 +1905,56 @@ class UncleVitoReport:
             "game_picks": games_data,
         }
         
-        return self.locked_picks.lock(sport, picks_data)
+        # Generate leg IDs for all picks (for settlement tracking)
+        lock_date = datetime.now().strftime("%Y-%m-%d")
+        leg_ids = []
+        
+        # Add props legs
+        for p in props:
+            leg_data = {
+                "sport": sport,
+                "date": lock_date,
+                "type": "prop",
+                "player": p.player,
+                "team": p.team,
+                "stat_type": p.stat_type,
+                "line": p.line,
+                "direction": p.direction,
+                "odds": p.odds,
+                "confidence": p.confidence,
+            }
+            leg_id = self.scoreboard.add_leg(leg_data)
+            leg_ids.append(leg_id)
+        
+        # Add game pick legs
+        for p in game_picks:
+            leg_data = {
+                "sport": sport,
+                "date": lock_date,
+                "type": p.pick_type,
+                "player": None,
+                "team": p.team,
+                "opponent": p.opponent,
+                "stat_type": None,
+                "line": p.line,
+                "direction": None,
+                "odds": p.odds,
+                "confidence": p.confidence,
+            }
+            leg_id = self.scoreboard.add_leg(leg_data)
+            leg_ids.append(leg_id)
+        
+        # Add parlay entry
+        parlay_data = {
+            "sport": sport,
+            "date": lock_date,
+            "legs": leg_ids,
+            "odds": -110,
+        }
+        self.scoreboard.add_parlay(parlay_data)
+        
+        # Lock with leg IDs
+        return self.locked_picks.lock(sport, picks_data, leg_ids=leg_ids)
     
     def get_lock_status(self, sport: str) -> Dict[str, Any]:
         """
@@ -2759,11 +2956,162 @@ class UncleVitoReport:
         # Check for stale locks (from previous days) and clear them
         self._check_and_clear_stale_locks()
         
+        # Settle any sports with completed games (from previous days)
+        self._settle_completed_sports()
+        
         # Check if any sports should be locked (first game within threshold)
         self._check_and_lock_sports()
 
         # Report is generated on-the-fly in format_report now
         return self.format_report()
+    
+    def _settle_completed_sports(self):
+        """
+        Check each sport with locked picks from previous days and settle legs.
+        Games that have finished will have actual scores in ESPN data.
+        """
+        today = datetime.now().date()
+        
+        for sport in list(self.locked_picks.picks.keys()):
+            locked_at = self.locked_picks.get_locked_at(sport)
+            if not locked_at:
+                continue
+            
+            try:
+                lock_date = datetime.fromisoformat(locked_at).date()
+                
+                # Only settle if locked on a previous day (games should be done)
+                if lock_date >= today:
+                    continue
+                    
+                logger.info(f"Settling {sport} picks from {lock_date}")
+                self.settle_sport(sport)
+                
+            except Exception as e:
+                logger.warning(f"Error settling {sport}: {e}")
+    
+    def settle_sport(self, sport: str):
+        """
+        Settle all pending legs for a sport against actual ESPN game results.
+        """
+        if sport not in self.games or not self.games[sport]:
+            logger.warning(f"No games found for {sport} to settle")
+            return
+        
+        # Build game lookup by team abbreviations
+        games_by_team = {}
+        for game in self.games[sport]:
+            if game.status == "final":
+                key_home = game.home_team.abbreviation
+                key_away = game.away_team.abbreviation
+                games_by_team[key_home] = game
+                games_by_team[key_away] = game
+        
+        # Get pending legs for this sport
+        pending_legs = self.scoreboard.get_pending_legs(sport)
+        
+        for leg in pending_legs:
+            self._settle_leg_with_games(leg, games_by_team)
+    
+    def _settle_leg_with_games(self, leg: Dict, games_by_team: Dict):
+        """
+        Settle a single leg against the actual game results.
+        """
+        leg_id = leg.get("id")
+        leg_type = leg.get("type")
+        team = leg.get("team")
+        opponent = leg.get("opponent")
+        line = leg.get("line", 0)
+        direction = leg.get("direction")
+        
+        # Find the game involving this team
+        game = games_by_team.get(team)
+        if not game:
+            logger.info(f"Leg {leg_id}: No game found for {team}, leaving pending")
+            return
+        
+        # Get actual scores
+        home_score = game.home_score
+        away_score = game.away_score
+        
+        # Determine which team is home/away
+        if game.home_team.abbreviation == team:
+            actual_margin = home_score - away_score
+            our_score = home_score
+            opp_score = away_score
+        else:
+            actual_margin = away_score - home_score
+            our_score = away_score
+            opp_score = home_score
+        
+        actual_total = home_score + away_score
+        
+        result = "pending"
+        actual_value = None
+        
+        if leg_type == "spread":
+            # Spread: did our team cover?
+            # line is e.g., -6.5 meaning team must win by more than 6.5
+            # For positive lines (underdog), team can lose by less than the line
+            if line < 0:
+                # Favorite: must win by more than |line|
+                covered = actual_margin > abs(line)
+            else:
+                # Underdog: must lose by less than line OR win outright
+                covered = actual_margin >= line
+            
+            result = "win" if covered else "loss"
+            actual_value = f"{team} {'+' if actual_margin >= 0 else ''}{actual_margin:.1f}"
+            
+        elif leg_type == "total":
+            # Total: was it over or under?
+            if direction == "over":
+                result = "win" if actual_total > line else "loss"
+            else:
+                result = "win" if actual_total < line else "loss"
+            actual_value = f"{actual_total:.1f}"
+            
+        elif leg_type == "moneyline":
+            # Moneyline: did our team win outright?
+            if actual_margin > 0:
+                result = "win"
+            else:
+                result = "loss"
+            actual_value = f"{our_score}-{opp_score}"
+            
+        elif leg_type == "prop":
+            # Props: for now, leave as pending since ESPN doesn't have player stats
+            # In a full implementation, would fetch player boxscore from ESPN
+            logger.info(f"Leg {leg_id}: Prop settlement requires player stats, leaving pending")
+            # Try to find player stat anyway (best effort)
+            player_stat = self._fetch_player_stat(
+                leg.get("player"), 
+                leg.get("stat_type"), 
+                team, 
+                game
+            )
+            if player_stat is not None:
+                actual_value = player_stat
+                if direction == "over":
+                    result = "win" if player_stat > line else "loss"
+                else:
+                    result = "win" if player_stat < line else "loss"
+            else:
+                # Cannot settle - leave pending for next run
+                return
+        
+        logger.info(f"Leg {leg_id} ({leg_type}): {team} {direction} {line} -> {result} (actual: {actual_value})")
+        self.scoreboard.settle_leg(leg_id, result, actual_value)
+    
+    def _fetch_player_stat(self, player_name: str, stat_type: str, team: str, game) -> Optional[float]:
+        """
+        Try to fetch a player's stat from ESPN boxscore (best effort).
+        Returns the stat value or None if unavailable.
+        """
+        # ESPN API doesn't provide easy player prop stats in the basic scoreboard
+        # This would require fetching the detailed boxscore endpoint
+        # For now, return None to leave props as pending
+        return None
     
     def _check_and_clear_stale_locks(self):
         """
@@ -3088,18 +3436,115 @@ __LEAGUE_SECTIONS__
         
         league_html += ml_section
         
-        # Vito's Record section
-        record_str = self.scoreboard.format_record_str()
-        record_section = '''        <div class="league-section">
+        # Vito's Record section - Leg-level tracking
+        overall_record = self.scoreboard.format_record_str()
+        sport_records = self.scoreboard.get_sport_records()
+        ml_stats = self.scoreboard.get_moneyline_stats()
+        recent_legs = self.scoreboard.get_recent_legs(limit=20)
+        
+        # Build sport records HTML
+        sport_records_html = ""
+        for sport, record in sorted(sport_records.items()):
+            wins = record.get("wins", 0)
+            losses = record.get("losses", 0)
+            total = wins + losses
+            if total > 0:
+                pct = (wins / total) * 100
+                sport_records_html += f'''
+                        <div class="best-bet-item" style="font-size: 0.8rem;">
+                            <span class="best-bet-text">{sport}</span>
+                            <span class="best-bet-conf">{wins}-{losses}</span>
+                        </div>
+'''
+        
+        # Build moneyline stats HTML
+        ml_total = ml_stats.get("total", 0)
+        ml_hit_rate = ml_stats.get("hit_rate", 0)
+        
+        if ml_total > 0:
+            if ml_hit_rate >= 86:
+                ml_indicator = '<span style="color: #00E676;">💰 86%+ ML hit rate — STRONG EDGE</span>'
+            elif ml_hit_rate >= 80:
+                ml_indicator = '<span style="color: #00E676;">✓ 80-85% ML hit rate — GOOD</span>'
+            else:
+                ml_indicator = f'<span style="color: #F0B90B;">💰 {ml_hit_rate:.1f}% ML hit rate</span>'
+            
+            moneyline_stats_html = f'''
+                        <div class="best-bet-item" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+                            <div style="display: flex; justify-content: space-between; width: 100%;">
+                                <span class="best-bet-text">Moneyline Hit Rate</span>
+                                <span class="best-bet-conf">{ml_total} bets</span>
+                            </div>
+                            <div style="font-size: 0.75rem;">{ml_indicator}</div>
+                        </div>
+'''
+        else:
+            moneyline_stats_html = ""
+        
+        # Build recent legs HTML
+        recent_legs_html = ""
+        for leg in recent_legs[:10]:
+            result_emoji = "✅" if leg.get("result") == "win" else "❌"
+            result_color = "#00E676" if leg.get("result") == "win" else "#FF5252"
+            
+            leg_type = leg.get("type", "")
+            team = leg.get("team", "")
+            opponent = leg.get("opponent", "")
+            direction = leg.get("direction", "")
+            line = leg.get("line", 0)
+            confidence = leg.get("confidence", 0)
+            actual = leg.get("actual_value", "")
+            player = leg.get("player", "")
+            
+            if leg_type == "prop" and player:
+                desc = f"{player} {direction.upper()} {leg.get('stat_type', '')} {line}"
+            elif leg_type == "spread":
+                desc = f"{team} ({line}) vs {opponent}"
+            elif leg_type == "total":
+                desc = f"{team} vs {opponent} O/U {line}"
+            else:
+                desc = f"{team} ML"
+            
+            actual_str = f" ({actual})" if actual else ""
+            recent_legs_html += f'''
+                        <div class="best-bet-item" style="font-size: 0.75rem;">
+                            <span style="color: {result_color}; margin-right: 4px;">{result_emoji}</span>
+                            <span class="best-bet-text">{desc} ({confidence}%){actual_str}</span>
+                        </div>
+'''
+        
+        record_section = f'''
+        <div class="league-section">
             <div class="league-header">
                 <span class="league-emoji">📊</span>
                 <span class="league-name" style="color: var(--gold);">VITO'S RECORD</span>
             </div>
+            
+            <!-- Overall stats -->
             <div class="pick-group">
                 <div class="pick-card">
-                    <div class="best-bet-item">
-                        <span class="best-bet-text">Locked Picks W-L</span>
-                        <span class="best-bet-conf" style="font-size: 1rem;">''' + record_str + '''</span>
+                    <div class="best-bet-item" style="justify-content: space-between;">
+                        <span class="best-bet-text">Overall</span>
+                        <span class="best-bet-conf" style="font-size: 1rem;">{overall_record}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- By sport -->
+            {sport_records_html if sport_records_html else '<div class="pick-group"><div class="pick-card"><div class="best-bet-item"><span class="best-bet-text">No settled picks yet</span></div></div></div>'}
+            
+            <!-- Moneyline stats -->
+            {moneyline_stats_html}
+            
+            <!-- Recent settled legs -->
+            <div class="pick-group">
+                <div class="pick-group-header">
+                    <span class="pick-group-icon">🕐</span>
+                    <span class="pick-group-title">Recent Settled</span>
+                </div>
+                <div class="pick-card">
+                    <div class="best-bets-list">
+                        {recent_legs_html if recent_legs_html else '<div class="best-bet-item"><span class="best-bet-text">No settled legs yet</span></div>'}
                     </div>
                 </div>
             </div>

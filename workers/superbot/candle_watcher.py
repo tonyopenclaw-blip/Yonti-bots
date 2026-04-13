@@ -327,7 +327,8 @@ class CandleTracker:
             # This is the "fade the pump" filter — we want the market to have moved before we short it
             mid = _get_market_mid_at_signal(self.coin)
             if mid is None or mid <= 0.52:
-                logger.info(f"[{self.coin}] ◆ NO SIGNAL SKIPPED - YES mid ${mid or 'N/A':.4f} <= $0.52 (no pump to fade)")
+                mid_str = f"{mid:.4f}" if mid is not None else "N/A"
+                logger.info(f"[{self.coin}] ◆ NO SIGNAL SKIPPED - YES mid ${mid_str} <= $0.52 (no pump to fade)")
                 # Log blocked signal
                 now_ts = datetime.utcnow().isoformat()
                 log_entry = {
@@ -372,7 +373,8 @@ class CandleTracker:
             # Fetch mid for logging and include in signal
             mid = _get_market_mid_at_signal(self.coin)
             conf = 99
-            logger.info(f"[{self.coin}] ★ BUY NO SIGNAL (conf={conf}) [mid={mid:.4f} > $0.55 - market extended]")
+            mid_str = f"{mid:.4f}" if mid is not None else "N/A"
+            logger.info(f"[{self.coin}] ★ BUY NO SIGNAL (conf={conf}) [mid={mid_str} > $0.55 - market extended]")
             # Successful NO signal - reset regime tracking
             self.regime_skip_this_cycle = False
             self.candle_ratios = []

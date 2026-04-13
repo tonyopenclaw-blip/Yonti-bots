@@ -707,8 +707,8 @@
     "market_mid_at_signal": null,
     "action": "BLOCKED",
     "block_reason": "entry guard skipped (mid $0.6000)",
-    "settlement_result": null,
-    "won": null,
+    "settlement_result": 1.0,
+    "won": true,
     "ticker": "KXSOL15M-26APR122100-00"
   },
   {
@@ -721,8 +721,161 @@
     "market_mid_at_signal": null,
     "action": "TAKEN",
     "block_reason": null,
+    "settlement_result": 1.0,
+    "won": true,
+    "ticker": "KXBNB15M-26APR122100-00"
+  },
+  {
+    "timestamp": "2026-04-13T01:00:03.479029",
+    "coin": "ETH",
+    "signal_type": "candle_YES",
+    "side": "YES",
+    "conf": 97,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "PENDING",
+    "block_reason": null,
+    "settlement_result": null,
+    "won": null
+  },
+  {
+    "timestamp": "2026-04-13T01:00:03.678043",
+    "coin": "BNB",
+    "signal_type": "candle_YES",
+    "side": "YES",
+    "conf": 97,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "PENDING",
+    "block_reason": null,
+    "settlement_result": null,
+    "won": null
+  },
+  {
+    "timestamp": "2026-04-13T01:00:03.924977",
+    "coin": "HYPE",
+    "signal_type": "candle_YES",
+    "side": "YES",
+    "conf": 97,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "BLOCKED",
+    "block_reason": "no suitable market",
+    "settlement_result": null,
+    "won": null
+  },
+  {
+    "timestamp": "2026-04-13T01:00:03.925947",
+    "coin": "HYPE",
+    "signal_type": "MACRO_FADE",
+    "side": "NO",
+    "conf": 60,
+    "entry_price": null,
+    "market_mid_at_signal": null,
+    "action": "PENDING",
+    "block_reason": null,
     "settlement_result": null,
     "won": null,
-    "ticker": "KXBNB15M-26APR122100-00"
+    "cluster_coins": [
+      "HYPE",
+      "ETH",
+      "BNB"
+    ],
+    "cluster_side": "YES",
+    "reason": "MACRO FADE: 3 coins YES in 0s"
+  },
+  {
+    "timestamp": "2026-04-13T01:00:03.927464",
+    "coin": "ETH",
+    "signal_type": "MACRO_FADE",
+    "side": "NO",
+    "conf": 60,
+    "entry_price": null,
+    "market_mid_at_signal": null,
+    "action": "BLOCKED",
+    "block_reason": "no suitable market",
+    "settlement_result": null,
+    "won": null,
+    "cluster_coins": [
+      "HYPE",
+      "ETH",
+      "BNB"
+    ],
+    "cluster_side": "YES",
+    "reason": "MACRO FADE: 3 coins YES in 0s"
+  },
+  {
+    "timestamp": "2026-04-13T01:00:03.928873",
+    "coin": "BNB",
+    "signal_type": "MACRO_FADE",
+    "side": "NO",
+    "conf": 60,
+    "entry_price": null,
+    "market_mid_at_signal": null,
+    "action": "BLOCKED",
+    "block_reason": "no suitable market",
+    "settlement_result": null,
+    "won": null,
+    "cluster_coins": [
+      "HYPE",
+      "ETH",
+      "BNB"
+    ],
+    "cluster_side": "YES",
+    "reason": "MACRO FADE: 3 coins YES in 0s"
+  },
+  {
+    "timestamp": "2026-04-13T01:15:05.380491",
+    "coin": "HYPE",
+    "signal_type": "candle_YES",
+    "side": "YES",
+    "conf": 97,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "BLOCKED",
+    "block_reason": "no suitable market",
+    "settlement_result": null,
+    "won": null
+  },
+  {
+    "timestamp": "2026-04-13T01:30:07.961200",
+    "coin": "SOL",
+    "signal_type": "candle_YES",
+    "side": "YES",
+    "conf": 97,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "TAKEN",
+    "block_reason": null,
+    "settlement_result": 1.0,
+    "won": true,
+    "ticker": "KXSOL15M-26APR122145-45"
+  },
+  {
+    "timestamp": "2026-04-13T01:30:08.336456",
+    "coin": "HYPE",
+    "signal_type": "candle_YES",
+    "side": "YES",
+    "conf": 97,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "TAKEN",
+    "block_reason": null,
+    "settlement_result": 1.0,
+    "won": true,
+    "ticker": "KXHYPE15M-26APR122145-45"
+  },
+  {
+    "timestamp": "2026-04-13T01:45:00.810678",
+    "coin": "BNB",
+    "signal_type": "candle_YES",
+    "side": "YES",
+    "conf": 97,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "BLOCKED",
+    "block_reason": "no suitable market",
+    "settlement_result": null,
+    "won": null
   }
 ]

@@ -1057,6 +1057,7 @@ class Superbot:
                 return None
             
             ts = datetime.fromisoformat(timestamp.replace('Z', '+00:00'))
+            ts = ts.replace(tzinfo=None)  # Make naive for comparison
             # Round DOWN to the 15-min boundary - the signal timestamp is when the candle closed,
             # which means the market that just closed has close_time >= signal timestamp,
             # rounded down to the nearest 15-min mark.
@@ -1067,8 +1068,8 @@ class Superbot:
             # We look for markets closing at or around this time
             target_close = ts_rounded
             
-            # Query API for actual markets
-            markets = self.api.get_markets(series, limit=10)
+            # Query API for actual markets (limit=100 to include past markets)
+            markets = self.api.get_markets(series, limit=100)
             if not markets:
                 logger.warning(f"[{self.coin}] No markets found for {series} via API")
                 return None

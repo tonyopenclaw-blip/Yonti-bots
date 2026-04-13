@@ -266,13 +266,14 @@ class KalshiAPI:
                 continue
         return markets
     
-    def place_order(self, ticker: str, side: str, price: float, amount: float, action: str = "buy") -> Dict[str, Any]:
+    def place_order(self, ticker: str, side: str, price: float, amount: float, action: str = "buy", order_type: str = "market") -> Dict[str, Any]:
         """
         Place an order on Kalshi.
         side: 'yes' or 'no'
         action: 'buy' or 'sell' (sell = sell existing position, expecting to buy back cheaper)
         price: probability price (e.g., 0.35 for 35 cents)
         amount: dollar amount to risk
+        order_type: 'market' or 'limit' (default: market)
         """
         try:
             price_str = f"{price:.2f}"
@@ -290,7 +291,7 @@ class KalshiAPI:
                     "action": action,  # 'buy' or 'sell'
                     "side": "yes",
                     "ticker": ticker,
-                    "type": "market",
+                    "type": order_type,  # 'market' or 'limit'
                     "yes_price_dollars": price_str,
                     "count": contracts,
                 }
@@ -299,7 +300,7 @@ class KalshiAPI:
                     "action": action,  # 'buy' or 'sell'
                     "side": "no",
                     "ticker": ticker,
-                    "type": "market",
+                    "type": order_type,  # 'market' or 'limit'
                     "no_price_dollars": no_price_str,
                     "count": contracts,
                 }

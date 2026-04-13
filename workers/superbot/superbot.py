@@ -1445,6 +1445,32 @@ class Superbot:
                     except: ttl=900
                     logger.warning(f"  Market {m.ticker}: mid={mid:.4f}, ttl={ttl:.0f}s, bid={m.yes_bid:.4f}, ask={m.yes_ask:.4f}")
 
+        # === OPEN ORDER STRATEGY: Catch MACRO_FADE/PUMP at the open ===
+        # If MACRO_FADE fires with 5+ coins and market just opened, try to get both YES+NO <= $0.15
+        if candle_sig and candle_sig.get('signal_type') in ('MACRO_FADE', 'MACRO_PUMP'):
+            cluster_coins = candle_sig.get('cluster_coins', [])
+            if len(cluster_coins) >= 5:
+                sig_timestamp = candle_sig.get('timestamp', '')
+                try:
+                    sig_dt = datetime.fromisoformat(sig_timestamp.replace('Z','')).replace(tzinfo=None)
+                    sig_age = (datetime.utcnow() - sig_dt).total_seconds()
+                except:
+                    sig_age = 999
+                
+                # Only try if signal is fresh (< 60s) and we haven't tried yet
+                open_order_key = (coin, sig_timestamp)
+                if sig_age < 60 and open_order_key not in getattr(self, '_open_order_tried', set()):
+                    if not hasattr(self, '_open_order_tried'):
+                        self._open_order_tried = set()
+                    self._open_order_tried.add(open_order_key)
+                    
+                    logger.info(f"[{coin}] OPEN ORDER: Fresh {candle_sig.get('signal_type')} with {len(cluster_coins)} coins, age={sig_age:.0f}s - checking open market...")
+                    both_filled = self._place_open_orders(coin, markets, candle_sig.get('signal_type', 'MACRO_FADE'))
+                    if both_filled:
+                        # Open order succeeded - both sides filled cheap, we're hedged for profit
+                        logger.info(f"[{coin}] OPEN ORDER: Success! Both sides filled at open. Returning.")
+                        return True
+
         # === 12-MIN NO LOCK-IN: Check at 12 min mark (3 min remaining) ===
         # This fires once per window when time_remaining <= 180s
         self._check_12min_no_lockin(series_ticker, markets, coin, trader)
@@ -1532,6 +1558,166 @@ class Superbot:
                     # Don't return here - allow more trades from same market (two-way)
 
         return True
+
+    def _place_open_orders(self, coin: str, markets: List[Market], signal_type: str) -> bool:
+        """
+        OPEN ORDER STRATEGY (Tony's edge play):
+        When MACRO_FADE/PUMP fires, check if newly opened market has YES and NO both <= $0.15.
+        If so, place $1 YES + $1 NO limit orders at $0.15 simultaneously.
+        Wait up to 30s for fills. Cancel unfilled.
+        
+        This catches reversals at the open - if both sides are cheap, one side will move.
+        
+        Args:
+            coin: coin symbol (BTC, ETH, etc.)
+            markets: list of open Market objects
+            signal_type: 'MACRO_FADE' or 'MACRO_PUMP'
+        
+        Returns:
+            True if both sides filled at <= $0.15, False otherwise
+        """
+        OPEN_ORDER_MAX_PRICE = 0.15
+        OPEN_ORDER_AMOUNT = 1.00  # $1 per side
+        OPEN_ORDER_TIMEOUT = 30    # seconds to wait for fills
+        OPEN_ORDER_POLL = 5       # poll every 5 seconds
+
+        # Find the market with most time remaining (likely the newly opened one)
+        market = None
+        max_time = 0
+        for m in markets:
+            try:
+                ttl = m.time_to_expiry_sec()
+                if ttl > max_time:
+                    max_time = ttl
+                    market = m
+            except (AttributeError, TypeError):
+                continue
+        
+        if not market:
+            return False
+        
+        ticker = market.ticker
+        
+        # Check if market just opened (within 60s of now based on market open_time)
+        try:
+            import re
+            open_time_str = getattr(market, 'open_time', None) or ''
+            if open_time_str:
+                # Parse ISO timestamp
+                open_dt = datetime.fromisoformat(open_time_str.replace('Z', '+00:00'))
+                open_ts = open_dt.timestamp()
+                age = time.time() - open_ts
+                if age > 60:
+                    logger.debug(f"[{coin}] OPEN ORDER: market age {age:.0f}s > 60s, skipping open-order check")
+                    return False
+                logger.info(f"[{coin}] OPEN ORDER: market {ticker} is {age:.0f}s old, checking prices...")
+        except Exception as e:
+            logger.debug(f"[{coin}] OPEN ORDER: couldn't parse market age: {e}")
+            # Continue anyway - check prices directly
+        
+        # Get current prices
+        yes_bid = getattr(market, 'yes_bid', None) or 0
+        yes_ask = getattr(market, 'yes_ask', None) or 0
+        no_bid = getattr(market, 'no_bid', None) or 0
+        no_ask = getattr(market, 'no_ask', None) or 0
+        
+        yes_mid = (yes_bid + yes_ask) / 2 if yes_bid and yes_ask else None
+        no_mid = (no_bid + no_ask) / 2 if no_bid and no_ask else None
+        
+        logger.info(f"[{coin}] OPEN ORDER: YES mid={yes_mid:.4f} NO mid={no_mid:.4f} (max=${OPEN_ORDER_MAX_PRICE:.2f})")
+        
+        # Check if both sides are cheap enough
+        if yes_mid is None or no_mid is None:
+            return False
+        if yes_mid > OPEN_ORDER_MAX_PRICE or no_mid > OPEN_ORDER_MAX_PRICE:
+            logger.info(f"[{coin}] OPEN ORDER: prices too high (YES={yes_mid:.4f} NO={no_mid:.4f}), skipping")
+            return False
+        
+        logger.info(f"[{coin}] OPEN ORDER: BOTH SIDES <= ${OPEN_ORDER_MAX_PRICE:.2f}! Placing simultaneous orders...")
+        
+        # Place $1 YES and $1 NO limit orders simultaneously
+        # Use limit orders at $0.15 (max price we're willing to pay)
+        contracts_yes = max(1, int(OPEN_ORDER_AMOUNT / OPEN_ORDER_MAX_PRICE))
+        contracts_no = max(1, int(OPEN_ORDER_AMOUNT / OPEN_ORDER_MAX_PRICE))
+        
+        # Place YES order
+        yes_result = self.api.place_order(
+            ticker=ticker,
+            side='yes',
+            price=OPEN_ORDER_MAX_PRICE,
+            amount=OPEN_ORDER_AMOUNT,
+            action='buy',
+            order_type='limit'
+        )
+        
+        # Place NO order
+        no_result = self.api.place_order(
+            ticker=ticker,
+            side='no',
+            price=OPEN_ORDER_MAX_PRICE,
+            amount=OPEN_ORDER_AMOUNT,
+            action='buy',
+            order_type='limit'
+        )
+        
+        yes_order_id = yes_result.get('order', {}).get('order_id') if 'order' in yes_result else None
+        no_order_id = no_result.get('order', {}).get('order_id') if 'order' in no_result else None
+        
+        logger.info(f"[{coin}] OPEN ORDER: YES order placed: {yes_result.get('order',{})}")
+        logger.info(f"[{coin}] OPEN ORDER: NO order placed: {no_result.get('order',{})}")
+        
+        if not yes_order_id and not no_order_id:
+            logger.warning(f"[{coin}] OPEN ORDER: both orders failed to place!")
+            return False
+        
+        # Wait for fills
+        filled_yes = False
+        filled_no = False
+        fills_yes = 0
+        fills_no = 0
+        
+        for i in range(OPEN_ORDER_TIMEOUT // OPEN_ORDER_POLL):
+            time.sleep(OPEN_ORDER_POLL)
+            
+            # Check YES order
+            if yes_order_id and not filled_yes:
+                status = self.api._get(f"/portfolio/orders/{yes_order_id}")
+                order = status.get('order', {})
+                order_status = order.get('status', '')
+                if order_status in ('executed', 'filled', 'complete'):
+                    fills_yes = float(order.get('fill_count_fp', 0))
+                    filled_yes = True
+                    logger.info(f"[{coin}] OPEN ORDER: YES FILLED! {fills_yes} contracts @ ${OPEN_ORDER_MAX_PRICE:.2f}")
+            
+            # Check NO order
+            if no_order_id and not filled_no:
+                status = self.api._get(f"/portfolio/orders/{no_order_id}")
+                order = status.get('order', {})
+                order_status = order.get('status', '')
+                if order_status in ('executed', 'filled', 'complete'):
+                    fills_no = float(order.get('fill_count_fp', 0))
+                    filled_no = True
+                    logger.info(f"[{coin}] OPEN ORDER: NO FILLED! {fills_no} contracts @ ${OPEN_ORDER_MAX_PRICE:.2f}")
+            
+            if filled_yes and filled_no:
+                logger.info(f"[{coin}] OPEN ORDER: BOTH SIDES FILLED! Profit locked in regardless of direction.")
+                break
+        
+        # Cancel unfilled orders
+        if yes_order_id and not filled_yes:
+            self.api.cancel_order(yes_order_id)
+            logger.info(f"[{coin}] OPEN ORDER: YES order cancelled (not filled)")
+        if no_order_id and not filled_no:
+            self.api.cancel_order(no_order_id)
+            logger.info(f"[{coin}] OPEN ORDER: NO order cancelled (not filled)")
+        
+        # Result: both filled at <= $0.15 = success
+        if filled_yes and filled_no:
+            logger.info(f"[{coin}] OPEN ORDER SUCCESS: {signal_type} caught at open for ${OPEN_ORDER_AMOUNT*2:.2f} total")
+            return True
+        else:
+            logger.info(f"[{coin}] OPEN ORDER: partial fill YES={filled_yes} NO={filled_no}, continuing with normal execution")
+            return False
 
     def _check_12min_no_lockin(self, series_ticker: str, markets: List[Market], coin: str, trader: 'CoinTrader'):
         """

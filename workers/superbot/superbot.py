@@ -1043,12 +1043,34 @@ class Superbot:
         logger.info(f"Received signal {signum}, shutting down...")
         self.running = False
 
+
+    def _derive_ticker_from_signal(self, coin: str, timestamp: str) -> Optional[str]:
+        """
+        Derive the Kalshi ticker from a signal's coin and timestamp.
+        Ticker format: {SERIES}-{YY}{MON}{DD}{HHMM}-15
+        E.g., KXBTC15M-26APR131500-15 for BTC market opening at 15:00 on Apr 13, 2026.
+        """
+        from datetime import datetime
+        try:
+            series = SERIES_TICKERS.get(coin.upper())
+            if not series:
+                return None
+            ts = datetime.fromisoformat(timestamp.replace('Z', ''))
+            minute = (ts.minute // 15) * 15
+            open_ts = ts.replace(minute=minute, second=0, microsecond=0)
+            ticker = f"{series}-{open_ts.strftime('%y%b%d%H%M')}-15"
+            return ticker.upper()
+        except Exception as e:
+            logger.debug(f"Could not derive ticker for {coin} @ {timestamp}: {e}")
+            return None
+
     def _check_and_update_settled_markets(self):
         """
         Check for settled markets and update their signal log entries.
         Runs periodically in the trading loop.
         Fix: Check pending signals directly (not just open markets) so we can
         update settlements for markets that have already dropped off the open list.
+        Also derive ticker from signal timestamp when ticker is missing (blocked signals).
         """
         try:
             signal_file = Path(__file__).parent / "signal_log.json"
@@ -1060,17 +1082,24 @@ class Superbot:
 
             updated = False
             for sig in signals:
-                # Only process TAKEN/BLOCKED signals that haven't settled yet
                 if sig.get("settlement_result") is not None:
                     continue
                 if sig.get("action") not in ("TAKEN", "BLOCKED"):
                     continue
 
+                coin = sig.get("coin")
                 ticker = sig.get("ticker")
+
+                # If ticker is missing (blocked signal), derive it from timestamp
+                if not ticker:
+                    ticker = self._derive_ticker_from_signal(coin, sig.get('timestamp', ''))
+                    if ticker:
+                        sig['ticker'] = ticker
+                        logger.info(f"Derived ticker for blocked {coin}: {ticker}")
+
                 if not ticker:
                     continue
 
-                # Try to get settlement result for this ticker
                 result = self.api.get_market_result(ticker)
                 if result:
                     settlement_val = 1.0 if result == "yes" else 0.0

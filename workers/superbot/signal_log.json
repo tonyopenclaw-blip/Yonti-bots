@@ -692,8 +692,8 @@
     "conf": 97,
     "entry_price_max": 0.85,
     "market_mid_at_signal": null,
-    "action": "PENDING",
-    "block_reason": null,
+    "action": "BLOCKED",
+    "block_reason": "no suitable market",
     "settlement_result": null,
     "won": null
   }

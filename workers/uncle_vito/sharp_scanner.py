@@ -41,7 +41,7 @@ APIFY_API_KEYS = [
     "apify_api_GO2yPSAz3zEedn49YlwKhRvY5iETvc3jwHRp",
     "apify_api_E01cfZlcTajPJORgmnnMKT0kUvQQ9X41b4u9",
 ]
-APIFY_ACTOR = "twitter-x-scraper"
+APIFY_ACTOR = "mpS4GhoarZWx8LMzZ"  # Actor ID (works for all 3 keys)
 
 # Key rotation state
 _apify_key_idx = 0
@@ -240,7 +240,7 @@ class ApifyTwitterClient:
         
         # Start the actor with user tweets input
         start_data = {
-            "usernames": [username],
+            "startUrls": [f"https://twitter.com/{username}"],
             "maxTweets": max_tweets,
             "tweetLanguage": "en",
         }
@@ -258,8 +258,59 @@ class ApifyTwitterClient:
         if not response or response.status_code not in (200, 201):
             logger.warning(f"Apify start run failed for @{username}: {response.status_code if response else 'no response'}")
             return []
-            
-    
+
+        run_data = response.json()
+        run_id = run_data.get("data", {}).get("id")
+
+        if not run_id:
+            logger.warning(f"No run ID returned for @{username}")
+            return []
+
+        # Poll for completion
+        import time
+        max_wait = 90
+        waited = 0
+
+        while waited < max_wait:
+            time.sleep(2)
+            waited += 2
+
+            status_url = f"{self.BASE_URL}/{APIFY_ACTOR}/runs/{run_id}"
+            status_resp = self.session.get(status_url, headers=self._headers(), timeout=30)
+
+            if status_resp.status_code == 200:
+                status_data = status_resp.json()
+                status = status_data.get("data", {}).get("status", "")
+
+                if status == "SUCCEEDED":
+                    break
+                elif status in ["FAILED", "ABORTED", "TIMED_OUT"]:
+                    logger.warning(f"Apify run {status} for @{username}")
+                    return []
+
+        # Get dataset items
+        dataset_id = run_data.get("data", {}).get("defaultDatasetId")
+        if not dataset_id:
+            status_url = f"{self.BASE_URL}/{APIFY_ACTOR}/runs/{run_id}"
+            status_resp = self.session.get(status_url, headers=self._headers(), timeout=30)
+            if status_resp.status_code == 200:
+                dataset_id = status_resp.json().get("data", {}).get("defaultDatasetId")
+
+        if not dataset_id:
+            logger.warning(f"No dataset ID for @{username}")
+            return []
+
+        items_url = f"https://api.apify.com/v2/datasets/{dataset_id}/items"
+        items_resp = self.session.get(items_url, headers=self._headers(), timeout=30)
+
+        if items_resp.status_code == 200:
+            tweets = items_resp.json()
+            logger.info(f"Fetched {len(tweets)} tweets from @{username}")
+            return tweets
+        else:
+            logger.warning(f"Failed to get tweets from @{username}: {items_resp.status_code}")
+            return []
+
     def search_tweets(self, query: str, max_tweets: int = 100) -> List[Dict]:
         """
         Search tweets by keyword/hashtag.
@@ -296,7 +347,44 @@ class ApifyTwitterClient:
         if not response or response.status_code not in (200, 201):
             logger.warning(f"Apify search failed for '{query}': {response.status_code if response else 'no response'}")
             return []
-            
+
+        run_data = response.json()
+        run_id = run_data.get("data", {}).get("id")
+
+        if not run_id:
+            return []
+
+        # Poll for completion
+        import time
+        max_wait = 90
+        waited = 0
+
+        while waited < max_wait:
+            time.sleep(3)
+            waited += 3
+
+            status_url = f"{self.BASE_URL}/{APIFY_ACTOR}/runs/{run_id}"
+            status_resp = self.session.get(status_url, headers=self._headers(), timeout=30)
+
+            if status_resp.status_code == 200:
+                status = status_resp.json().get("data", {}).get("status", "")
+                if status == "SUCCEEDED":
+                    break
+                elif status in ["FAILED", "ABORTED", "TIMED_OUT"]:
+                    return []
+
+        dataset_id = run_data.get("data", {}).get("defaultDatasetId")
+        if not dataset_id:
+            return []
+
+        items_url = f"https://api.apify.com/v2/datasets/{dataset_id}/items"
+        items_resp = self.session.get(items_url, headers=self._headers(), timeout=30)
+
+        if items_resp.status_code == 200:
+            tweets = items_resp.json()
+            logger.info(f"Search '{query}' returned {len(tweets)} tweets")
+            return tweets
+        return []
 
 # ============================================================
 # PLAYER NAME EXTRACTION

@@ -316,7 +316,8 @@ class CandleTracker:
                 "settlement_result": None,
                 "won": None,
             }
-            _append_signal_log(log_entry)
+            # NOTE: SB handles signal_log.json writes for CANDLE signals
+            # CW only writes directly when SB never sees the signal
             return sig
 
         # BUY NO: <30% → conf=99 (skip if in bullish regime)
@@ -326,10 +327,8 @@ class CandleTracker:
             # Check YES mid price: only emit NO if market has pumped (YES > $0.52)
             # This is the "fade the pump" filter — we want the market to have moved before we short it
             mid = _get_market_mid_at_signal(self.coin)
-            if mid is None or mid <= 0.52:
-                mid_str = f"{mid:.4f}" if mid is not None else "N/A"
-                logger.info(f"[{self.coin}] ◆ NO SIGNAL SKIPPED - YES mid ${mid_str} <= $0.52 (no pump to fade)")
-                # Log blocked signal
+            if mid is None:
+                logger.info(f"[{self.coin}] ◆ NO SIGNAL SKIPPED - Kalshi unreachable (mid unavailable)")
                 now_ts = datetime.utcnow().isoformat()
                 log_entry = {
                     "timestamp": now_ts,
@@ -338,34 +337,22 @@ class CandleTracker:
                     "side": "NO",
                     "conf": 99,
                     "entry_price_max": 0.85,
-                    "market_mid_at_signal": mid,
+                    "market_mid_at_signal": None,
                     "action": "BLOCKED",
-                    "block_reason": f"YES mid {mid or 'N/A'} <= $0.52 (no pump to fade)",
+                    "block_reason": "Kalshi unreachable - skipping blind entry",
                     "settlement_result": None,
                     "won": None,
                 }
                 _append_signal_log(log_entry)
+                return None
+            elif mid <= 0.52:
+                mid_str = f"{mid:.4f}"
+                logger.info(f"[{self.coin}] ◆ NO SIGNAL SKIPPED - YES mid ${mid_str} <= $0.52 (no pump to fade)")
                 self.candle_ratios = []
                 return None
             # Check regime filter: skip NO if 3 consecutive candles showed >60% YES
             if self.regime_skip_this_cycle:
                 logger.info(f"[{self.coin}] ◆ NO SIGNAL SKIPPED - BULLISH REGIME (3 consecutive YES candles >60%)")
-                # Log blocked signal
-                now_ts = datetime.utcnow().isoformat()
-                log_entry = {
-                    "timestamp": now_ts,
-                    "coin": self.coin,
-                    "signal_type": "candle_NO",
-                    "side": "NO",
-                    "conf": 99,
-                    "entry_price_max": 0.85,
-                    "market_mid_at_signal": mid,
-                    "action": "BLOCKED",
-                    "block_reason": "bullish regime (3 consecutive YES candles >60%)",
-                    "settlement_result": None,
-                    "won": None,
-                }
-                _append_signal_log(log_entry)
                 # Reset regime flag for next cycle
                 self.regime_skip_this_cycle = False
                 self.candle_ratios = []  # Reset regime tracking after suppression
@@ -399,7 +386,7 @@ class CandleTracker:
                 "settlement_result": None,
                 "won": None,
             }
-            _append_signal_log(log_entry)
+            # NOTE: SB handles signal_log.json writes - CW does not write PENDING here
             return sig
 
         return None
@@ -520,7 +507,7 @@ class MacroCorrelationDetector:
                 "cluster_side": cluster_info["side"],
                 "reason": signal["reason"]
             }
-            _append_signal_log(log_entry)
+            # NOTE: SB handles signal_log.json writes for MACRO signals
 
         return signals
 
@@ -572,7 +559,7 @@ class MacroCorrelationDetector:
                 "cluster_side": cluster_info["side"],
                 "reason": signal["reason"]
             }
-            _append_signal_log(log_entry)
+            # NOTE: SB handles signal_log.json writes for MACRO signals
 
         return signals
 

@@ -68,10 +68,11 @@ def _save_signal_log(log: list):
     except IOError as e:
         logger.warning(f"Failed to save signal log: {e}")
 
-def _update_signal_log(coin: str, timestamp: str, action: str, block_reason: str = None, ticker: str = None):
+def _update_signal_log(coin: str, timestamp: str, action: str, block_reason: str = None, ticker: str = None, signal_type: str = None, side: str = None):
     """
     Update action for a pending candle signal from this coin.
     Matches by coin + timestamp (PENDING → TAKEN or BLOCKED).
+    If no PENDING entry exists, creates a new entry (for BLOCKED signals where CW didn't write PENDING).
     """
     log = _get_signal_log()
     updated = False
@@ -84,6 +85,25 @@ def _update_signal_log(coin: str, timestamp: str, action: str, block_reason: str
                 entry["ticker"] = ticker
             updated = True
             break
+    if not updated and action == "BLOCKED":
+        # No PENDING entry found (CW didn't write one) — create BLOCKED entry directly
+        new_entry = {
+            "timestamp": timestamp,
+            "coin": coin,
+            "signal_type": signal_type or "unknown",
+            "side": side or "unknown",
+            "conf": 0,
+            "entry_price_max": 0.85,
+            "market_mid_at_signal": None,
+            "action": "BLOCKED",
+            "block_reason": block_reason or "unknown",
+            "settlement_result": None,
+            "won": None,
+        }
+        if ticker:
+            new_entry["ticker"] = ticker
+        log.append(new_entry)
+        updated = True
     if updated:
         _save_signal_log(log)
 
@@ -1342,7 +1362,7 @@ class Superbot:
         else:
             block_reason = f"entry guard skipped (mid ${first_viable_mid:.4f})"
 
-        _update_signal_log(coin, sig_timestamp, "BLOCKED", block_reason, ticker=first_viable_ticker)
+        _update_signal_log(coin, sig_timestamp, "BLOCKED", block_reason, ticker=first_viable_ticker, signal_type=signal_data.get("signal_type", "CANDLE"), side=side.upper())
         return False
 
     def _check_and_trade_series(self, series_ticker: str) -> bool:
@@ -1407,8 +1427,11 @@ class Superbot:
         candle_sig = self._read_candle_signal(coin)
         if candle_sig:
             sig_coin = candle_sig.get("coin")
-            age = (datetime.utcnow() - datetime.fromisoformat(candle_sig.get('timestamp','').replace('Z','')).replace(tzinfo=None)).total_seconds()
+            sig_timestamp = candle_sig.get('timestamp', '')
+            age = (datetime.utcnow() - datetime.fromisoformat(sig_timestamp.replace('Z','')).replace(tzinfo=None)).total_seconds()
             logger.info(f"[{coin}] Checking candle signal (coin={sig_coin}, age={age:.0f}s): {candle_sig}")
+            # Write PENDING so _execute_candle_signal can update it to TAKEN/BLOCKED
+            _update_signal_log(coin, sig_timestamp, "PENDING", signal_type=candle_sig.get("signal_type", "CANDLE"), side=candle_sig.get("side", "YES").upper())
             executed = self._execute_candle_signal(candle_sig, markets, coin, trader)
             if executed:
                 logger.info(f"[{coin}] CANDLE SIGNAL EXECUTED!")
@@ -1430,8 +1453,11 @@ class Superbot:
         macro_ride_sig = self._read_macro_ride_signal(coin)
         if macro_ride_sig:
             sig_coin = macro_ride_sig.get("coin")
-            age = (datetime.utcnow() - datetime.fromisoformat(macro_ride_sig.get('timestamp','').replace('Z','')).replace(tzinfo=None)).total_seconds()
+            sig_timestamp = macro_ride_sig.get('timestamp', '')
+            age = (datetime.utcnow() - datetime.fromisoformat(sig_timestamp.replace('Z','')).replace(tzinfo=None)).total_seconds()
             logger.info(f"[{coin}] Checking MACRO_RIDE signal (coin={sig_coin}, age={age:.0f}s): {macro_ride_sig}")
+            # Write PENDING so _execute_candle_signal can update it to TAKEN/BLOCKED
+            _update_signal_log(coin, sig_timestamp, "PENDING", signal_type="MACRO_RIDE", side=macro_ride_sig.get("side", "YES").upper())
             executed = self._execute_candle_signal(macro_ride_sig, markets, coin, trader)
             if executed:
                 logger.info(f"[{coin}] MACRO_RIDE SIGNAL EXECUTED!")

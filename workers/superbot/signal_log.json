@@ -63,5 +63,31 @@
     "block_reason": "Kalshi unreachable - skipping blind entry",
     "settlement_result": null,
     "won": null
+  },
+  {
+    "timestamp": "2026-04-13T16:15:09.763573",
+    "coin": "ADA",
+    "signal_type": "candle_NO",
+    "side": "NO",
+    "conf": 99,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "BLOCKED",
+    "block_reason": "Kalshi unreachable - skipping blind entry",
+    "settlement_result": null,
+    "won": null
+  },
+  {
+    "timestamp": "2026-04-13T16:15:09.502772",
+    "coin": "XRP",
+    "signal_type": "CANDLE",
+    "side": "NO",
+    "conf": 0,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "BLOCKED",
+    "block_reason": "no suitable market",
+    "settlement_result": null,
+    "won": null
   }
 ]

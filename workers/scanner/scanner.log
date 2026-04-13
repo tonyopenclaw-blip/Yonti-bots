@@ -16529,3 +16529,22 @@ Scanning all series...
 No tradeable markets found.
 
 Saved to /home/ubuntu/.openclaw/workspace/workers/scanner/../data/live_markets.json
+Kalshi Market Scanner starting...
+Current 15-min window: 16:15 - 16:30 UTC
+Checking tickers: ['26APR131615-15', '26APR131630-30', '26APR131645-45', '26APR131700-00']
+
+Scanning all series...
+
+SCAN RESULTS - 2026-04-13 16:15 UTC
+============================================================
+
+SOL (KXSOL15M):
+  KXSOL15M-26APR131230-30 | active | YES: $0.70
+
+BNB (KXBNB15M):
+  KXBNB15M-26APR131230-30 | active | YES: $0.75
+
+============================================================
+Total tradeable markets: 2
+
+Saved to /home/ubuntu/.openclaw/workspace/workers/scanner/../data/live_markets.json

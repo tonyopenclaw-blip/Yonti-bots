@@ -1457,9 +1457,9 @@ class Superbot:
                 except:
                     sig_age = 999
                 
-                # Only try if signal is fresh (< 60s) and we haven't tried yet
+                # Only try if signal is fresh (< 20s) and we haven't tried yet
                 open_order_key = (coin, sig_timestamp)
-                if sig_age < 60 and open_order_key not in getattr(self, '_open_order_tried', set()):
+                if sig_age < 20 and open_order_key not in getattr(self, '_open_order_tried', set()):
                     if not hasattr(self, '_open_order_tried'):
                         self._open_order_tried = set()
                     self._open_order_tried.add(open_order_key)
@@ -1607,8 +1607,8 @@ class Superbot:
                 open_dt = datetime.fromisoformat(open_time_str.replace('Z', '+00:00'))
                 open_ts = open_dt.timestamp()
                 age = time.time() - open_ts
-                if age > 60:
-                    logger.debug(f"[{coin}] OPEN ORDER: market age {age:.0f}s > 60s, skipping open-order check")
+                if age > 15:
+                    logger.debug(f"[{coin}] OPEN ORDER: market age {age:.0f}s > 15s, skipping open-order check")
                     return False
                 logger.info(f"[{coin}] OPEN ORDER: market {ticker} is {age:.0f}s old, checking prices...")
         except Exception as e:
@@ -2120,11 +2120,10 @@ class Superbot:
                     last_cooldown_tick = time.time()
 
                 if self.active_series:
-                    # ACTIVE MODE: Poll all active series every 30s (was 3s)
-                    # Coinbase pre-filter handles fast detection
+                    # ACTIVE MODE: Poll all active series every 5s
                     for series_ticker in self.our_series_tickers:
                         self._check_and_trade_series(series_ticker)
-                    time.sleep(30)  # Nerd v2: 30s Kalshi polling (was 3s)
+                    time.sleep(5)  # Fast polling for active markets
                 else:
                     # IDLE MODE: Check ONE series per cycle, cycle through all coins
                     series_ticker = self.our_series_tickers[self.series_cycle % len(self.our_series_tickers)]
@@ -2138,10 +2137,10 @@ class Superbot:
                         loss_pct = realized_pnl / self.day_start_balance * 100 if self.day_start_balance > 0 else 0
                         logger.info(f"😴 IDLE: checked {series_ticker} (poll #{loop_count}) | Day Realized P&L: ${realized_pnl:.2f} ({loss_pct:.1}%)")
 
-                    # If no markets found, sleep 30 seconds
+                    # If no markets found, sleep 10 seconds
                     # If markets WERE found, don't sleep - immediately go to active polling
                     if not had_markets and not self.active_series:
-                        time.sleep(30)  # Nerd v2: 30s idle poll (was 20s)
+                        time.sleep(10)  # Fast idle polling to catch opens
 
                 # Status log every 30 seconds
                 if time.time() - last_status_log >= 30:

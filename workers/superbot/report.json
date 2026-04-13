@@ -4,27 +4,95 @@
   "starting_balance": 34.67,
   "ending_balance": 0.0,
   "total_pnl": -34.67,
-  "total_trades": 0,
-  "winning_trades": 0,
-  "losing_trades": 0,
-  "win_rate": 0,
-  "largest_win": 0.0,
-  "largest_loss": 0.0,
-  "open_positions": 1,
-  "thermostat": 12,
-  "trades": [],
-  "last_10_open_trades": [
+  "total_trades": 3,
+  "winning_trades": 2,
+  "losing_trades": 1,
+  "win_rate": 66.7,
+  "largest_win": 1.5,
+  "largest_loss": -1.2735,
+  "open_positions": 0,
+  "thermostat": 0,
+  "trades": [
     {
       "ticker": "KXBNB15M-26APR130100-00",
       "side": "yes",
       "entry_price": 0.43000000000000005,
+      "exit_price": 0.0055,
       "shares": 3,
       "cost": 1.29,
-      "pnl": 0.0,
+      "pnl": -1.2735,
       "strategy": "momentum",
       "open_time": "2026-04-13 04:45:27 UTC",
-      "current_price": 0.0055
+      "close_time": "2026-04-13 05:00:04 UTC",
+      "exit_reason": "settled"
+    },
+    {
+      "ticker": "KXBNB15M-26APR130145-45",
+      "side": "yes",
+      "entry_price": 0.5,
+      "exit_price": 1.0,
+      "shares": 3,
+      "cost": 1.5,
+      "pnl": 1.5,
+      "strategy": "momentum",
+      "open_time": "2026-04-13 05:30:47 UTC",
+      "close_time": "2026-04-13 05:45:26 UTC",
+      "exit_reason": "settled"
+    },
+    {
+      "ticker": "KXXRP15M-26APR130145-45",
+      "side": "yes",
+      "entry_price": 0.5,
+      "exit_price": 1.0,
+      "shares": 3,
+      "cost": 1.5,
+      "pnl": 1.5,
+      "strategy": "momentum",
+      "open_time": "2026-04-13 05:30:47 UTC",
+      "close_time": "2026-04-13 05:45:26 UTC",
+      "exit_reason": "settled"
     }
   ],
-  "last_10_closed_trades": []
+  "last_10_open_trades": [],
+  "last_10_closed_trades": [
+    {
+      "ticker": "KXXRP15M-26APR130145-45",
+      "side": "yes",
+      "entry_price": 0.5,
+      "exit_price": 1.0,
+      "shares": 3,
+      "cost": 1.5,
+      "pnl": 1.5,
+      "strategy": "momentum",
+      "open_time": "2026-04-13 05:30:47 UTC",
+      "close_time": "2026-04-13 05:45:26 UTC",
+      "exit_reason": "settled"
+    },
+    {
+      "ticker": "KXBNB15M-26APR130145-45",
+      "side": "yes",
+      "entry_price": 0.5,
+      "exit_price": 1.0,
+      "shares": 3,
+      "cost": 1.5,
+      "pnl": 1.5,
+      "strategy": "momentum",
+      "open_time": "2026-04-13 05:30:47 UTC",
+      "close_time": "2026-04-13 05:45:26 UTC",
+      "exit_reason": "settled"
+    },
+    {
+      "ticker": "KXBNB15M-26APR130100-00",
+      "side": "yes",
+      "entry_price": 0.43000000000000005,
+      "exit_price": 0.0055,
+      "shares": 3,
+      "cost": 1.29,
+      "pnl": -1.2735,
+      "strategy": "momentum",
+      "open_time": "2026-04-13 04:45:27 UTC",
+      "close_time": "2026-04-13 05:00:04 UTC",
+      "exit_reason": "settled"
+    }
+  ]
 }

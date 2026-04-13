@@ -1412,8 +1412,8 @@
     "market_mid_at_signal": null,
     "action": "TAKEN",
     "block_reason": null,
-    "settlement_result": null,
-    "won": null,
+    "settlement_result": 0.0,
+    "won": false,
     "ticker": "KXBNB15M-26APR130100-00"
   },
   {
@@ -1447,8 +1447,8 @@
     "market_mid_at_signal": null,
     "action": "BLOCKED",
     "block_reason": "entry guard skipped (mid $0.3800)",
-    "settlement_result": null,
-    "won": null,
+    "settlement_result": 0.0,
+    "won": false,
     "cluster_coins": [
       "SOL",
       "ETH",
@@ -1500,5 +1500,31 @@
     ],
     "cluster_side": "YES",
     "reason": "MACRO FADE: 4 coins YES in 0s"
+  },
+  {
+    "timestamp": "2026-04-13T05:30:07.728890",
+    "coin": "BNB",
+    "signal_type": "candle_YES",
+    "side": "YES",
+    "conf": 97,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "BLOCKED",
+    "block_reason": "no suitable market",
+    "settlement_result": null,
+    "won": null
+  },
+  {
+    "timestamp": "2026-04-13T05:30:07.876601",
+    "coin": "XRP",
+    "signal_type": "candle_YES",
+    "side": "YES",
+    "conf": 97,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "BLOCKED",
+    "block_reason": "no suitable market",
+    "settlement_result": null,
+    "won": null
   }
 ]

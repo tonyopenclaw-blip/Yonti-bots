@@ -26,7 +26,7 @@ MARKETS_LIMIT = 20
 COINS = ['BTC', 'ETH', 'BNB', 'SOL', 'DOGE', 'XRP', 'HYPE', 'ADA']  # All coins — testing for stats
 SERIES_TICKERS = {coin: f'KX{coin}15M' for coin in COINS}
 
-KALSHI_ACCESS_KEY = os.getenv("KALSHI_ACCESS_KEY", "")
+KALSHI_ACCESS_KEY = "2af9792d-cadd-4067-a861-b9bff4238248"
 KALSHI_TRACKER_KEY = os.getenv("KALSHI_TRACKER_KEY", "dd143eb9-ac4a-4cc2-bb17-11b47147a8fe")
 
 # =============================================================================

@@ -1,58 +1,18 @@
 {
-  "start_time": "2026-04-13 17:02:43 UTC",
+  "start_time": "2026-04-13 17:20:37 UTC",
   "end_time": "",
   "starting_balance": 34.67,
   "ending_balance": 0.0,
   "total_pnl": -34.67,
-  "total_trades": 1,
+  "total_trades": 0,
   "winning_trades": 0,
-  "losing_trades": 1,
-  "win_rate": 0.0,
+  "losing_trades": 0,
+  "win_rate": 0,
   "largest_win": 0.0,
-  "largest_loss": -0.8160000000000001,
-  "open_positions": 1,
-  "thermostat": 12,
-  "trades": [
-    {
-      "ticker": "KXXRP15M-26APR131315-15",
-      "side": "yes",
-      "entry_price": 0.335,
-      "exit_price": 0.063,
-      "shares": 3,
-      "cost": 1.0050000000000001,
-      "pnl": -0.8160000000000001,
-      "strategy": "momentum",
-      "open_time": "2026-04-13 17:02:55 UTC",
-      "close_time": "2026-04-13 17:08:54 UTC",
-      "exit_reason": "cut_loss_30"
-    }
-  ],
-  "last_10_open_trades": [
-    {
-      "ticker": "KXHYPE15M-26APR131315-15",
-      "side": "yes",
-      "entry_price": 0.38,
-      "shares": 3,
-      "cost": 1.1400000000000001,
-      "pnl": 0.0,
-      "strategy": "momentum",
-      "open_time": "2026-04-13 17:02:56 UTC",
-      "current_price": 0.9984999999999999
-    }
-  ],
-  "last_10_closed_trades": [
-    {
-      "ticker": "KXXRP15M-26APR131315-15",
-      "side": "yes",
-      "entry_price": 0.335,
-      "exit_price": 0.063,
-      "shares": 3,
-      "cost": 1.0050000000000001,
-      "pnl": -0.8160000000000001,
-      "strategy": "momentum",
-      "open_time": "2026-04-13 17:02:55 UTC",
-      "close_time": "2026-04-13 17:08:54 UTC",
-      "exit_reason": "cut_loss_30"
-    }
-  ]
+  "largest_loss": 0.0,
+  "open_positions": 0,
+  "thermostat": 0,
+  "trades": [],
+  "last_10_open_trades": [],
+  "last_10_closed_trades": []
 }

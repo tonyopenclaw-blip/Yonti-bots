@@ -1500,9 +1500,11 @@ class Superbot:
                 except:
                     sig_age = 999
                 
-                # Only try if signal is fresh (< 20s) and we haven't tried yet
+                # Only try if we haven't tried this exact signal yet
+                # Note: sig_age check removed - _place_open_orders has its own market-age check
+                # which is the correct metric (market freshness, not signal file age)
                 open_order_key = (coin, sig_timestamp)
-                if sig_age < 20 and open_order_key not in getattr(self, '_open_order_tried', set()):
+                if open_order_key not in getattr(self, '_open_order_tried', set()):
                     if not hasattr(self, '_open_order_tried'):
                         self._open_order_tried = set()
                     self._open_order_tried.add(open_order_key)

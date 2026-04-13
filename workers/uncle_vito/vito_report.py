@@ -3182,6 +3182,20 @@ class UncleVitoReport:
         .topbar-btn:hover { background: var(--card-hover); border-color: var(--gold); color: var(--gold); }
         .container { max-width: 480px; margin: 0 auto; }
         .report-header { background: linear-gradient(135deg, rgba(240,185,11,0.08), rgba(240,185,11,0.03)); border: 1px solid var(--gold-border); border-radius: 14px; padding: 20px 24px; margin-bottom: 24px; text-align: center; }
+        .confidence-parlay { background: linear-gradient(135deg, rgba(0,230,118,0.06), rgba(0,230,118,0.02)); border: 1px solid rgba(0,230,118,0.2); border-radius: 14px; padding: 18px 20px; margin-bottom: 24px; }
+        .confidence-parlay-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+        .confidence-parlay-icon { font-size: 1.2rem; }
+        .confidence-parlay-title { font-family: 'Oswald', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--win); text-transform: uppercase; letter-spacing: 0.04em; }
+        .confidence-parlay-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-dim); margin-left: auto; }
+        .confidence-parlay-picks { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+        .confidence-pick-item { display: flex; align-items: center; gap: 8px; padding: 7px 12px; background: rgba(0,0,0,0.3); border-radius: 6px; font-size: 0.85rem; }
+        .confidence-pick-num { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-dim); min-width: 18px; }
+        .confidence-pick-sport { font-size: 0.9rem; }
+        .confidence-pick-text { flex: 1; color: var(--text); }
+        .confidence-pick-conf { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--win); }
+        .confidence-parlay-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px solid rgba(0,230,118,0.15); }
+        .confidence-parlay-odds { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--gold); font-weight: 600; }
+        .confidence-parlay-avg { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-dim); }
         .report-icon { font-size: 36px; margin-bottom: 6px; }
         .report-title { font-family: 'Oswald', sans-serif; font-size: 1.6rem; font-weight: 700; color: var(--gold); letter-spacing: 0.03em; }
         .report-date { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-dim); margin-top: 6px; }
@@ -3261,6 +3275,7 @@ class UncleVitoReport:
             <div class="report-title">UNCLE VITO'S PICKS</div>
             <div class="report-date">__DATE_STR__ — NBA, NHL, MLB</div>
         </div>
+__CONFIDENCE_PARLAY__
 __LEAGUE_SECTIONS__
         <div class="footer">
             🍝 Uncle Vito's Picks — Yonti Trading Operation<br>
@@ -3560,7 +3575,49 @@ __LEAGUE_SECTIONS__
 '''
         league_html += record_section
         
+        # Build confidence parlay HTML (cross-league top picks)
+        sport_emoji = {"NBA": "🏀", "NHL": "🧊", "MLB": "⚾"}
+        conf_parlay_html = ""
+        if confidence_parlay:
+            picks_html = ""
+            total_odds = 1.0
+            for i, p in enumerate(confidence_parlay[:5], 1):
+                pick = p["pick"]
+                emoji = sport_emoji.get(p["sport"], "🏆")
+                if p["type"] == "prop":
+                    pick_text = f"{pick.player} <span class=\"pick-direction {pick.direction}\">{pick.direction.upper()}</span> {pick.stat_type} {pick.line}"
+                else:
+                    if pick.pick_type == "spread":
+                        pick_text = f"{pick.team} ({pick.line})"
+                    elif pick.pick_type == "total":
+                        pick_text = f"{pick.team} vs {pick.opponent} O/U {pick.line}"
+                    else:
+                        pick_text = f"{pick.team} ML"
+                total_odds *= (pick.odds / 100 + 1) if pick.odds > 0 else (100 / abs(pick.odds) + 1)
+                picks_html += f'''<div class="confidence-pick-item">
+                            <span class="confidence-pick-num">{i}.</span>
+                            <span class="confidence-pick-sport">{emoji}</span>
+                            <span class="confidence-pick-text">{pick_text}</span>
+                            <span class="confidence-pick-conf">{p["confidence"]}%</span>
+                        </div>'''
+            payout = int((total_odds - 1) * 100)
+            avg_conf = int(sum(p["confidence"] for p in confidence_parlay[:5]) / min(len(confidence_parlay), 5))
+            conf_parlay_html = f'''<div class="confidence-parlay">
+                <div class="confidence-parlay-header">
+                    <span class="confidence-parlay-icon">🌐</span>
+                    <span class="confidence-parlay-title">CONFIDENCE PARLAY</span>
+                    <span class="confidence-parlay-meta">all leagues</span>
+                </div>
+                <div class="confidence-parlay-picks">
+{picks_html}                </div>
+                <div class="confidence-parlay-footer">
+                    <span class="confidence-parlay-odds">+{payout}</span>
+                    <span class="confidence-parlay-avg">🎯 {avg_conf}% avg confidence</span>
+                </div>
+            </div>'''
+        
         html = html.replace("__DATE_STR__", date_str)
+        html = html.replace("__CONFIDENCE_PARLAY__", conf_parlay_html)
         html = html.replace("__LEAGUE_SECTIONS__", league_html)
         
         return html

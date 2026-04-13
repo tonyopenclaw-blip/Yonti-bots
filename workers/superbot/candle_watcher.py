@@ -16,6 +16,9 @@ from typing import Dict, List, Optional
 
 import requests
 
+from kalshi_api import KalshiAPI
+from config import KALSHI_ACCESS_KEY, COINBASE_PRODUCTS, SERIES_TICKERS
+
 # =============================================================================
 # CONFIG
 # =============================================================================
@@ -588,6 +591,121 @@ class MacroCorrelationDetector:
 
 
 # =============================================================================
+# =============================================================================
+# PRE-OPEN ORDER PLACEMENT (Tony's edge play)
+# =============================================================================
+def compute_next_window_ticker(series_ticker: str, coin: str) -> Optional[str]:
+    """
+    Compute the ticker for the next 15-minute window.
+    E.g., KXBTC15M → KXBTC15M-26APR131500-15 (for 15:00 window)
+    """
+    now = datetime.utcnow()
+    # Round up to next 15-minute boundary
+    minute = (now.minute // 15 + 1) * 15
+    hour = now.hour
+    if minute >= 60:
+        minute = 0
+        hour = (hour + 1) % 24
+    # Format: YYMONTHDDHHMM
+    month_abbr = now.strftime("%b").upper()
+    day = now.day
+    # If we're at 56-59 minutes, next window is tomorrow if hour wraps to 0
+    next_ts = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
+    ticker = f"{series_ticker}-{next_ts.strftime('%y%b%d%H%M')}-15"
+    return ticker.upper()
+
+
+def place_pre_open_orders(cluster_coins: List[str], cluster_side: str, kalshi_api: 'KalshiAPI'):
+    """
+    Pre-open order strategy: When MACRO_FADE fires, place $1 YES + $1 NO limit
+    orders at $0.15 on the NEXT window's ticker for each coin in the cluster.
+    
+    This catches reversals right at the open - market makers often quote both sides
+    cheap before repricing within the first 10-15 seconds of a new window.
+    
+    Args:
+        cluster_coins: List of coin symbols in the cluster
+        cluster_side: The side that clustered ('YES' or 'NO')
+        kalshi_api: KalshiAPI instance for placing orders
+    """
+    MAX_PRICE = 0.15
+    AMOUNT_PER_SIDE = 1.00
+    WAIT_SECONDS = 20
+    POLL_INTERVAL = 2
+    
+    logger.info(f"PRE-OPEN ORDERS: cluster={cluster_coins} side={cluster_side}, placing on next window...")
+    
+    # Compute next window tickers for all coins
+    next_tickres = {}
+    for coin in cluster_coins:
+        series = SERIES_TICKERS.get(coin)
+        if not series:
+            continue
+        next_ticker = compute_next_window_ticker(series, coin)
+        next_tickres[coin] = next_ticker
+        logger.info(f"PRE-OPEN ORDERS: {coin} → next window ticker: {next_ticker}")
+    
+    if not next_tickres:
+        return
+    
+    # Place orders on all coins simultaneously
+    order_ids = {}  # coin -> {yes_order_id, no_order_id}
+    for coin, ticker in next_tickres.items():
+        contracts = max(1, int(AMOUNT_PER_SIDE / MAX_PRICE))
+        
+        # Place YES order
+        yes_result = kalshi_api.place_order(
+            ticker=ticker,
+            side='yes',
+            price=MAX_PRICE,
+            amount=AMOUNT_PER_SIDE,
+            action='buy',
+            order_type='limit'
+        )
+        yes_order_id = yes_result.get('order', {}).get('order_id') if 'order' in yes_result else None
+        
+        # Place NO order
+        no_result = kalshi_api.place_order(
+            ticker=ticker,
+            side='no',
+            price=MAX_PRICE,
+            amount=AMOUNT_PER_SIDE,
+            action='buy',
+            order_type='limit'
+        )
+        no_order_id = no_result.get('order', {}).get('order_id') if 'order' in no_result else None
+        
+        order_ids[coin] = {'yes': yes_order_id, 'no': no_order_id, 'ticker': ticker}
+        
+        if yes_order_id:
+            logger.info(f"PRE-OPEN ORDERS: {coin} YES order placed: id={yes_order_id}")
+        else:
+            logger.warning(f"PRE-OPEN ORDERS: {coin} YES order FAILED: {yes_result}")
+        if no_order_id:
+            logger.info(f"PRE-OPEN ORDERS: {coin} NO order placed: id={no_order_id}")
+        else:
+            logger.warning(f"PRE-OPEN ORDERS: {coin} NO order FAILED: {no_result}")
+    
+    # Wait for fills
+    time.sleep(WAIT_SECONDS)
+    
+    # Check results and cancel unfilled
+    for coin, data in order_ids.items():
+        ticker = data['ticker']
+        for side, order_id in [('YES', data['yes']), ('NO', data['no'])]:
+            if not order_id:
+                continue
+            status_result = kalshi_api._get(f"/portfolio/orders/{order_id}")
+            order = status_result.get('order', {})
+            order_status = order.get('status', '')
+            if order_status in ('executed', 'filled', 'complete'):
+                logger.info(f"PRE-OPEN ORDERS: {coin} {side} FILLED! count={order.get('fill_count_fp')} @ ${order.get('fill_price_dollars', MAX_PRICE)}")
+            else:
+                # Cancel unfilled
+                kalshi_api.cancel_order(order_id)
+                logger.info(f"PRE-OPEN ORDERS: {coin} {side} cancelled (not filled, status={order_status})")
+
+
 # MAIN LOOP
 # =============================================================================
 macro_detector = MacroCorrelationDetector()
@@ -600,6 +718,7 @@ def main():
     logger.info("=" * 60)
 
     trackers = {coin: CandleTracker(coin) for coin in COINBASE_PRODUCTS}
+    kalshi_api = KalshiAPI(KALSHI_ACCESS_KEY)  # For pre-open order placement
     poll_interval = 10  # seconds
     last_status_bucket: Optional[int] = None  # 0, 15, 30, or 45
 
@@ -636,6 +755,14 @@ def main():
                                 0.85,  # entry_price_max not in macro signal, use default
                                 "MACRO_FADE"
                             )
+
+                        # PRE-OPEN ORDERS: Place $1 YES+NO limit orders at $0.15 on next window for all cluster coins
+                        # This catches reversals right at the open before market makers reprice
+                        if len(cluster['coins']) >= 5:
+                            try:
+                                place_pre_open_orders(cluster['coins'], cluster['side'], kalshi_api)
+                            except Exception as e:
+                                logger.error(f"PRE-OPEN ORDERS: failed: {e}")
 
                         # Also emit MACRO_RIDE signals for 7+ coin clusters (momentum-following paper test)
                         # Write to SEPARATE file so both strategies can be processed independently

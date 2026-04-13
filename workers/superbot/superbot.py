@@ -1250,8 +1250,9 @@ class Superbot:
                 first_viable_mid = mid
 
             # For YES signals, block expensive entries
-            if side == "yes" and mid > 0.55:
-                logger.info(f"[{coin}] ENTRY SKIP: YES entry ${mid:.4f} > $0.55 (too expensive)")
+            # EXPERIMENTAL: Allow up to $0.60 mid, but cap at $0.50/trade (watch-list test)
+            if side == "yes" and mid > 0.60:
+                logger.info(f"[{coin}] ENTRY SKIP: YES entry ${mid:.4f} > $0.60 (too expensive)")
                 continue
 
             # For NO signals, block when YES is cheap (YES < $0.45 means market thinks YES unlikely = NO overpriced)
@@ -1439,6 +1440,15 @@ class Superbot:
                 if self.sizing_reduced:
                     max_dollar = max_dollar * 0.5  # 50% reduction
                     logger.debug(f"[{coin}] Sizing reduced: max ${max_dollar:.2f}")
+                # EXPERIMENTAL: YES signals in $0.55-$0.60 range capped at $0.50 (watch-list test)
+                if signal.side == 'yes' and signal.price > 0.55:
+                    max_dollar = min(max_dollar, 0.50)
+                    logger.debug(f"[{coin}] EXPERIMENTAL: YES mid ${signal.price:.4f} > $0.55 - capping at ${max_dollar:.2f}")
+                # EXPERIMENTAL: CANDLE_NO signals capped at $0.50 (watch-list test)
+                # CANDLE_NO is structurally fragile — treat as watch-list until we have WR data
+                if signal.side == 'no' and signal.signal_type == 'candle_NO':
+                    max_dollar = min(max_dollar, 0.50)
+                    logger.debug(f"[{coin}] EXPERIMENTAL: CANDLE_NO ${signal.price:.4f} - capping at ${max_dollar:.2f}")
                 if signal.price > 0:
                     max_contracts = max_dollar / signal.price
                     signal.size = math.ceil(min(signal.size, max_contracts))
@@ -1630,8 +1640,97 @@ class Superbot:
                     logger.info(f"🔒 [{coin}] 12MIN NO LOCK-IN: {ticker} @ ${no_price:.4f} (coinbase={coinbase_price:.2f} <= prev_close={prev_close:.2f}, kelly={kelly_pct:.1%}) contracts={int(size):d}")
                 else:
                     logger.warning(f"[12MIN] {coin} NO LOCK-IN order failed")
+
+            # =============================================================
+            # EXPERIMENTAL: 12-MIN YES LOCK-IN (PAPER TEST)
+            # Mirror of 12-min NO — fires on pump instead of pullback
+            # =============================================================
+            # Reset coinbase_price for YES check (already fetched above)
+            pump_pct = (coinbase_price - prev_close) / prev_close
+            if pump_pct >= 0.05:
+                # Pump confirmed — check YES entry conditions
+                yes_mid_y = (market.yes_bid + market.yes_ask) / 2
+                if yes_mid_y <= 0 or yes_mid_y >= 1.0:
+                    yes_mid_y = 0.50
+                no_price_y = 1 - yes_mid_y
+
+                # EXPERIMENTAL: 12-MIN YES
+                # YES price must be <= $0.50 (cheap = good entry despite pump)
+                if yes_mid_y <= 0.50:
+                    # NO mid must be > $0.52 (market is extended, we want to ride the pump)
+                    if no_price_y > 0.52:
+                        # Correlation check: block if 3+ coins in simultaneous pump
+                        import json as _json
+                        correlation_blocked_y = False
+                        try:
+                            corr_api = KalshiAPI()
+                            correlation_count_y = 1
+                            for other_coin in COINS:
+                                if other_coin == coin:
+                                    continue
+                                corr_series = SERIES_TICKERS.get(other_coin, f"KX{other_coin}15M")
+                                corr_markets = corr_api.get_markets(corr_series, limit=3)
+                                for m in corr_markets:
+                                    if m.status == 'open' and m.time_to_expiry_sec() > 180:
+                                        try:
+                                            other_cp = get_coinbase_price(other_coin)
+                                            other_state_file = BASE_DIR / "state" / f"{other_coin}_state.json"
+                                            if other_state_file.exists():
+                                                with open(other_state_file) as f:
+                                                    other_state = _json.load(f)
+                                                    other_prev_close = other_state.get('prev_close', 0)
+                                                    if other_prev_close > 0 and other_cp >= other_prev_close:
+                                                        correlation_count_y += 1
+                                        except:
+                                            pass
+                                        break
+                            if correlation_count_y >= 3:
+                                logger.warning(f"[12MIN-Y] {coin} SKIP: {correlation_count_y} coins in simultaneous pump (macro, skip all)")
+                                correlation_blocked_y = True
+                        except Exception as e:
+                            logger.debug(f"[12MIN-Y] {coin} correlation check failed: {e}")
+
+                        if not correlation_blocked_y:
+                            # Calculate Kelly size
+                            from strategies import Strategy
+                            prob_y = yes_mid_y  # YES probability
+                            confidence_y = 55
+                            size_y, kelly_pct_y, _ = trader.strategy_engine.calculate_kelly_size(
+                                Strategy.MOMENTUM, prob_y, confidence_y, yes_mid_y, cash_override=self.cash
+                            )
+
+                            # EXPERIMENTAL: cap at $0.50 for paper test
+                            max_dollar_y = min(MAX_BET, 0.50)
+                            if self.sizing_reduced:
+                                max_dollar_y *= 0.5
+                            if yes_mid_y > 0:
+                                size_y = math.ceil(min(size_y, max_dollar_y / yes_mid_y))
+
+                            ts_signal_y = TradeSignal(
+                                strategy=Strategy.MOMENTUM,
+                                ticker=ticker,
+                                side="yes",
+                                direction="buy",
+                                price=yes_mid_y,
+                                size=int(size_y),
+                                reason=f"12MIN_Y_PAPER: {coin} YES coinbase={coinbase_price:.2f} >= prev_close={prev_close:.2f} pump={pump_pct*100:.1f}%",
+                                is_candle_duration=True,
+                                confidence=confidence_y,
+                            )
+
+                            success_y, cost_y = trader._open_position(ts_signal_y, self.cash)
+                            if success_y:
+                                self.cash -= cost_y
+                                self.daily_trades += 1
+                                logger.info(f"🌱 [12MIN-Y] {coin} EXPERIMENTAL YES LOCK-IN: {ticker} @ ${yes_mid_y:.4f} (coinbase={coinbase_price:.2f} >= prev_close={prev_close:.2f}, pump={pump_pct*100:.1f}%) contracts={int(size_y):d}")
+                            else:
+                                logger.warning(f"[12MIN-Y] {coin} YES LOCK-IN order failed")
+                    else:
+                        logger.debug(f"[12MIN-Y] {coin} {ticker} NO mid=${no_price_y:.4f} <= $0.52 — no pullback context to ride")
+                else:
+                    logger.debug(f"[12MIN-Y] {coin} {ticker} YES=${yes_mid_y:.4f} > $0.50 — too expensive to enter")
             else:
-                logger.debug(f"[12MIN] {coin} {ticker} price={coinbase_price:.2f} > prev_close={prev_close:.2f} — no entry")
+                logger.debug(f"[12MIN-Y] {coin} {ticker} pump={pump_pct*100:.1f}% < 5% — no entry")
 
     def _cancel_orders_for_ticker(self, ticker: str):
         """Cancel all unfilled orders for a given ticker to avoid double exposure."""

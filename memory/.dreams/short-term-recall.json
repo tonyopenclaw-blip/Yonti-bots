@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-04-12T03:37:56.658Z",
+  "updatedAt": "2026-04-13T02:41:20.884Z",
   "entries": {
     "memory:memory/2026-04-01.md:141:162": {
       "key": "memory:memory/2026-04-01.md:141:162",
@@ -155,6 +155,68 @@
         "4-leg",
         "test",
         "report"
+      ]
+    },
+    "memory:memory/2026-04-02.md:129:144": {
+      "key": "memory:memory/2026-04-02.md:129:144",
+      "path": "memory/2026-04-02.md",
+      "startLine": 129,
+      "endLine": 144,
+      "source": "memory",
+      "snippet": "- Bloomberg/Tableau style dark dashboard - Live ticker bar, price charts, volume heatmap, data stream monitor - Reads: market_data.jsonl (live), report.json (superbot status) ### Nerd + Backtesting Status - Recorder data: 28k ticks, 10 min, 8 coins — Nerd CAN analyze this now - Not enough for historical backtest (need days/weeks) - Nerd can do: volatility profiles, bid-ask spreads, momentum signals, coin correlations - To build historical dataset: CryptoCompare API (free, no key) or run Recorder 24-48h ### Superbot Current State (18:10 UTC) - 7 active series: KXBTC15M, KXETH15M, KXSOL15M, KXXRP15M, KXDOGE15M, KXHYPE15M, KXBNB15M - BNB series returning 429s (rate limited by Kalshi)",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.8151277850665707,
+      "maxScore": 0.8151277850665707,
+      "firstRecalledAt": "2026-04-13T02:41:20.884Z",
+      "lastRecalledAt": "2026-04-13T02:41:20.884Z",
+      "queryHashes": [
+        "884b2f2d9784"
+      ],
+      "recallDays": [
+        "2026-04-13"
+      ],
+      "conceptTags": [
+        "bloomberg/tableau",
+        "market-data.jsonl",
+        "report.json",
+        "days/weeks",
+        "bid-ask",
+        "24-48h",
+        "bloomberg",
+        "tableau"
+      ]
+    },
+    "memory:memory/2026-04-02.md:110:135": {
+      "key": "memory:memory/2026-04-02.md:110:135",
+      "path": "memory/2026-04-02.md",
+      "startLine": 110,
+      "endLine": 135,
+      "source": "memory",
+      "snippet": "- Bot restarted with fresh $100, $5 max bet (was $2) - Entry zones widened: drift_buy $0.30-$0.50, dead zone starts $0.50 - 5 positions opened immediately: BTC, ETH, XRP, DOGE, HYPE deep_short - Coinbase fetcher bug: was using candles[-1] (oldest) instead of candles[0] (newest), fixed ### Recorder: New Coinbase WebSocket Feed - Built `/home/ubuntu/.openclaw/workspace/workers/recorder/coinbase_ws_recorder.py` - Connects to wss://advanced-trade-ws.coinbase.com (public, no API key) - Streams BTC, ETH, SOL, XRP, DOGE, BNB, HYPE, ADA — 8 coins - Writes to `/home/ubuntu/.openclaw/workspace/workers/recorder/data/market_data.jsonl` - 28k+ ticks, 6.7MB, 10+ minutes of data — LIVE and growing - Kalsh",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.7753544383349891,
+      "maxScore": 0.7753544383349891,
+      "firstRecalledAt": "2026-04-13T02:41:20.884Z",
+      "lastRecalledAt": "2026-04-13T02:41:20.884Z",
+      "queryHashes": [
+        "884b2f2d9784"
+      ],
+      "recallDays": [
+        "2026-04-13"
+      ],
+      "conceptTags": [
+        "drift-buy",
+        "0.30",
+        "0.50",
+        "deep-short",
+        "home/ubuntu",
+        "advanced-trade-ws.coinbase.com",
+        "6.7mb",
+        "bot"
       ]
     }
   }

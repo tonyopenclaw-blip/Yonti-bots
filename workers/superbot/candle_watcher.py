@@ -47,7 +47,8 @@ DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1486066262122430684/mLKWVlGJ
 
 # Signal thresholds
 BUY_YES_THRESHOLD = 0.90  # >90% of candle time above prev close → BUY YES (conf=97)
-BUY_NO_THRESHOLD = -1.0  # DISABLED: candle NO signals structurally unprofitable (Nerd analysis 2026-04-12)
+BUY_NO_THRESHOLD = 0.10  # <10% above prev_close = >90% below → bearish confirmation (mirror of YES)
+# EXPERIMENTAL: CANDLE_NO enabled with YES > $0.52 pump filter (Nerd analysis 2026-04-12)
 
 # Macro Correlation Detector params
 MACRO_WINDOW_SEC = 30      # Cluster window: 3+ coins same direction within 30s
@@ -313,10 +314,11 @@ class CandleTracker:
         # NO works like YES: only fire when market is extended (mid > $0.55 = YES expensive = NO is cheap)
         # If mid <= $0.55, market isn't extended enough for NO — block signal
         elif ratio < BUY_NO_THRESHOLD:
-            # Check mid price: only emit NO if market is extended (YES expensive)
+            # Check YES mid price: only emit NO if market has pumped (YES > $0.52)
+            # This is the "fade the pump" filter — we want the market to have moved before we short it
             mid = _get_market_mid_at_signal(self.coin)
-            if mid is None or mid <= 0.55:
-                logger.info(f"[{self.coin}] ◆ NO SIGNAL SKIPPED - mid ${mid or 'N/A':.4f} <= $0.55 (market not extended, NO expensive)")
+            if mid is None or mid <= 0.52:
+                logger.info(f"[{self.coin}] ◆ NO SIGNAL SKIPPED - YES mid ${mid or 'N/A':.4f} <= $0.52 (no pump to fade)")
                 # Log blocked signal
                 now_ts = datetime.utcnow().isoformat()
                 log_entry = {
@@ -328,7 +330,7 @@ class CandleTracker:
                     "entry_price_max": 0.85,
                     "market_mid_at_signal": mid,
                     "action": "BLOCKED",
-                    "block_reason": f"mid {mid or 'N/A'} <= $0.55 (market not extended)",
+                    "block_reason": f"YES mid {mid or 'N/A'} <= $0.52 (no pump to fade)",
                     "settlement_result": None,
                     "won": None,
                 }

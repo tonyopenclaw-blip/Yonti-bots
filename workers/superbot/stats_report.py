@@ -13,14 +13,33 @@ ACCESS_KEY = '2af9792d-cadd-4067-a861-b9bff4238248'
 PRIVATE_KEY_PATH = '/home/ubuntu/.openclaw/workspace/workers/superbot/kalshi_private_key.pem'
 LOG_FILE = '/home/ubuntu/.openclaw/workspace/workers/superbot/superbot_live.log'
 
-def get_signal_stats():
-    """Get signal outcome stats from signal_log.json."""
+def get_session_start():
+    """Find the most recent 'Report session started' timestamp from the log."""
+    try:
+        with open(LOG_FILE) as f:
+            content = f.read()
+        matches = re.findall(r'Report session started: (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})', content)
+        if matches:
+            # Return the LAST session start (most recent)
+            return matches[-1][:16]  # YYYY-MM-DD HH:MM
+    except:
+        pass
+    return '22:00'  # fallback
+
+def get_signal_stats(session_start_iso: str = None):
+    """Get signal outcome stats from signal_log.json, filtered to current session."""
     signal_file = Path(__file__).parent / "signal_log.json"
     if not signal_file.exists():
         return None
 
+    if session_start_iso is None:
+        session_start_iso = get_session_start()
+
     with open(signal_file) as f:
         signals = json.load(f)
+
+    # Filter to current session
+    signals = [s for s in signals if s.get('timestamp', '') >= session_start_iso]
 
     taken = [s for s in signals if s.get('action') == 'TAKEN']
     blocked = [s for s in signals if s.get('action') == 'BLOCKED']
@@ -98,7 +117,8 @@ def get_stats():
         coin = ticker_to_coin.get(ticker, '???')
         try:
             pnl_val = float(pnl)
-            if time_only >= '22:00':  # session start
+            session_start = get_session_start()
+            if time_only >= session_start[11:]:  # session start
                 trades.append({'time': time_only, 'coin': coin, 'pnl': pnl_val})
         except:
             pass
@@ -110,6 +130,7 @@ def get_stats():
     avg_loss = sum(t['pnl'] for t in losses) / len(losses) if losses else 0
     win_rate = len(wins) / len(trades) * 100 if trades else 0
     pf = abs(avg_win / avg_loss) if avg_loss else 0
+    session_start = get_session_start()
 
     return {
         'trades': trades[-10:],  # last 10
@@ -124,7 +145,8 @@ def get_stats():
         'cash': cash,
         'portfolio': portfolio,
         'open_pos': open_pos,
-        'signals': get_signal_stats(),
+        'signals': get_signal_stats(session_start_iso=session_start),
+        'session_start': session_start,
     }
 
 def format_message(s):

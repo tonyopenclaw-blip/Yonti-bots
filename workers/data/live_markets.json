@@ -1,14 +1,34 @@
 {
-  "updated_at": "2026-04-13T11:45:01.547831",
-  "market_count": 1,
+  "updated_at": "2026-04-13T12:45:02.240096",
+  "market_count": 3,
   "markets": {
+    "ETH": [
+      {
+        "ticker": "KXETH15M-26APR130900-00",
+        "status": "active",
+        "yes_bid": 0.66,
+        "yes_ask": 0.9,
+        "close_time": "2026-04-13T13:00:00Z",
+        "resolution_time": ""
+      }
+    ],
+    "XRP": [
+      {
+        "ticker": "KXXRP15M-26APR130900-00",
+        "status": "active",
+        "yes_bid": 0.35,
+        "yes_ask": 0.55,
+        "close_time": "2026-04-13T13:00:00Z",
+        "resolution_time": ""
+      }
+    ],
     "BNB": [
       {
-        "ticker": "KXBNB15M-26APR130800-00",
+        "ticker": "KXBNB15M-26APR130900-00",
         "status": "active",
         "yes_bid": 0.25,
         "yes_ask": 0.75,
-        "close_time": "2026-04-13T12:00:00Z",
+        "close_time": "2026-04-13T13:00:00Z",
         "resolution_time": ""
       }
     ]

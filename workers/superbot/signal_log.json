@@ -3063,5 +3063,32 @@
     "cluster_side": "YES",
     "reason": "MACRO FADE: 8 coins YES in 4s",
     "ticker": "KXSOL15M-26APR130230-30"
+  },
+  {
+    "timestamp": "2026-04-13T07:45:01.840237",
+    "coin": "ETH",
+    "signal_type": "candle_YES",
+    "side": "YES",
+    "conf": 97,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "TAKEN",
+    "block_reason": null,
+    "settlement_result": null,
+    "won": null,
+    "ticker": "KXETH15M-26APR130400-00"
+  },
+  {
+    "timestamp": "2026-04-13T07:45:02.037495",
+    "coin": "HYPE",
+    "signal_type": "candle_YES",
+    "side": "YES",
+    "conf": 97,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "BLOCKED",
+    "block_reason": "no suitable market",
+    "settlement_result": null,
+    "won": null
   }
 ]

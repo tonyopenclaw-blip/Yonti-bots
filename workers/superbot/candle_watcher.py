@@ -672,6 +672,17 @@ def check_and_place_open_orders(kalshi_api: 'KalshiAPI'):
             if sides_placed:
                 _played_tickers[ticker] = time.time()  # Mark as played
                 
+                # Wait up to 20s for fills, then cancel unfilled
+                time.sleep(20)
+                for side, order_id in sides_placed:
+                    status = kalshi_api._get(f"/portfolio/orders/{order_id}")
+                    order = status.get('order', {})
+                    if order.get('status') in ('executed', 'filled', 'complete'):
+                        logger.info(f"OPEN ORDER: {ticker} {side} FILLED count={order.get('fill_count_fp')}")
+                    else:
+                        kalshi_api.cancel_order(order_id)
+                        logger.info(f"OPEN ORDER: {ticker} {side} cancelled (not filled)")
+                
         except Exception as e:
             logger.debug(f"OPEN ORDER: {coin} error: {e}")
 

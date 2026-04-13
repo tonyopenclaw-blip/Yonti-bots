@@ -664,6 +664,14 @@ class OddsAPIClient:
                     line = outcome.get("point", 0)
                     price = outcome.get("price", -110)
                     
+                    # Tony: MLB counting stats with .5 lines are not betable as UNDER (e.g., under 0.5 runs/hits)
+                    # Over .5 is fine (basically "any" = 1+), but sportsbooks don't offer under .5 for these
+                    if sport.upper() == "MLB":
+                        mlb_counting_stats = ["runs", "hits", "rbi", "home_runs", "strikeouts"]
+                        if stat_type in mlb_counting_stats and direction == "under":
+                            if line != int(line):
+                                continue
+                    
                     # Determine which team this player is on
                     team_abbr = self._get_team_abbr(player_name, home_team, away_team)
                     

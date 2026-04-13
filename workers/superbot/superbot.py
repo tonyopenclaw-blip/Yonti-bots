@@ -1047,18 +1047,32 @@ class Superbot:
     def _derive_ticker_from_signal(self, coin: str, timestamp: str) -> Optional[str]:
         """
         Derive the Kalshi ticker from a signal's coin and timestamp.
-        Ticker format: {SERIES}-{YY}{MON}{DD}{HHMM}-15
-        E.g., KXBTC15M-26APR131500-15 for BTC market opening at 15:00 on Apr 13, 2026.
+        Ticker format: {SERIES}-{YY}{MON}{DD}{ET_CLOSE_HHMM}-00
+        E.g., KXBTC15M-26APR131300-00 for BTC market closing at 1:00 PM ET on Apr 13, 2026.
+        Kalshi tickers encode the market's close time in Eastern Time.
         """
-        from datetime import datetime
+        from datetime import datetime, timedelta
         try:
             series = SERIES_TICKERS.get(coin.upper())
             if not series:
                 return None
-            ts = datetime.fromisoformat(timestamp.replace('Z', ''))
-            minute = (ts.minute // 15) * 15
-            open_ts = ts.replace(minute=minute, second=0, microsecond=0)
-            ticker = f"{series}-{open_ts.strftime('%y%b%d%H%M')}-15"
+            ts = datetime.fromisoformat(timestamp.replace('Z', '+00:00'))
+            et = ts - timedelta(hours=4)  # EDT = UTC-4 in April
+            # Round UP to next 15-min boundary (the close time of the market we're in)
+            minute = (et.minute // 15) * 15
+            if et.minute % 15 != 0 or et.second > 0:
+                # Signal is NOT exactly on a 15-min boundary or has sub-second offset
+                # Round up to next close time
+                minute = ((et.minute // 15) + 1) * 15
+                if minute >= 60:
+                    minute = 0
+                    close_et = et.replace(hour=(et.hour + 1) % 24, minute=0, second=0, microsecond=0)
+                else:
+                    close_et = et.replace(minute=minute, second=0, microsecond=0)
+            else:
+                # Exact :00 second - use current boundary
+                close_et = et.replace(minute=minute, second=0, microsecond=0)
+            ticker = f"{series}-{close_et.strftime('%y%b%d%H%M')}-00"
             return ticker.upper()
         except Exception as e:
             logger.debug(f"Could not derive ticker for {coin} @ {timestamp}: {e}")

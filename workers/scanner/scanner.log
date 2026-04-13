@@ -16501,3 +16501,22 @@ BNB (KXBNB15M):
 Total tradeable markets: 2
 
 Saved to /home/ubuntu/.openclaw/workspace/workers/scanner/../data/live_markets.json
+Kalshi Market Scanner starting...
+Current 15-min window: 15:45 - 16:00 UTC
+Checking tickers: ['26APR131545-45', '26APR131600-00', '26APR131615-15', '26APR131630-30']
+
+Scanning all series...
+
+SCAN RESULTS - 2026-04-13 15:45 UTC
+============================================================
+
+BTC (KXBTC15M):
+  KXBTC15M-26APR131200-00 | active | YES: $0.52
+
+BNB (KXBNB15M):
+  KXBNB15M-26APR131200-00 | active | YES: $0.75
+
+============================================================
+Total tradeable markets: 2
+
+Saved to /home/ubuntu/.openclaw/workspace/workers/scanner/../data/live_markets.json

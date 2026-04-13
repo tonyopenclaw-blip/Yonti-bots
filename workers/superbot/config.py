@@ -48,8 +48,8 @@ BALANCE_RESET_AMOUNT = 100.00
 # (2) Allowing smaller bets to capture positive variance during hot streaks
 # (3) Using 1/2 Kelly instead of 1/4 Kelly since we're in paper trading mode
 
-MAX_BET = 2.00   # Safety cap: $2 max per trade (Nerd v2)
-MIN_BET = 0.05   # Minimum bet (Tony fix: lowered from 0.10 to allow smaller trades with low cash)
+MAX_BET = 10.00  # Aggressive growth mode - $10 max per trade
+MIN_BET = 0.10   # Minimum bet
 
 # Kelly Criterion — CRITICAL FIX
 # With 37.8% WR, the STRATEGY ITSELF is negative EV.
@@ -58,7 +58,7 @@ MIN_BET = 0.05   # Minimum bet (Tony fix: lowered from 0.10 to allow smaller tra
 # rather than dynamic Kelly, since dynamic Kelly would say "bet 0%"
 
 KELLY_TRACKED_TRADES = 50
-KELLY_MAX_CAP = 0.20   # Never bet more than 20% of balance
+KELLY_MAX_CAP = 0.35   # Aggressive: let Kelly ride up to 35% of balance
 FIXED_KELLY_PCT = 0.04  # 4% of bankroll per trade — fallback when Kelly <= 0
 
 # =============================================================================

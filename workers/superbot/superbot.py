@@ -1046,34 +1046,56 @@ class Superbot:
 
     def _derive_ticker_from_signal(self, coin: str, timestamp: str) -> Optional[str]:
         """
-        Derive the Kalshi ticker from a signal's coin and timestamp.
-        Ticker format: {SERIES}-{YY}{MON}{DD}{ET_CLOSE_HHMM}-00
-        E.g., KXBTC15M-26APR131300-00 for BTC market closing at 1:00 PM ET on Apr 13, 2026.
-        Kalshi tickers encode the market's close time in Eastern Time.
+        Find the Kalshi ticker for a signal by looking up actual markets via API.
+        Instead of computing ticker from timestamp (which produces wrong format), 
+        we query the API and find the market whose close_time matches.
         """
         from datetime import datetime, timedelta
         try:
             series = SERIES_TICKERS.get(coin.upper())
             if not series:
                 return None
+            
             ts = datetime.fromisoformat(timestamp.replace('Z', '+00:00'))
-            et = ts - timedelta(hours=4)  # EDT = UTC-4 in April
-            # Round UP to next 15-min boundary (the close time of the market we're in)
-            minute = (et.minute // 15) * 15
-            if et.minute % 15 != 0 or et.second > 0:
-                # Signal is NOT exactly on a 15-min boundary or has sub-second offset
-                # Round up to next close time
-                minute = ((et.minute // 15) + 1) * 15
-                if minute >= 60:
-                    minute = 0
-                    close_et = et.replace(hour=(et.hour + 1) % 24, minute=0, second=0, microsecond=0)
-                else:
-                    close_et = et.replace(minute=minute, second=0, microsecond=0)
+            # Round DOWN to the 15-min boundary - the signal timestamp is when the candle closed,
+            # which means the market that just closed has close_time >= signal timestamp,
+            # rounded down to the nearest 15-min mark.
+            minute = (ts.minute // 15) * 15
+            ts_rounded = ts.replace(minute=minute, second=0, microsecond=0)
+            
+            # Target close_time is the rounded timestamp (market closes at that time)
+            # We look for markets closing at or around this time
+            target_close = ts_rounded
+            
+            # Query API for actual markets
+            markets = self.api.get_markets(series, limit=10)
+            if not markets:
+                logger.warning(f"[{self.coin}] No markets found for {series} via API")
+                return None
+            
+            # Find market whose close_time matches our target
+            best_match = None
+            min_diff = float('inf')
+            for m in markets:
+                if not m.close_time:
+                    continue
+                try:
+                    m_close = datetime.fromisoformat(m.close_time.replace('Z', '+00:00'))
+                    m_close_naive = m_close.replace(tzinfo=None)
+                    diff = abs((m_close_naive - target_close).total_seconds())
+                    if diff < min_diff:
+                        min_diff = diff
+                        best_match = m
+                except:
+                    continue
+            
+            if best_match and min_diff < 900:  # Within 15 minutes
+                logger.info(f"[{self.coin}] Found ticker via API: {best_match.ticker} (diff={min_diff:.0f}s)")
+                return best_match.ticker
             else:
-                # Exact :00 second - use current boundary
-                close_et = et.replace(minute=minute, second=0, microsecond=0)
-            ticker = f"{series}-{close_et.strftime('%y%b%d%H%M')}-00"
-            return ticker.upper()
+                logger.warning(f"[{self.coin}] No close match found for {series} @ {timestamp}")
+                return None
+                
         except Exception as e:
             logger.debug(f"Could not derive ticker for {coin} @ {timestamp}: {e}")
             return None

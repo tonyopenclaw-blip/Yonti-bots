@@ -98,10 +98,12 @@ class KalshiAPI:
             headers = self._get_auth_headers('GET', path_without_qs)
             try:
                 resp = requests.get(url, headers=headers, params=params, timeout=10)
-                if resp.status_code == 401 and attempt < 2:
-                    logger.warning(f"GET {url} got 401 - refreshing auth and retrying...")
-                    self._refresh_auth()
-                    continue
+                if resp.status_code == 401:
+                    logger.warning(f"GET {url} got 401 - response: {resp.text[:200]}")
+                    if attempt < 2:
+                        logger.warning(f"GET {url} got 401 - refreshing auth and retrying...")
+                        self._refresh_auth()
+                        continue
                 resp.raise_for_status()
                 return resp.json()
             except requests.exceptions.RequestException as e:

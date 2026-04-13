@@ -1,0 +1,22 @@
+{
+  "signal_type": "MACRO_RIDE",
+  "coin": "DOGE",
+  "side": "YES",
+  "confidence": 65,
+  "entry_price": 0.5,
+  "market_mid_at_signal": 0.5,
+  "is_candle_duration": false,
+  "reason": "MACRO RIDE: 8 coins YES in 9s (ride momentum)",
+  "timestamp": "2026-04-13T18:45:15.430568",
+  "cluster_coins": [
+    "BTC",
+    "XRP",
+    "ADA",
+    "ETH",
+    "DOGE",
+    "HYPE",
+    "SOL",
+    "BNB"
+  ],
+  "cluster_side": "YES"
+}

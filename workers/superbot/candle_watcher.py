@@ -593,20 +593,19 @@ class MacroCorrelationDetector:
 # =============================================================================
 # =============================================================================
 # OPEN ORDER PLACEMENT (Tony's edge play)
-# Check every market, every poll cycle. If both sides <= $0.15, place orders.
-# No signal required — pure price-based entry at the open.
+# Any coin, any side, if <= $0.15 → buy $1 limit order at $0.15
+# Poll every 5 seconds to catch markets as they open
 # =============================================================================
 OPEN_ORDER_MAX_PRICE = 0.15
 OPEN_ORDER_AMOUNT = 1.00  # $1 per side
-OPEN_ORDER_WAIT = 20       # seconds to wait for fills
-OPEN_ORDER_COOLDOWN = 60   # don't play same ticker within 60 seconds
+OPEN_ORDER_COOLDOWN = 90  # don't play same ticker within 90 seconds
 
-# Track tickers we've already played (cooldown to avoid double-playing same market)
+# Track tickers we've already played
 _played_tickers: Dict[str, float] = {}  # ticker -> last_play_timestamp
 
 
 def _cleanup_stale_tickers():
-    """Remove tickers from cooldown if they're older than COOLDOWN."""
+    """Remove tickers from cooldown."""
     now = time.time()
     stale = [t for t, ts in _played_tickers.items() if now - ts > OPEN_ORDER_COOLDOWN]
     for t in stale:
@@ -615,11 +614,8 @@ def _cleanup_stale_tickers():
 
 def check_and_place_open_orders(kalshi_api: 'KalshiAPI'):
     """
-    Tony's open order play: Check all market prices. If YES <= $0.15 AND NO <= $0.15
-    on a fresh ticker, place $1 YES + $1 NO limit orders at $0.15.
-    Wait 20s for fills, cancel unfilled.
-    
-    No signal required — pure price-based entry.
+    Tony's edge play: Any side <= $0.15 on any market → buy $1 limit order.
+    Simple. Fast. Early.
     """
     _cleanup_stale_tickers()
     
@@ -629,10 +625,9 @@ def check_and_place_open_orders(kalshi_api: 'KalshiAPI'):
             if not markets:
                 continue
             
-            market = markets[0]  # Take the first (most open) market
+            market = markets[0]
             ticker = market.ticker
             
-            # Skip if we're in cooldown for this ticker
             if ticker in _played_tickers:
                 continue
             
@@ -644,54 +639,39 @@ def check_and_place_open_orders(kalshi_api: 'KalshiAPI'):
             if not (yes_bid > 0 and yes_ask > 0 and no_bid > 0 and no_ask > 0):
                 continue
             
-            yes_mid = (yes_bid + yes_ask) / 2
-            no_mid = (no_bid + no_ask) / 2
             
-            if yes_mid > OPEN_ORDER_MAX_PRICE or no_mid > OPEN_ORDER_MAX_PRICE:
-                continue  # Too expensive, skip
+            # Check each side independently
+            sides_placed = []
             
-            # Both sides are <= $0.15! Place orders immediately.
-            logger.info(f"OPEN ORDER: {ticker} ({coin}) YES={yes_mid:.4f} NO={no_mid:.4f} — placing orders!")
-            
-            # Mark as played immediately to avoid double-entries
-            _played_tickers[ticker] = time.time()
-            
-            # Place YES order
-            yes_result = kalshi_api.place_order(
-                ticker=ticker, side='yes', price=OPEN_ORDER_MAX_PRICE,
-                amount=OPEN_ORDER_AMOUNT, action='buy', order_type='limit'
-            )
-            yes_order_id = yes_result.get('order', {}).get('order_id') if 'order' in yes_result else None
-            
-            # Place NO order
-            no_result = kalshi_api.place_order(
-                ticker=ticker, side='no', price=OPEN_ORDER_MAX_PRICE,
-                amount=OPEN_ORDER_AMOUNT, action='buy', order_type='limit'
-            )
-            no_order_id = no_result.get('order', {}).get('order_id') if 'order' in no_result else None
-            
-            if not yes_order_id and not no_order_id:
-                logger.warning(f"OPEN ORDER: {ticker} both orders failed: YES={yes_result}, NO={no_result}")
-                del _played_tickers[ticker]  # Reset so we can retry
-                continue
-            
-            logger.info(f"OPEN ORDER: {ticker} YES id={yes_order_id}, NO id={no_order_id}")
-            
-            # Wait for fills
-            time.sleep(OPEN_ORDER_WAIT)
-            
-            # Check and cancel
-            for side, order_id in [('YES', yes_order_id), ('NO', no_order_id)]:
-                if not order_id:
-                    continue
-                status = kalshi_api._get(f"/portfolio/orders/{order_id}")
-                order = status.get('order', {})
-                if order.get('status') in ('executed', 'filled', 'complete'):
-                    logger.info(f"OPEN ORDER: {ticker} {side} FILLED! count={order.get('fill_count_fp')}")
+            if yes_bid <= OPEN_ORDER_MAX_PRICE:
+                # YES is cheap — buy YES
+                result = kalshi_api.place_order(
+                    ticker=ticker, side='yes', price=OPEN_ORDER_MAX_PRICE,
+                    amount=OPEN_ORDER_AMOUNT, action='buy', order_type='limit'
+                )
+                order_id = result.get('order', {}).get('order_id') if 'order' in result else None
+                if order_id:
+                    logger.info(f"OPEN ORDER: {ticker} YES bought @ ${OPEN_ORDER_MAX_PRICE:.2f} (bid={yes_bid:.4f})")
+                    sides_placed.append(('YES', order_id))
                 else:
-                    kalshi_api.cancel_order(order_id)
-                    logger.info(f"OPEN ORDER: {ticker} {side} cancelled")
-                    
+                    logger.warning(f"OPEN ORDER: {ticker} YES failed: {result}")
+            
+            if no_bid <= OPEN_ORDER_MAX_PRICE:
+                # NO is cheap — buy NO
+                result = kalshi_api.place_order(
+                    ticker=ticker, side='no', price=OPEN_ORDER_MAX_PRICE,
+                    amount=OPEN_ORDER_AMOUNT, action='buy', order_type='limit'
+                )
+                order_id = result.get('order', {}).get('order_id') if 'order' in result else None
+                if order_id:
+                    logger.info(f"OPEN ORDER: {ticker} NO bought @ ${OPEN_ORDER_MAX_PRICE:.2f} (bid={no_bid:.4f})")
+                    sides_placed.append(('NO', order_id))
+                else:
+                    logger.warning(f"OPEN ORDER: {ticker} NO failed: {result}")
+            
+            if sides_placed:
+                _played_tickers[ticker] = time.time()  # Mark as played
+                
         except Exception as e:
             logger.debug(f"OPEN ORDER: {coin} error: {e}")
 
@@ -709,7 +689,7 @@ def main():
 
     trackers = {coin: CandleTracker(coin) for coin in COINBASE_PRODUCTS}
     kalshi_api = KalshiAPI(KALSHI_ACCESS_KEY)  # For pre-open order placement
-    poll_interval = 10  # seconds
+    poll_interval = 5  # seconds - fast polling to catch market opens
     last_status_bucket: Optional[int] = None  # 0, 15, 30, or 45
 
     def shutdown_handler(signum, frame):

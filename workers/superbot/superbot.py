@@ -34,6 +34,12 @@ def get_candle_signal_file(coin: str) -> Path:
     d.mkdir(exist_ok=True)
     return d / f"{coin}.json"
 
+def get_macro_ride_signal_file(coin: str) -> Path:
+    """MACRO_RIDE signals use a separate file so they don't conflict with MACRO_FADE."""
+    d = Path(__file__).parent / "candle_signals"
+    d.mkdir(exist_ok=True)
+    return d / f"{coin}_macro_ride.json"
+
 CANDLE_SIGNAL_MAX_AGE_SEC = 120  # 2 minutes (signals stale after 2 min in fast markets)
 
 SIGNAL_LOG_FILE = BASE_DIR / "signal_log.json"
@@ -1220,6 +1226,28 @@ class Superbot:
         except Exception as e:
             logger.warning(f"Failed to clear candle signal file: {e}")
 
+    def _read_macro_ride_signal(self, coin: str) -> Optional[Dict]:
+        """Read a MACRO_RIDE signal from the separate signal file."""
+        signal_file = get_macro_ride_signal_file(coin)
+        try:
+            if not signal_file.exists():
+                return None
+            with open(signal_file) as f:
+                return json.load(f)
+        except Exception as e:
+            logger.warning(f"Failed to read macro ride signal file: {e}")
+            return None
+
+    def _clear_macro_ride_signal(self, coin: str):
+        """Clear the MACRO_RIDE signal file after execution."""
+        signal_file = get_macro_ride_signal_file(coin)
+        try:
+            if signal_file.exists():
+                signal_file.unlink()
+                logger.info(f"Macro ride signal file cleared for {coin}")
+        except Exception as e:
+            logger.warning(f"Failed to clear macro ride signal file: {e}")
+
     def _execute_candle_signal(self, signal_data: Dict, markets: List[Market], coin: str, trader: 'CoinTrader') -> bool:
         """Execute a candle signal: find best market and place order."""
         side = signal_data.get("side", "YES").lower()  # 'yes' or 'no'
@@ -1250,9 +1278,9 @@ class Superbot:
                 first_viable_mid = mid
 
             # For YES signals, block expensive entries
-            # EXPERIMENTAL: Allow up to $0.60 mid, but cap at $0.50/trade (watch-list test)
-            if side == "yes" and mid > 0.60:
-                logger.info(f"[{coin}] ENTRY SKIP: YES entry ${mid:.4f} > $0.60 (too expensive)")
+            # EXPERIMENTAL: Allow up to $0.65 mid, but cap at $0.50/trade (watch-list test)
+            if side == "yes" and mid > 0.65:
+                logger.info(f"[{coin}] ENTRY SKIP: YES entry ${mid:.4f} > $0.65 (too expensive)")
                 continue
 
             # For NO signals, block when YES is cheap (YES < $0.45 means market thinks YES unlikely = NO overpriced)
@@ -1397,6 +1425,21 @@ class Superbot:
         # This fires once per window when time_remaining <= 180s
         self._check_12min_no_lockin(series_ticker, markets, coin, trader)
 
+        # === MACRO_RIDE: Momentum-following paper test for 7+ coin clusters ===
+        # Processed separately from MACRO_FADE via a different signal file
+        macro_ride_sig = self._read_macro_ride_signal(coin)
+        if macro_ride_sig:
+            sig_coin = macro_ride_sig.get("coin")
+            age = (datetime.utcnow() - datetime.fromisoformat(macro_ride_sig.get('timestamp','').replace('Z','')).replace(tzinfo=None)).total_seconds()
+            logger.info(f"[{coin}] Checking MACRO_RIDE signal (coin={sig_coin}, age={age:.0f}s): {macro_ride_sig}")
+            executed = self._execute_candle_signal(macro_ride_sig, markets, coin, trader)
+            if executed:
+                logger.info(f"[{coin}] MACRO_RIDE SIGNAL EXECUTED!")
+                self._clear_macro_ride_signal(coin)
+                return True
+            else:
+                logger.warning(f"[{coin}] MACRO_RIDE signal found but NO SUITABLE MARKET")
+
         # === NERD v2: MAX_POSITIONS = 3 check ===
         total_positions = sum(len(t.positions) for t in self.coin_traders.values())
         if total_positions >= MAX_POSITIONS:
@@ -1440,10 +1483,10 @@ class Superbot:
                 if self.sizing_reduced:
                     max_dollar = max_dollar * 0.5  # 50% reduction
                     logger.debug(f"[{coin}] Sizing reduced: max ${max_dollar:.2f}")
-                # EXPERIMENTAL: YES signals in $0.55-$0.60 range capped at $0.50 (watch-list test)
-                if signal.side == 'yes' and signal.price > 0.55:
+                # EXPERIMENTAL: YES signals in $0.60-$0.65 range capped at $0.50 (watch-list test)
+                if signal.side == 'yes' and signal.price > 0.60:
                     max_dollar = min(max_dollar, 0.50)
-                    logger.debug(f"[{coin}] EXPERIMENTAL: YES mid ${signal.price:.4f} > $0.55 - capping at ${max_dollar:.2f}")
+                    logger.debug(f"[{coin}] EXPERIMENTAL: YES mid ${signal.price:.4f} > $0.60 - capping at ${max_dollar:.2f}")
                 # EXPERIMENTAL: CANDLE_NO signals capped at $0.50 (watch-list test)
                 # CANDLE_NO is structurally fragile — treat as watch-list until we have WR data
                 if signal.side == 'no' and signal.signal_type == 'candle_NO':

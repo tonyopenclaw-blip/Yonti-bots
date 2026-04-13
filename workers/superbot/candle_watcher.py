@@ -31,6 +31,10 @@ def get_signal_file(coin: str) -> Path:
     """Return the per-coin signal file path."""
     return SIGNALS_DIR / f"{coin}.json"
 
+def get_macro_ride_file(coin: str) -> Path:
+    """Return the per-coin MACRO_RIDE signal file path."""
+    return SIGNALS_DIR / f"{coin}_macro_ride.json"
+
 COINBASE_API = "https://api.exchange.coinbase.com"
 COINBASE_PRODUCTS = {
     "BTC": "BTC-USD",
@@ -47,12 +51,12 @@ DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1486066262122430684/mLKWVlGJ
 
 # Signal thresholds
 BUY_YES_THRESHOLD = 0.90  # >90% of candle time above prev close → BUY YES (conf=97)
-BUY_NO_THRESHOLD = 0.10  # <10% above prev_close = >90% below → bearish confirmation (mirror of YES)
+BUY_NO_THRESHOLD = 0.30  # <30% above prev_close = >70% below → bearish confirmation (lowered from 10% to catch more valid signals)
 # EXPERIMENTAL: CANDLE_NO enabled with YES > $0.52 pump filter (Nerd analysis 2026-04-12)
 
 # Macro Correlation Detector params
 MACRO_WINDOW_SEC = 30      # Cluster window: 3+ coins same direction within 30s
-MACRO_MIN_CLUSTER = 3     # Minimum coins to trigger macro fade
+MACRO_MIN_CLUSTER = 5     # Minimum coins to trigger macro fade (raised from 3 — 3-4 coin clusters 0W/4L vs 7-8 coin clusters 9W/0L)
 
 # Regime filter: skip NO signals if 3 consecutive candles had >60% YES ratio
 REGIME_WINDOW = 3          # Rolling window of last 3 candles
@@ -272,6 +276,11 @@ class CandleTracker:
 
         # BUY YES: >90% → conf=97
         if ratio > BUY_YES_THRESHOLD:
+            # BLOCK CANDLE_YES during 09:00-10:30 UTC — historical data shows 0% WR in this window (8 losses)
+            hour_utc = datetime.utcnow().hour
+            if 9 <= hour_utc < 11:
+                logger.info(f"[{self.coin}] ◆ CANDLE_YES BLOCKED - within 09:00-10:30 UTC blackout ({hour_utc}:00 UTC)")
+                return None
             conf = 97
             # Record this candle's ratio for regime tracking
             self.candle_ratios.append(ratio)
@@ -513,6 +522,58 @@ class MacroCorrelationDetector:
 
         return signals
 
+    def emit_macro_ride_signals(self, cluster_info: Dict) -> List[Dict]:
+        """
+        MOMENTUM-FOLLOWING VARIANT (paper test):
+        When 7+ coins fire the same direction within 30s, emit MACRO_RIDE signals
+        in the SAME direction (ride the pump, don't fade it).
+        
+        This is the opposite of MACRO_FADE. Only fires on 7+ coin clusters.
+        Conf=65 (slightly higher than fade since we don't have historical data).
+        Sizing capped at $0.50/trade until we have n>=15.
+        """
+        if cluster_info['count'] < 7:
+            return []  # Only fire on big clusters
+
+        signals = []
+        for coin in cluster_info["coins"]:
+            mid = _get_market_mid_at_signal(coin)
+            signal = {
+                "signal_type": "MACRO_RIDE",
+                "coin": coin,
+                "side": cluster_info["side"],  # SAME direction as cluster (not opposite)
+                "confidence": 65,
+                "entry_price": mid,
+                "market_mid_at_signal": mid,
+                "is_candle_duration": False,
+                "reason": f"MACRO RIDE: {cluster_info['count']} coins {cluster_info['side']} in {cluster_info['window']}s (ride momentum)",
+                "timestamp": datetime.utcnow().isoformat(),
+                "cluster_coins": cluster_info["coins"],
+                "cluster_side": cluster_info["side"],
+            }
+            signals.append(signal)
+
+            # Log to signal_log.json
+            log_entry = {
+                "timestamp": signal["timestamp"],
+                "coin": coin,
+                "signal_type": "MACRO_RIDE",
+                "side": signal["side"],
+                "conf": signal["confidence"],
+                "entry_price": signal["entry_price"],
+                "market_mid_at_signal": mid,
+                "action": "PENDING",
+                "block_reason": None,
+                "settlement_result": None,
+                "won": None,
+                "cluster_coins": cluster_info["coins"],
+                "cluster_side": cluster_info["side"],
+                "reason": signal["reason"]
+            }
+            _append_signal_log(log_entry)
+
+        return signals
+
 
 # =============================================================================
 # MAIN LOOP
@@ -563,6 +624,15 @@ def main():
                                 0.85,  # entry_price_max not in macro signal, use default
                                 "MACRO_FADE"
                             )
+
+                        # Also emit MACRO_RIDE signals for 7+ coin clusters (momentum-following paper test)
+                        # Write to SEPARATE file so both strategies can be processed independently
+                        ride_signals = macro_detector.emit_macro_ride_signals(cluster)
+                        for rsig in ride_signals:
+                            macro_ride_file = get_macro_ride_file(rsig["coin"])
+                            with open(macro_ride_file, "w") as f:
+                                json.dump(rsig, f, indent=2)
+                            logger.info(f"🌊 MACRO RIDE signal saved to {macro_ride_file}: {rsig}")
 
                     # Write normal signal
                     signal_file = get_signal_file(coin)

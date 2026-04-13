@@ -3074,8 +3074,8 @@
     "market_mid_at_signal": null,
     "action": "TAKEN",
     "block_reason": null,
-    "settlement_result": null,
-    "won": null,
+    "settlement_result": 1.0,
+    "won": true,
     "ticker": "KXETH15M-26APR130400-00"
   },
   {
@@ -3088,6 +3088,58 @@
     "market_mid_at_signal": null,
     "action": "BLOCKED",
     "block_reason": "no suitable market",
+    "settlement_result": null,
+    "won": null
+  },
+  {
+    "timestamp": "2026-04-13T08:00:10.161419",
+    "coin": "BTC",
+    "signal_type": "candle_YES",
+    "side": "YES",
+    "conf": 97,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "BLOCKED",
+    "block_reason": "no suitable market",
+    "settlement_result": null,
+    "won": null
+  },
+  {
+    "timestamp": "2026-04-13T08:00:10.334204",
+    "coin": "ETH",
+    "signal_type": "candle_YES",
+    "side": "YES",
+    "conf": 97,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "BLOCKED",
+    "block_reason": "no suitable market",
+    "settlement_result": null,
+    "won": null
+  },
+  {
+    "timestamp": "2026-04-13T09:00:00.379308",
+    "coin": "ETH",
+    "signal_type": "candle_YES",
+    "side": "YES",
+    "conf": 97,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "PENDING",
+    "block_reason": null,
+    "settlement_result": null,
+    "won": null
+  },
+  {
+    "timestamp": "2026-04-13T09:00:00.674772",
+    "coin": "BNB",
+    "signal_type": "candle_YES",
+    "side": "YES",
+    "conf": 97,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "PENDING",
+    "block_reason": null,
     "settlement_result": null,
     "won": null
   }

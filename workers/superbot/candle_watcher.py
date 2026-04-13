@@ -59,7 +59,7 @@ BUY_NO_THRESHOLD = 0.30  # <30% above prev_close = >70% below → bearish confir
 
 # Macro Correlation Detector params
 MACRO_WINDOW_SEC = 30      # Cluster window: 3+ coins same direction within 30s
-MACRO_MIN_CLUSTER = 5     # Minimum coins to trigger macro fade (raised from 3 — 3-4 coin clusters 0W/4L vs 7-8 coin clusters 9W/0L)
+MACRO_MIN_CLUSTER = 7     # Minimum coins to trigger macro fade (raised from 5 — 5-6 coin clusters 0% WR, 7+ clusters 9W/0L)
 
 # Regime filter: skip NO signals if 3 consecutive candles had >60% YES ratio
 REGIME_WINDOW = 3          # Rolling window of last 3 candles

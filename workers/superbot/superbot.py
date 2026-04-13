@@ -582,10 +582,10 @@ class CoinTrader:
                 positions_changed = True
                 continue
 
-            # CUT-LOSS: If price <= $0.10 AND time_remaining <= 7.5 min, close entire position immediately
-            # Nerd fix: raised from $0.20 to $0.10 - $0.20 was cutting winners prematurely (33% cut-loss rate, 0% win rate)
-            # EXCEPTION: candle-duration positions hold to expiry - they would have won (BNB, SOL, HYPE, BTC, XRP all won)
-            elif mid_price <= 0.10 and time_left <= 450 and not position.is_candle_duration:
+            # CUT-LOSS: If price <= $0.10 AND 3min < time_remaining <= 7.5 min, close entire position immediately
+            # Nerd fix: Do NOT cut when < 180s to expiry — let near-settlement positions hold to settle
+            # All 6 trades that hit cut_loss_30 would have WON if held to settlement (market settled at ~$0)
+            elif mid_price <= 0.10 and time_left <= 450 and time_left > 180 and not position.is_candle_duration:
                 entry_price = position.avg_price if position.avg_price > 0 else position.entry_price
                 logger.warning(f"CUT LOSS: [{self.coin}] {position.side.upper()} {ticker} exited at ${mid_price:.4f} (was ${entry_price:.4f} entry, time_left={time_left}s)")
                 self._close_position(ticker, "cut_loss_30", mid_price, side=side)
@@ -1268,7 +1268,9 @@ class Superbot:
                     if signal_time.tzinfo is None:
                         signal_time = signal_time.replace(tzinfo=None)
                     age = datetime.utcnow() - signal_time
-                    if age.total_seconds() > CANDLE_SIGNAL_MAX_AGE_SEC:
+                    # NERD FIX: MACRO_FADE signals expire after 30 seconds (not 120)
+                    max_age = 30 if signal_data.get('signal_type') == 'MACRO_FADE' else CANDLE_SIGNAL_MAX_AGE_SEC
+                    if age.total_seconds() > max_age:
                         logger.debug(f"Candle signal stale ({age.total_seconds():.0f}s old), ignoring")
                         return None
                 except Exception as e:
@@ -1331,6 +1333,11 @@ class Superbot:
             except (AttributeError, TypeError):
                 time_left = 900
             if time_left < 60:
+                continue
+
+            # NERD FIX: No entries in last 3 minutes — too close to expiry
+            if time_left < 180:
+                logger.info(f"[{coin}] ENTRY SKIP: only {time_left}s left (< 180s minimum)")
                 continue
 
             mid = (market.yes_bid + market.yes_ask) / 2

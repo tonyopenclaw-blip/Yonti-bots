@@ -33,7 +33,7 @@ def get_signal_stats(session_start_iso: str = None):
         return None
 
     if session_start_iso is None:
-        session_start_iso = get_session_start()
+        session_start_iso = get_session_start().replace(' ', 'T')
 
     with open(signal_file) as f:
         signals = json.load(f)
@@ -117,7 +117,7 @@ def get_stats():
         coin = ticker_to_coin.get(ticker, '???')
         try:
             pnl_val = float(pnl)
-            session_start = get_session_start()
+            session_start = get_session_start().replace(' ', 'T')
             if time_only >= session_start[11:]:  # session start
                 trades.append({'time': time_only, 'coin': coin, 'pnl': pnl_val})
         except:
@@ -145,7 +145,7 @@ def get_stats():
         'cash': cash,
         'portfolio': portfolio,
         'open_pos': open_pos,
-        'signals': get_signal_stats(session_start_iso=session_start),
+        'signals': get_signal_stats(session_start_iso=session_start.replace(' ', 'T')),
         'session_start': session_start,
     }
 

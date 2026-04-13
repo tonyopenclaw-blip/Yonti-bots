@@ -109,25 +109,44 @@ def _append_signal_log(entry: dict):
 
 
 def _get_market_mid_at_signal(coin: str) -> Optional[float]:
-    """Fetch the current Kalshi market mid price for a coin."""
+    """Fetch current Kalshi market mid using raw requests + fresh kalshi_py auth per call.
+    No module-level import to avoid circular init issues. 5s timeout.
+    """
     try:
-        from config import KALSHI_ACCESS_KEY
-        import KalshiAPI
-        api = KalshiAPI.KalshiAPI(KALSHI_ACCESS_KEY)
+        import os
+        import requests
+        BASE_URL = "https://api.elections.kalshi.com/trade-api/v2"
         series_map = {
             "BTC": "KXBTC15M", "ETH": "KXETH15M", "SOL": "KXSOL15M",
             "BNB": "KXBNB15M", "DOGE": "KXDOGE15M", "XRP": "KXXRP15M",
-            "HYPE": "KXXRP15M", "ADA": "KXADA15M",
+            "HYPE": "KXHYPE15M", "ADA": "KXADA15M",
         }
         series = series_map.get(coin.upper())
         if not series:
             return None
-        markets = api.get_open_markets(series_ticker=series)
+
+        access_key = os.getenv("KALSHI_ACCESS_KEY", "")
+        private_key_path = '/home/ubuntu/.openclaw/workspace/workers/superbot/kalshi_private_key.pem'
+        with open(private_key_path) as f:
+            private_key_data = f.read()
+
+        from kalshi_py.auth import KalshiAuth
+        auth = KalshiAuth(access_key_id=access_key, private_key_pem=private_key_data)
+        path = "/markets"
+        headers = auth.get_auth_headers('GET', path)
+        params = {"series_ticker": series, "status": "open", "limit": 1}
+        resp = requests.get(f"{BASE_URL}{path}", headers=headers, params=params, timeout=5)
+        resp.raise_for_status()
+        data = resp.json()
+        markets = data.get("markets", [])
         if markets:
             m = markets[0]
-            return (m.yes_bid + m.yes_ask) / 2 if m.yes_bid and m.yes_ask else None
-    except Exception:
-        pass
+            yes_bid = float(m.get("yes_bid_dollars", 0) or 0)
+            yes_ask = float(m.get("yes_ask_dollars", 0) or 0)
+            if yes_bid > 0 and yes_ask > 0:
+                return (yes_bid + yes_ask) / 2
+    except Exception as e:
+        logger.debug(f"[_get_market_mid] {coin}: {e}")
     return None
 
 
@@ -144,19 +163,23 @@ def notify_discord_status(msg: str):
 
 
 def _post_discord(msg: str):
-    """Post a message to the Discord webhook."""
+    """Post a message to the Discord webhook (non-blocking, 5s timeout)."""
     try:
         resp = requests.post(
             DISCORD_WEBHOOK,
             json={"content": msg},
-            timeout=10,
+            timeout=5,  # Reduced from 10s to 5s to prevent hangs
         )
         if resp.status_code in (200, 204):
             logger.info(f"Discord posted: {msg}")
+        elif resp.status_code == 429:
+            logger.warning(f"Discord rate limited - skipping ({resp.status_code})")
         else:
-            logger.warning(f"Discord post failed: {resp.status_code} {resp.text}")
+            logger.warning(f"Discord post failed: {resp.status_code} {resp.text[:100]}")
+    except requests.exceptions.Timeout:
+        logger.warning("Discord post timed out after 5s - continuing")
     except Exception as e:
-        logger.error(f"Discord post error: {e}")
+        logger.warning(f"Discord post error: {e}")
 
 
 # =============================================================================

@@ -1,0 +1,20 @@
+{
+  "signal_type": "MACRO_FADE",
+  "coin": "BTC",
+  "side": "NO",
+  "confidence": 60,
+  "entry_price": null,
+  "market_mid_at_signal": null,
+  "is_candle_duration": false,
+  "reason": "MACRO FADE: 6 coins YES in 2s",
+  "timestamp": "2026-04-13T14:45:02.793875",
+  "cluster_coins": [
+    "ETH",
+    "BTC",
+    "XRP",
+    "DOGE",
+    "HYPE",
+    "BNB"
+  ],
+  "cluster_side": "YES"
+}

@@ -1297,23 +1297,24 @@ class Superbot:
                 first_viable_ticker = market.ticker
                 first_viable_mid = mid
 
-            # For YES signals, block expensive entries
-            # EXPERIMENTAL: Allow up to $0.65 mid, but cap at $0.50/trade (watch-list test)
-            if side == "yes" and mid > 0.65:
-                logger.info(f"[{coin}] ENTRY SKIP: YES entry ${mid:.4f} > $0.65 (too expensive)")
+            # For YES signals, only block absurdly expensive entries
+            # $0.65 was too tight — expand to $0.75 to allow valid momentum signals
+            if side == "yes" and mid > 0.75:
+                logger.info(f"[{coin}] ENTRY SKIP: YES entry ${mid:.4f} > $0.75 (too expensive)")
                 continue
 
-            # For NO signals, block when YES is cheap (YES < $0.45 means market thinks YES unlikely = NO overpriced)
-            if side == "no" and mid < 0.45:
-                logger.info(f"[{coin}] ENTRY SKIP: NO entry ${mid:.4f} (YES=${mid:.4f} < $0.45, NO overpriced)")
+            # For NO signals, block when YES is cheap (YES < $0.38 means market thinks YES unlikely = NO overpriced)
+            # Tightened from $0.45 to $0.38 based on Nerd's research ($0.35-$0.50 is dead zone)
+            if side == "no" and mid < 0.38:
+                logger.info(f"[{coin}] ENTRY SKIP: NO entry ${mid:.4f} (YES=${mid:.4f} < $0.38, NO overpriced)")
                 continue
 
-            # === ENTRY PRICE GUARD: Block entries below $0.20 or above $0.80 ===
-            if mid < 0.20:
-                logger.info(f"[{coin}] ENTRY SKIP: entry price ${mid:.4f} < $0.20 (below minimum)")
+            # === ENTRY PRICE GUARD: Block entries below $0.15 or above $0.85 ===
+            if mid < 0.15:
+                logger.info(f"[{coin}] ENTRY SKIP: entry price ${mid:.4f} < $0.15 (below minimum)")
                 continue
-            if mid > 0.80:
-                logger.info(f"[{coin}] ENTRY SKIP: entry price ${mid:.4f} > $0.80 (above maximum)")
+            if mid > 0.85:
+                logger.info(f"[{coin}] ENTRY SKIP: entry price ${mid:.4f} > $0.85 (above maximum)")
                 continue
 
             # MACRO_FADE entry guard: also check mid is within sane range

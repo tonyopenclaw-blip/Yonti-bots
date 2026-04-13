@@ -1225,8 +1225,8 @@
     "market_mid_at_signal": null,
     "action": "TAKEN",
     "block_reason": null,
-    "settlement_result": null,
-    "won": null,
+    "settlement_result": 0.0,
+    "won": false,
     "ticker": "KXXRP15M-26APR122300-00"
   },
   {
@@ -1239,8 +1239,8 @@
     "market_mid_at_signal": null,
     "action": "TAKEN",
     "block_reason": null,
-    "settlement_result": null,
-    "won": null,
+    "settlement_result": 0.0,
+    "won": false,
     "cluster_coins": [
       "BTC",
       "XRP",

@@ -1303,9 +1303,9 @@ class Superbot:
                 logger.info(f"[{coin}] ENTRY SKIP: YES entry ${mid:.4f} > $0.75 (too expensive)")
                 continue
 
-            # For NO signals, block when YES is cheap (YES < $0.38 means market thinks YES unlikely = NO overpriced)
-            # Tightened from $0.45 to $0.38 based on Nerd's research ($0.35-$0.50 is dead zone)
-            if side == "no" and mid < 0.38:
+            # For NO signals, block when YES is cheap (YES < $0.30 means market thinks YES unlikely = NO overpriced)
+            # Relaxed from $0.38 to $0.30 to catch more valid fades in the $0.30-$0.50 dead zone
+            if side == "no" and mid < 0.30:
                 logger.info(f"[{coin}] ENTRY SKIP: NO entry ${mid:.4f} (YES=${mid:.4f} < $0.38, NO overpriced)")
                 continue
 

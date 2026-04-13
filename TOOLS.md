@@ -32,12 +32,15 @@ Things like:
 
 ### Apify (Twitter/X Scraper)
 
-- API Key: `apify_api_sK4vzx6r1hzexr7TA2muKebeQWqChT2psmmB`
-- Actor: `xtdata/twitter-x-scraper`
-- Account: Tbruno94 (free tier, $5/month credit)
+Keys rotate automatically (like Odds API):
+1. `apify_api_sK4vzx6r1hzexr7TA2muKebeQWqChT2psmmB`
+2. `apify_api_GO2yPSAz3zEedn49YlwKhRvY5iETvc3jwHRp`
+3. `apify_api_E01cfZlcTajPJORgmnnMKT0kUvQQ9X41b4u9`
+- Actor: `twitter-x-scraper`
+- Account: Tbruno94 (free tier, ~$5/month credit each)
 - Cost: $0.0005/start + $0.005/tweet
 - Usage: Scrapes tweets by URL or search terms
-- Free tier proxy groups available (BUYPROXIES94952 - 5 proxies)
+- Key rotation: On 403 (usage limit), rotates to next key and retries
 
 ### Twitter/X API (Official - DEPLETED)
 

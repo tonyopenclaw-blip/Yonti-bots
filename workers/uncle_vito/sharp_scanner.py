@@ -35,8 +35,28 @@ logger = logging.getLogger("uncle_vito.sharp_scanner")
 # CONFIGURATION
 # ============================================================
 
-APIFY_API_KEY = "apify_api_sK4vzx6r1hzexr7TA2muKebeQWqChT2psmmB"
-APIFY_ACTOR = "apify/twitter-scraper"
+# Rotate through 3 Apify keys like Odds API
+APIFY_API_KEYS = [
+    "apify_api_sK4vzx6r1hzexr7TA2muKebeQWqChT2psmmB",
+    "apify_api_GO2yPSAz3zEedn49YlwKhRvY5iETvc3jwHRp",
+    "apify_api_E01cfZlcTajPJORgmnnMKT0kUvQQ9X41b4u9",
+]
+APIFY_ACTOR = "twitter-x-scraper"
+
+# Key rotation state
+_apify_key_idx = 0
+
+def _get_next_apify_key() -> str:
+    global _apify_key_idx
+    key = APIFY_API_KEYS[_apify_key_idx % len(APIFY_API_KEYS)]
+    _apify_key_idx += 1
+    return key
+
+def _rotate_apify_key():
+    """Rotate to next Apify key (call when current key hits limit)."""
+    global _apify_key_idx
+    _apify_key_idx = (_apify_key_idx + 1) % len(APIFY_API_KEYS)
+    logger.info(f"Rotated to Apify key {_apify_key_idx % len(APIFY_API_KEYS)}: {APIFY_API_KEYS[_apify_key_idx % len(APIFY_API_KEYS)][:20]}...")
 
 # Sharp bettor accounts to track
 # Organized by sport/focus
@@ -170,9 +190,29 @@ class ApifyTwitterClient:
     
     BASE_URL = "https://api.apify.com/v2/acts"
     
-    def __init__(self, api_key: str = APIFY_API_KEY):
-        self.api_key = api_key
+    def __init__(self, api_key: str = None):
+        self.api_key = api_key or _get_next_apify_key()
         self.session = requests.Session() if requests else None
+
+    def _try_with_key_rotation(self, req_func, *args, **kwargs):
+        """Execute a request, rotating Apify keys on 403 (usage limit)."""
+        last_error = None
+        for attempt in range(len(APIFY_API_KEYS)):
+            try:
+                resp = req_func(*args, **kwargs)
+                if resp.status_code == 403:
+                    _rotate_apify_key()
+                    self.api_key = _get_next_apify_key()
+                    last_error = "usage limit"
+                    continue
+                return resp
+            except requests.exceptions.RequestException as e:
+                last_error = str(e)
+                _rotate_apify_key()
+                self.api_key = _get_next_apify_key()
+                continue
+        logger.warning(f"All Apify keys exhausted (last error: {last_error})")
+        return None
     
     def _headers(self) -> Dict[str, str]:
         return {
@@ -205,75 +245,20 @@ class ApifyTwitterClient:
             "tweetLanguage": "en",
         }
         
-        try:
-            # Start the run
-            response = self.session.post(
-                url,
-                headers=self._headers(),
-                json=start_data,
-                timeout=30
-            )
-            
-            if response.status_code != 200 and response.status_code != 201:
-                logger.warning(f"Apify start run failed for @{username}: {response.status_code}")
-                return []
-            
-            run_data = response.json()
-            run_id = run_data.get("data", {}).get("id")
-            
-            if not run_id:
-                logger.warning(f"No run ID returned for @{username}")
-                return []
-            
-            # Poll for completion
-            import time
-            max_wait = 60  # seconds
-            waited = 0
-            
-            while waited < max_wait:
-                time.sleep(2)
-                waited += 2
-                
-                status_url = f"{self.BASE_URL}/{APIFY_ACTOR}/runs/{run_id}"
-                status_resp = self.session.get(status_url, headers=self._headers(), timeout=30)
-                
-                if status_resp.status_code == 200:
-                    status_data = status_resp.json()
-                    status = status_data.get("data", {}).get("status", "")
-                    
-                    if status == "SUCCEEDED":
-                        break
-                    elif status in ["FAILED", "ABORTED", "TIMED_OUT"]:
-                        logger.warning(f"Apify run {status} for @{username}")
-                        return []
-            
-            # Get dataset items
-            dataset_id = run_data.get("data", {}).get("defaultDatasetId")
-            if not dataset_id:
-                # Try to get from status response
-                status_url = f"{self.BASE_URL}/{APIFY_ACTOR}/runs/{run_id}"
-                status_resp = self.session.get(status_url, headers=self._headers(), timeout=30)
-                if status_resp.status_code == 200:
-                    dataset_id = status_resp.json().get("data", {}).get("defaultDatasetId")
-            
-            if not dataset_id:
-                logger.warning(f"No dataset ID for @{username}")
-                return []
-            
-            items_url = f"https://api.apify.com/v2/datasets/{dataset_id}/items"
-            items_resp = self.session.get(items_url, headers=self._headers(), timeout=30)
-            
-            if items_resp.status_code == 200:
-                tweets = items_resp.json()
-                logger.info(f"Fetched {len(tweets)} tweets from @{username}")
-                return tweets
-            else:
-                logger.warning(f"Failed to get tweets from @{username}: {items_resp.status_code}")
-                return []
-                
-        except Exception as e:
-            logger.error(f"Error fetching tweets from @{username}: {e}")
+        response = None
+        for attempt in range(len(APIFY_API_KEYS)):
+            response = self.session.post(url, headers=self._headers(), json=start_data, timeout=30)
+            if response.status_code == 403:
+                _rotate_apify_key()
+                self.api_key = _get_next_apify_key()
+                logger.warning(f"Apify key hit usage limit, rotating for @{username}")
+                continue
+            break
+
+        if not response or response.status_code not in (200, 201):
+            logger.warning(f"Apify start run failed for @{username}: {response.status_code if response else 'no response'}")
             return []
+            
     
     def search_tweets(self, query: str, max_tweets: int = 100) -> List[Dict]:
         """
@@ -298,59 +283,20 @@ class ApifyTwitterClient:
             "tweetLanguage": "en",
         }
         
-        try:
-            response = self.session.post(
-                url,
-                headers=self._headers(),
-                json=start_data,
-                timeout=30
-            )
-            
-            if response.status_code not in (200, 201):
-                logger.warning(f"Apify search failed for '{query}': {response.status_code}")
-                return []
-            
-            run_data = response.json()
-            run_id = run_data.get("data", {}).get("id")
-            
-            if not run_id:
-                return []
-            
-            # Poll for completion
-            import time
-            max_wait = 90
-            waited = 0
-            
-            while waited < max_wait:
-                time.sleep(3)
-                waited += 3
-                
-                status_url = f"{self.BASE_URL}/{APIFY_ACTOR}/runs/{run_id}"
-                status_resp = self.session.get(status_url, headers=self._headers(), timeout=30)
-                
-                if status_resp.status_code == 200:
-                    status = status_resp.json().get("data", {}).get("status", "")
-                    if status == "SUCCEEDED":
-                        break
-                    elif status in ["FAILED", "ABORTED", "TIMED_OUT"]:
-                        return []
-            
-            dataset_id = run_data.get("data", {}).get("defaultDatasetId")
-            if not dataset_id:
-                return []
-            
-            items_url = f"https://api.apify.com/v2/datasets/{dataset_id}/items"
-            items_resp = self.session.get(items_url, headers=self._headers(), timeout=30)
-            
-            if items_resp.status_code == 200:
-                tweets = items_resp.json()
-                logger.info(f"Search '{query}' returned {len(tweets)} tweets")
-                return tweets
+        response = None
+        for attempt in range(len(APIFY_API_KEYS)):
+            response = self.session.post(url, headers=self._headers(), json=start_data, timeout=30)
+            if response.status_code == 403:
+                _rotate_apify_key()
+                self.api_key = _get_next_apify_key()
+                logger.warning(f"Apify key hit usage limit, rotating for search '{query}'")
+                continue
+            break
+
+        if not response or response.status_code not in (200, 201):
+            logger.warning(f"Apify search failed for '{query}': {response.status_code if response else 'no response'}")
             return []
             
-        except Exception as e:
-            logger.error(f"Error searching tweets for '{query}': {e}")
-            return []
 
 # ============================================================
 # PLAYER NAME EXTRACTION
@@ -550,8 +496,8 @@ class SharpScanner:
         recommendations = scanner.weight_vito_picks(vito_picks, consensus)
     """
     
-    def __init__(self, api_key: str = APIFY_API_KEY):
-        self.twitter_client = ApifyTwitterClient(api_key)
+    def __init__(self, api_key: str = None):
+        self.twitter_client = ApifyTwitterClient(api_key)  # None → uses key rotation
         self.calculator = SharpConsensusCalculator()
         self.accounts = SHARP_ACCOUNTS
         self.cache: Dict[str, Any] = {}

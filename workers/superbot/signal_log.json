@@ -696,5 +696,33 @@
     "block_reason": "no suitable market",
     "settlement_result": null,
     "won": null
+  },
+  {
+    "timestamp": "2026-04-13T00:45:09.965785",
+    "coin": "SOL",
+    "signal_type": "candle_YES",
+    "side": "YES",
+    "conf": 97,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "BLOCKED",
+    "block_reason": "entry guard skipped (mid $0.6000)",
+    "settlement_result": null,
+    "won": null,
+    "ticker": "KXSOL15M-26APR122100-00"
+  },
+  {
+    "timestamp": "2026-04-13T00:45:10.180995",
+    "coin": "BNB",
+    "signal_type": "candle_YES",
+    "side": "YES",
+    "conf": 97,
+    "entry_price_max": 0.85,
+    "market_mid_at_signal": null,
+    "action": "TAKEN",
+    "block_reason": null,
+    "settlement_result": null,
+    "won": null,
+    "ticker": "KXBNB15M-26APR122100-00"
   }
 ]

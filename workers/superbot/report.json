@@ -1,5 +1,5 @@
 {
-  "start_time": "2026-04-12 22:27:09 UTC",
+  "start_time": "2026-04-13 00:08:59 UTC",
   "end_time": "",
   "starting_balance": 34.67,
   "ending_balance": 0.0,
@@ -10,9 +10,32 @@
   "win_rate": 0,
   "largest_win": 0.0,
   "largest_loss": 0.0,
-  "open_positions": 0,
-  "thermostat": 0,
+  "open_positions": 2,
+  "thermostat": 25,
   "trades": [],
-  "last_10_open_trades": [],
+  "last_10_open_trades": [
+    {
+      "ticker": "KXBNB15M-26APR122100-00",
+      "side": "yes",
+      "entry_price": 0.5,
+      "shares": 3,
+      "cost": 1.5,
+      "pnl": 0.0,
+      "strategy": "momentum",
+      "open_time": "2026-04-13 00:45:26 UTC",
+      "current_price": 0.9964999999999999
+    },
+    {
+      "ticker": "KXSOL15M-26APR122100-00",
+      "side": "yes",
+      "entry_price": 0.5449999999999999,
+      "shares": 3,
+      "cost": 1.6349999999999998,
+      "pnl": 0.0,
+      "strategy": "momentum",
+      "open_time": "2026-04-13 00:45:57 UTC",
+      "current_price": 0.9995
+    }
+  ],
   "last_10_closed_trades": []
 }
